@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Stock — Bespoke</title>
+  <link rel="stylesheet" href="../assets/styles.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="navbar">
+      <a class="brand" href="index.html">
+        <img class="mark" src="../assets/photos/hero.jpg" alt="Bespoke" />
+        <div>
+          <div class="name">BESPOKE</div>
+          <div class="tag">Sourcing • Mandates • Import • Collector & Prestige</div>
+        </div>
+      </a>
+      <nav>
+        <a data-nav class="navlink" href="index.html">Home</a>
+        <a data-nav class="navlink" href="services.html">Services</a>
+        <a data-nav class="navlink" href="stock.html">Stock</a>
+        <a data-nav class="navlink" href="track-record.html">Track record</a>
+        <a data-nav class="navlink" href="partenaires.html">Partners</a>
+        <a data-nav class="navlink" href="a-propos.html">About</a>
+        <a data-nav class="navlink" href="contact.html">Contact</a>
+        
+    <div class="lang">
+      <a class="" href="../fr/stock.html">FR</a>
+      <a class="active" href="../en/stock.html">EN</a>
+    </div>
+    
+      </nav>
+    </div>
+  </div>
+  <div class="ribbon">
+    <div class="container">
+      <div class="inner">Positioning: sourcing & import of collector and premium cars — workshop collaborations in France & Italy. <span class='gold'>This website is not regulated financial advice.</span></div>
+    </div>
+  </div>
+</header>
+<main class="section">
+  <div class="container">
+    <div class="card pad-lg">
+      <div class="kicker">Stock</div>
+      <h1>Vehicles</h1>
+      <p class="lead">Frequently updated. Price on request. Sold vehicles can be displayed.</p>
+    </div>
+
+    <div class="card pad stockControls">
+      <div class="stockControlsLeft">
+        <input id="stockSearch" class="input" type="search" placeholder="Search (make, model, year…)" autocomplete="off"/>
+        <div class="mini stockHint">Tip: to add / remove a vehicle, just update stock.json and add photos in /assets/stock/images.</div>
+      </div>
+      <div class="stockControlsRight">
+        <label class="toggle">
+          <input id="includeSold" type="checkbox"/>
+          <span>Include sold</span>
+        </label>
+        <div class="stockSort">
+          <span class="mini">Sort</span>
+          <select id="stockSort" class="select">
+            <option value="year_desc">Year (new → old)</option>
+<option value="year_asc">Year (old → new)</option>
+<option value="az">A → Z</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <noscript>
+      <div class="card pad">Enable JavaScript to display the stock.</div>
+    </noscript>
+
+    <div id="stockGrid" class="stockGrid"></div>
+  </div>
+</main>
+
+<div id="stockModal" class="modal" aria-hidden="true">
+  <div class="modalOverlay" data-close="1"></div>
+  <div class="modalPanel" role="dialog" aria-modal="true" aria-labelledby="stockModalTitle">
+    <button class="modalClose" type="button" data-close="1" aria-label="Close">×</button>
+    <div class="modalBody">
+      <div class="modalMedia">
+        <img id="modalMainImage" alt="" class="modalMainImage"/>
+        <div id="modalThumbs" class="modalThumbs"></div>
+      </div>
+      <div class="modalInfo">
+        <div class="kicker" id="modalStatus"></div>
+        <h2 id="stockModalTitle" class="modalTitle"></h2>
+        <div class="modalMeta" id="modalMeta"></div>
+        <div class="price" id="modalPrice"></div>
+        <p class="modalText" id="modalDescription"></p>
+        <a id="modalContact" class="btn btnPrimary" href="contact.html">Contact</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footerGrid">
+      <div>
+        <div class="footerTitle">Bespoke</div>
+        <div class="footerText">
+          Sourcing, mandates and import of premium and collector cars, in partnership with specialist workshops in France and Italy.
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+            <span class="badge">Due diligence / PPI</span>
+            <span class="badge">Logistics & import</span>
+            <span class="badge">Buy-side mandate</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="footerTitle">Contact details</div>
+        <div class="footerText">
+          Address : <strong>[À RENSEIGNER]</strong><br/>
+          Email : to be added<br/>
+          Téléphone : +33 …<br/>
+        </div>
+      </div>
+      <div>
+        <div class="footerTitle">Legal</div>
+        <div class="footerLinks">
+          <a class="navlink" href="legal/mentions-legales.html">Legal notice</a>
+          <a class="navlink" href="legal/confidentialite.html">Privacy</a>
+        </div>
+        <div class="footerText">
+          Workshop partners : France &amp; Italy
+        </div>
+      </div>
+    </div>
+    <div class="sep"></div>
+    <div class="mini">© 2026 Bespoke — All rights reserved.</div>
+  </div>
+</footer>
+<script>window.__BESPOKE_LANG__="en";</script>
+<script src="../assets/site.js"></script>
+<script src="../assets/stock/stock.js"></script>
+</body>
+</html>
