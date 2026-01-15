@@ -1,0 +1,112 @@
+{
+  "items": [
+    {
+      "id": "saab-900-turbo-cabriolet",
+      "make": {
+        "fr": "Saab",
+        "en": "Saab"
+      },
+      "model": {
+        "fr": "900 Turbo Cabriolet",
+        "en": "900 Turbo Cabriolet"
+      },
+      "year": 1993,
+      "mileage_km": null,
+      "price_eur": null,
+      "status": "available",
+      "location": {
+        "fr": "France / Europe",
+        "en": "France / Europe"
+      },
+      "headline": {
+        "fr": "Icône scandinave, rare et désirable.",
+        "en": "Scandinavian icon, rare and desirable."
+      },
+      "description": {
+        "fr": "Fiche indicative. Informations complètes sur demande.",
+        "en": "Indicative listing. Full details on request."
+      },
+      "images": [
+        "assets/stock/images/p8259754.jpg",
+        "assets/stock/images/p8259757.jpg",
+        "assets/stock/images/p8259771.jpg"
+      ],
+      "title": {
+        "fr": "Saab 900 Turbo Cabriolet",
+        "en": "Saab 900 Turbo Cabriolet"
+      }
+    },
+    {
+      "id": "mercedes-c36-amg-w202",
+      "make": {
+        "fr": "Mercedes-Benz",
+        "en": "Mercedes-Benz"
+      },
+      "model": {
+        "fr": "C36 AMG (W202)",
+        "en": "C36 AMG (W202)"
+      },
+      "year": 1995,
+      "mileage_km": null,
+      "price_eur": null,
+      "status": "available",
+      "location": {
+        "fr": "France / Europe",
+        "en": "France / Europe"
+      },
+      "headline": {
+        "fr": "Berline AMG de première génération, configuration authentique.",
+        "en": "Early AMG saloon, authentic configuration."
+      },
+      "description": {
+        "fr": "Fiche indicative. Informations complètes sur demande.",
+        "en": "Indicative listing. Full details on request."
+      },
+      "images": [
+        "assets/stock/images/p6180110.jpg",
+        "assets/stock/images/p6180120.jpg",
+        "assets/stock/images/p6180123.jpg"
+      ],
+      "title": {
+        "fr": "Mercedes-Benz C36 AMG (W202)",
+        "en": "Mercedes-Benz C36 AMG (W202)"
+      }
+    },
+    {
+      "id": "chevrolet-corvette-stingray",
+      "make": {
+        "fr": "Chevrolet",
+        "en": "Chevrolet"
+      },
+      "model": {
+        "fr": "Corvette Stingray",
+        "en": "Corvette Stingray"
+      },
+      "year": null,
+      "mileage_km": null,
+      "price_eur": null,
+      "status": "sold",
+      "location": {
+        "fr": "France / Europe",
+        "en": "France / Europe"
+      },
+      "headline": {
+        "fr": "Vendu. Historique disponible sur demande.",
+        "en": "Sold. History available on request."
+      },
+      "description": {
+        "fr": "Exemple de véhicule déjà placé. D’autres opportunités arrivent régulièrement.",
+        "en": "Example of a vehicle already placed. New opportunities arrive regularly."
+      },
+      "images": [
+        "assets/stock/images/img_20191225_132353.jpg",
+        "assets/stock/images/img_20191225_132401.jpg",
+        "assets/stock/images/img_20191224_110524.jpg"
+      ],
+      "title": {
+        "fr": "Chevrolet Corvette Stingray",
+        "en": "Chevrolet Corvette Stingray"
+      }
+    }
+  ]
+}
