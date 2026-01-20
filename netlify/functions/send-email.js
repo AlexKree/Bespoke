@@ -1,5 +1,17 @@
 const nodemailer = require('nodemailer');
 
+// Helper function to escape HTML to prevent XSS
+function escapeHtml(text) {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return text.replace(/[&<>"']/g, m => map[m]);
+}
+
 exports.handler = async (event) => {
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
@@ -52,13 +64,13 @@ ${message}
       `,
       html: `
 <h2>New contact form submission</h2>
-<p><strong>Name/Company:</strong> ${name}</p>
-<p><strong>Email:</strong> ${email}</p>
-<p><strong>Phone:</strong> ${phone || 'N/A'}</p>
-<p><strong>Budget:</strong> ${budget || 'N/A'}</p>
-<p><strong>Vehicle:</strong> ${vehicle || 'N/A'}</p>
+<p><strong>Name/Company:</strong> ${escapeHtml(name)}</p>
+<p><strong>Email:</strong> ${escapeHtml(email)}</p>
+<p><strong>Phone:</strong> ${escapeHtml(phone || 'N/A')}</p>
+<p><strong>Budget:</strong> ${escapeHtml(budget || 'N/A')}</p>
+<p><strong>Vehicle:</strong> ${escapeHtml(vehicle || 'N/A')}</p>
 <h3>Message:</h3>
-<p>${message.replace(/\n/g, '<br>')}</p>
+<p>${escapeHtml(message).replace(/\n/g, '<br>')}</p>
       `,
       replyTo: email
     };
@@ -78,8 +90,7 @@ ${message}
     return {
       statusCode: 500,
       body: JSON.stringify({ 
-        error: 'Failed to send email',
-        details: error.message 
+        error: 'Failed to send email. Please try again later.'
       })
     };
   }

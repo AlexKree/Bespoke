@@ -12,7 +12,7 @@
     
     // Disable the button and show loading state
     submitButton.disabled = true;
-    submitButton.textContent = submitButton.dataset.loading || 'Sending...';
+    submitButton.textContent = submitButton.dataset.loading || form.dataset.loading || 'Sending...';
     
     // Get form data
     const formData = {
