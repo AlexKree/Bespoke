@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "description": "Netlify Functions for Bespoke contact form",
   "dependencies": {
-    "nodemailer": "^6.9.7"
+    "nodemailer": "^7.0.7"
   }
 }
