@@ -10,8 +10,12 @@ exports.handler = async (event, context) => {
   }
 
   // Set up CORS headers
+  // Note: Using '*' allows the form to work from any domain (e.g., preview deployments)
+  // For production, you can restrict this to your specific domain by setting
+  // ALLOWED_ORIGIN environment variable in Netlify
+  const allowedOrigin = process.env.ALLOWED_ORIGIN || '*';
   const headers = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': allowedOrigin,
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Content-Type': 'application/json'
@@ -40,7 +44,7 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Validate email format
+    // Validate email format (fallback validation; HTML5 validation happens client-side first)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return {
