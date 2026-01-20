@@ -1,0 +1,11 @@
+{
+  "name": "bespoke-website",
+  "version": "1.0.0",
+  "description": "Bespoke Investment Company website",
+  "scripts": {
+    "test": "echo \"No tests configured\" && exit 0"
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^7.7.0"
+  }
+}
