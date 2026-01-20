@@ -58,15 +58,16 @@
   <div class="sectionTitle"><h2>Form</h2><div class="sub">Final version: privacy + anti-spam</div></div>
   <div class="sep"></div>
   <div class="card pad-md">
-    <form class="form" onsubmit="event.preventDefault(); alert('Preview: connect this form to your email/CRM.');">
-      <input placeholder="Name / Company" required>
-      <input placeholder="Email" type="email" required>
-      <input placeholder="Phone (optional)">
-      <input placeholder="Budget (optional)">
-      <input placeholder="Car to source / sell (model, year)">
-      <textarea placeholder="Describe your request (timeline, country, criteria, usage, constraints)"></textarea>
-      <button class="btn primary" type="submit">Send</button>
-      <small>This form is a preview. We will enable it (email/CRM) during deployment.</small>
+    <form class="form" id="contact-form">
+      <input placeholder="Name / Company" required name="name">
+      <input placeholder="Email" type="email" required name="email">
+      <input placeholder="Phone (optional)" name="phone">
+      <input placeholder="Budget (optional)" name="budget">
+      <input placeholder="Car to source / sell (model, year)" name="vehicle">
+      <textarea placeholder="Describe your request (timeline, country, criteria, usage, constraints)" name="message" required></textarea>
+      <button class="btn primary" type="submit" data-text="Send" data-loading="Sending..." data-success="Message sent successfully!" data-error="An error occurred. Please try again.">Send</button>
+      <div id="form-status"></div>
+      <small>Your message will be sent directly to contact@thebespokecar.com</small>
     </form>
   </div>
 </div>
@@ -123,5 +124,6 @@
   </div>
 </footer>
 <script src="../assets/site.js"></script>
+<script src="../assets/contact-form.js"></script>
 </body>
 </html>
