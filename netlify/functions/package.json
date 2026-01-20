@@ -1,0 +1,8 @@
+{
+  "name": "bespoke-netlify-functions",
+  "version": "1.0.0",
+  "description": "Netlify Functions for Bespoke contact form",
+  "dependencies": {
+    "nodemailer": "^7.0.7"
+  }
+}

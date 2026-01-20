@@ -55,18 +55,21 @@
 </div>
 
 <div class="section">
-  <div class="sectionTitle"><h2>Form</h2><div class="sub">Final version: privacy + anti-spam</div></div>
+  <div class="sectionTitle"><h2>Form</h2><div class="sub">Secure • Privacy • Anti-spam</div></div>
   <div class="sep"></div>
   <div class="card pad-md">
-    <form class="form" onsubmit="event.preventDefault(); alert('Preview: connect this form to your email/CRM.');">
-      <input placeholder="Name / Company" required>
-      <input placeholder="Email" type="email" required>
-      <input placeholder="Phone (optional)">
-      <input placeholder="Budget (optional)">
-      <input placeholder="Car to source / sell (model, year)">
-      <textarea placeholder="Describe your request (timeline, country, criteria, usage, constraints)"></textarea>
+    <form id="contactForm" class="form"
+          data-success="Message sent successfully! We will respond as soon as possible."
+          data-error="Error sending message. Please try again."
+          data-loading="Sending...">
+      <input placeholder="Name / Company" required name="name">
+      <input placeholder="Email" type="email" required name="email">
+      <input placeholder="Phone (optional)" name="phone">
+      <input placeholder="Budget (optional)" name="budget">
+      <input placeholder="Car to source / sell (model, year)" name="vehicle">
+      <textarea placeholder="Describe your request (timeline, country, criteria, usage, constraints)" required name="message"></textarea>
       <button class="btn primary" type="submit">Send</button>
-      <small>This form is a preview. We will enable it (email/CRM) during deployment.</small>
+      <small>Your data is transmitted securely via SMTP.</small>
     </form>
   </div>
 </div>
@@ -123,5 +126,6 @@
   </div>
 </footer>
 <script src="../assets/site.js"></script>
+<script src="../assets/contact.js"></script>
 </body>
 </html>
