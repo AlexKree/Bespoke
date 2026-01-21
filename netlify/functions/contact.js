@@ -1,5 +1,23 @@
 const nodemailer = require('nodemailer');
 
+// HTML escape function to prevent XSS
+function escapeHtml(text) {
+  if (typeof text !== 'string') return '';
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Sanitize text to remove potentially malicious content
+function sanitizeText(text) {
+  if (typeof text !== 'string') return '';
+  // Remove any control characters except newlines and tabs
+  return text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '').trim();
+}
+
 exports.handler = async (event, context) => {
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
@@ -22,8 +40,16 @@ exports.handler = async (event, context) => {
 
   const { name, email, phone, budget, vehicle, message } = formData;
 
+  // Sanitize all input fields
+  const sanitizedName = sanitizeText(name);
+  const sanitizedEmail = sanitizeText(email);
+  const sanitizedPhone = sanitizeText(phone || '');
+  const sanitizedBudget = sanitizeText(budget || '');
+  const sanitizedVehicle = sanitizeText(vehicle || '');
+  const sanitizedMessage = sanitizeText(message);
+
   // Validate required fields
-  if (!name || !email || !message) {
+  if (!sanitizedName || !sanitizedEmail || !sanitizedMessage) {
     return {
       statusCode: 400,
       body: JSON.stringify({ error: 'Missing required fields: name, email, and message are required' })
@@ -32,7 +58,7 @@ exports.handler = async (event, context) => {
 
   // Validate email format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
+  if (!emailRegex.test(sanitizedEmail)) {
     return {
       statusCode: 400,
       body: JSON.stringify({ error: 'Invalid email format' })
@@ -78,29 +104,29 @@ exports.handler = async (event, context) => {
     }
   });
 
-  // Build email content
+  // Build email content with escaped HTML
   const emailHtml = `
     <h2>New Contact Form Submission</h2>
-    <p><strong>Name:</strong> ${name}</p>
-    <p><strong>Email:</strong> ${email}</p>
-    ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
-    ${budget ? `<p><strong>Budget:</strong> ${budget}</p>` : ''}
-    ${vehicle ? `<p><strong>Vehicle:</strong> ${vehicle}</p>` : ''}
+    <p><strong>Name:</strong> ${escapeHtml(sanitizedName)}</p>
+    <p><strong>Email:</strong> ${escapeHtml(sanitizedEmail)}</p>
+    ${sanitizedPhone ? `<p><strong>Phone:</strong> ${escapeHtml(sanitizedPhone)}</p>` : ''}
+    ${sanitizedBudget ? `<p><strong>Budget:</strong> ${escapeHtml(sanitizedBudget)}</p>` : ''}
+    ${sanitizedVehicle ? `<p><strong>Vehicle:</strong> ${escapeHtml(sanitizedVehicle)}</p>` : ''}
     <p><strong>Message:</strong></p>
-    <p>${message.replace(/\n/g, '<br>')}</p>
+    <p>${escapeHtml(sanitizedMessage).replace(/\n/g, '<br>')}</p>
   `;
 
   const emailText = `
 New Contact Form Submission
 
-Name: ${name}
-Email: ${email}
-${phone ? `Phone: ${phone}` : ''}
-${budget ? `Budget: ${budget}` : ''}
-${vehicle ? `Vehicle: ${vehicle}` : ''}
+Name: ${sanitizedName}
+Email: ${sanitizedEmail}
+${sanitizedPhone ? `Phone: ${sanitizedPhone}` : ''}
+${sanitizedBudget ? `Budget: ${sanitizedBudget}` : ''}
+${sanitizedVehicle ? `Vehicle: ${sanitizedVehicle}` : ''}
 
 Message:
-${message}
+${sanitizedMessage}
   `;
 
   // Send email
@@ -108,8 +134,8 @@ ${message}
     await transporter.sendMail({
       from: emailFrom,
       to: emailTo,
-      replyTo: email,
-      subject: `Contact Form: ${name}`,
+      replyTo: sanitizedEmail,
+      subject: `Contact Form: ${sanitizedName}`,
       text: emailText,
       html: emailHtml
     });
@@ -122,12 +148,12 @@ ${message}
       })
     };
   } catch (error) {
+    // Log detailed error server-side but send generic message to client
     console.error('Error sending email:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ 
-        error: 'Failed to send email',
-        details: error.message 
+        error: 'Failed to send email. Please try again later.'
       })
     };
   }
