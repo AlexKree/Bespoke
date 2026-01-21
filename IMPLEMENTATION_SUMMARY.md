@@ -31,7 +31,7 @@ This implementation adds a functional contact form to the Bespoke website that s
 
 ### Configuration Files
 - **netlify.toml**: Netlify deployment configuration
-- **package.json**: Node.js dependencies (nodemailer v6.9.16)
+- **package.json**: Node.js dependencies (nodemailer v7.0.7)
 - **.gitignore**: Excludes node_modules and build artifacts
 
 ### Documentation
@@ -92,11 +92,9 @@ To test the implementation:
 
 ## Known Limitations
 
-1. **Nodemailer Version**: Using v6.9.16 (latest in 6.x) due to potential breaking changes in v7.x. The code includes mitigations for the known vulnerability by controlling from/to addresses via environment variables.
+1. **Rate Limiting**: No rate limiting implemented. Consider adding Netlify rate limiting if spam becomes an issue.
 
-2. **Rate Limiting**: No rate limiting implemented. Consider adding Netlify rate limiting if spam becomes an issue.
-
-3. **CAPTCHA**: No CAPTCHA implemented. Consider adding if spam becomes an issue.
+2. **CAPTCHA**: No CAPTCHA implemented. Consider adding if spam becomes an issue.
 
 ## Future Enhancements
 
