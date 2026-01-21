@@ -58,15 +58,15 @@
   <div class="sectionTitle"><h2>Formulaire</h2><div class="sub">Version finale : RGPD + anti-spam</div></div>
   <div class="sep"></div>
   <div class="card pad-md">
-    <form class="form" action="mailto:contact@thebespokecar.com?subject=Contact%20-%20The%20Bespoke%20Car%20Company" method="post" enctype="text/plain">
+    <form id="contact-form" class="form">
       <input placeholder="Nom / Société" required name="name">
       <input placeholder="Email" type="email" required name="email">
       <input placeholder="Téléphone (optionnel)" name="phone">
       <input placeholder="Budget (optionnel)" name="budget">
       <input placeholder="Véhicule recherché / vendu (modèle, année)" name="vehicle">
-      <textarea placeholder="Détaillez votre demande (délai, pays, critères, usage, contraintes)" name="message"></textarea>
-      <button class="btn primary" type="submit">Envoyer</button>
-      <small>L’envoi s’effectue via votre application email (lien mailto).</small>
+      <textarea placeholder="Détaillez votre demande (délai, pays, critères, usage, contraintes)" required name="message"></textarea>
+      <button class="btn primary" type="submit" data-text="Envoyer" data-sending="Envoi en cours...">Envoyer</button>
+      <div id="form-status" data-success="Message envoyé avec succès ! Nous vous recontacterons bientôt." data-error="Une erreur s'est produite. Veuillez réessayer."></div>
     </form>
   </div>
 </div>
