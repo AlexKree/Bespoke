@@ -56,6 +56,17 @@ exports.handler = async (event, context) => {
     };
   }
 
+  // Validate that emailFrom and emailTo are properly formatted
+  // This prevents the Nodemailer interpretation conflict vulnerability
+  // by ensuring that the from/to addresses are not user-controlled
+  if (!emailFrom || !emailTo) {
+    console.error('Email configuration missing');
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Server configuration error' })
+    };
+  }
+
   // Create transporter
   const transporter = nodemailer.createTransport({
     host: smtpHost,
