@@ -156,3 +156,22 @@ footer{
 .footerLinks{display:grid;gap:8px;margin-top:10px}
 .badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);border:1px solid rgba(255,255,255,.12);padding:7px 10px;border-radius:999px;background: rgba(255,255,255,.04)}
 .gold{color:var(--gold)}
+.form-status{
+  padding:12px 14px;
+  border-radius:14px;
+  font-size:14px;
+  margin-top:4px;
+  display:none;
+}
+.form-status.success{
+  display:block;
+  background:rgba(76,175,80,.15);
+  border:1px solid rgba(76,175,80,.4);
+  color:#81c784;
+}
+.form-status.error{
+  display:block;
+  background:rgba(244,67,54,.15);
+  border:1px solid rgba(244,67,54,.4);
+  color:#e57373;
+}
