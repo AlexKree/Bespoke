@@ -67,7 +67,7 @@ exports.handler = async (event, context) => {
 
   // Get SMTP configuration from environment variables
   const smtpHost = process.env.SMTP_HOST;
-  const smtpPort = process.env.SMTP_PORT || 587;
+  const smtpPort = parseInt(process.env.SMTP_PORT || '587', 10);
   const smtpUser = process.env.SMTP_USER;
   const smtpPass = process.env.SMTP_PASS;
   const emailFrom = process.env.EMAIL_FROM || 'contact@thebespokecar.com';
@@ -135,7 +135,7 @@ ${sanitizedMessage}
       from: emailFrom,
       to: emailTo,
       replyTo: sanitizedEmail,
-      subject: `Contact Form: ${sanitizedName}`,
+      subject: `Contact Form: ${escapeHtml(sanitizedName)}`,
       text: emailText,
       html: emailHtml
     });
