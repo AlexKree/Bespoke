@@ -2,126 +2,121 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Contact — Bespoke (FR)</title>
-  <meta name="description" content="Demande de mandat.">
-  <meta name="robots" content="index,follow">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/styles.css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contact — The Bespoke Car</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 1.5rem; max-width: 800px; margin: 0 auto; color: #111; }
+    h1 { margin-top: 0; }
+    form p { margin: 0.75rem 0; }
+    label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+    input[type="text"], input[type="email"], textarea { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    textarea { min-height: 140px; resize: vertical; }
+    button { background: #0b74de; color: white; border: none; padding: 0.6rem 1rem; border-radius: 4px; cursor: pointer; }
+    button[disabled] { opacity: 0.6; cursor: not-allowed; }
+    .status { margin-top: 1rem; padding: 0.75rem; border-radius: 4px; display: none; }
+    .status.error { background: #ffdede; color: #8a1f1f; display: none; }
+    .status.success { background: #e6ffed; color: #1f6f3a; display: none; }
+  </style>
 </head>
 <body>
-<header>
-  <div class="container">
-    <div class="navbar">
-      <a class="brand" href="index.html">
-        <img class="mark" src="../assets/photos/hero.jpg" alt="Bespoke" />
-        <div>
-          <div class="name">BESPOKE</div>
-          <div class="tag">Sourcing • Mandats • Import • Collection & Prestige</div>
-        </div>
-      </a>
-      <nav>
-        <a data-nav class="navlink" href="index.html">Accueil</a>
-        <a data-nav class="navlink" href="services.html">Services</a>
-        <a data-nav class="navlink" href="stock.html">Stock</a>
-        <a data-nav class="navlink" href="track-record.html">Track record</a>
-        <a data-nav class="navlink" href="partenaires.html">Partenaires</a>
-        <a data-nav class="navlink" href="a-propos.html">À propos</a>
-        <a data-nav class="navlink" href="contact.html">Contact</a>
-        
-    <div class="lang">
-      <a class="active" href="../fr/contact.html">FR</a>
-      <a class="" href="../en/contact.html">EN</a>
-    </div>
-    
-      </nav>
-    </div>
-  </div>
-  <div class="ribbon">
-    <div class="container">
-      <div class="inner">Positionnement : sourcing & importation de véhicules de collection / prestige — collaboration atelier en France & Italie. <span class='gold'>Ce site ne constitue pas un conseil financier réglementé.</span></div>
-    </div>
-  </div>
-</header>
-<main>
-  <div class="container">
+  <h1>Contact</h1>
+  <p>Utilisez le formulaire ci‑dessous pour nous envoyer un message. Nous répondrons dans les meilleurs délais.</p>
 
-<div class="card pad-lg">
-  <div class="kicker">Contact</div>
-  <h1>Concierge & mandats.</h1>
-  <p class="lead">Décrivez votre demande (modèle, budget, délai, usage). Nous revenons vers vous pour qualifier le dossier.</p>
-</div>
+  <form id="contact-form" novalidate>
+    <!-- Honeypot anti‑spam (ne pas remplir) -->
+    <div style="display:none;" aria-hidden="true">
+      <label for="bot-field">Ne pas remplir</label>
+      <input type="text" name="bot-field" id="bot-field" autocomplete="off">
+    </div>
 
-<div class="section">
-  <div class="sectionTitle"><h2>Formulaire</h2><div class="sub">Version finale : RGPD + anti-spam</div></div>
-  <div class="sep"></div>
-  <div class="card pad-md">
-    <form class="form" action="mailto:contact@thebespokecar.com?subject=Contact%20-%20The%20Bespoke%20Car%20Company" method="post" enctype="text/plain">
-      <input placeholder="Nom / Société" required name="name">
-      <input placeholder="Email" type="email" required name="email">
-      <input placeholder="Téléphone (optionnel)" name="phone">
-      <input placeholder="Budget (optionnel)" name="budget">
-      <input placeholder="Véhicule recherché / vendu (modèle, année)" name="vehicle">
-      <textarea placeholder="Détaillez votre demande (délai, pays, critères, usage, contraintes)" name="message"></textarea>
-      <button class="btn primary" type="submit">Envoyer</button>
-      <small>L’envoi s’effectue via votre application email (lien mailto).</small>
-    </form>
-  </div>
-</div>
-
-<div class="section">
-  <div class="card pad-md">
-    <div class="sectionTitle"><h2>Informations légales</h2><div class="sub"></div></div>
-    <div class="sep"></div>
-    <p class="lead" style="font-size:15px">
-      Adresse : <strong>1530 Chemin de Peyniblou 06560 Sophia-Antipolis France</strong><br/>
-      Directeur de publication : <strong>Patricia Blin</strong><br/>
-      SIRET : <strong>95383492600016</strong> — TVA : <strong>FR37953834926</strong>
+    <p>
+      <label for="name">Nom</label>
+      <input type="text" id="name" name="name" required placeholder="Votre nom">
     </p>
-  </div>
-</div>
 
-  </div>
-</main>
-<footer>
-  <div class="container">
-    <div class="footerGrid">
-      <div>
-        <div class="footerTitle">Bespoke</div>
-        <div class="footerText">
-          Sourcing, mandats et importation de véhicules de prestige et de collection, en partenariat avec des ateliers spécialisés en France et dans le Monde.
-          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-            <span class="badge">Due diligence / PPI</span>
-            <span class="badge">Logistics & import</span>
-            <span class="badge">Mandat d’acquisition</span>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="footerTitle">Coordonnées</div>
-        <div class="footerText">
-          Adresse : <strong>1530 Chemin de Peyniblou 06560 Sophia-Antipolis France</strong><br/>
-          Email : contact@thebespokecar.com<br/>
-          Téléphone : <br/>
-        </div>
-      </div>
-      <div>
-        <div class="footerTitle">Légal</div>
-        <div class="footerLinks">
-          <a class="navlink" href="legal/mentions-legales.html">Mentions légales</a>
-          <a class="navlink" href="legal/confidentialite.html">Confidentialité</a>
-        </div>
-        <div class="footerText">
-          Ateliers partenaires : <span class="gold">France & Europe & Japon & Corée du Sud</span>
-        </div>
-      </div>
-    </div>
-    <div class="sep"></div>
-    <div class="mini">© 2026 Bespoke — Tous droits réservés.</div>
-  </div>
-</footer>
-<script src="../assets/site.js"></script>
+    <p>
+      <label for="email">Adresse e‑mail</label>
+      <input type="email" id="email" name="email" required placeholder="votre@exemple.com">
+    </p>
+
+    <p>
+      <label for="subject">Sujet (optionnel)</label>
+      <input type="text" id="subject" name="subject" placeholder="Sujet du message">
+    </p>
+
+    <p>
+      <label for="message">Message</label>
+      <textarea id="message" name="message" required placeholder="Votre message"></textarea>
+    </p>
+
+    <p>
+      <button type="submit" id="submit-btn">Envoyer</button>
+    </p>
+
+    <div id="form-status" class="status" role="status" aria-live="polite"></div>
+  </form>
+
+  <script>
+  (function () {
+    const form = document.getElementById('contact-form');
+    const btn = document.getElementById('submit-btn');
+    const statusEl = document.getElementById('form-status');
+
+    function showStatus(message, type) {
+      statusEl.textContent = message;
+      statusEl.className = 'status ' + (type === 'error' ? 'error' : 'success');
+      statusEl.style.display = 'block';
+    }
+
+    function clearStatus() {
+      statusEl.textContent = '';
+      statusEl.style.display = 'none';
+    }
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      clearStatus();
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const subject = document.getElementById('subject').value.trim();
+      const message = document.getElementById('message').value.trim();
+      const bot = document.getElementById('bot-field') ? document.getElementById('bot-field').value : '';
+
+      if (bot) return; // honeypot -> ignore silently
+      if (!name || !email || !message) {
+        showStatus('Veuillez remplir les champs requis (nom, e‑mail, message).', 'error');
+        return;
+      }
+
+      const payload = { name, email, subject, message, 'bot-field': bot };
+
+      try {
+        btn.disabled = true;
+        btn.textContent = 'Envoi…';
+
+        const res = await fetch('/.netlify/functions/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (res.ok) {
+          window.location.href = '/fr/merci.html';
+        } else {
+          let json = {};
+          try { json = await res.json(); } catch (err) {}
+          const errMsg = (json && json.error) ? json.error : 'Erreur lors de l\'envoi.';
+          showStatus('Erreur : ' + errMsg, 'error');
+        }
+      } catch (err) {
+        showStatus('Erreur réseau lors de l\'envoi. Merci de réessayer plus tard.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Envoyer';
+      }
+    });
+  })();
+  </script>
 </body>
 </html>
