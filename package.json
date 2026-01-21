@@ -1,1 +1,1 @@
-package.json
+{ "name": "bespoke-site", "private": true, "dependencies": { "nodemailer": "^6.9.3" }, "engines": { "node": "18.x" } }
