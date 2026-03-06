@@ -28,14 +28,26 @@ else:
     print("  AVERTISSEMENT : ligne API_URL non trouvée (peut-être déjà corrigée ?)")
 EOF
 
-echo "=== Fix 2 : useCompanyVerification.ts — ajouter import supabase ==="
-# N'ajouter que si pas déjà présent
-if ! grep -q "import { supabase } from '@/integrations/supabase/client'" \
-  src/hooks/client/useCompanyVerification.ts; then
-  sed -i "1s|^|import { supabase } from '@/integrations/supabase/client';\n|" \
-    src/hooks/client/useCompanyVerification.ts
+echo "=== Fix 2 : useCompanyVerification.ts — vérification (pas d'import supabase nécessaire) ==="
+# NOTE: useCompanyVerification.ts utilise uniquement localStorage, PAS supabase.
+# Ajouter un import inutile provoquerait une erreur TypeScript (noUnusedLocals).
+# L'import supabase manquant est dans ComplianceTab.tsx → traité par Fix 4 ci-dessous.
+if grep -q "supabase" src/hooks/client/useCompanyVerification.ts; then
+  echo "  supabase détecté dans le fichier — ajout de l'import"
+  python3 - <<'PYEOF'
+import pathlib
+path = pathlib.Path("src/hooks/client/useCompanyVerification.ts")
+content = path.read_text()
+imp = "import { supabase } from '@/integrations/supabase/client';\n"
+if imp.strip() not in content:
+    path.write_text(imp + content)
+    print("  import ajouté")
+else:
+    print("  import déjà présent")
+PYEOF
+else
+  echo "  OK (supabase non utilisé dans ce fichier — import superflu ignoré)"
 fi
-echo "  OK"
 
 echo "=== Fix 3 : useClientDetailsData.ts — supprimer le PATCH de test ==="
 python3 - <<'EOF'

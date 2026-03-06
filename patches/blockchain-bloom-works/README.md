@@ -1,5 +1,14 @@
 # Corrections — branche `copilot/replace-supabase-with-postgresql-again`
 
+## Statut des fixes
+
+| Fix | Fichier | Statut |
+|-----|---------|--------|
+| Fix 1 | `src/integrations/supabase/client.ts` | ✅ Appliqué (commit 41ca118) |
+| Fix 2 | `src/hooks/client/useCompanyVerification.ts` | ✅ Pas nécessaire — fichier n'utilise pas supabase |
+| Fix 3 | `src/hooks/client/useClientDetailsData.ts` | ✅ Appliqué (commit 41ca118) |
+| Fix 4 | `src/components/client/tabs/ComplianceTab.tsx` | ❌ **À appliquer** |
+
 ## Problèmes identifiés dans les logs
 
 ```
@@ -9,9 +18,9 @@ ClientDetails.tsx:72 AML check data (from hook): null
 localhost:3001/api/quebec/registry-download — ERR_CONNECTION_REFUSED
 ```
 
-## 4 fichiers à corriger
+## Détail des 4 fixes
 
-### Fix 1 — `src/integrations/supabase/client.ts` (ligne 4)
+### Fix 1 — `src/integrations/supabase/client.ts` (ligne 4) ✅
 
 **Avant :**
 ```typescript
@@ -29,18 +38,15 @@ const API_URL = import.meta.env.VITE_API_URL || '';
 
 ---
 
-### Fix 2 — `src/hooks/client/useCompanyVerification.ts` (ligne 1)
+### Fix 2 — `src/hooks/client/useCompanyVerification.ts` ✅ (pas nécessaire)
 
-**Avant :** (premier import est `useState, useEffect`)
-
-**Après :** ajouter en tout premier :
-```typescript
-import { supabase } from '@/integrations/supabase/client';
-```
+Ce fichier utilise uniquement `localStorage`, **pas** `supabase`.
+Ajouter un import inutile provoquerait une erreur TypeScript (`noUnusedLocals`).
+L'import `supabase` manquant se trouve dans `ComplianceTab.tsx` → traité par Fix 4.
 
 ---
 
-### Fix 3 — `src/hooks/client/useClientDetailsData.ts` (~lignes 109-125)
+### Fix 3 — `src/hooks/client/useClientDetailsData.ts` (~lignes 109-125) ✅
 
 **Avant :**
 ```typescript
@@ -74,44 +80,69 @@ const complianceItems = useComplianceItems(
 
 ---
 
-### Fix 4 — `src/components/client/tabs/ComplianceTab.tsx`
+### Fix 4 — `src/components/client/tabs/ComplianceTab.tsx` ❌ CRITIQUE
 
-**Partie A** — Ajouter l'import manquant après la ligne `import React...` :
-```typescript
-import { supabase } from '@/integrations/supabase/client';
+`ComplianceTab.tsx` appelle `supabase.from('aml_checks')` **sans importer `supabase`** → `ReferenceError: supabase is not defined` à l'exécution.
+
+**Commande à exécuter dans le terminal blockchain-bloom-works :**
+
+```bash
+python3 - <<'PYEOF'
+import pathlib
+
+path = pathlib.Path("src/components/client/tabs/ComplianceTab.tsx")
+content = path.read_text()
+
+# A — Ajouter l'import supabase manquant
+imp = "import { supabase } from '@/integrations/supabase/client';\n"
+if imp.strip() not in content:
+    content = content.replace(
+        "import React, { useEffect, useState } from 'react';",
+        "import React, { useEffect, useState } from 'react';\n" + imp,
+        1
+    )
+    print("  import supabase ajouté")
+else:
+    print("  import supabase déjà présent")
+
+# B — Retirer isVerificationValid du destructuring
+content = content.replace(
+    "const { kycVerificationData, isVerificationValid } = useCompanyVerification(",
+    "const { kycVerificationData } = useCompanyVerification(",
+    1
+)
+
+# C — Remplacer isVerificationValid() par kycVerificationData?.status === 'verified'
+content = content.replace(
+    "isVerificationValid(),",
+    "kycVerificationData?.status === 'verified',",
+    1
+)
+
+path.write_text(content)
+print("  Fix 4 OK")
+PYEOF
 ```
 
-**Partie B** — Ligne ~27 :
-```typescript
-// Avant :
-const { kycVerificationData, isVerificationValid } = useCompanyVerification(companyData?.["Registration number"]);
-// Après :
-const { kycVerificationData } = useCompanyVerification(companyData?.["Registration number"]);
-```
-
-**Partie C** — Ligne ~73 :
-```typescript
-// Avant :
-const complianceItems = useComplianceItems(
-  isVerificationValid(),
-// Après :
-const complianceItems = useComplianceItems(
-  kycVerificationData?.status === 'verified',
+Puis :
+```bash
+git add src/components/client/tabs/ComplianceTab.tsx
+git commit -m "Fix 4: add missing supabase import and fix isVerificationValid in ComplianceTab"
+git push
 ```
 
 ---
 
-## Application automatique (si terminal disponible)
+## Application automatique (tous les fixes d'un coup)
 
 ```bash
-cd /path/to/blockchain-bloom-works
+# Depuis la racine de blockchain-bloom-works :
 git checkout copilot/replace-supabase-with-postgresql-again
 bash patches/blockchain-bloom-works/apply-all-fixes.sh
 git add src/integrations/supabase/client.ts \
-        src/hooks/client/useCompanyVerification.ts \
         src/hooks/client/useClientDetailsData.ts \
         src/components/client/tabs/ComplianceTab.tsx
-git commit -m "Fix 4 regressions: localhost fallback, PATCH test data, missing supabase imports"
+git commit -m "Fix regressions: localhost fallback, PATCH test data, missing supabase import in ComplianceTab"
 git push
 ```
 
