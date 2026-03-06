@@ -1,0 +1,8 @@
+--- a/src/integrations/supabase/client.ts
++++ b/src/integrations/supabase/client.ts
+@@ -1,6 +1,6 @@
+ // API client to replace Supabase client
+ // This provides a similar interface but calls our Express backend instead
+ 
+-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
++const API_URL = import.meta.env.VITE_API_URL || '';

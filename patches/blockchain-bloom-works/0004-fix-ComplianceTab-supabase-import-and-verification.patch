@@ -1,0 +1,24 @@
+--- a/src/components/client/tabs/ComplianceTab.tsx
++++ b/src/components/client/tabs/ComplianceTab.tsx
+@@ -1,4 +1,5 @@
+ import React, { useEffect, useState } from 'react';
+ import { useNavigate } from 'react-router-dom';
++import { supabase } from '@/integrations/supabase/client';
+ import { ComplianceItem } from '@/hooks/client/types';
+ import { useCompanyVerification } from '@/hooks/client/useCompanyVerification';
+@@ -26,7 +27,7 @@ const ComplianceTab: React.FC<ComplianceTabProps> = ({
+   taxComplianceData
+ }) => {
+   const navigate = useNavigate();
+-  const { kycVerificationData, isVerificationValid } = useCompanyVerification(companyData?.["Registration number"]);
++  const { kycVerificationData } = useCompanyVerification(companyData?.["Registration number"]);
+ 
+   const {
+     isAuthenticated,
+@@ -72,7 +73,7 @@ const ComplianceTab: React.FC<ComplianceTabProps> = ({
+   // Now generate compliance items with the correct AML data
+   const complianceItems = useComplianceItems(
+-    isVerificationValid(),
++    kycVerificationData?.status === 'verified',
+     kycVerificationData?.timestamp,
+     amlCheckData,

@@ -1,0 +1,28 @@
+--- a/src/hooks/client/useClientDetailsData.ts
++++ b/src/hooks/client/useClientDetailsData.ts
+@@ -108,20 +108,10 @@ export const useClientDetailsData = (companyName: string | undefined, registrati
+     country
+   );
+ 
+-  // PATCH : simule TOUT validé pour test front !
+-  const complianceItems = useComplianceItems(
+-    true,
+-    (new Date()).toISOString(),
+-    {
+-      status: "completed",
+-      check_date: (new Date()).toISOString(),
+-      risk_level: "low"
+-    },
+-    {
+-      status: "compliant",
+-      last_checked: (new Date()).toISOString()
+-    },
+-    "France"
+-  );
++  const complianceItems = useComplianceItems(
++    kycVerificationData?.status === 'verified',
++    kycVerificationData?.timestamp,
++    amlCheckData,
++    rawComplianceData,
++    country
++  );
