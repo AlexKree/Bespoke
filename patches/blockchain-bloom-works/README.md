@@ -124,3 +124,79 @@ git push
 La table `aml_checks` n'est pas encore implémentée dans le `TableQuery` du `client.ts`. Il faut :
 1. Ajouter un endpoint `GET /api/aml-checks?company_name=...&registration_number=...` côté Express
 2. Ajouter le cas `aml_checks` dans `TableQuery.execute()` du `client.ts`
+
+---
+
+## Analyse — API du Registre des entreprises du Québec (REQ)
+
+### Question posée
+> « Il existe une API pour le registre des entreprises du Québec. Cela serait plus simple pour se connecter et demander uniquement ce qu'on a besoin. Faut-il basculer vers cette API ou garder le système actuel ? »
+
+### Résultat de la recherche
+
+#### ❌ Pas d'API REST officielle
+
+Il **n'existe pas d'API REST officielle et publique** fournie par le Registraire des entreprises du Québec pour des requêtes à la demande (lookup par NEQ, recherche par nom, etc.).
+
+Les seuls accès officiels sont :
+| Source | Type | Mise à jour | Usage |
+|--------|------|-------------|-------|
+| [Données Québec](https://www.donneesquebec.ca/recherche/dataset/registre-des-entreprises) | Téléchargement ZIP/CSV | Toutes les 2 semaines | Licence CC-BY-NC-SA (usage non-commercial) |
+| [Site REQ](https://registreentreprises.gouv.qc.ca) | Interface web (formulaire) | Temps réel | Usage humain uniquement |
+
+#### ⚠️ Bibliothèques non-officielles
+
+Une bibliothèque TypeScript/npm non-officielle existe :
+- **`@jpmonette/req`** ([GitHub](https://github.com/jpmonette/req-ts)) — émule les requêtes HTTP du site web officiel pour récupérer les infos d'une entreprise par NEQ
+- Avantages : requêtes en temps réel, pas de stockage
+- **Inconvénients majeurs** :
+  - Non-officielle (scraping du site gouvernemental)
+  - Risque de rupture si le gouvernement modifie son site
+  - Possiblement contraire aux CGU du site
+  - Maintenance incertaine (bibliothèque archivée)
+
+### ✅ Recommandation : garder le système actuel + ajouter les endpoints de lookup
+
+**Garder le système bulk import** comme source principale car :
+1. Données officielles, stables, bien documentées
+2. Mises à jour toutes les 2 semaines (suffisant pour la conformité KYC/AML)
+3. Performance optimale (requêtes PostgreSQL locales < 1 ms vs appel réseau externe)
+4. Pas de dépendance externe fragile
+
+**Ce qu'on a ajouté** (patch `0005`) : deux nouveaux endpoints qui exploitent la DB locale :
+
+```
+GET /api/quebec/lookup-neq/:neq
+  → Retourne les données complètes d'une entreprise par son NEQ (10 chiffres)
+  → 200 + {found: true, company: {...}} si trouvée
+  → 404 + {found: false, message: "..."} si absente de la DB
+
+GET /api/quebec/search?q=<nom>&limit=20
+  → Recherche plein-texte (ILIKE) sur le nom de l'entreprise
+  → Tri : correspondance exacte > début du nom > contient
+  → Maximum 100 résultats
+```
+
+### Appliquer le patch 0005
+
+```bash
+# Dans blockchain-bloom-works :
+git apply patches/blockchain-bloom-works/0005-add-neq-lookup-and-search-endpoints.patch
+# OU manuellement — ajouter les 2 router.get() avant "export default router" dans server/routes/quebec.ts
+git add server/routes/quebec.ts
+git commit -m "feat(quebec): add GET /lookup-neq/:neq and GET /search endpoints"
+git push
+```
+
+### Tester les nouveaux endpoints
+
+```bash
+# Lookup par NEQ (doit être dans la DB après import CSV)
+curl http://localhost:3001/api/quebec/lookup-neq/1143920115
+
+# Recherche par nom
+curl "http://localhost:3001/api/quebec/search?q=Bombardier&limit=5"
+
+# Test validation NEQ invalide
+curl http://localhost:3001/api/quebec/lookup-neq/123   # → 400 "must be exactly 10 digits"
+```
