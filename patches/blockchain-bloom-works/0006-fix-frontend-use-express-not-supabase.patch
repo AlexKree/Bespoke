@@ -1,0 +1,624 @@
+--- a/src/components/admin/QuebecManualUpload.tsx
++++ b/src/components/admin/QuebecManualUpload.tsx
+@@ -3,8 +3,8 @@
+ import { Card, CardContent } from '@/components/ui/card';
+ import { ExternalLink, Upload, CheckCircle2, AlertCircle } from 'lucide-react';
+ import { toast } from '@/hooks/use-toast';
+-import Papa from 'papaparse';
+-import { unzip } from 'fflate';
++
++const API_URL = import.meta.env.VITE_API_URL || '';
+ 
+ interface QuebecManualUploadProps {
+   manualFlow: {
+@@ -16,38 +16,32 @@
+ 
+ export const QuebecManualUpload = ({ manualFlow, onSuccess }: QuebecManualUploadProps) => {
+   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+-  const [isUploading, setIsUploading] = useState(false);
++  const [isProcessing, setIsProcessing] = useState(false);
+   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+   const [parseStatus, setParseStatus] = useState<string | null>(null);
+   const [error, setError] = useState<string | null>(null);
+-  
+-  // Use ref to track upload state across re-renders
+-  const uploadingRef = useRef(false);
+-
+-  // Prevent navigation/reload during active upload
++
++  const processingRef = useRef(false);
++
++  // Prevent accidental navigation while upload / parse is running
+   useEffect(() => {
+-    if (isUploading) {
+-      uploadingRef.current = true;
+-      
++    if (isProcessing) {
++      processingRef.current = true;
+       const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+-        if (uploadingRef.current) {
++        if (processingRef.current) {
+           e.preventDefault();
+           e.returnValue = 'Upload in progress. Are you sure you want to leave?';
+           return e.returnValue;
+         }
+       };
+-
+       window.addEventListener('beforeunload', handleBeforeUnload);
+-      console.log('Upload protection enabled - preventing navigation');
+-
+       return () => {
+         window.removeEventListener('beforeunload', handleBeforeUnload);
+-        console.log('Upload protection disabled');
+       };
+     } else {
+-      uploadingRef.current = false;
+-    }
+-  }, [isUploading]);
++      processingRef.current = false;
++    }
++  }, [isProcessing]);
+ 
+   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+     const file = event.target.files?.[0];
+@@ -56,10 +50,9 @@
+         name: file.name,
+         size: file.size,
+         type: file.type,
+-        lastModified: new Date(file.lastModified).toISOString()
+-      });
+-      
+-      if (file.size < 1024 * 10) { // Less than 10KB is suspicious
++        lastModified: new Date(file.lastModified).toISOString(),
++      });
++      if (file.size < 1024 * 10) {
+         console.warn('Warning: Selected file is very small, might be a Cloudflare challenge page');
+       }
+     }
+@@ -72,260 +65,109 @@
+   const handleUpload = async () => {
+     if (!selectedFile) {
+       toast({
+-        title: "No file selected",
+-        description: "Please select a ZIP file to upload.",
+-        variant: "destructive"
++        title: 'No file selected',
++        description: 'Please select a ZIP file to upload.',
++        variant: 'destructive',
+       });
+       return;
+     }
+ 
+-    setIsUploading(true);
+-    setUploadStatus('Reading ZIP file...');
+-    setParseStatus('');
++    setIsProcessing(true);
+     setError(null);
++    setUploadStatus(null);
++    setParseStatus(null);
+ 
+     try {
+-      // Validate file size (basic check for Cloudflare HTML)
+-      if (selectedFile.size < 1048576) {
+-        throw new Error(`File size is suspiciously small. This is likely a Cloudflare challenge page, not the actual ZIP.`);
+-      }
+-
+-      // Basic ZIP validation (magic bytes: PK)
+-      const zipHeader = new Uint8Array(await selectedFile.slice(0, 4).arrayBuffer());
+-      if (!(zipHeader[0] === 0x50 && zipHeader[1] === 0x4B)) {
+-        throw new Error('Selected file is not a valid ZIP. You likely downloaded a Cloudflare HTML page.');
+-      }
+-
+-      console.log("Starting Quebec registry upload:", selectedFile.name);
+-      
+-      // Read ZIP file as binary
+-      const fileData = await selectedFile.arrayBuffer();
+-      console.log("ZIP file loaded, size:", fileData.byteLength);
+-      
+-      setUploadStatus('Extracting CSV from ZIP...');
+-      
+-      // Unzip the file
+-      const zipData = new Uint8Array(fileData);
+-      
+-      const unzipped = await new Promise<{ [key: string]: Uint8Array }>((resolve, reject) => {
+-        unzip(zipData, (err, data) => {
+-          if (err) {
+-            console.error("Unzip error:", err);
+-            reject(new Error(`Failed to unzip file: ${err.message}`));
+-          } else {
+-            console.log("Unzipped files:", Object.keys(data));
+-            resolve(data);
+-          }
+-        });
+-      });
+-      
+-      // Find CSV files
+-      const csvFiles = Object.entries(unzipped).filter(([filename]) => 
+-        filename.toLowerCase().endsWith('.csv') && 
+-        !filename.includes('__MACOSX') && 
+-        !filename.includes('.DS_Store')
++      // Basic size check — anything under 1 MB is a Cloudflare HTML page, not the ZIP
++      if (selectedFile.size < 1_048_576) {
++        throw new Error(
++          'File is too small — this is likely a Cloudflare challenge page, not the actual ZIP. Please re-download.',
++        );
++      }
++
++      // Verify ZIP magic bytes (PK = 0x50 0x4B)
++      const header = new Uint8Array(await selectedFile.slice(0, 4).arrayBuffer());
++      if (!(header[0] === 0x50 && header[1] === 0x4b)) {
++        throw new Error(
++          'Selected file is not a valid ZIP. You likely downloaded a Cloudflare HTML page.',
++        );
++      }
++
++      const mb = Math.round((selectedFile.size / 1024 / 1024) * 100) / 100;
++
++      // -----------------------------------------------------------------------
++      // Step 1 — Upload the ZIP to the Express server (disk storage).
++      //
++      // The server saves it to: uploads/quebec-registry/<fileName>
++      // The 263 MB binary stays on the SERVER disk; the browser only streams
++      // it once — no decompression or parsing happens in the browser.
++      // -----------------------------------------------------------------------
++      const fileName = manualFlow.fileName || selectedFile.name;
++      setUploadStatus(`Uploading ${mb} MB to server...`);
++
++      const uploadRes = await fetch(
++        `${API_URL}/api/quebec/upload?fileName=${encodeURIComponent(fileName)}`,
++        {
++          method: 'POST',
++          headers: { 'Content-Type': 'application/octet-stream' },
++          body: selectedFile, // browser streams the file body directly - no extra RAM copy
++        },
+       );
+-      
+-      if (csvFiles.length === 0) {
+-        throw new Error('No CSV files found in ZIP archive');
+-      }
+-      
+-      console.log(`Found ${csvFiles.length} CSV files`);
+-      
+-      // Find the main data file
+-      const skipFiles = ['domainevaleur', 'lookup', 'reference', 'code'];
+-      const mainFiles = csvFiles.filter(([filename]) => {
+-        const lower = filename.toLowerCase();
+-        return !skipFiles.some(skip => lower.includes(skip));
+-      });
+-      
+-      if (mainFiles.length === 0) {
+-        throw new Error('No main data CSV file found in ZIP archive');
+-      }
+-      
+-      // Use the largest file as the main data file
+-      const [csvFileName, csvData] = mainFiles.sort((a, b) => b[1].length - a[1].length)[0];
+-      console.log(`Selected main data file: ${csvFileName}, size: ${csvData.length} bytes`);
+-      
+-      setUploadStatus(`Processing ${csvFileName}...`);
+-      
+-      console.log(`CSV file size: ${csvData.length} bytes`);
+-      
+-      // Check for UTF-8 BOM and remove if present
+-      let processedData = csvData;
+-      if (csvData.length >= 3 && csvData[0] === 0xEF && csvData[1] === 0xBB && csvData[2] === 0xBF) {
+-        console.log('Removing UTF-8 BOM');
+-        processedData = csvData.slice(3);
+-      }
+-      
+-      // Create a File from the Uint8Array so PapaParse can stream it internally
+-      // This avoids creating large strings in memory
+-      const csvFile = new File([processedData as unknown as BlobPart], csvFileName, { type: 'text/csv' });
+-      console.log('Created File for streaming, size:', csvFile.size);
+-      
+-      setParseStatus('Parsing CSV data in browser...');
+-      
+-      let totalRecords = 0;
+-      let batchNumber = 0;
+-      const BATCH_SIZE = 2000;
+-      const batchRecords: any[] = [];
+-      let csvHeaders: string[] = [];
+-      let recordsFilteredOut = 0;
+-      
+-      // Use PapaParse streaming with File - it handles large files internally
+-      await new Promise<void>((resolve, reject) => {
+-        Papa.parse<any>(csvFile, {
+-          header: true,
+-          skipEmptyLines: true,
+-          encoding: 'UTF-8',
+-          chunk: async (results, parser) => {
+-            // Log headers on first chunk
+-            if (csvHeaders.length === 0 && results.data.length > 0) {
+-              csvHeaders = Object.keys(results.data[0]);
+-              console.log('CSV Headers detected:', csvHeaders);
+-              console.log('First row sample:', results.data[0]);
+-            }
+-            // Pause parsing while we process batch
+-            parser.pause();
+-            
+-            for (const row of results.data as any[]) {
+-              // Map CSV columns to our format - try multiple variations of column names
+-              const record = {
+-                neq: row['NEQ'] || row["Numero d'entreprise du Quebec (NEQ)"] || row["Numéro d'entreprise du Québec (NEQ)"] || row['neq'] || '',
+-                nom: row["Nom de l'entreprise"] || row['Nom'] || row["Nom de l'entreprise principale"] || row['nom'] || '',
+-                statut: row['Statut'] || row["Statut de l'entreprise"] || row['statut'] || '',
+-                forme_juridique: row['Forme juridique'] || row['forme_juridique'] || '',
+-                date_immatriculation: row["Date d'immatriculation"] || row['Date immatriculation'] || row['date_immatriculation'] || null,
+-                date_radiation: row['Date de radiation'] || row['Date radiation'] || row['date_radiation'] || null,
+-                activite_economique: row['Activite economique principale'] || row['Activité économique principale'] || row['Activite economique'] || row['activite_economique'] || '',
+-                adresse: row['Adresse domicile'] || row['Adresse'] || row['adresse'] || '',
+-                code_postal: row['Code postal domicile'] || row['Code postal'] || row['code_postal'] || '',
+-                ville: row['Municipalite domicile'] || row['Municipalité domicile'] || row['Ville'] || row['ville'] || '',
+-                province: row['Province domicile'] || row['Province'] || row['province'] || 'QC',
+-                email: row['email'] || row['Email'] || row['Courriel'] || null,
+-                site_web: row['site web'] || row['Site web'] || row['site_web'] || null
+-              };
+-              
+-              // Debug first few filtered records
+-              if (!record.neq || !record.nom) {
+-                if (recordsFilteredOut < 3) {
+-                  console.log('Filtered out record (missing NEQ or name):', {
+-                    neq: record.neq,
+-                    nom: record.nom,
+-                    rawRow: Object.keys(row).slice(0, 5).reduce((obj, key) => ({ ...obj, [key]: row[key] }), {})
+-                  });
+-                }
+-                recordsFilteredOut++;
+-              } else {
+-                batchRecords.push(record);
+-              }
+-            }
+-            
+-            // Send batch when we reach BATCH_SIZE
+-            while (batchRecords.length >= BATCH_SIZE) {
+-              const recordsToSend = batchRecords.splice(0, BATCH_SIZE);
+-              
+-              try {
+-                const response = await supabase.functions.invoke('quebec-csv-insert', {
+-                  body: {
+-                    records: recordsToSend,
+-                    batchNumber,
+-                    isFirstBatch: batchNumber === 0,
+-                    isFinalBatch: false
+-                  }
+-                });
+-                
+-                if (response.error) {
+-                  throw new Error(`Batch ${batchNumber} failed: ${response.error.message}`);
+-                }
+-                
+-                totalRecords += recordsToSend.length;
+-                batchNumber++;
+-                setParseStatus(`Imported ${totalRecords} companies...`);
+-                console.log(`Batch ${batchNumber} completed: ${recordsToSend.length} records`);
+-              } catch (err) {
+-                parser.abort();
+-                reject(err);
+-                return;
+-              }
+-            }
+-            
+-            // Resume parsing
+-            parser.resume();
+-          },
+-          complete: async () => {
+-            try {
+-              console.log(`CSV parsing complete. Headers found:`, csvHeaders);
+-              console.log(`Records filtered out: ${recordsFilteredOut}`);
+-              console.log(`Valid records collected: ${batchRecords.length}`);
+-              
+-              // Warn if no records passed validation
+-              if (batchRecords.length === 0 && recordsFilteredOut > 0) {
+-                console.error('WARNING: All records were filtered out. CSV headers may not match expected format.');
+-                console.error("Expected headers should include: NEQ, Nom de l'entreprise (or variations)");
+-                throw new Error(`No valid records found in CSV. Please check the file format. Found headers: ${csvHeaders.slice(0, 5).join(', ')}`);
+-              }
+-              
+-              // Send remaining records
+-              if (batchRecords.length > 0) {
+-                const response = await supabase.functions.invoke('quebec-csv-insert', {
+-                  body: {
+-                    records: batchRecords,
+-                    batchNumber,
+-                    isFirstBatch: batchNumber === 0,
+-                    isFinalBatch: true
+-                  }
+-                });
+-                
+-                if (response.error) {
+-                  throw new Error(`Final batch failed: ${response.error.message}`);
+-                }
+-                
+-                totalRecords += batchRecords.length;
+-                console.log(`Final batch completed: ${batchRecords.length} records`);
+-              }
+-              
+-              resolve();
+-            } catch (err) {
+-              reject(err);
+-            }
+-          },
+-          error: (error) => {
+-            reject(new Error(`CSV parsing error: ${error.message}`));
+-          }
+-        });
+-      });
+-      
+-      setUploadStatus('Upload completed');
+-      setParseStatus(`Imported ${totalRecords} companies successfully${recordsFilteredOut > 0 ? ` (${recordsFilteredOut} records skipped - missing NEQ or name)` : ''}`);
+-      
+-      console.log('Upload complete summary:', {
+-        totalImported: totalRecords,
+-        recordsFiltered: recordsFilteredOut,
+-        batches: batchNumber + 1,
+-        headers: csvHeaders
+-      });
+-      
++
++      if (!uploadRes.ok) {
++        const err = await uploadRes.json().catch(() => ({ error: 'Upload failed' }));
++        throw new Error(err.error || `Upload error ${uploadRes.status}`);
++      }
++
++      const uploadData = await uploadRes.json();
++      console.log('Upload complete:', uploadData);
++      setUploadStatus(`File uploaded (${mb} MB)`);
++
++      // -----------------------------------------------------------------------
++      // Step 2 — Ask the Express server to decompress, parse and import.
++      //
++      // All RAM-heavy work (unzip + CSV parse + ~500k DB inserts) happens
++      // server-side. The browser just waits for a JSON result.
++      // -----------------------------------------------------------------------
++      setParseStatus('Server is processing the ZIP... (this may take a few minutes)');
++
++      const parseRes = await fetch(`${API_URL}/api/quebec/parse-csv`, {
++        method: 'POST',
++        headers: { 'Content-Type': 'application/json' },
++        body: JSON.stringify({ fileName }),
++      });
++
++      if (!parseRes.ok) {
++        const err = await parseRes.json().catch(() => ({ error: 'Parse failed' }));
++        throw new Error(err.error || `Parse error ${parseRes.status}`);
++      }
++
++      const parseData = await parseRes.json();
++      const { inserted = 0, skipped = 0 } = parseData.summary ?? {};
++      setParseStatus(
++        `Done - ${inserted.toLocaleString()} companies imported${skipped > 0 ? `, ${skipped} skipped` : ''}`,
++      );
++
++      console.log('Import complete:', parseData);
++
+       toast({
+-        title: "Success",
+-        description: `Imported ${totalRecords} companies from Quebec registry${recordsFilteredOut > 0 ? `. ${recordsFilteredOut} records were skipped.` : ''}`,
+-        duration: 5000
+-      });
+-      
++        title: 'Import successful',
++        description: `${inserted.toLocaleString()} companies imported from the Quebec registry.`,
++        duration: 6000,
++      });
++
+       onSuccess?.();
+-      
+-    } catch (err) {
+-      console.error("Upload error:", err);
+-      const errorMessage = err instanceof Error ? err.message : 'Unknown error during upload';
+-      setError(errorMessage);
+-      
++    } catch (err: unknown) {
++      const msg = err instanceof Error ? err.message : 'Unknown error';
++      console.error('Upload error:', err);
++      setError(msg);
+       toast({
+-        title: "Upload failed",
+-        description: errorMessage,
+-        variant: "destructive"
++        title: 'Upload failed',
++        description: msg,
++        variant: 'destructive',
+       });
+     } finally {
+-      setIsUploading(false);
++      setIsProcessing(false);
+     }
+   };
+ 
+@@ -349,30 +191,29 @@
+           </div>
+ 
+           <div className="space-y-2">
+-            <label className="block text-sm font-medium">
+-              Upload Downloaded ZIP File:
+-            </label>
++            <label className="block text-sm font-medium">Upload Downloaded ZIP File:</label>
+             <input
+               type="file"
+               accept=".zip"
+               onChange={handleFileSelect}
+-              disabled={isUploading}
++              disabled={isProcessing}
+               className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+             />
+             {selectedFile && (
+               <p className="text-xs text-muted-foreground">
+-                Selected: {selectedFile.name} ({Math.round(selectedFile.size / 1024 / 1024 * 100) / 100} MB)
++                Selected: {selectedFile.name} (
++                {Math.round((selectedFile.size / 1024 / 1024) * 100) / 100} MB)
+               </p>
+             )}
+           </div>
+ 
+           <Button
+             onClick={handleUpload}
+-            disabled={!selectedFile || isUploading}
++            disabled={!selectedFile || isProcessing}
+             className="w-full"
+             size="sm"
+           >
+-            {isUploading ? (
++            {isProcessing ? (
+               <>
+                 <Upload className="h-4 w-4 mr-2 animate-pulse" />
+                 Processing...
+@@ -386,21 +227,20 @@
+           </Button>
+         </div>
+ 
+-        {/* Status Messages */}
+         {uploadStatus && (
+           <div className="flex items-center gap-2 text-sm text-blue-600">
+             <CheckCircle2 className="h-4 w-4" />
+             {uploadStatus}
+           </div>
+         )}
+-        
++
+         {parseStatus && (
+           <div className="flex items-center gap-2 text-sm text-green-600">
+             <CheckCircle2 className="h-4 w-4" />
+             {parseStatus}
+           </div>
+         )}
+-        
++
+         {error && (
+           <div className="flex items-start gap-2 text-sm text-red-600">
+             <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+@@ -409,10 +249,10 @@
+         )}
+ 
+         <div className="text-xs text-muted-foreground bg-gray-50 p-2 rounded">
+-          <strong>Tip:</strong> If your downloaded file is only 3–4 KB, it's a Cloudflare challenge page. 
+-          Wait for the page to fully load, then click the download button again.
++          <strong>Tip:</strong> If your downloaded file is only 3-4 KB, it is a Cloudflare
++          challenge page. Wait for the page to fully load, then click the download button again.
+         </div>
+       </CardContent>
+     </Card>
+   );
+-};+};
+--- a/src/components/admin/QuebecRegistryManager.tsx
++++ b/src/components/admin/QuebecRegistryManager.tsx
+@@ -4,6 +4,8 @@
+ import { Download, RefreshCw, Database, CheckCircle, AlertCircle } from 'lucide-react';
+ import { toast } from '@/hooks/use-toast';
+ import { QuebecManualUpload } from './QuebecManualUpload';
++
++const API_URL = import.meta.env.VITE_API_URL || '';
+ 
+ export const QuebecRegistryManager = () => {
+   const [isDownloading, setIsDownloading] = useState(false);
+@@ -13,16 +15,13 @@
+ 
+   const checkRegistryStatus = async () => {
+     try {
+-      const { data: metadata } = await supabase
+-        .from('quebec_registry_metadata')
+-        .select('data_version, last_ingest_at, ingest_status, total_records')
+-        .order('last_ingest_at', { ascending: false })
+-        .limit(1)
+-        .maybeSingle();
++      const res = await fetch(`${API_URL}/api/quebec/import-status`);
++      if (!res.ok) throw new Error(`Status check failed: ${res.status}`);
++      const data = await res.json();
+ 
+-      if (metadata && metadata.total_records && metadata.total_records > 0) {
++      if (data.totalRecords && data.totalRecords > 0) {
+         setRegistryStatus('available');
+-        setLastUpdate(metadata.last_ingest_at);
++        setLastUpdate(data.lastImportDate ?? null);
+       } else {
+         setRegistryStatus('empty');
+         setLastUpdate(null);
+@@ -35,29 +34,28 @@
+ 
+   const triggerDownload = async () => {
+     setIsDownloading(true);
+-    
++
+     try {
+       toast({
+-        title: "Initiating Manual Download",
+-        description: "Getting download link and upload token...",
++        title: 'Initiating Manual Download',
++        description: 'Getting download link...',
+       });
+ 
+-      const { data: result, error } = await supabase.functions.invoke('quebec-registry-download', {
+-        body: { manual: true }
+-      });
+-
+-      if (error) {
+-        throw error;
++      const res = await fetch(`${API_URL}/api/quebec/registry-download`, { method: 'POST' });
++      if (!res.ok) {
++        const err = await res.json().catch(() => ({ error: 'Request failed' }));
++        throw new Error(err.error || `Error ${res.status}`);
+       }
++      const result = await res.json();
+ 
+       console.log('Function result:', result);
+-      
++
+       if (result?.success && result?.manual) {
+         console.log('Setting manual flow:', result);
+         setManualFlow(result);
+         toast({
+-          title: "Manual Download Ready",
+-          description: "Please download the ZIP from the official link, then upload it below.",
++          title: 'Manual Download Ready',
++          description: 'Please download the ZIP from the official link, then upload it below.',
+         });
+       } else {
+         console.error('Unexpected result:', result);
+@@ -66,9 +64,9 @@
+     } catch (error) {
+       console.error('Download trigger error:', error);
+       toast({
+-        title: "Download Setup Failed", 
+-        description: error instanceof Error ? error.message : "Failed to setup download",
+-        variant: "destructive",
++        title: 'Download Setup Failed',
++        description: error instanceof Error ? error.message : 'Failed to setup download',
++        variant: 'destructive',
+       });
+     } finally {
+       setIsDownloading(false);
+--- a/server/routes/quebec.ts
++++ b/server/routes/quebec.ts
+@@ -1 +1,32 @@
++// GET /api/quebec/import-status
++// Returns the total number of imported companies and the date of the last import
++// from the quebec_registry_downloads table stored in Neon.
++// Used by the admin UI to show registry health without querying the full table.
++router.get('/import-status', async (_req: Request, res: Response) => {
++  try {
++    const { rows: countRows } = await pool.query(
++      'SELECT COUNT(*) AS total FROM quebec_entities',
++    );
++    const totalRecords = parseInt(countRows[0]?.total ?? '0', 10);
++
++    const { rows: importRows } = await pool.query(
++      `SELECT file_name, records_processed, download_date
++       FROM quebec_registry_downloads
++       ORDER BY download_date DESC
++       LIMIT 1`,
++    );
++    const lastImport = importRows[0] ?? null;
++
++    return res.json({
++      totalRecords,
++      lastImportDate: lastImport?.download_date ?? null,
++      lastImportFile: lastImport?.file_name ?? null,
++      lastImportRecords: lastImport?.records_processed ?? null,
++    });
++  } catch (error: any) {
++    console.error('Quebec import-status error:', error);
++    return res.status(500).json({ error: 'Internal server error' });
++  }
++});
++
+ // GET /api/quebec/lookup-neq/:neq

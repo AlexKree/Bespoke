@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# Appliquer les 5 corrections sur la branche copilot/replace-supabase-with-postgresql-again
+# Appliquer les 6 corrections sur la branche copilot/replace-supabase-with-postgresql-again
 # de AlexKree/blockchain-bloom-works
 #
 # Exécuter depuis la racine du repo blockchain-bloom-works :
@@ -226,6 +226,167 @@ else:
 EOF
 
 echo ""
+echo "=== Fix 6 : QuebecManualUpload.tsx + QuebecRegistryManager.tsx + import-status endpoint ==="
+echo "    Le frontend n'utilise plus Supabase ni ne traite le ZIP dans le navigateur."
+echo "    Il uploade le ZIP vers Express (/api/quebec/upload) puis"
+echo "    appelle /api/quebec/parse-csv pour le traitement côté serveur."
+git apply --whitespace=fix patches/blockchain-bloom-works/0006-fix-frontend-use-express-not-supabase.patch 2>/dev/null || \
+python3 - <<'EOF'
+# Application manuelle si git apply échoue (e.g. whitespace differences)
+import pathlib, difflib, re
+
+# 1. QuebecManualUpload.tsx — remplacement complet
+print("  Applying QuebecManualUpload.tsx...")
+p = pathlib.Path("src/components/admin/QuebecManualUpload.tsx")
+new_content = pathlib.Path(
+    "patches/blockchain-bloom-works/_QuebecManualUpload.new.tsx"
+).read_text() if pathlib.Path(
+    "patches/blockchain-bloom-works/_QuebecManualUpload.new.tsx"
+).exists() else None
+
+if new_content:
+    p.write_text(new_content)
+    print("  QuebecManualUpload.tsx: OK (full replacement)")
+else:
+    content = p.read_text()
+    # Remove old Supabase/PapaParse imports
+    content = content.replace("import Papa from 'papaparse';\n", "", 1)
+    content = content.replace("import { unzip } from 'fflate';\n", "", 1)
+    if "VITE_API_URL" not in content:
+        content = content.replace(
+            "import { QuebecManualUpload } from './QuebecManualUpload';",
+            "import { QuebecManualUpload } from './QuebecManualUpload';",
+            1
+        )
+        # Add API_URL after imports
+        lines = content.split('\n')
+        last_import = max(i for i, l in enumerate(lines) if l.startswith('import '))
+        lines.insert(last_import + 1, "\nconst API_URL = import.meta.env.VITE_API_URL || '';")
+        content = '\n'.join(lines)
+    p.write_text(content)
+    print("  QuebecManualUpload.tsx: partial (run git apply manually for full diff)")
+
+# 2. QuebecRegistryManager.tsx — replace Supabase calls
+print("  Applying QuebecRegistryManager.tsx...")
+p2 = pathlib.Path("src/components/admin/QuebecRegistryManager.tsx")
+content2 = p2.read_text()
+
+# Add API_URL after imports
+if "VITE_API_URL" not in content2:
+    content2 = content2.replace(
+        "import { QuebecManualUpload } from './QuebecManualUpload';",
+        "import { QuebecManualUpload } from './QuebecManualUpload';\n\nconst API_URL = import.meta.env.VITE_API_URL || '';",
+        1
+    )
+
+# Replace checkRegistryStatus
+old_check = """  const checkRegistryStatus = async () => {
+    try {
+      const { data: metadata } = await supabase
+        .from('quebec_registry_metadata')
+        .select('data_version, last_ingest_at, ingest_status, total_records')
+        .order('last_ingest_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (metadata && metadata.total_records && metadata.total_records > 0) {
+        setRegistryStatus('available');
+        setLastUpdate(metadata.last_ingest_at);
+      } else {
+        setRegistryStatus('empty');
+        setLastUpdate(null);
+      }
+    } catch (error) {
+      console.error('Error checking registry status:', error);
+      setRegistryStatus('unknown');
+    }
+  };"""
+new_check = """  const checkRegistryStatus = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/quebec/import-status`);
+      if (!res.ok) throw new Error(`Status check failed: ${res.status}`);
+      const data = await res.json();
+
+      if (data.totalRecords && data.totalRecords > 0) {
+        setRegistryStatus('available');
+        setLastUpdate(data.lastImportDate ?? null);
+      } else {
+        setRegistryStatus('empty');
+        setLastUpdate(null);
+      }
+    } catch (error) {
+      console.error('Error checking registry status:', error);
+      setRegistryStatus('unknown');
+    }
+  };"""
+content2 = content2.replace(old_check, new_check, 1)
+
+# Replace triggerDownload (Supabase → Express)
+old_trigger = """      const { data: result, error } = await supabase.functions.invoke('quebec-registry-download', {
+        body: { manual: true }
+      });
+
+      if (error) {
+        throw error;
+      }"""
+new_trigger = """      const res = await fetch(`${API_URL}/api/quebec/registry-download`, { method: 'POST' });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Request failed' }));
+        throw new Error(err.error || `Error ${res.status}`);
+      }
+      const result = await res.json();"""
+content2 = content2.replace(old_trigger, new_trigger, 1)
+
+p2.write_text(content2)
+print("  QuebecRegistryManager.tsx: OK")
+
+# 3. server/routes/quebec.ts — add import-status endpoint
+print("  Applying server/routes/quebec.ts (import-status)...")
+p3 = pathlib.Path("server/routes/quebec.ts")
+content3 = p3.read_text()
+if 'import-status' not in content3:
+    endpoint = """
+// GET /api/quebec/import-status
+// Returns the total number of imported companies and the date of the last import
+// from the quebec_registry_downloads table stored in Neon.
+// Used by the admin UI to show registry health without querying the full table.
+router.get('/import-status', async (_req: Request, res: Response) => {
+  try {
+    const { rows: countRows } = await pool.query(
+      'SELECT COUNT(*) AS total FROM quebec_entities',
+    );
+    const totalRecords = parseInt(countRows[0]?.total ?? '0', 10);
+
+    const { rows: importRows } = await pool.query(
+      `SELECT file_name, records_processed, download_date
+       FROM quebec_registry_downloads
+       ORDER BY download_date DESC
+       LIMIT 1`,
+    );
+    const lastImport = importRows[0] ?? null;
+
+    return res.json({
+      totalRecords,
+      lastImportDate: lastImport?.download_date ?? null,
+      lastImportFile: lastImport?.file_name ?? null,
+      lastImportRecords: lastImport?.records_processed ?? null,
+    });
+  } catch (error: any) {
+    console.error('Quebec import-status error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+"""
+    content3 = content3.replace("// GET /api/quebec/lookup-neq/:neq", endpoint + "// GET /api/quebec/lookup-neq/:neq", 1)
+    p3.write_text(content3)
+    print("  server/routes/quebec.ts: OK")
+else:
+    print("  server/routes/quebec.ts: OK (endpoint already present)")
+EOF
+echo "  Fix 6 done"
+
+echo ""
 echo "=== Vérification TypeScript (rapide) ==="
 if command -v npx &>/dev/null; then
   npx tsc --noEmit --skipLibCheck 2>&1 | tail -20 || true
@@ -234,5 +395,5 @@ else
 fi
 
 echo ""
-echo "=== Toutes les corrections ont été appliquées ==="
+echo "=== Toutes les 6 corrections ont été appliquées ==="
 echo "Prochaine étape : git add -p && git commit && git push"

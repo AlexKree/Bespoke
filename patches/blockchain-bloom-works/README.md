@@ -230,3 +230,86 @@ Une fois les données dans Neon, les requêtes `GET /lookup-neq/:neq` et `GET /s
 ### Fréquence d'import recommandée
 
 Configurer le job d'import pour s'exécuter **bi-hebdomadaire** (tous les 15 jours), en vérifiant d'abord si `metadata_modified` de l'API CKAN a changé avant de lancer le téléchargement et l'import.
+
+---
+
+## Un fichier de 263 Mo peut-il tenir sur le serveur Express ?
+
+> **Question :** *« Est-ce qu'un fichier de 263 Mo peut tenir sur le serveur Express ? »*
+
+### Réponse courte : **Oui sur disque — mais le vrai problème était dans le navigateur**
+
+#### Disque (pas un problème)
+263 Mo sur disque est trivial pour n'importe quel serveur moderne. Railway, Render, Fly.io fournissent au moins 1–5 Go de stockage éphémère. Le fichier ZIP est écrit dans `uploads/quebec-registry/` et n'occupe pas Neon du tout.
+
+> ⚠️ Exception : **Vercel** (serverless) a un système de fichiers **en lecture seule** en production. Si le serveur Express tourne sur Vercel, l'upload sur disque ne fonctionnera pas. Utiliser Railway, Render ou Fly.io à la place.
+
+#### RAM — c'était le vrai problème (corrigé par patch 0006)
+
+Avant le patch 0006, **tout le traitement se faisait dans le navigateur** :
+
+```
+Navigateur : charge 263 Mo en mémoire
+           + décompresse le ZIP → CSV ~800 Mo en RAM
+           + PapaParse parse ~800 Mo en RAM
+           + envoie des batches à supabase.functions.invoke('quebec-csv-insert')  ← CASSÉ
+```
+
+**Peak RAM navigateur ≈ 1,5 Go** → crash possible sur mobile ou machines limitées.
+
+Après le patch 0006, le navigateur **n'ouvre jamais** le fichier :
+
+```
+Navigateur : stream le ZIP vers POST /api/quebec/upload  (minimal RAM)
+Serveur    : lit le ZIP (263 Mo RAM)
+           + décompresse → CSV (~800 Mo RAM)
+           + insère dans Neon par batches de 500
+```
+
+**Peak RAM serveur ≈ 1 Go** — acceptable pour un serveur Node.js standard (512 Mo min recommandé).
+
+#### Résumé
+
+| Aspect | Avant patch 0006 | Après patch 0006 |
+|--------|-----------------|-----------------|
+| Traitement ZIP | ❌ Navigateur (crash possible) | ✅ Serveur Express |
+| Appels DB | ❌ `supabase.functions.invoke` (Supabase) | ✅ Neon via Express |
+| Disque serveur | ✅ Déjà correct | ✅ Inchangé |
+| RAM navigateur pic | ❌ ~1,5 Go | ✅ < 1 Mo |
+
+---
+
+## Patch 0006 — Corriger le flux d'import (frontend → Express, pas Supabase)
+
+### Problème corrigé
+
+`QuebecManualUpload.tsx` appelait encore `supabase.functions.invoke('quebec-csv-insert')` et traitait le ZIP entier dans le navigateur. `QuebecRegistryManager.tsx` appelait `supabase.from('quebec_registry_metadata')` pour vérifier le statut.
+
+### Fichiers modifiés
+
+| Fichier | Changement |
+|---------|-----------|
+| `src/components/admin/QuebecManualUpload.tsx` | Supprime tout le code de parsing navigateur ; upload le ZIP vers `POST /api/quebec/upload` puis appelle `POST /api/quebec/parse-csv` |
+| `src/components/admin/QuebecRegistryManager.tsx` | Remplace `supabase.from(...)` et `supabase.functions.invoke(...)` par des appels Express |
+| `server/routes/quebec.ts` | Ajoute `GET /api/quebec/import-status` pour le statut du registre |
+
+### Appliquer le patch 0006
+
+```bash
+# Dans blockchain-bloom-works :
+git apply patches/blockchain-bloom-works/0006-fix-frontend-use-express-not-supabase.patch
+# OU lancer le script complet :
+bash patches/blockchain-bloom-works/apply-all-fixes.sh
+git add src/components/admin/QuebecManualUpload.tsx \
+        src/components/admin/QuebecRegistryManager.tsx \
+        server/routes/quebec.ts
+git commit -m "fix(quebec): route upload/parse via Express, not Supabase; add import-status endpoint"
+git push
+```
+
+### Tester le nouveau endpoint import-status
+
+```bash
+curl http://localhost:3001/api/quebec/import-status
+# → {"totalRecords": 542180, "lastImportDate": "2026-02-14T...", "lastImportFile": "...zip"}
+```
