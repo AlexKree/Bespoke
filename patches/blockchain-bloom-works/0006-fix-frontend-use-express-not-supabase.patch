@@ -238,11 +238,11 @@
 -            for (const row of results.data as any[]) {
 -              // Map CSV columns to our format - try multiple variations of column names
 -              const record = {
--                neq: row['NEQ'] || row["Numero d'entreprise du Quebec (NEQ)"] || row["Numéro d'entreprise du Québec (NEQ)"] || row['neq'] || '',
--                nom: row["Nom de l'entreprise"] || row['Nom'] || row["Nom de l'entreprise principale"] || row['nom'] || '',
--                statut: row['Statut'] || row["Statut de l'entreprise"] || row['statut'] || '',
+-                neq: row['NEQ'] || row['Numero d\'entreprise du Quebec (NEQ)'] || row['Numéro d\'entreprise du Québec (NEQ)'] || row['neq'] || '',
+-                nom: row['Nom de l\'entreprise'] || row['Nom'] || row['Nom de l\'entreprise principale'] || row['nom'] || '',
+-                statut: row['Statut'] || row['Statut de l\'entreprise'] || row['statut'] || '',
 -                forme_juridique: row['Forme juridique'] || row['forme_juridique'] || '',
--                date_immatriculation: row["Date d'immatriculation"] || row['Date immatriculation'] || row['date_immatriculation'] || null,
+-                date_immatriculation: row['Date d\'immatriculation'] || row['Date immatriculation'] || row['date_immatriculation'] || null,
 -                date_radiation: row['Date de radiation'] || row['Date radiation'] || row['date_radiation'] || null,
 -                activite_economique: row['Activite economique principale'] || row['Activité économique principale'] || row['Activite economique'] || row['activite_economique'] || '',
 -                adresse: row['Adresse domicile'] || row['Adresse'] || row['adresse'] || '',
@@ -309,7 +309,7 @@
 -              // Warn if no records passed validation
 -              if (batchRecords.length === 0 && recordsFilteredOut > 0) {
 -                console.error('WARNING: All records were filtered out. CSV headers may not match expected format.');
--                console.error("Expected headers should include: NEQ, Nom de l'entreprise (or variations)");
+-                console.error('Expected headers should include: NEQ, Nom de l\'entreprise (or variations)');
 -                throw new Error(`No valid records found in CSV. Please check the file format. Found headers: ${csvHeaders.slice(0, 5).join(', ')}`);
 -              }
 -              
@@ -487,7 +487,7 @@
          {error && (
            <div className="flex items-start gap-2 text-sm text-red-600">
              <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-@@ -409,10 +249,10 @@
+@@ -409,8 +249,8 @@
          )}
  
          <div className="text-xs text-muted-foreground bg-gray-50 p-2 rounded">
@@ -498,8 +498,7 @@
          </div>
        </CardContent>
      </Card>
-   );
--};+};
+
 --- a/src/components/admin/QuebecRegistryManager.tsx
 +++ b/src/components/admin/QuebecRegistryManager.tsx
 @@ -4,6 +4,8 @@
@@ -533,18 +532,8 @@
        } else {
          setRegistryStatus('empty');
          setLastUpdate(null);
-@@ -35,29 +34,28 @@
- 
-   const triggerDownload = async () => {
-     setIsDownloading(true);
--    
-+
-     try {
-       toast({
--        title: "Initiating Manual Download",
--        description: "Getting download link and upload token...",
-+        title: 'Initiating Manual Download',
-+        description: 'Getting download link...',
+@@ -42,13 +41,12 @@
+         description: "Getting download link and upload token...",
        });
  
 -      const { data: result, error } = await supabase.functions.invoke('quebec-registry-download', {
@@ -561,35 +550,14 @@
 +      const result = await res.json();
  
        console.log('Function result:', result);
--      
-+
-       if (result?.success && result?.manual) {
-         console.log('Setting manual flow:', result);
-         setManualFlow(result);
-         toast({
--          title: "Manual Download Ready",
--          description: "Please download the ZIP from the official link, then upload it below.",
-+          title: 'Manual Download Ready',
-+          description: 'Please download the ZIP from the official link, then upload it below.',
-         });
-       } else {
-         console.error('Unexpected result:', result);
-@@ -66,9 +64,9 @@
-     } catch (error) {
-       console.error('Download trigger error:', error);
-       toast({
--        title: "Download Setup Failed", 
--        description: error instanceof Error ? error.message : "Failed to setup download",
--        variant: "destructive",
-+        title: 'Download Setup Failed',
-+        description: error instanceof Error ? error.message : 'Failed to setup download',
-+        variant: 'destructive',
-       });
-     } finally {
-       setIsDownloading(false);
+       
+
 --- a/server/routes/quebec.ts
 +++ b/server/routes/quebec.ts
-@@ -1 +1,32 @@
+@@ -270,6 +270,37 @@
+   }
+ });
+ 
 +// GET /api/quebec/import-status
 +// Returns the total number of imported companies and the date of the last import
 +// from the quebec_registry_downloads table stored in Neon.
@@ -622,3 +590,5 @@
 +});
 +
  // GET /api/quebec/lookup-neq/:neq
+ // Looks up a single company by its NEQ (Numéro d'Entreprise du Québec)
+ // in the local postgresql table populated by the bulk import.

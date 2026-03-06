@@ -2,45 +2,40 @@
 
 ## ⚡ Prochaines étapes — Ce qu'il faut faire maintenant
 
-> **Patches 0001-0004 sont déjà appliqués** par Alex Kree. Il reste à appliquer **les patches 0005 et 0006**.
+> **Patches 0001-0005 sont déjà appliqués.** Patch 0006 avait une corruption (`error: corrupt patch at line 505`) — **il a été corrigé**, téléchargez la nouvelle version ci-dessous.
 
 ```bash
-# 1. Aller dans le repo blockchain-bloom-works
-cd ~/blockchain-bloom-works   # ou le dossier où vous l'avez cloné
-
-# 2. S'assurer d'être sur la bonne branche
+# Depuis le dossier blockchain-bloom-works, sur la branche correcte :
 git checkout copilot/replace-supabase-with-postgresql-again
-git pull origin copilot/replace-supabase-with-postgresql-again
 
-# 3. Copier les patches depuis ce repo (Bespoke) si nécessaire
-#    OU les télécharger directement depuis GitHub :
-#    https://github.com/AlexKree/Bespoke/tree/copilot/fix-registry-file-loading-error/patches/blockchain-bloom-works
+# Télécharger le patch 0006 corrigé (version sans corruption)
+curl -O https://raw.githubusercontent.com/AlexKree/Bespoke/copilot/fix-registry-file-loading-error/patches/blockchain-bloom-works/0006-fix-frontend-use-express-not-supabase.patch
 
-# 4. Appliquer uniquement les patches manquants (0005 et 0006)
-git apply patches/0005-add-neq-lookup-and-search-endpoints.patch
-git apply patches/0006-fix-frontend-use-express-not-supabase.patch
+# Appliquer
+git apply --whitespace=fix 0006-fix-frontend-use-express-not-supabase.patch
 
-# 5. Vérifier qu'il n'y a pas d'erreurs TypeScript
+# Vérifier (0 erreur TypeScript attendu)
 npx tsc --noEmit --skipLibCheck
 
-# 6. Committer
-git add server/routes/quebec.ts \
-        src/components/admin/QuebecManualUpload.tsx \
-        src/components/admin/QuebecRegistryManager.tsx
-git commit -m "fix(quebec): add lookup-neq/search endpoints; route upload via Express not Supabase"
+# Committer et pousser
+git add src/components/admin/QuebecManualUpload.tsx \
+        src/components/admin/QuebecRegistryManager.tsx \
+        server/routes/quebec.ts
+git commit -m "fix(quebec): route upload via Express not Supabase; add import-status endpoint"
 git push
 ```
 
-### Ce que chaque patch change
+### Ce que le patch 0006 change exactement
 
-| Patch | Fichiers modifiés | Ce que ça corrige |
-|-------|------------------|-------------------|
-| **0005** | `server/routes/quebec.ts` | Ajoute `GET /lookup-neq/:neq` et `GET /search?q=` |
-| **0006** | `QuebecManualUpload.tsx`<br>`QuebecRegistryManager.tsx`<br>`server/routes/quebec.ts` | Supprime tout le traitement ZIP dans le navigateur et les appels `supabase.functions.invoke()` → 2 appels `fetch()` vers Express |
+| Fichier | Ce qui change |
+|---------|---------------|
+| `QuebecManualUpload.tsx` | Supprime tout le traitement ZIP navigateur + `supabase.functions.invoke('quebec-csv-insert')` → 2 `fetch()` vers Express |
+| `QuebecRegistryManager.tsx` | Remplace `supabase.from('quebec_registry_metadata')` et `supabase.functions.invoke('quebec-registry-download')` → `fetch()` Express |
+| `server/routes/quebec.ts` | Ajoute `GET /api/quebec/import-status` (avant `lookup-neq`) |
 
-### Pourquoi c'est urgent
+### Pourquoi le patch était corrompu
 
-`QuebecManualUpload.tsx` appelle encore `supabase.functions.invoke('quebec-csv-insert')` qui **n'existe plus**. Résultat : l'import du registre québécois plante à 100% en production. Après le patch 0006, le ZIP de 263 Mo est envoyé directement au serveur Express qui s'occupe de tout.
+La ligne 502 du patch original contenait `-};+};` (deux tokens sur une ligne sans newline entre eux), car l'ancien `QuebecManualUpload.tsx` se terminait sans newline finale. Le patch corrigé a été re-généré proprement et vérifié (`git apply` → exit code 0).
 
 ---
 
@@ -49,11 +44,11 @@ git push
 | Fix | Fichier | Statut |
 |-----|---------|--------|
 | Fix 1 | `src/integrations/supabase/client.ts` | ✅ Appliqué (commit 41ca118) |
-| Fix 2 | `src/hooks/client/useCompanyVerification.ts` | ✅ Pas nécessaire — fichier n'utilise pas supabase |
+| Fix 2 | `src/hooks/client/useCompanyVerification.ts` | ✅ Pas nécessaire |
 | Fix 3 | `src/hooks/client/useClientDetailsData.ts` | ✅ Appliqué (commit 41ca118) |
 | Fix 4 | `src/components/client/tabs/ComplianceTab.tsx` | ✅ Appliqué (commit ebd70ba) |
-| **Fix 5** | `server/routes/quebec.ts` | **⏳ À appliquer** — endpoints lookup-neq et search |
-| **Fix 6** | `QuebecManualUpload.tsx`, `QuebecRegistryManager.tsx`, `server/routes/quebec.ts` | **⏳ À appliquer** — frontend → Express (pas Supabase) |
+| Fix 5 | `server/routes/quebec.ts` | ✅ Appliqué (commit 9a5a864) — lookup-neq + search |
+| **Fix 6** | `QuebecManualUpload.tsx`, `QuebecRegistryManager.tsx`, `server/routes/quebec.ts` | **⏳ À appliquer** — patch corrigé disponible |
 
 ## Problèmes identifiés dans les logs
 
