@@ -200,3 +200,33 @@ curl "http://localhost:3001/api/quebec/search?q=Bombardier&limit=5"
 # Test validation NEQ invalide
 curl http://localhost:3001/api/quebec/lookup-neq/123   # → 400 "must be exactly 10 digits"
 ```
+
+---
+
+## Architecture de stockage — Où va le fichier du registre québécois ?
+
+> **Question :** *« Où devrait être stocké le fichier pour ne pas charger inutilement Neon ? »*
+
+### Réponse courte : le système actuel est déjà correct
+
+| Donnée | Stockage | Raison |
+|--------|----------|--------|
+| Fichier ZIP brut (~400 Mo) | **Disque local du serveur** (`uploads/quebec-registry/*.zip`) | Fichier temporaire de traitement — jamais dans une DB |
+| Données parsées (~500k entreprises) | **Neon** (table `quebec_entities`) | Données structurées, interrogeables via index |
+| Log des imports | **Neon** (table `quebec_registry_downloads`) | Une seule ligne par import — négligeable |
+
+### Neon est utilisé de façon raisonnable
+
+L'import bulk (~500k `INSERT/UPDATE`) ne se produit **qu'une fois toutes les 2 semaines** (fréquence de mise à jour de Données Québec). Ce n'est pas une charge continue.
+
+Une fois les données dans Neon, les requêtes `GET /lookup-neq/:neq` et `GET /search?q=...` sont rapides car PostgreSQL utilise ses index.
+
+### Ce qu'il ne faut PAS faire
+
+- ❌ Stocker le fichier ZIP dans Neon (inutile — c'est un binaire, pas des données relationnelles)
+- ❌ Importer le registre **toutes les nuits** si les données ne changent que toutes les 2 semaines
+- ❌ Ajouter une base SQLite ou un autre moteur de stockage — Neon suffit
+
+### Fréquence d'import recommandée
+
+Configurer le job d'import pour s'exécuter **bi-hebdomadaire** (tous les 15 jours), en vérifiant d'abord si `metadata_modified` de l'API CKAN a changé avant de lancer le téléchargement et l'import.
