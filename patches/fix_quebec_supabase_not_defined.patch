@@ -1,0 +1,374 @@
+diff --git a/server/index.ts b/server/index.ts
+index b22639a..38c34e7 100644
+--- a/server/index.ts
++++ b/server/index.ts
+@@ -6,6 +6,7 @@ import adminAuthRoutes from './routes/adminAuth.js';
+ import adminRoutes from './routes/admin.js';
+ import companyRoutes from './routes/company.js';
+ import filesRoutes from './routes/files.js';
++import quebecRoutes from './routes/quebec.js';
+ import pool from './db.js';
+ 
+ dotenv.config();
+@@ -63,6 +64,7 @@ app.use('/api/admin-auth', adminAuthRoutes);
+ app.use('/api/admin', adminRoutes);
+ app.use('/api/company', companyRoutes);
+ app.use('/api/files', filesRoutes);
++app.use('/api/quebec', quebecRoutes);
+ 
+ app.get('/health', (_req: Request, res: Response) => {
+   res.json({ status: 'ok' });
+diff --git a/src/components/admin/QuebecTestDownload.tsx b/src/components/admin/QuebecTestDownload.tsx
+index a885bc3..58d6392 100644
+--- a/src/components/admin/QuebecTestDownload.tsx
++++ b/src/components/admin/QuebecTestDownload.tsx
+@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
+ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+ import { Progress } from '@/components/ui/progress';
+ import { Download, AlertCircle, X } from 'lucide-react';
++import { supabase } from '@/integrations/supabase/client';
+ 
+ export const QuebecTestDownload = () => {
+   const [isLoading, setIsLoading] = useState(false);
+diff --git a/src/integrations/supabase/client.ts b/src/integrations/supabase/client.ts
+index 1c8b23d..d927fc6 100644
+--- a/src/integrations/supabase/client.ts
++++ b/src/integrations/supabase/client.ts
+@@ -165,11 +165,59 @@ class ApiClient {
+         },
+         getPublicUrl: (path: string) => {
+           return { data: { publicUrl: `/storage/${path}` } };
+-        }
++        },
++        // Replaces supabase.storage.from(bucket).uploadToSignedUrl(path, token, file).
++        // The signed-URL token is no longer used; the file is sent straight to the
++        // Express /api/quebec/upload endpoint as a raw binary body.
++        uploadToSignedUrl: async (_path: string, _token: string, file: File) => {
++          const encodedName = encodeURIComponent(file.name || _path);
++          const url = `${API_URL}/api/quebec/upload?fileName=${encodedName}`;
++          try {
++            const response = await fetch(url, {
++              method: 'POST',
++              headers: { 'Content-Type': 'application/octet-stream' },
++              body: file,
++            });
++            const data = await response.json();
++            if (!response.ok) {
++              return { data: null, error: new Error(data.error || 'Upload failed') };
++            }
++            return { data, error: null };
++          } catch (error: any) {
++            console.error('Storage uploadToSignedUrl failed:', error);
++            return { data: null, error };
++          }
++        },
+       };
+     }
+   };
+ 
++  // Edge-function invocations – maps former Supabase Function names to Express API routes.
++  // Add a new entry here for every function that was previously called via
++  // supabase.functions.invoke().
++  functions = {
++    invoke: async (functionName: string, options?: { body?: any }) => {
++      const functionEndpoints: Record<string, { method: string; endpoint: string }> = {
++        'quebec-registry-download': { method: 'POST', endpoint: '/api/quebec/registry-download' },
++        'quebec-csv-parser':        { method: 'POST', endpoint: '/api/quebec/parse-csv' },
++      };
++
++      const mapping = functionEndpoints[functionName];
++      if (!mapping) {
++        console.error(`functions.invoke: no mapping for "${functionName}"`);
++        return {
++          data: null,
++          error: new Error(`Function "${functionName}" is not mapped to an API endpoint`),
++        };
++      }
++
++      return this.request(mapping.endpoint, {
++        method: mapping.method,
++        body: options?.body ? JSON.stringify(options.body) : undefined,
++      });
++    },
++  };
++
+   // RPC function calls
+   async rpc(functionName: string, params: any) {
+     const rpcMapping: { [key: string]: { method: string; endpoint: (p: any) => string } } = {
+diff --git a/src/utils/processQuebecRegistry.ts b/src/utils/processQuebecRegistry.ts
+index 9ddaae4..60eee54 100644
+--- a/src/utils/processQuebecRegistry.ts
++++ b/src/utils/processQuebecRegistry.ts
+@@ -1,3 +1,4 @@
++import { supabase } from '@/integrations/supabase/client';
+ 
+ export async function processQuebecRegistryFile(fileName: string) {
+   console.log(`Triggering CSV parser for file: ${fileName} (storage-only)`);
+diff --git a/server/routes/quebec.ts b/server/routes/quebec.ts
+new file mode 100644
+index 0000000..bc8e5ab
+--- /dev/null
++++ b/server/routes/quebec.ts
+@@ -0,0 +1,262 @@
++import express, { Request, Response } from 'express';
++import pool from '../db.js';
++import fs from 'fs';
++import path from 'path';
++import { createRequire } from 'module';
++
++const require = createRequire(import.meta.url);
++const fflate = require('fflate');
++const Papa = require('papaparse');
++
++const router = express.Router();
++
++const CKAN_API_URL =
++  'https://www.donneesquebec.ca/recherche/api/3/action/package_show?id=6f710997-b5f9-4347-893b-1a47ddb61437';
++
++const UPLOAD_DIR = process.env.UPLOAD_DIR
++  ? path.resolve(process.env.UPLOAD_DIR)
++  : path.resolve('./uploads/quebec-registry');
++
++// Ensure the upload directory exists at startup
++if (!fs.existsSync(UPLOAD_DIR)) {
++  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
++}
++
++// POST /api/quebec/registry-download
++// Returns download URL and metadata from the Quebec open-data CKAN API.
++// Replaces the former `supabase.functions.invoke('quebec-registry-download')` call.
++router.post('/registry-download', async (_req: Request, res: Response) => {
++  try {
++    const ckanResponse = await fetch(CKAN_API_URL);
++    if (!ckanResponse.ok) {
++      const errText = await ckanResponse.text();
++      return res.status(502).json({
++        success: false,
++        error: `CKAN API error: ${ckanResponse.status} – ${errText}`,
++      });
++    }
++
++    const ckanData = await ckanResponse.json();
++    const result = ckanData.result;
++    const metadataModified: string = result.metadata_modified;
++    const dataVersion = new Date(metadataModified).toISOString();
++
++    const resources: any[] = result.resources || [];
++    const zipResource = resources.find(
++      (r) =>
++        r.format?.toLowerCase() === 'zip' ||
++        r.name?.toLowerCase().includes('zip') ||
++        r.url?.toLowerCase().includes('.zip'),
++    );
++
++    if (!zipResource) {
++      return res.status(404).json({
++        success: false,
++        error: 'No ZIP file resource found in the dataset',
++      });
++    }
++
++    const downloadUrl: string = zipResource.url;
++    const ts = new Date().toISOString().split('T')[0];
++    const suggestedFileName = `quebec_business_registry_${ts}_${dataVersion.split('T')[0]}.zip`;
++
++    return res.json({
++      success: true,
++      manual: true,
++      message:
++        'Use downloadUrl to fetch the ZIP manually, then upload it via POST /api/quebec/upload',
++      version: dataVersion,
++      metadata_modified: metadataModified,
++      downloadUrl,
++      fileName: suggestedFileName,
++      // upload.path and upload.token keep the same shape as the old Supabase response
++      // so the frontend needs no other changes to these fields.
++      upload: { path: suggestedFileName, token: null },
++    });
++  } catch (error: any) {
++    console.error('Quebec registry-download error:', error);
++    return res.status(500).json({ success: false, error: error.message });
++  }
++});
++
++// POST /api/quebec/upload
++// Receives a raw ZIP binary body (Content-Type: application/octet-stream).
++// Query parameter `fileName` is used as the on-disk filename.
++// Replaces the former `supabase.storage.from('quebec-registry').uploadToSignedUrl()` call.
++router.post(
++  '/upload',
++  express.raw({ type: 'application/octet-stream', limit: '600mb' }),
++  (req: Request, res: Response) => {
++    const fileName = (req.query.fileName as string) || `upload_${Date.now()}.zip`;
++    const safeName = path.basename(fileName); // prevent path traversal
++    const destPath = path.join(UPLOAD_DIR, safeName);
++
++    if (!Buffer.isBuffer(req.body) || req.body.length === 0) {
++      return res.status(400).json({ error: 'Request body is empty or not a binary buffer' });
++    }
++
++    fs.writeFile(destPath, req.body, (err) => {
++      if (err) {
++        console.error('Quebec upload write error:', err);
++        return res.status(500).json({ error: 'Failed to save uploaded file' });
++      }
++      return res.json({ success: true, path: safeName, size: req.body.length });
++    });
++  },
++);
++
++// POST /api/quebec/parse-csv
++// Extracts the first CSV from the uploaded ZIP and upserts records into Neon.
++// Replaces the former `supabase.functions.invoke('quebec-csv-parser')` call.
++router.post('/parse-csv', async (req: Request, res: Response) => {
++  const { fileName, analysisType = 'full' } = req.body as {
++    fileName?: string;
++    analysisType?: string;
++  };
++
++  if (!fileName) {
++    return res.status(400).json({ error: 'fileName is required' });
++  }
++
++  const safeName = path.basename(fileName);
++  const filePath = path.join(UPLOAD_DIR, safeName);
++
++  if (!fs.existsSync(filePath)) {
++    return res.status(404).json({
++      error: `File not found: ${safeName}. Please upload the file first via POST /api/quebec/upload`,
++    });
++  }
++
++  try {
++    const zipBuffer = fs.readFileSync(filePath);
++
++    // Decompress ZIP using fflate (synchronous unzip)
++    const decompressed = fflate.unzipSync(new Uint8Array(zipBuffer)) as Record<string, Uint8Array>;
++    const csvEntry = Object.entries(decompressed).find(([name]) =>
++      name.toLowerCase().endsWith('.csv'),
++    );
++
++    if (!csvEntry) {
++      return res.status(422).json({ error: 'No CSV file found inside the ZIP archive' });
++    }
++
++    const [csvFileName, csvData] = csvEntry as [string, Uint8Array];
++    const csvText = Buffer.from(csvData).toString('utf-8');
++    console.log(`Parsing CSV: ${csvFileName} (${csvText.length} chars)`);
++
++    // Parse CSV header to decide column mapping
++    const parseResult = Papa.parse(csvText, {
++      header: true,
++      skipEmptyLines: true,
++      dynamicTyping: false,
++      delimiter: ',',
++    });
++
++    if (parseResult.errors.length > 0) {
++      console.warn('CSV parse warnings:', parseResult.errors.slice(0, 5));
++    }
++
++    const rows: Record<string, string>[] = parseResult.data;
++    console.log(`Parsed ${rows.length} rows from ${csvFileName}`);
++
++    if (analysisType === 'summary') {
++      return res.json({
++        success: true,
++        summary: { totalRows: rows.length, csvFile: csvFileName },
++      });
++    }
++
++    // Upsert rows into quebec_entities (batch of 500)
++    const client = await pool.connect();
++    let inserted = 0;
++    let skipped = 0;
++
++    try {
++      await client.query('BEGIN');
++
++      const BATCH = 500;
++      for (let i = 0; i < rows.length; i += BATCH) {
++        const batch = rows.slice(i, i + BATCH);
++        for (const row of batch) {
++          const neq =
++            row['NEQ'] || row['neq'] || row['Numéro d\'entreprise du Québec (NEQ)'] || '';
++          if (!neq) {
++            skipped++;
++            continue;
++          }
++
++          const nomEntreprise =
++            row['Nom'] || row['nom_entreprise'] || row['Nom de l\'entreprise'] || '';
++          const formeJuridique =
++            row['Forme juridique'] ||
++            row['forme_juridique'] ||
++            row['Code de la forme juridique'] ||
++            '';
++          const statutEntreprise =
++            row['Statut'] || row['statut_entreprise'] || row['Statut de l\'entreprise'] || '';
++          const dateImmatriculation =
++            row['Date immatriculation'] ||
++            row['date_immatriculation'] ||
++            row["Date d'immatriculation"] ||
++            null;
++          const dateRadiation =
++            row['Date radiation'] || row['date_radiation'] || row['Date de radiation'] || null;
++
++          await client.query(
++            `INSERT INTO quebec_entities
++               (neq, nom_entreprise, forme_juridique, statut_entreprise,
++                date_immatriculation, date_radiation, updated_at)
++             VALUES ($1, $2, $3, $4, $5, $6, NOW())
++             ON CONFLICT (neq) DO UPDATE SET
++               nom_entreprise      = EXCLUDED.nom_entreprise,
++               forme_juridique     = EXCLUDED.forme_juridique,
++               statut_entreprise   = EXCLUDED.statut_entreprise,
++               date_immatriculation = EXCLUDED.date_immatriculation,
++               date_radiation      = EXCLUDED.date_radiation,
++               updated_at          = NOW()`,
++            [
++              neq,
++              nomEntreprise || null,
++              formeJuridique || null,
++              statutEntreprise || null,
++              dateImmatriculation || null,
++              dateRadiation || null,
++            ],
++          );
++          inserted++;
++        }
++      }
++
++      await client.query('COMMIT');
++    } catch (dbError) {
++      await client.query('ROLLBACK');
++      throw dbError;
++    } finally {
++      client.release();
++    }
++
++    // Record the download/import in quebec_registry_downloads
++    await pool.query(
++      `INSERT INTO quebec_registry_downloads
++         (file_name, file_size, download_date, status, records_processed)
++       VALUES ($1, $2, NOW(), 'completed', $3)
++       ON CONFLICT DO NOTHING`,
++      [safeName, zipBuffer.length, inserted],
++    );
++
++    return res.json({
++      success: true,
++      summary: {
++        csvFile: csvFileName,
++        totalRows: rows.length,
++        inserted,
++        skipped,
++      },
++    });
++  } catch (error: any) {
++    console.error('Quebec parse-csv error:', error);
++    return res.status(500).json({ success: false, error: error.message });
++  }
++});
++
++export default router;
