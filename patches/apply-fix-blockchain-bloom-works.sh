@@ -514,10 +514,84 @@ fi
 
 echo ""
 echo "✅  All changes applied. Verifying TypeScript..."
-if npx tsc --noEmit 2>&1 && npx tsc --project tsconfig.node.json --noEmit 2>&1; then
-  echo "✅  TypeScript OK — commit with:"
-  echo "    git add server/routes/quebec.ts server/index.ts src/components/admin/QuebecTestDownload.tsx src/integrations/supabase/client.ts src/utils/processQuebecRegistry.ts"
-  echo "    git commit -m 'Fix Quebec registry download: supabase is not defined after Neon migration'"
+if ! npx tsc --noEmit 2>&1; then
+  echo "❌  TypeScript errors in the frontend build — see output above. Aborting commit."
+  exit 1
+fi
+if ! npx tsc --project tsconfig.node.json --noEmit 2>&1; then
+  echo "❌  TypeScript errors in the server build — see output above. Aborting commit."
+  exit 1
+fi
+echo "✅  TypeScript OK"
+
+# ---------------------------------------------------------------------------
+# Auto-commit and push to the current branch
+# ---------------------------------------------------------------------------
+CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+EXPECTED_BRANCH="copilot/replace-supabase-with-postgresql-again"
+
+echo ""
+echo "Current branch: $CURRENT_BRANCH"
+if [ "$CURRENT_BRANCH" != "$EXPECTED_BRANCH" ]; then
+  echo "⚠️   Warning: expected branch '$EXPECTED_BRANCH' but you are on '$CURRENT_BRANCH'."
+  echo "    Committing and pushing to '$CURRENT_BRANCH' anyway..."
+fi
+
+# Ensure git identity is set (needed for commit); use GitHub Codespaces defaults if missing
+if [ -z "$(git config user.email)" ]; then
+  GH_USER="$(git remote get-url origin 2>/dev/null | sed -E 's|.*github\.com[:/]([^/]+)/.*|\1|')"
+  if [ -z "$GH_USER" ]; then
+    GH_USER="codespace"
+  fi
+  git config user.email "${GH_USER}@users.noreply.github.com"
+  git config user.name "${GH_USER}"
+  echo "ℹ️   Git identity not configured — using: $(git config user.name) <$(git config user.email)>"
+fi
+
+# Derive the repository browse URL dynamically from the remote
+REMOTE_URL="$(git remote get-url origin 2>/dev/null || echo '')"
+REPO_WEB_URL="$(echo "$REMOTE_URL" | sed -E 's|git@github\.com:|https://github.com/|; s|\.git$||')"
+
+# Stage only the files touched by this fix
+CHANGED_FILES=(
+  server/routes/quebec.ts
+  server/index.ts
+  src/components/admin/QuebecTestDownload.tsx
+  src/integrations/supabase/client.ts
+  src/utils/processQuebecRegistry.ts
+)
+
+# Only stage files that are actually modified (working tree or index) or untracked
+STAGED=()
+for f in "${CHANGED_FILES[@]}"; do
+  STATUS="$(git status --short "$f" 2>/dev/null)"
+  # Include: modified in working tree (M), untracked (?), or already staged but not committed (A/M in index)
+  if [ -n "$STATUS" ]; then
+    git add "$f"
+    STAGED+=("$f")
+  fi
+done
+
+if [ ${#STAGED[@]} -eq 0 ]; then
+  echo "ℹ️   Nothing to commit — all changes were already committed."
 else
-  echo "❌  TypeScript errors found — see output above"
+  echo "Staging: ${STAGED[*]}"
+  git commit -m "Fix Quebec registry download: supabase is not defined after Neon migration
+
+- Add missing import { supabase } to QuebecTestDownload.tsx and processQuebecRegistry.ts
+- Add functions.invoke() to ApiClient routing to POST /api/quebec/registry-download
+  and POST /api/quebec/parse-csv
+- Add storage.uploadToSignedUrl() to ApiClient posting binary to POST /api/quebec/upload
+- Add server/routes/quebec.ts (POST /registry-download, POST /upload, POST /parse-csv)
+- Register /api/quebec routes in server/index.ts"
+
+  echo "✅  Committed. Pushing to origin/$CURRENT_BRANCH ..."
+  if git push origin "$CURRENT_BRANCH"; then
+    echo "✅  Pushed — ${REPO_WEB_URL}/tree/${CURRENT_BRANCH}"
+  else
+    echo ""
+    echo "❌  Push failed (see error above). Your commit is saved locally."
+    echo "    Run manually: git push origin $CURRENT_BRANCH"
+    exit 1
+  fi
 fi
