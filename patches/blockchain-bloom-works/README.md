@@ -7,7 +7,7 @@
 | Fix 1 | `src/integrations/supabase/client.ts` | ✅ Appliqué (commit 41ca118) |
 | Fix 2 | `src/hooks/client/useCompanyVerification.ts` | ✅ Pas nécessaire — fichier n'utilise pas supabase |
 | Fix 3 | `src/hooks/client/useClientDetailsData.ts` | ✅ Appliqué (commit 41ca118) |
-| Fix 4 | `src/components/client/tabs/ComplianceTab.tsx` | ❌ **À appliquer** |
+| Fix 4 | `src/components/client/tabs/ComplianceTab.tsx` | ✅ Appliqué (commit ebd70ba) |
 
 ## Problèmes identifiés dans les logs
 
@@ -80,60 +80,33 @@ const complianceItems = useComplianceItems(
 
 ---
 
-### Fix 4 — `src/components/client/tabs/ComplianceTab.tsx` ❌ CRITIQUE
+### Fix 4 — `src/components/client/tabs/ComplianceTab.tsx` ✅ (commit ebd70ba)
 
-`ComplianceTab.tsx` appelle `supabase.from('aml_checks')` **sans importer `supabase`** → `ReferenceError: supabase is not defined` à l'exécution.
+`ComplianceTab.tsx` appelait `supabase.from('aml_checks')` **sans importer `supabase`** → `ReferenceError: supabase is not defined` à l'exécution.
 
-**Commande à exécuter dans le terminal blockchain-bloom-works :**
+**Corrections appliquées :**
 
-```bash
-python3 - <<'PYEOF'
-import pathlib
+- **Partie A** — Import ajouté ligne 2 :
+  ```typescript
+  import { supabase } from '@/integrations/supabase/client';
+  ```
 
-path = pathlib.Path("src/components/client/tabs/ComplianceTab.tsx")
-content = path.read_text()
+- **Partie B** — Destructuring simplifié (suppression de `isVerificationValid`) :
+  ```typescript
+  const { kycVerificationData } = useCompanyVerification(companyData?.["Registration number"]);
+  ```
 
-# A — Ajouter l'import supabase manquant
-imp = "import { supabase } from '@/integrations/supabase/client';\n"
-if imp.strip() not in content:
-    content = content.replace(
-        "import React, { useEffect, useState } from 'react';",
-        "import React, { useEffect, useState } from 'react';\n" + imp,
-        1
-    )
-    print("  import supabase ajouté")
-else:
-    print("  import supabase déjà présent")
-
-# B — Retirer isVerificationValid du destructuring
-content = content.replace(
-    "const { kycVerificationData, isVerificationValid } = useCompanyVerification(",
-    "const { kycVerificationData } = useCompanyVerification(",
-    1
-)
-
-# C — Remplacer isVerificationValid() par kycVerificationData?.status === 'verified'
-content = content.replace(
-    "isVerificationValid(),",
-    "kycVerificationData?.status === 'verified',",
-    1
-)
-
-path.write_text(content)
-print("  Fix 4 OK")
-PYEOF
-```
-
-Puis :
-```bash
-git add src/components/client/tabs/ComplianceTab.tsx
-git commit -m "Fix 4: add missing supabase import and fix isVerificationValid in ComplianceTab"
-git push
-```
+- **Partie C** — Vérification directe sur le statut :
+  ```typescript
+  const complianceItems = useComplianceItems(
+    kycVerificationData?.status === 'verified',
+  ```
 
 ---
 
 ## Application automatique (tous les fixes d'un coup)
+
+> **Tous les fixes ont été appliqués manuellement.** Le script ci-dessous est conservé comme référence pour ré-appliquer les corrections sur une nouvelle branche.
 
 ```bash
 # Depuis la racine de blockchain-bloom-works :
