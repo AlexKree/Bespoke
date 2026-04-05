@@ -8,12 +8,12 @@ const https = require('https');
 const MS_PER_HOUR = 3_600_000;
 
 /**
- * Derive a signing key from the admin password so the raw password value is
- * never used directly as an HMAC key.  Using HMAC-SHA256 with a fixed context
- * string produces a full-entropy 32-byte key regardless of password strength.
+ * Derive a 32-byte signing key from the admin password using scrypt, a
+ * memory-hard KDF designed for password-based key derivation.  This ensures
+ * the raw password is never used directly as a cryptographic key.
  */
 function deriveSigningKey(password) {
-  return crypto.createHmac('sha256', 'bespoke-admin-signing-key-v1').update(password).digest();
+  return crypto.scryptSync(password, 'bespoke-admin-token-salt-v1', 32);
 }
 
 function makeToken(password, hourTs) {
