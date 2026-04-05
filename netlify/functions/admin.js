@@ -5,12 +5,23 @@ const https = require('https');
 // Token helpers — stateless HMAC-based session (~1-2 h validity)
 // ---------------------------------------------------------------------------
 
+const MS_PER_HOUR = 3_600_000;
+
+/**
+ * Derive a signing key from the admin password so the raw password value is
+ * never used directly as an HMAC key.  Using HMAC-SHA256 with a fixed context
+ * string produces a full-entropy 32-byte key regardless of password strength.
+ */
+function deriveSigningKey(password) {
+  return crypto.createHmac('sha256', 'bespoke-admin-signing-key-v1').update(password).digest();
+}
+
 function makeToken(password, hourTs) {
-  return crypto.createHmac('sha256', password).update(String(hourTs)).digest('hex');
+  return crypto.createHmac('sha256', deriveSigningKey(password)).update(String(hourTs)).digest('hex');
 }
 
 function currentHour() {
-  return Math.floor(Date.now() / 3600000);
+  return Math.floor(Date.now() / MS_PER_HOUR);
 }
 
 function verifyToken(token, password) {
@@ -20,6 +31,22 @@ function verifyToken(token, password) {
     crypto.timingSafeEqual(Buffer.from(token), Buffer.from(makeToken(password, h))) ||
     crypto.timingSafeEqual(Buffer.from(token), Buffer.from(makeToken(password, h - 1)))
   );
+}
+
+/**
+ * Constant-time string equality — prevents timing attacks on password comparison.
+ * Pads shorter buffers so length differences don't shortcut the comparison.
+ */
+function timingSafeStringEqual(a, b) {
+  const bufA = Buffer.from(String(a));
+  const bufB = Buffer.from(String(b));
+  // Pad to the same length; result is still false when lengths differ
+  const maxLen = Math.max(bufA.length, bufB.length);
+  const paddedA = Buffer.concat([bufA, Buffer.alloc(maxLen - bufA.length)]);
+  const paddedB = Buffer.concat([bufB, Buffer.alloc(maxLen - bufB.length)]);
+  const equal = crypto.timingSafeEqual(paddedA, paddedB);
+  // Explicitly reject if lengths differ (padding means equal is meaningless)
+  return equal && bufA.length === bufB.length;
 }
 
 // ---------------------------------------------------------------------------
@@ -101,7 +128,7 @@ exports.handler = async function (event) {
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Admin not configured' }) };
     }
     const { password } = body;
-    if (!password || password !== ADMIN_PASSWORD) {
+    if (!password || !timingSafeStringEqual(password, ADMIN_PASSWORD)) {
       return { statusCode: 401, headers, body: JSON.stringify({ error: 'Invalid password' }) };
     }
     const sessionToken = makeToken(ADMIN_PASSWORD, currentHour());
@@ -134,6 +161,8 @@ exports.handler = async function (event) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'GitHub not configured' }) };
   }
 
+  // GITHUB_TOKEN must be a Personal Access Token (classic) with `repo` scope,
+  // or a fine-grained token with Contents: Read & Write on this repository.
   const filePath = `/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/assets/stock/stock.json`;
 
   // ── Get current stock ────────────────────────────────────────────────────
