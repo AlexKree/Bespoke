@@ -1,0 +1,988 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Admin — Bespoke</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ── Design tokens (same as main site) ────────────────────────────── */
+    :root {
+      --bg0: #071526;
+      --bg1: #050f1c;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.04);
+      --line: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.88);
+      --muted: rgba(255,255,255,.62);
+      --muted2: rgba(255,255,255,.46);
+      --gold: #c6b07a;
+      --red: #e05c5c;
+      --green: #5cb88a;
+      --shadow: 0 20px 60px rgba(0,0,0,.50);
+      --r-xl: 22px;
+      --r-lg: 16px;
+      --r-md: 12px;
+      --max: 1100px;
+      --serif: "Cormorant Garamond", ui-serif, Georgia, serif;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--sans);
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg0), var(--bg1));
+      min-height: 100vh;
+      line-height: 1.55;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Layout ────────────────────────────────────────────────────────── */
+    .container { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+
+    header {
+      position: sticky; top: 0; z-index: 40;
+      backdrop-filter: blur(10px);
+      background: rgba(7,21,38,.86);
+      border-bottom: 1px solid var(--line);
+    }
+    .navbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0; gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand .name { font-family: var(--serif); letter-spacing: .16em; font-weight: 600; }
+    .brand .tag { font-size: 12px; letter-spacing: .18em; color: var(--muted); }
+    .brand .admin-badge {
+      font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+      padding: 4px 9px; border-radius: 999px;
+      background: rgba(198,176,122,.14); border: 1px solid rgba(198,176,122,.4);
+      color: var(--gold);
+    }
+
+    main { padding: 40px 0 60px; }
+
+    /* ── Cards ─────────────────────────────────────────────────────────── */
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--r-xl);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .pad-lg { padding: 28px; }
+    .pad { padding: 22px; }
+    .kicker {
+      font-size: 12px; letter-spacing: .18em; color: var(--muted);
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+    h1 {
+      font-family: var(--serif); font-size: 48px; line-height: 1.05;
+      letter-spacing: .02em; margin: 10px 0 8px;
+    }
+    h2 {
+      font-family: var(--serif); font-size: 28px; letter-spacing: .03em;
+      margin: 0 0 16px;
+    }
+    .lead { color: var(--muted); font-size: 16px; max-width: 60ch; }
+    .sep { height: 1px; background: var(--line); margin: 18px 0; }
+
+    /* ── Buttons ────────────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      border-radius: 14px; border: 1px solid var(--line);
+      background: var(--panel2); padding: 10px 16px;
+      font-size: 14px; color: var(--text); cursor: pointer;
+      font-family: inherit; transition: background .15s, border-color .15s;
+      white-space: nowrap;
+    }
+    .btn:hover { background: rgba(255,255,255,.09); }
+    .btn:active { background: rgba(255,255,255,.13); }
+    .btn.primary {
+      border-color: rgba(198,176,122,.42);
+      background: rgba(198,176,122,.12); color: var(--gold);
+    }
+    .btn.primary:hover { background: rgba(198,176,122,.20); }
+    .btn.danger {
+      border-color: rgba(224,92,92,.4);
+      background: rgba(224,92,92,.10); color: var(--red);
+    }
+    .btn.danger:hover { background: rgba(224,92,92,.18); }
+    .btn.sold-btn {
+      border-color: rgba(224,92,92,.4);
+      background: rgba(224,92,92,.10); color: var(--red);
+    }
+    .btn.sold-btn:hover { background: rgba(224,92,92,.18); }
+    .btn.avail-btn {
+      border-color: rgba(92,184,138,.4);
+      background: rgba(92,184,138,.10); color: var(--green);
+    }
+    .btn.avail-btn:hover { background: rgba(92,184,138,.18); }
+    .btn:disabled { opacity: .5; cursor: not-allowed; pointer-events: none; }
+    .btn-sm { padding: 7px 12px; font-size: 13px; border-radius: 11px; }
+
+    /* ── Forms ──────────────────────────────────────────────────────────── */
+    .form { display: grid; gap: 12px; }
+    .field { display: grid; gap: 5px; }
+    .field label { font-size: 13px; color: var(--muted); letter-spacing: .05em; }
+    .field .hint { font-size: 12px; color: var(--muted2); margin-top: 3px; }
+    input[type="text"], input[type="number"], input[type="password"],
+    textarea, select {
+      width: 100%; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      padding: 11px 14px; color: var(--text);
+      font-size: 14px; outline: none;
+      font-family: inherit; transition: border-color .15s;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: rgba(198,176,122,.55);
+    }
+    textarea { min-height: 80px; resize: vertical; }
+    select option { background: #0d1f35; }
+
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 600px) { .row2 { grid-template-columns: 1fr; } }
+    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    @media (max-width: 700px) { .row3 { grid-template-columns: 1fr; } }
+
+    .section-label {
+      font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--gold); font-weight: 600; padding: 6px 0 2px;
+      border-top: 1px solid rgba(198,176,122,.2); margin-top: 4px;
+    }
+
+    /* ── Login screen ───────────────────────────────────────────────────── */
+    #loginScreen {
+      display: flex; justify-content: center; align-items: center;
+      min-height: calc(100vh - 80px); padding: 40px 20px;
+    }
+    .loginBox {
+      width: 100%; max-width: 400px;
+    }
+    #loginError {
+      display: none; color: var(--red); font-size: 13px;
+      background: rgba(224,92,92,.08); border: 1px solid rgba(224,92,92,.3);
+      border-radius: 10px; padding: 10px 14px; margin-top: 8px;
+    }
+
+    /* ── Stock list ─────────────────────────────────────────────────────── */
+    #adminScreen { display: none; }
+    .adminHeader {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 12px;
+      flex-wrap: wrap; margin-bottom: 24px;
+    }
+    .carList { display: grid; gap: 10px; margin-top: 20px; }
+
+    .carRow {
+      display: grid;
+      grid-template-columns: 64px 1fr auto;
+      gap: 14px; align-items: center;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      background: var(--panel2);
+      transition: background .15s;
+    }
+    .carRow:hover { background: rgba(255,255,255,.06); }
+    .carThumb {
+      width: 64px; height: 48px; border-radius: 8px;
+      object-fit: cover; border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+    }
+    .carThumbPlaceholder {
+      width: 64px; height: 48px; border-radius: 8px;
+      border: 1px solid var(--line); background: rgba(255,255,255,.04);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; color: var(--muted2);
+    }
+    .carInfo { min-width: 0; }
+    .carTitle {
+      font-weight: 500; font-size: 15px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .carMeta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .carStatus {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 999px; margin-top: 4px;
+      font-weight: 600;
+    }
+    .carStatus.available {
+      background: rgba(92,184,138,.12); border: 1px solid rgba(92,184,138,.35);
+      color: var(--green);
+    }
+    .carStatus.sold {
+      background: rgba(224,92,92,.12); border: 1px solid rgba(224,92,92,.35);
+      color: var(--red);
+    }
+    .carActions {
+      display: flex; gap: 8px; flex-shrink: 0; flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    @media (max-width: 700px) {
+      .carRow { grid-template-columns: 1fr; }
+      .carThumb, .carThumbPlaceholder { display: none; }
+      .carActions { justify-content: flex-start; }
+    }
+
+    /* ── Modal (edit/add form) ───────────────────────────────────────────── */
+    .overlay {
+      display: none; position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,.72); backdrop-filter: blur(4px);
+      overflow-y: auto;
+    }
+    .overlay.open { display: flex; align-items: flex-start; justify-content: center; padding: 40px 16px; }
+    .drawer {
+      width: 100%; max-width: 700px;
+      border: 1px solid var(--line); border-radius: var(--r-xl);
+      background: #0b1e34; box-shadow: var(--shadow);
+      padding: 28px;
+      margin: auto 0;
+    }
+    .drawerHeader {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 20px;
+    }
+    .drawerClose {
+      background: none; border: none; color: var(--muted);
+      font-size: 24px; cursor: pointer; padding: 4px 8px;
+      border-radius: 8px; transition: color .15s;
+    }
+    .drawerClose:hover { color: var(--text); }
+    .formActions {
+      display: flex; gap: 10px; justify-content: flex-end;
+      margin-top: 20px; flex-wrap: wrap;
+    }
+
+    /* ── Delete confirmation modal ───────────────────────────────────────── */
+    #confirmModal {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,.8); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center;
+    }
+    #confirmModal.open { display: flex; }
+    .confirmBox {
+      background: #0b1e34; border: 1px solid var(--line);
+      border-radius: var(--r-xl); box-shadow: var(--shadow);
+      padding: 28px; max-width: 420px; width: 90%; text-align: center;
+    }
+    .confirmBox h3 {
+      font-family: var(--serif); font-size: 24px; margin: 0 0 10px;
+    }
+    .confirmBox p { color: var(--muted); font-size: 14px; margin: 0 0 22px; }
+    .confirmActions { display: flex; gap: 10px; justify-content: center; }
+
+    /* ── Toast ──────────────────────────────────────────────────────────── */
+    #toast {
+      position: fixed; bottom: 28px; right: 28px; z-index: 300;
+      padding: 13px 20px; border-radius: 14px;
+      border: 1px solid var(--line); background: #0d2039;
+      color: var(--text); font-size: 14px; box-shadow: var(--shadow);
+      opacity: 0; transform: translateY(8px);
+      transition: opacity .25s, transform .25s;
+      pointer-events: none; max-width: 320px;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+    #toast.success { border-color: rgba(92,184,138,.5); background: rgba(92,184,138,.12); color: var(--green); }
+    #toast.error { border-color: rgba(224,92,92,.5); background: rgba(224,92,92,.12); color: var(--red); }
+
+    /* ── Loading spinner ────────────────────────────────────────────────── */
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.18);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty {
+      text-align: center; color: var(--muted); font-size: 15px;
+      padding: 48px 0;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      padding: 20px 0;
+    }
+    .mini { font-size: 12px; color: var(--muted2); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="navbar">
+      <div class="brand">
+        <div>
+          <div class="name">BESPOKE</div>
+          <div class="tag">Administration du stock</div>
+        </div>
+        <span class="admin-badge">Admin</span>
+      </div>
+      <button id="logoutBtn" class="btn btn-sm" style="display:none">Déconnexion</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ── Login screen ───────────────────────────────────────────────── -->
+  <div id="loginScreen">
+    <div class="loginBox card pad-lg">
+      <div class="kicker">Accès sécurisé</div>
+      <h2>Connexion</h2>
+      <p class="lead" style="font-size:14px;margin-bottom:16px">Entrez le mot de passe administrateur pour gérer le stock de véhicules.</p>
+      <form id="loginForm" class="form" autocomplete="off">
+        <div class="field">
+          <label for="passwordInput">Mot de passe</label>
+          <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="current-password" required/>
+        </div>
+        <button type="submit" class="btn primary" id="loginBtn">
+          Se connecter
+        </button>
+        <div id="loginError">Mot de passe incorrect.</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Admin screen ───────────────────────────────────────────────── -->
+  <div id="adminScreen" class="container">
+
+    <div class="adminHeader">
+      <div>
+        <div class="kicker">Gestion du stock</div>
+        <h1 style="font-size:36px;margin:4px 0 0">Véhicules</h1>
+      </div>
+      <button id="addCarBtn" class="btn primary">+ Ajouter un véhicule</button>
+    </div>
+
+    <div class="card pad">
+      <div id="stockLoading" style="text-align:center;padding:32px 0">
+        <span class="spinner"></span>
+        <div class="mini" style="margin-top:10px">Chargement du stock…</div>
+      </div>
+      <div id="carList" class="carList" style="display:none"></div>
+      <div id="carListEmpty" class="empty" style="display:none">Aucun véhicule dans le stock. Ajoutez-en un !</div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ── Edit / Add drawer ─────────────────────────────────────────────── -->
+<div id="formOverlay" class="overlay" role="dialog" aria-modal="true" aria-label="Fiche véhicule">
+  <div class="drawer">
+    <div class="drawerHeader">
+      <h2 id="formTitle" style="margin:0;font-size:24px">Nouveau véhicule</h2>
+      <button class="drawerClose" id="closeFormBtn" aria-label="Fermer">&times;</button>
+    </div>
+
+    <form id="carForm" class="form" autocomplete="off" novalidate>
+      <input type="hidden" id="fieldEditIndex"/>
+
+      <!-- Identifiant -->
+      <div class="field">
+        <label for="fieldId">Identifiant unique (slug)</label>
+        <input type="text" id="fieldId" placeholder="ex: porsche-911-997-carrera-s"/>
+        <div class="hint">Minuscules, tirets uniquement. Généré automatiquement si laissé vide.</div>
+      </div>
+
+      <div class="section-label">Marque & Modèle</div>
+      <div class="row2">
+        <div class="field">
+          <label for="fieldMakeFr">Marque (FR)</label>
+          <input type="text" id="fieldMakeFr" placeholder="Porsche"/>
+        </div>
+        <div class="field">
+          <label for="fieldMakeEn">Marque (EN)</label>
+          <input type="text" id="fieldMakeEn" placeholder="Porsche"/>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="fieldModelFr">Modèle (FR)</label>
+          <input type="text" id="fieldModelFr" placeholder="911 Carrera S"/>
+        </div>
+        <div class="field">
+          <label for="fieldModelEn">Modèle (EN)</label>
+          <input type="text" id="fieldModelEn" placeholder="911 Carrera S"/>
+        </div>
+      </div>
+
+      <div class="section-label">Titre affiché</div>
+      <div class="row2">
+        <div class="field">
+          <label for="fieldTitleFr">Titre (FR)</label>
+          <input type="text" id="fieldTitleFr" placeholder="Porsche 911 Carrera S"/>
+        </div>
+        <div class="field">
+          <label for="fieldTitleEn">Titre (EN)</label>
+          <input type="text" id="fieldTitleEn" placeholder="Porsche 911 Carrera S"/>
+        </div>
+      </div>
+
+      <div class="section-label">Informations principales</div>
+      <div class="row3">
+        <div class="field">
+          <label for="fieldYear">Année</label>
+          <input type="number" id="fieldYear" placeholder="2006" min="1900"/>
+        </div>
+        <div class="field">
+          <label for="fieldMileage">Kilométrage (km)</label>
+          <input type="number" id="fieldMileage" placeholder="Laisser vide = N/A" min="0"/>
+        </div>
+        <div class="field">
+          <label for="fieldPrice">Prix (€)</label>
+          <input type="number" id="fieldPrice" placeholder="Laisser vide = sur demande" min="0"/>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="fieldStatus">Statut</label>
+          <select id="fieldStatus">
+            <option value="available">Disponible</option>
+            <option value="sold">Vendu</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="fieldLocationFr">Localisation (FR)</label>
+          <input type="text" id="fieldLocationFr" placeholder="France / Europe"/>
+        </div>
+      </div>
+      <div class="field">
+        <label for="fieldLocationEn">Localisation (EN)</label>
+        <input type="text" id="fieldLocationEn" placeholder="France / Europe"/>
+      </div>
+
+      <div class="section-label">Accroche</div>
+      <div class="row2">
+        <div class="field">
+          <label for="fieldHeadlineFr">Accroche (FR)</label>
+          <input type="text" id="fieldHeadlineFr" placeholder="Configuration élégante, historique limpide."/>
+        </div>
+        <div class="field">
+          <label for="fieldHeadlineEn">Accroche (EN)</label>
+          <input type="text" id="fieldHeadlineEn" placeholder="Elegant spec, clean history."/>
+        </div>
+      </div>
+
+      <div class="section-label">Description</div>
+      <div class="row2">
+        <div class="field">
+          <label for="fieldDescFr">Description (FR)</label>
+          <textarea id="fieldDescFr" placeholder="Informations complètes sur demande."></textarea>
+        </div>
+        <div class="field">
+          <label for="fieldDescEn">Description (EN)</label>
+          <textarea id="fieldDescEn" placeholder="Full details on request."></textarea>
+        </div>
+      </div>
+
+      <div class="section-label">Photos</div>
+      <div class="field">
+        <label for="fieldImages">Chemins des images (un par ligne)</label>
+        <textarea id="fieldImages" style="min-height:90px" placeholder="assets/stock/images/porsche-01.jpg&#10;assets/stock/images/porsche-02.jpg"></textarea>
+        <div class="hint">Les images doivent être déposées manuellement dans <code>assets/stock/images/</code> du dépôt GitHub.</div>
+      </div>
+
+      <div class="formActions">
+        <button type="button" class="btn" id="cancelFormBtn">Annuler</button>
+        <button type="submit" class="btn primary" id="saveFormBtn">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── Delete confirmation modal ─────────────────────────────────────── -->
+<div id="confirmModal">
+  <div class="confirmBox">
+    <h3>Supprimer le véhicule ?</h3>
+    <p id="confirmMsg">Cette action est irréversible. Le véhicule sera retiré définitivement du stock.</p>
+    <div class="confirmActions">
+      <button class="btn" id="cancelDeleteBtn">Annuler</button>
+      <button class="btn danger" id="confirmDeleteBtn">Supprimer définitivement</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast ─────────────────────────────────────────────────────────── -->
+<div id="toast"></div>
+
+<footer>
+  <div class="container">
+    <div class="mini">© 2026 Bespoke — Interface d'administration</div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+
+  const API = '/.netlify/functions/admin';
+  const SESSION_KEY = 'bespoke_admin_token';
+
+  // ── State ────────────────────────────────────────────────────────────
+  let token = sessionStorage.getItem(SESSION_KEY) || '';
+  let stockData = null;   // { items: [...] }
+  let stockSha  = '';
+  let pendingDeleteIndex = null;
+
+  // ── DOM refs ─────────────────────────────────────────────────────────
+  const loginScreen  = document.getElementById('loginScreen');
+  const adminScreen  = document.getElementById('adminScreen');
+  const loginForm    = document.getElementById('loginForm');
+  const passwordInput = document.getElementById('passwordInput');
+  const loginBtn     = document.getElementById('loginBtn');
+  const loginError   = document.getElementById('loginError');
+  const logoutBtn    = document.getElementById('logoutBtn');
+
+  const stockLoading = document.getElementById('stockLoading');
+  const carListEl    = document.getElementById('carList');
+  const carListEmpty = document.getElementById('carListEmpty');
+  const addCarBtn    = document.getElementById('addCarBtn');
+
+  const formOverlay  = document.getElementById('formOverlay');
+  const formTitle    = document.getElementById('formTitle');
+  const carForm      = document.getElementById('carForm');
+  const closeFormBtn = document.getElementById('closeFormBtn');
+  const cancelFormBtn = document.getElementById('cancelFormBtn');
+  const saveFormBtn  = document.getElementById('saveFormBtn');
+
+  const confirmModal     = document.getElementById('confirmModal');
+  const confirmMsg       = document.getElementById('confirmMsg');
+  const cancelDeleteBtn  = document.getElementById('cancelDeleteBtn');
+  const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+  const toastEl = document.getElementById('toast');
+
+  // ── Toast ─────────────────────────────────────────────────────────────
+  let toastTimer;
+  function showToast(msg, type = '') {
+    clearTimeout(toastTimer);
+    toastEl.textContent = msg;
+    toastEl.className = 'show' + (type ? ' ' + type : '');
+    toastTimer = setTimeout(() => { toastEl.className = ''; }, 3200);
+  }
+
+  // ── API calls ─────────────────────────────────────────────────────────
+  async function apiCall(action, extra = {}) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    const res = await fetch(API, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ action, ...extra }),
+    });
+    const data = await res.json().catch(() => ({}));
+    return { ok: res.ok, status: res.status, data };
+  }
+
+  // ── Auth ──────────────────────────────────────────────────────────────
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginError.style.display = 'none';
+    loginBtn.disabled = true;
+    loginBtn.innerHTML = '<span class="spinner"></span> Connexion…';
+
+    const password = passwordInput.value;
+    const { ok, data } = await apiCall('auth', { password }).catch(() => ({ ok: false, data: {} }));
+
+    if (ok && data.token) {
+      token = data.token;
+      sessionStorage.setItem(SESSION_KEY, token);
+      showAdminScreen();
+    } else {
+      loginError.style.display = 'block';
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'Se connecter';
+      passwordInput.value = '';
+      passwordInput.focus();
+    }
+  });
+
+  logoutBtn.addEventListener('click', () => {
+    token = '';
+    sessionStorage.removeItem(SESSION_KEY);
+    stockData = null;
+    showLoginScreen();
+  });
+
+  // ── Screen switching ──────────────────────────────────────────────────
+  function showLoginScreen() {
+    loginScreen.style.display = 'flex';
+    adminScreen.style.display = 'none';
+    logoutBtn.style.display = 'none';
+    passwordInput.value = '';
+    loginBtn.disabled = false;
+    loginBtn.textContent = 'Se connecter';
+    loginError.style.display = 'none';
+  }
+
+  function showAdminScreen() {
+    loginScreen.style.display = 'none';
+    adminScreen.style.display = 'block';
+    logoutBtn.style.display = '';
+    loadStock();
+  }
+
+  // ── Load stock ────────────────────────────────────────────────────────
+  async function loadStock() {
+    stockLoading.style.display = 'block';
+    carListEl.style.display = 'none';
+    carListEmpty.style.display = 'none';
+
+    const { ok, status, data } = await apiCall('getStock').catch(() => ({ ok: false, status: 0, data: {} }));
+
+    stockLoading.style.display = 'none';
+
+    if (!ok) {
+      if (status === 401) {
+        token = '';
+        sessionStorage.removeItem(SESSION_KEY);
+        showLoginScreen();
+        return;
+      }
+      showToast('Erreur lors du chargement du stock.', 'error');
+      return;
+    }
+
+    stockData = data.stock;
+    stockSha  = data.sha;
+    renderList();
+  }
+
+  // ── Save stock ────────────────────────────────────────────────────────
+  async function saveStock() {
+    const { ok, status, data } = await apiCall('saveStock', { stock: stockData, sha: stockSha })
+      .catch(() => ({ ok: false, status: 0, data: {} }));
+
+    if (!ok) {
+      if (status === 401) {
+        token = '';
+        sessionStorage.removeItem(SESSION_KEY);
+        showLoginScreen();
+        return false;
+      }
+      const msg = (data && data.error) || 'Erreur lors de la sauvegarde.';
+      showToast(msg, 'error');
+      return false;
+    }
+    // Refresh sha after write
+    await loadStock();
+    return true;
+  }
+
+  // ── Render car list ───────────────────────────────────────────────────
+  function renderList() {
+    carListEl.innerHTML = '';
+    const items = (stockData && stockData.items) || [];
+
+    if (!items.length) {
+      carListEmpty.style.display = 'block';
+      return;
+    }
+
+    carListEl.style.display = 'grid';
+    items.forEach((car, idx) => {
+      carListEl.appendChild(buildCarRow(car, idx));
+    });
+  }
+
+  function buildCarRow(car, idx) {
+    const row = document.createElement('div');
+    row.className = 'carRow';
+
+    // Thumbnail
+    const thumbWrap = document.createElement('div');
+    if (car.images && car.images.length) {
+      const img = document.createElement('img');
+      img.className = 'carThumb';
+      img.src = '../' + car.images[0].replace(/^\//, '');
+      img.alt = '';
+      img.loading = 'lazy';
+      thumbWrap.appendChild(img);
+    } else {
+      const ph = document.createElement('div');
+      ph.className = 'carThumbPlaceholder';
+      ph.textContent = '🚗';
+      thumbWrap.appendChild(ph);
+    }
+    row.appendChild(thumbWrap);
+
+    // Info
+    const info = document.createElement('div');
+    info.className = 'carInfo';
+
+    const title = document.createElement('div');
+    title.className = 'carTitle';
+    title.textContent = (car.title && (car.title.fr || car.title.en)) ||
+      [(car.make && (car.make.fr || car.make.en)), (car.model && (car.model.fr || car.model.en))].filter(Boolean).join(' ') ||
+      car.id || 'Véhicule';
+    info.appendChild(title);
+
+    const meta = document.createElement('div');
+    meta.className = 'carMeta';
+    const parts = [];
+    if (car.year) parts.push(car.year);
+    if (car.mileage_km) parts.push(car.mileage_km.toLocaleString('fr-FR') + ' km');
+    if (car.price_eur) parts.push(car.price_eur.toLocaleString('fr-FR') + ' €');
+    meta.textContent = parts.join(' • ');
+    info.appendChild(meta);
+
+    const badge = document.createElement('span');
+    badge.className = 'carStatus ' + (car.status === 'sold' ? 'sold' : 'available');
+    badge.textContent = car.status === 'sold' ? 'Vendu' : 'Disponible';
+    info.appendChild(badge);
+
+    row.appendChild(info);
+
+    // Actions
+    const actions = document.createElement('div');
+    actions.className = 'carActions';
+
+    // Edit button
+    const editBtn = document.createElement('button');
+    editBtn.type = 'button';
+    editBtn.className = 'btn btn-sm';
+    editBtn.textContent = '✏️ Modifier';
+    editBtn.addEventListener('click', () => openForm(idx));
+    actions.appendChild(editBtn);
+
+    // Toggle sold / available
+    if (car.status === 'sold') {
+      const availBtn = document.createElement('button');
+      availBtn.type = 'button';
+      availBtn.className = 'btn btn-sm avail-btn';
+      availBtn.textContent = '✅ Remettre disponible';
+      availBtn.addEventListener('click', () => toggleStatus(idx));
+      actions.appendChild(availBtn);
+    } else {
+      const soldBtn = document.createElement('button');
+      soldBtn.type = 'button';
+      soldBtn.className = 'btn btn-sm sold-btn';
+      soldBtn.textContent = '🔴 Marquer vendu';
+      soldBtn.addEventListener('click', () => toggleStatus(idx));
+      actions.appendChild(soldBtn);
+    }
+
+    // Delete button
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'btn btn-sm danger';
+    delBtn.textContent = '🗑 Supprimer';
+    delBtn.addEventListener('click', () => askDelete(idx));
+    actions.appendChild(delBtn);
+
+    row.appendChild(actions);
+    return row;
+  }
+
+  // ── Toggle sold / available ───────────────────────────────────────────
+  async function toggleStatus(idx) {
+    const car = stockData.items[idx];
+    const newStatus = car.status === 'sold' ? 'available' : 'sold';
+    const label = newStatus === 'sold' ? '"Vendu"' : '"Disponible"';
+
+    stockData.items[idx] = { ...car, status: newStatus };
+    const ok = await saveStock();
+    if (ok) {
+      showToast(`Statut mis à jour : ${label}`, 'success');
+    } else {
+      // Revert on failure
+      stockData.items[idx] = car;
+      renderList();
+    }
+  }
+
+  // ── Delete ────────────────────────────────────────────────────────────
+  function askDelete(idx) {
+    pendingDeleteIndex = idx;
+    const car = stockData.items[idx];
+    const name = (car.title && (car.title.fr || car.title.en)) || car.id || 'ce véhicule';
+    confirmMsg.textContent = `Supprimer "${name}" ? Cette action est irréversible.`;
+    confirmModal.classList.add('open');
+  }
+
+  cancelDeleteBtn.addEventListener('click', () => {
+    confirmModal.classList.remove('open');
+    pendingDeleteIndex = null;
+  });
+
+  confirmDeleteBtn.addEventListener('click', async () => {
+    confirmModal.classList.remove('open');
+    if (pendingDeleteIndex === null) return;
+    const idx = pendingDeleteIndex;
+    pendingDeleteIndex = null;
+
+    const car = stockData.items[idx];
+    stockData.items.splice(idx, 1);
+    const ok = await saveStock();
+    if (ok) {
+      showToast('Véhicule supprimé.', 'success');
+    } else {
+      // Revert
+      stockData.items.splice(idx, 0, car);
+      renderList();
+    }
+  });
+
+  // ── Form open / close ─────────────────────────────────────────────────
+  function openForm(idx = null) {
+    carForm.reset();
+    document.getElementById('fieldEditIndex').value = idx !== null ? String(idx) : '';
+
+    if (idx !== null) {
+      formTitle.textContent = 'Modifier le véhicule';
+      const car = stockData.items[idx];
+      document.getElementById('fieldId').value = car.id || '';
+      document.getElementById('fieldMakeFr').value = (car.make && car.make.fr) || '';
+      document.getElementById('fieldMakeEn').value = (car.make && car.make.en) || '';
+      document.getElementById('fieldModelFr').value = (car.model && car.model.fr) || '';
+      document.getElementById('fieldModelEn').value = (car.model && car.model.en) || '';
+      document.getElementById('fieldTitleFr').value = (car.title && car.title.fr) || '';
+      document.getElementById('fieldTitleEn').value = (car.title && car.title.en) || '';
+      document.getElementById('fieldYear').value = car.year != null ? car.year : '';
+      document.getElementById('fieldMileage').value = car.mileage_km != null ? car.mileage_km : '';
+      document.getElementById('fieldPrice').value = car.price_eur != null ? car.price_eur : '';
+      document.getElementById('fieldStatus').value = car.status || 'available';
+      document.getElementById('fieldLocationFr').value = (car.location && car.location.fr) || '';
+      document.getElementById('fieldLocationEn').value = (car.location && car.location.en) || '';
+      document.getElementById('fieldHeadlineFr').value = (car.headline && car.headline.fr) || '';
+      document.getElementById('fieldHeadlineEn').value = (car.headline && car.headline.en) || '';
+      document.getElementById('fieldDescFr').value = (car.description && car.description.fr) || '';
+      document.getElementById('fieldDescEn').value = (car.description && car.description.en) || '';
+      document.getElementById('fieldImages').value = (car.images || []).join('\n');
+    } else {
+      formTitle.textContent = 'Nouveau véhicule';
+      document.getElementById('fieldStatus').value = 'available';
+      document.getElementById('fieldLocationFr').value = 'France / Europe';
+      document.getElementById('fieldLocationEn').value = 'France / Europe';
+    }
+
+    formOverlay.classList.add('open');
+    // Focus first meaningful field
+    setTimeout(() => document.getElementById('fieldMakeFr').focus(), 50);
+  }
+
+  function closeForm() {
+    formOverlay.classList.remove('open');
+  }
+
+  addCarBtn.addEventListener('click', () => openForm(null));
+  closeFormBtn.addEventListener('click', closeForm);
+  cancelFormBtn.addEventListener('click', closeForm);
+  formOverlay.addEventListener('click', (e) => { if (e.target === formOverlay) closeForm(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeForm();
+      confirmModal.classList.remove('open');
+    }
+  });
+
+  // ── Form submit ───────────────────────────────────────────────────────
+  carForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const makeFr  = document.getElementById('fieldMakeFr').value.trim();
+    const makeEn  = document.getElementById('fieldMakeEn').value.trim();
+    const modelFr = document.getElementById('fieldModelFr').value.trim();
+    const modelEn = document.getElementById('fieldModelEn').value.trim();
+
+    if (!makeFr && !makeEn) {
+      showToast('La marque est requise.', 'error');
+      document.getElementById('fieldMakeFr').focus();
+      return;
+    }
+
+    // Build id
+    let id = document.getElementById('fieldId').value.trim();
+    if (!id) {
+      id = [(makeEn || makeFr), (modelEn || modelFr), document.getElementById('fieldYear').value.trim()]
+        .filter(Boolean).join('-')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+    }
+    if (!id) id = 'vehicle-' + Date.now();
+
+    const year     = document.getElementById('fieldYear').value.trim();
+    const mileage  = document.getElementById('fieldMileage').value.trim();
+    const price    = document.getElementById('fieldPrice').value.trim();
+    const images   = document.getElementById('fieldImages').value
+      .split('\n').map(l => l.trim()).filter(Boolean);
+
+    const car = {
+      id,
+      make:        { fr: makeFr || makeEn, en: makeEn || makeFr },
+      model:       { fr: modelFr || modelEn, en: modelEn || modelFr },
+      year:        year ? Number(year) : null,
+      mileage_km:  mileage ? Number(mileage) : null,
+      price_eur:   price ? Number(price) : null,
+      status:      document.getElementById('fieldStatus').value,
+      location:    {
+        fr: document.getElementById('fieldLocationFr').value.trim() || 'France / Europe',
+        en: document.getElementById('fieldLocationEn').value.trim() || 'France / Europe',
+      },
+      headline:    {
+        fr: document.getElementById('fieldHeadlineFr').value.trim(),
+        en: document.getElementById('fieldHeadlineEn').value.trim(),
+      },
+      description: {
+        fr: document.getElementById('fieldDescFr').value.trim(),
+        en: document.getElementById('fieldDescEn').value.trim(),
+      },
+      images,
+      title:       {
+        fr: document.getElementById('fieldTitleFr').value.trim() ||
+            [(makeFr || makeEn), (modelFr || modelEn)].filter(Boolean).join(' '),
+        en: document.getElementById('fieldTitleEn').value.trim() ||
+            [(makeEn || makeFr), (modelEn || modelFr)].filter(Boolean).join(' '),
+      },
+    };
+
+    saveFormBtn.disabled = true;
+    saveFormBtn.innerHTML = '<span class="spinner"></span> Enregistrement…';
+
+    const editIndexVal = document.getElementById('fieldEditIndex').value;
+    const editIndex = editIndexVal !== '' ? parseInt(editIndexVal, 10) : null;
+
+    if (editIndex !== null) {
+      stockData.items[editIndex] = car;
+    } else {
+      stockData.items.push(car);
+    }
+
+    const ok = await saveStock();
+
+    saveFormBtn.disabled = false;
+    saveFormBtn.textContent = 'Enregistrer';
+
+    if (ok) {
+      closeForm();
+      showToast(editIndex !== null ? 'Véhicule mis à jour.' : 'Véhicule ajouté.', 'success');
+    } else {
+      // Revert
+      if (editIndex !== null) {
+        // Can't easily revert here since saveStock already re-loaded;
+        // the list will be fresh after loadStock() called inside saveStock()
+      } else {
+        stockData.items.pop();
+        renderList();
+      }
+    }
+  });
+
+  // ── Init ──────────────────────────────────────────────────────────────
+  if (token) {
+    showAdminScreen();
+  } else {
+    showLoginScreen();
+  }
+})();
+</script>
+</body>
+</html>
