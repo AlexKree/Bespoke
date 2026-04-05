@@ -171,9 +171,9 @@ exports.handler = async function (event) {
     if (res.status !== 200) {
       return { statusCode: 502, headers, body: JSON.stringify({ error: 'GitHub API error', detail: res.body }) };
     }
-    const content = Buffer.from(res.body.content, 'base64').toString('utf8');
-    let stock;
+    let content, stock;
     try {
+      content = Buffer.from(res.body.content, 'base64').toString('utf8');
       stock = JSON.parse(content);
     } catch (_) {
       return { statusCode: 502, headers, body: JSON.stringify({ error: 'Malformed stock.json' }) };
