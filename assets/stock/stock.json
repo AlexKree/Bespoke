@@ -11,8 +11,8 @@
         "en": "900 Turbo Cabriolet"
       },
       "year": 1993,
-      "mileage_km": null,
-      "price_eur": null,
+      "mileage_km": 112500,
+      "price_eur": 16900,
       "status": "available",
       "location": {
         "fr": "France / Europe",
