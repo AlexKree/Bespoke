@@ -49,7 +49,7 @@
       "year": 1995,
       "mileage_km": null,
       "price_eur": null,
-      "status": "available",
+      "status": "sold",
       "location": {
         "fr": "France / Europe",
         "en": "France / Europe"
