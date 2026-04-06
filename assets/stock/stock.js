@@ -1,4 +1,3 @@
-
 (() => {
   const grid = document.getElementById('stockGrid');
   if (!grid) return;
@@ -12,7 +11,7 @@
       year: 'Année',
       location: 'Localisation',
       priceOnRequest: 'Prix sur demande',
-      includeSold: 'Inclure vendus',
+      hideSold: 'Masquer vendus',
       details: 'Détails',
       contact: 'Contacter',
       searchEmpty: 'Aucun résultat.',
@@ -24,7 +23,7 @@
       year: 'Year',
       location: 'Location',
       priceOnRequest: 'Price on request',
-      includeSold: 'Include sold',
+      hideSold: 'Hide sold',
       details: 'Details',
       contact: 'Contact',
       searchEmpty: 'No results.',
@@ -38,6 +37,15 @@
   const searchEl = document.getElementById('stockSearch');
   const includeSoldEl = document.getElementById('includeSold');
   const sortEl = document.getElementById('stockSort');
+
+  // Update checkbox label text to reflect new meaning
+  if (includeSoldEl) {
+    const label = includeSoldEl.closest('label');
+    if (label) {
+      const span = label.querySelector('span');
+      if (span) span.textContent = T.hideSold;
+    }
+  }
 
   // Modal
   const modal = document.getElementById('stockModal');
@@ -81,7 +89,7 @@
 
   function resolveAsset(assetPath) {
     // assetPath is like "assets/stock/images/xxx.jpg"
-    return basePrefix + assetPath.replace(/^\//, '');
+    return basePrefix + assetPath.replace(/^\\/, '');
   }
 
   function statusLabel(item) {
@@ -115,10 +123,11 @@
 
   function applyFilters() {
     const q = (searchEl ? searchEl.value : '').trim().toLowerCase();
-    const includeSold = !!(includeSoldEl && includeSoldEl.checked);
+    // Checkbox now means "hide sold": checked = hide sold, unchecked = show all
+    const hideSold = !!(includeSoldEl && includeSoldEl.checked);
 
     filtered = items.filter((it) => {
-      if (!includeSold && it.status === 'sold') return false;
+      if (hideSold && it.status === 'sold') return false;
       return matchesQuery(it, q);
     });
 
@@ -128,7 +137,7 @@
 
   function renderCard(item) {
     const card = document.createElement('div');
-    card.className = 'stockCard';
+    card.className = 'stockCard' + (item.status === 'sold' ? ' stockCardSold' : '');
     card.setAttribute('data-id', item.id);
 
     const imgWrap = document.createElement('div');
