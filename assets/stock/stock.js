@@ -7,11 +7,11 @@
   const T = {
     fr: {
       available: 'Disponible',
-      sold: 'Vendu',
+      sold: 'Vendue',
       year: 'Année',
       location: 'Localisation',
       priceOnRequest: 'Prix sur demande',
-      hideSold: 'Masquer vendus',
+      hideSold: 'Masquer vendues',
       details: 'Détails',
       contact: 'Contacter',
       searchEmpty: 'Aucun résultat.',
@@ -38,7 +38,6 @@
   const includeSoldEl = document.getElementById('includeSold');
   const sortEl = document.getElementById('stockSort');
 
-  // Update checkbox label text to reflect new meaning
   if (includeSoldEl) {
     const label = includeSoldEl.closest('label');
     if (label) {
@@ -47,7 +46,6 @@
     }
   }
 
-  // Modal
   const modal = document.getElementById('stockModal');
   const modalMainImage = document.getElementById('modalMainImage');
   const modalThumbs = document.getElementById('modalThumbs');
@@ -88,8 +86,7 @@
   }
 
   function resolveAsset(assetPath) {
-    // assetPath is like "assets/stock/images/xxx.jpg"
-    return basePrefix + assetPath.replace(/^\\/, '');
+    return basePrefix + assetPath.replace(/^/, '');
   }
 
   function statusLabel(item) {
@@ -108,9 +105,9 @@
     return hay.includes(q);
   }
 
-  function sortItems(list) {
+  function sortGroup(group) {
     const mode = sortEl ? sortEl.value : 'year_desc';
-    const copy = [...list];
+    const copy = [...group];
     if (mode === 'year_asc') {
       copy.sort((a, b) => (a.year || 0) - (b.year || 0));
     } else if (mode === 'az') {
@@ -121,23 +118,27 @@
     return copy;
   }
 
+  function sortItems(list) {
+    const available = list.filter(it => it.status !== 'sold');
+    const sold = list.filter(it => it.status === 'sold');
+    return [...sortGroup(available), ...sortGroup(sold)];
+  }
+
   function applyFilters() {
     const q = (searchEl ? searchEl.value : '').trim().toLowerCase();
-    // Checkbox now means "hide sold": checked = hide sold, unchecked = show all
     const hideSold = !!(includeSoldEl && includeSoldEl.checked);
-
     filtered = items.filter((it) => {
       if (hideSold && it.status === 'sold') return false;
       return matchesQuery(it, q);
     });
-
     filtered = sortItems(filtered);
     render();
   }
 
   function renderCard(item) {
+    const isSold = item.status === 'sold';
     const card = document.createElement('div');
-    card.className = 'stockCard' + (item.status === 'sold' ? ' stockCardSold' : '');
+    card.className = 'stockCard' + (isSold ? ' stockCardSold' : '');
     card.setAttribute('data-id', item.id);
 
     const imgWrap = document.createElement('div');
@@ -148,10 +149,11 @@
     img.decoding = 'async';
     img.alt = itemTitle(item);
     img.src = item.images && item.images.length ? resolveAsset(item.images[0]) : '';
+    if (isSold) img.style.filter = 'grayscale(40%) opacity(0.75)';
     imgWrap.appendChild(img);
 
     const badge = document.createElement('div');
-    badge.className = 'stockBadge ' + (item.status === 'sold' ? 'sold' : 'available');
+    badge.className = 'stockBadge ' + (isSold ? 'sold' : 'available');
     badge.textContent = statusLabel(item);
     imgWrap.appendChild(badge);
 
@@ -163,6 +165,7 @@
     const h3 = document.createElement('div');
     h3.className = 'stockCardTitle';
     h3.textContent = itemTitle(item);
+    if (isSold) h3.style.opacity = '0.6';
     body.appendChild(h3);
 
     const meta = document.createElement('div');
@@ -175,6 +178,7 @@
     const price = document.createElement('div');
     price.className = 'stockCardPrice';
     price.textContent = formatPrice(item);
+    if (isSold) price.style.color = '#e05c5c';
     body.appendChild(price);
 
     const actions = document.createElement('div');
@@ -188,20 +192,19 @@
       e.stopPropagation();
       openModal(item);
     });
-
-    const contact = document.createElement('a');
-    contact.className = 'btn btnPrimary btnSm';
-    contact.textContent = T.contact;
-    contact.href = 'contact.html?vehicle=' + encodeURIComponent(item.id);
-
     actions.appendChild(btn);
-    actions.appendChild(contact);
+
+    if (!isSold) {
+      const contact = document.createElement('a');
+      contact.className = 'btn btnPrimary btnSm';
+      contact.textContent = T.contact;
+      contact.href = 'contact.html?vehicle=' + encodeURIComponent(item.id);
+      actions.appendChild(contact);
+    }
+
     body.appendChild(actions);
-
     card.appendChild(body);
-
     card.addEventListener('click', () => openModal(item));
-
     return card;
   }
 
@@ -241,15 +244,16 @@
     modalMeta.textContent = metaBits.join(' • ');
 
     modalPrice.textContent = formatPrice(item);
-    modalDescription.textContent = (item.description && (item.description[lang] || item.description.en || item.description.fr)) || '';
+    modalPrice.style.color = item.status === 'sold' ? '#e05c5c' : '';
 
+    modalDescription.textContent = (item.description && (item.description[lang] || item.description.en || item.description.fr)) || '';
     modalContact.href = 'contact.html?vehicle=' + encodeURIComponent(item.id);
 
-    // Images
     const imgs = (item.images || []).map(resolveAsset);
     if (imgs.length) {
       modalMainImage.src = imgs[0];
       modalMainImage.alt = itemTitle(item);
+      modalMainImage.style.filter = item.status === 'sold' ? 'grayscale(30%) opacity(0.8)' : '';
 
       modalThumbs.innerHTML = '';
       imgs.forEach((src, idx) => {
