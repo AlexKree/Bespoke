@@ -8,6 +8,7 @@
   --muted: rgba(255,255,255,.62);
   --muted2: rgba(255,255,255,.46);
   --gold: #c6b07a;
+  --red: #e05c5c;
   --shadow: 0 20px 60px rgba(0,0,0,.50);
   --r-xl: 22px;
   --r-lg: 16px;
@@ -79,6 +80,7 @@ main{padding:42px 0 50px}
 .pad-lg{padding:28px}
 .pad-md{padding:22px}
 .kicker{font-size:12px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+.kicker.sold{color:var(--red)}
 h1{
   font-family: var(--serif);
   font-size: 52px;
@@ -156,3 +158,21 @@ footer{
 .footerLinks{display:grid;gap:8px;margin-top:10px}
 .badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);border:1px solid rgba(255,255,255,.12);padding:7px 10px;border-radius:999px;background: rgba(255,255,255,.04)}
 .gold{color:var(--gold)}
+
+/* ── Stock badges ─────────────────────────────────────────────────── */
+.stockBadge{
+  position:absolute; top:10px; left:10px;
+  font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+  padding:4px 10px; border-radius:999px;
+}
+.stockBadge.available{
+  background: rgba(92,184,138,.15);
+  border:1px solid rgba(92,184,138,.4);
+  color:#5cb88a;
+}
+.stockBadge.sold{
+  background: rgba(224,92,92,.18);
+  border:1px solid rgba(224,92,92,.5);
+  color: var(--red);
+  font-weight:700;
+}
