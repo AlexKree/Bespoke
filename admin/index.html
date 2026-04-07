@@ -311,6 +311,46 @@
       padding: 20px 0;
     }
     .mini { font-size: 12px; color: var(--muted2); }
+
+    /* ── Image upload area ──────────────────────────────────────────────── */
+    .image-grid {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      min-height: 60px; padding: 8px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 12px;
+      background: rgba(255,255,255,.03);
+      align-items: flex-start; align-content: flex-start;
+    }
+    .image-grid:empty::before {
+      content: 'Aucune photo'; color: var(--muted2); font-size: 13px;
+      display: flex; align-items: center; height: 44px;
+    }
+    .img-thumb-wrap {
+      position: relative; width: 80px; height: 60px;
+      border-radius: 8px; overflow: hidden;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04); flex-shrink: 0;
+    }
+    .img-thumb-wrap img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .img-thumb-remove {
+      position: absolute; top: 2px; right: 2px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: rgba(0,0,0,.72); border: none;
+      color: #fff; font-size: 13px; line-height: 1;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      padding: 0; transition: background .15s;
+    }
+    .img-thumb-remove:hover { background: rgba(224,92,92,.85); }
+    .upload-bar {
+      display: flex; gap: 8px; align-items: center;
+      margin-top: 8px; flex-wrap: wrap;
+    }
+    #uploadStatus {
+      display: none; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--muted);
+    }
   </style>
 </head>
 <body>
@@ -484,9 +524,17 @@
 
       <div class="section-label">Photos</div>
       <div class="field">
-        <label for="fieldImages">Chemins des images (un par ligne)</label>
-        <textarea id="fieldImages" style="min-height:90px" placeholder="assets/stock/images/porsche-01.jpg&#10;assets/stock/images/porsche-02.jpg"></textarea>
-        <div class="hint">Les images doivent être déposées manuellement dans <code>assets/stock/images/</code> du dépôt GitHub.</div>
+        <div id="imageGrid" class="image-grid"></div>
+        <div class="upload-bar">
+          <label class="btn btn-sm" for="imageFileInput" id="uploadLabel">
+            📷 Ajouter des photos
+          </label>
+          <input type="file" id="imageFileInput" multiple accept="image/*" style="display:none"/>
+          <span id="uploadStatus">
+            <span class="spinner" style="width:14px;height:14px;border-width:2px"></span> Envoi en cours…
+          </span>
+        </div>
+        <div class="hint">Formats acceptés : JPG, PNG, WebP, GIF, AVIF. Taille max : 5 Mo par photo.</div>
       </div>
 
       <div class="formActions">
@@ -530,6 +578,7 @@
   let stockData = null;   // { items: [...] }
   let stockSha  = '';
   let pendingDeleteIndex = null;
+  let currentImages = []; // paths for the vehicle being edited/created
 
   // ── DOM refs ─────────────────────────────────────────────────────────
   const loginScreen  = document.getElementById('loginScreen');
@@ -579,6 +628,94 @@
     });
     const data = await res.json().catch(() => ({}));
     return { ok: res.ok, status: res.status, data };
+  }
+
+  // ── Image grid (upload area) ──────────────────────────────────────────
+  function renderImageGrid() {
+    const grid = document.getElementById('imageGrid');
+    grid.innerHTML = '';
+    currentImages.forEach((path, i) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'img-thumb-wrap';
+
+      const img = document.createElement('img');
+      img.src = '../' + path.replace(/^\//, '');
+      img.alt = '';
+      img.loading = 'lazy';
+      img.onerror = () => { img.style.display = 'none'; };
+      wrap.appendChild(img);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'img-thumb-remove';
+      removeBtn.title = 'Retirer';
+      removeBtn.innerHTML = '&times;';
+      removeBtn.addEventListener('click', () => {
+        currentImages.splice(i, 1);
+        renderImageGrid();
+      });
+      wrap.appendChild(removeBtn);
+
+      grid.appendChild(wrap);
+    });
+  }
+
+  async function handleImageUpload(files) {
+    if (!files || !files.length) return;
+
+    const uploadLabel  = document.getElementById('uploadLabel');
+    const uploadStatus = document.getElementById('uploadStatus');
+    const fileInput    = document.getElementById('imageFileInput');
+
+    uploadLabel.style.pointerEvents = 'none';
+    uploadLabel.style.opacity = '0.5';
+    uploadStatus.style.display = 'inline-flex';
+    fileInput.disabled = true;
+
+    try {
+      const carId = document.getElementById('fieldId').value.trim();
+      const formData = new FormData();
+      if (carId) formData.append('carId', carId);
+      for (const file of files) {
+        formData.append('images', file);
+      }
+
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + token },
+        body: formData,
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          token = '';
+          sessionStorage.removeItem(SESSION_KEY);
+          showLoginScreen();
+          return;
+        }
+        showToast(data.error || 'Erreur lors de l\'envoi.', 'error');
+        return;
+      }
+
+      if (data.paths && data.paths.length) {
+        currentImages = [...currentImages, ...data.paths];
+        renderImageGrid();
+        showToast(`${data.paths.length} photo(s) ajoutée(s).`, 'success');
+      }
+      if (data.errors && data.errors.length) {
+        showToast('Certains fichiers n\'ont pas pu être envoyés.', 'error');
+      }
+    } catch (_) {
+      showToast('Erreur réseau lors de l\'envoi.', 'error');
+    } finally {
+      uploadLabel.style.pointerEvents = '';
+      uploadLabel.style.opacity = '';
+      uploadStatus.style.display = 'none';
+      fileInput.disabled = false;
+      fileInput.value = ''; // allow re-selecting the same files
+    }
   }
 
   // ── Auth ──────────────────────────────────────────────────────────────
@@ -855,14 +992,16 @@
       document.getElementById('fieldHeadlineEn').value = (car.headline && car.headline.en) || '';
       document.getElementById('fieldDescFr').value = (car.description && car.description.fr) || '';
       document.getElementById('fieldDescEn').value = (car.description && car.description.en) || '';
-      document.getElementById('fieldImages').value = (car.images || []).join('\n');
+      currentImages = [...(car.images || [])];
     } else {
       formTitle.textContent = 'Nouveau véhicule';
       document.getElementById('fieldStatus').value = 'available';
       document.getElementById('fieldLocationFr').value = 'France / Europe';
       document.getElementById('fieldLocationEn').value = 'France / Europe';
+      currentImages = [];
     }
 
+    renderImageGrid();
     formOverlay.classList.add('open');
     // Focus first meaningful field
     setTimeout(() => document.getElementById('fieldMakeFr').focus(), 50);
@@ -870,6 +1009,8 @@
 
   function closeForm() {
     formOverlay.classList.remove('open');
+    currentImages = [];
+    renderImageGrid();
   }
 
   addCarBtn.addEventListener('click', () => openForm(null));
@@ -912,8 +1053,7 @@
     const year     = document.getElementById('fieldYear').value.trim();
     const mileage  = document.getElementById('fieldMileage').value.trim();
     const price    = document.getElementById('fieldPrice').value.trim();
-    const images   = document.getElementById('fieldImages').value
-      .split('\n').map(l => l.trim()).filter(Boolean);
+    const images   = [...currentImages];
 
     const car = {
       id,
@@ -973,6 +1113,13 @@
         stockData.items.pop();
         renderList();
       }
+    }
+  });
+
+  // ── Image file input listener ─────────────────────────────────────────
+  document.getElementById('imageFileInput').addEventListener('change', function () {
+    if (this.files && this.files.length) {
+      handleImageUpload(Array.from(this.files));
     }
   });
 

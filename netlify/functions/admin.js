@@ -2,6 +2,113 @@ const crypto = require('crypto');
 const https = require('https');
 
 // ---------------------------------------------------------------------------
+// Image upload constants
+// ---------------------------------------------------------------------------
+
+const ALLOWED_IMAGE_TYPES = new Set([
+  'image/jpeg', 'image/jpg', 'image/png', 'image/webp',
+  'image/gif', 'image/avif', 'image/heic', 'image/heif',
+  'image/tiff', 'image/bmp', 'image/svg+xml',
+]);
+
+const MIME_TO_EXT = {
+  'image/jpeg': 'jpg', 'image/jpg': 'jpg',
+  'image/png': 'png',  'image/webp': 'webp',
+  'image/gif': 'gif',  'image/avif': 'avif',
+  'image/heic': 'heic','image/heif': 'heif',
+  'image/tiff': 'tiff','image/bmp': 'bmp',
+  'image/svg+xml': 'svg',
+};
+
+/** Maximum size per uploaded file (5 MB). */
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+/** Maximum number of files per upload request. */
+const MAX_FILES = 20;
+
+// ---------------------------------------------------------------------------
+// Upload helpers
+// ---------------------------------------------------------------------------
+
+function slugify(s) {
+  return (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'img';
+}
+
+function getExtFromMime(mime, filename) {
+  const ext = MIME_TO_EXT[(mime || '').toLowerCase()];
+  if (ext) return ext;
+  const m = (filename || '').match(/\.([a-zA-Z0-9]+)$/);
+  return m ? m[1].toLowerCase() : 'jpg';
+}
+
+/**
+ * Minimal multipart/form-data parser — no external dependencies.
+ * Returns an array of { name, filename, contentType, data (Buffer) }.
+ */
+function parseMultipartBody(bodyBuffer, boundary) {
+  const parts = [];
+  const firstBoundaryBuf = Buffer.from('--' + boundary);
+  const sepBuf           = Buffer.from('\r\n--' + boundary);
+  const CRLF2            = Buffer.from('\r\n\r\n');
+
+  // Locate the start of the first part
+  let pos = bodyBuffer.indexOf(firstBoundaryBuf);
+  if (pos === -1) return parts;
+  pos += firstBoundaryBuf.length;
+
+  // Skip CRLF after the opening boundary
+  if (bodyBuffer[pos] === 0x0D && bodyBuffer[pos + 1] === 0x0A) pos += 2;
+  else if (bodyBuffer[pos] === 0x0A) pos += 1;
+
+  while (pos < bodyBuffer.length) {
+    const headerEnd = bodyBuffer.indexOf(CRLF2, pos);
+    if (headerEnd === -1) break;
+
+    // Use latin1 so header bytes are preserved faithfully
+    const headerText = bodyBuffer.slice(pos, headerEnd).toString('latin1');
+    const dataStart  = headerEnd + 4;
+
+    // Find the next boundary separator (preceded by \r\n)
+    const nextSepPos = bodyBuffer.indexOf(sepBuf, dataStart);
+    const dataEnd    = nextSepPos === -1 ? bodyBuffer.length : nextSepPos;
+    const data       = bodyBuffer.slice(dataStart, dataEnd);
+
+    // Parse headers into a plain object
+    const hdrs = {};
+    headerText.split('\r\n').forEach(line => {
+      const colon = line.indexOf(':');
+      if (colon > -1) {
+        hdrs[line.slice(0, colon).toLowerCase().trim()] = line.slice(colon + 1).trim();
+      }
+    });
+
+    const cd             = hdrs['content-disposition'] || '';
+    const nameMatch      = cd.match(/\bname="([^"]+)"/i);
+    const filenameMatch  = cd.match(/\bfilename="([^"]*?)"/i);
+
+    parts.push({
+      name:        nameMatch     ? nameMatch[1]     : null,
+      filename:    filenameMatch ? filenameMatch[1]  : null,
+      contentType: (hdrs['content-type'] || 'application/octet-stream').split(';')[0].trim(),
+      data,
+    });
+
+    if (nextSepPos === -1) break;
+
+    pos = nextSepPos + sepBuf.length;
+
+    // Final boundary ends with '--'
+    if (bodyBuffer[pos] === 0x2D && bodyBuffer[pos + 1] === 0x2D) break;
+
+    // Skip CRLF before next part
+    if (bodyBuffer[pos] === 0x0D && bodyBuffer[pos + 1] === 0x0A) pos += 2;
+    else if (bodyBuffer[pos] === 0x0A) pos += 1;
+  }
+
+  return parts;
+}
+
+// ---------------------------------------------------------------------------
 // Token helpers — stateless HMAC-based session (~1-2 h validity)
 // ---------------------------------------------------------------------------
 
@@ -108,17 +215,133 @@ exports.handler = async function (event) {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+  const GITHUB_TOKEN   = process.env.GITHUB_TOKEN;
+  const GITHUB_OWNER   = process.env.GITHUB_OWNER;
+  const GITHUB_REPO    = process.env.GITHUB_REPO;
+
+  // ── Detect multipart (image upload) ─────────────────────────────────────
+  const rawContentType = (event.headers || {})['content-type'] || (event.headers || {})['Content-Type'] || '';
+  const contentTypeLower = rawContentType.toLowerCase();
+
+  if (contentTypeLower.startsWith('multipart/form-data')) {
+    // ── Auth check ──────────────────────────────────────────────────────
+    const authHeader   = (event.headers || {})['authorization'] || (event.headers || {})['Authorization'] || '';
+    const sessionToken = authHeader.replace(/^Bearer\s+/i, '').trim();
+
+    if (!sessionToken || !ADMIN_PASSWORD) {
+      return { statusCode: 401, headers, body: JSON.stringify({ error: 'Unauthorized' }) };
+    }
+
+    let tokenValid = false;
+    try {
+      if (sessionToken.length === 64) tokenValid = verifyToken(sessionToken, ADMIN_PASSWORD);
+    } catch (_) {}
+
+    if (!tokenValid) {
+      return { statusCode: 401, headers, body: JSON.stringify({ error: 'Unauthorized' }) };
+    }
+
+    if (!GITHUB_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) {
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'GitHub not configured' }) };
+    }
+
+    // ── Parse multipart boundary ─────────────────────────────────────────
+    const boundaryMatch = rawContentType.match(/boundary=([^\s;]+)/i);
+    if (!boundaryMatch) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing multipart boundary' }) };
+    }
+    const boundary = boundaryMatch[1].replace(/^"(.*)"$/, '$1');
+
+    // Netlify base64-encodes binary bodies
+    const bodyBuffer = event.isBase64Encoded
+      ? Buffer.from(event.body || '', 'base64')
+      : Buffer.from(event.body || '', 'utf8');
+
+    const parts = parseMultipartBody(bodyBuffer, boundary);
+
+    // ── Extract optional carId field ─────────────────────────────────────
+    let carId = 'img';
+    for (const part of parts) {
+      if (part.name === 'carId' && !part.filename) {
+        carId = slugify(part.data.toString('utf8').trim()) || 'img';
+        break;
+      }
+    }
+
+    // ── Validate and upload image files ──────────────────────────────────
+    const imageFiles = parts.filter(p => p.name === 'images' && p.filename);
+
+    if (!imageFiles.length) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'No image files provided' }) };
+    }
+    if (imageFiles.length > MAX_FILES) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: `Too many files (max ${MAX_FILES})` }) };
+    }
+
+    const uploadedPaths = [];
+    const uploadErrors  = [];
+
+    for (const file of imageFiles) {
+      const mime = file.contentType.toLowerCase();
+
+      if (!ALLOWED_IMAGE_TYPES.has(mime)) {
+        uploadErrors.push(`${file.filename}: unsupported type (${mime})`);
+        continue;
+      }
+      if (file.data.length > MAX_FILE_SIZE) {
+        uploadErrors.push(`${file.filename}: file too large (max 5 MB)`);
+        continue;
+      }
+
+      const ext      = getExtFromMime(mime, file.filename);
+      const ts       = Date.now();
+      const rnd      = crypto.randomBytes(3).toString('hex'); // 6 hex chars
+      const filename = `${carId}-${ts}-${rnd}.${ext}`;
+      const ghPath   = `/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/assets/stock/images/${filename}`;
+
+      try {
+        const res = await githubRequest('PUT', ghPath, GITHUB_TOKEN, {
+          message: `Admin: upload image ${filename}`,
+          content:  file.data.toString('base64'),
+        });
+
+        if (res.status !== 200 && res.status !== 201) {
+          uploadErrors.push(`${file.filename}: GitHub error (${res.status})`);
+          continue;
+        }
+        uploadedPaths.push(`/assets/stock/images/${filename}`);
+      } catch (_) {
+        uploadErrors.push(`${file.filename}: network error`);
+      }
+    }
+
+    if (uploadedPaths.length === 0 && uploadErrors.length > 0) {
+      return {
+        statusCode: 422,
+        headers,
+        body: JSON.stringify({ error: uploadErrors.join('; '), paths: [] }),
+      };
+    }
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        ok: true,
+        paths: uploadedPaths,
+        ...(uploadErrors.length ? { errors: uploadErrors } : {}),
+      }),
+    };
+  }
+
+  // ── JSON actions (auth / getStock / saveStock) ────────────────────────────
   let body;
   try {
     body = JSON.parse(event.body || '{}');
   } catch (_) {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON' }) };
   }
-
-  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-  const GITHUB_TOKEN   = process.env.GITHUB_TOKEN;
-  const GITHUB_OWNER   = process.env.GITHUB_OWNER;
-  const GITHUB_REPO    = process.env.GITHUB_REPO;
 
   const { action } = body;
 
