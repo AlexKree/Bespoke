@@ -20,7 +20,6 @@ const STATIC_ASSETS = [
   '/en/opportunites.html',
   '/assets/styles.css',
   '/assets/site.js',
-  '/assets/sw.js',
   '/manifest.webmanifest',
   '/offline.html',
 ];
