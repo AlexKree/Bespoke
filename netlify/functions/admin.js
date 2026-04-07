@@ -26,12 +26,18 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024;
 /** Maximum number of files per upload request. */
 const MAX_FILES = 20;
 
+/** Maximum length for the car ID slug prefix in generated filenames. */
+const MAX_SLUG_LENGTH = 40;
+
+/** Number of random bytes for the unique suffix in filenames (produces 6 hex chars). */
+const RANDOM_BYTES = 3;
+
 // ---------------------------------------------------------------------------
 // Upload helpers
 // ---------------------------------------------------------------------------
 
 function slugify(s) {
-  return (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'img';
+  return (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, MAX_SLUG_LENGTH) || 'img';
 }
 
 function getExtFromMime(mime, filename) {
@@ -296,7 +302,7 @@ exports.handler = async function (event) {
 
       const ext      = getExtFromMime(mime, file.filename);
       const ts       = Date.now();
-      const rnd      = crypto.randomBytes(3).toString('hex'); // 6 hex chars
+      const rnd      = crypto.randomBytes(RANDOM_BYTES).toString('hex');
       const filename = `${carId}-${ts}-${rnd}.${ext}`;
       const ghPath   = `/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/assets/stock/images/${filename}`;
 

@@ -651,7 +651,7 @@
       removeBtn.title = 'Retirer';
       removeBtn.innerHTML = '&times;';
       removeBtn.addEventListener('click', () => {
-        currentImages.splice(i, 1);
+        currentImages = currentImages.filter((_, idx) => idx !== i);
         renderImageGrid();
       });
       wrap.appendChild(removeBtn);
@@ -714,7 +714,7 @@
       uploadLabel.style.opacity = '';
       uploadStatus.style.display = 'none';
       fileInput.disabled = false;
-      fileInput.value = ''; // allow re-selecting the same files
+      fileInput.value = ''; // Allow re-selecting the same files
     }
   }
 
