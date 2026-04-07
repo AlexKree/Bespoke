@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>The Bespoke Investment Company — FR / EN</title>
   <link rel="stylesheet" href="assets/styles.css" />
-  <!-- PWA manifest -->
-  <link rel="manifest" href="/manifest.webmanifest" />
-  <!-- Theme color for browser chrome -->
-  <meta name="theme-color" content="#071526" />
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#c6b07a" />
   <!-- Apple PWA -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -34,7 +33,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/assets/sw.js')
+      navigator.serviceWorker.register('/sw.js')
         .catch(err => console.warn('SW registration failed:', err));
     });
   }

@@ -1,0 +1,25 @@
+{
+  "name": "The Bespoke Investment Company",
+  "short_name": "Bespoke",
+  "description": "Sourcing, mandats et import de voitures collector et prestige.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#071526",
+  "theme_color": "#c6b07a",
+  "orientation": "portrait-primary",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "/assets/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
