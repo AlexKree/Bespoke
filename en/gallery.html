@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Gallery — Bespoke</title>
   <link rel="stylesheet" href="../assets/styles.css"/>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#071526" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Bespoke" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -104,5 +111,13 @@
 </footer>
 <script src="../assets/site.js"></script>
 <script src="../assets/gallery/gallery.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/assets/sw.js')
+        .catch(err => console.warn('SW registration failed:', err));
+    });
+  }
+</script>
 </body>
 </html>
