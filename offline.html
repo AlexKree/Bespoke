@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Bespoke — Hors ligne</title>
+  <style>
+    /* Reprise des tokens du site */
+    :root{--bg0:#071526;--gold:#c6b07a;--text:rgba(255,255,255,.88);--muted:rgba(255,255,255,.62);--serif:"Cormorant Garamond",ui-serif,Georgia,serif;--sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;height:100%}
+    body{font-family:var(--sans);background:var(--bg0);color:var(--text);display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;text-align:center}
+    .box{max-width:420px}
+    h1{font-family:var(--serif);font-size:48px;color:var(--gold);margin:0 0 12px;letter-spacing:.04em}
+    p{color:var(--muted);font-size:15px;line-height:1.6;margin:0 0 24px}
+    button{background:rgba(198,176,122,.12);border:1px solid rgba(198,176,122,.42);color:var(--gold);font-size:14px;padding:12px 22px;border-radius:18px;cursor:pointer;font-family:inherit;transition:background .15s}
+    button:hover{background:rgba(198,176,122,.22)}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Bespoke</h1>
+    <p>Vous êtes hors ligne. Vérifiez votre connexion et réessayez.</p>
+    <button onclick="location.reload()">Réessayer</button>
+  </div>
+</body>
+</html>
