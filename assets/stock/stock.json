@@ -174,13 +174,13 @@
         "en": "Beautiful Car - Fully Restored - Paint - Engine."
       },
       "images": [
-        "/assets/stock/images/volvo-p1800-1775666289150-ad886d.jpg",
-        "/assets/stock/images/volvo-p1800-1775666311006-7048d8.jpg",
-        "/assets/stock/images/volvo-p1800-1775666327070-201407.jpg",
-        "/assets/stock/images/volvo-p1800-1775666337550-eeb509.jpg",
-        "/assets/stock/images/volvo-p1800-1775666347025-bfbd4a.jpg",
-        "/assets/stock/images/volvo-p1800-1775666358003-d03ec6.jpg",
-        "/assets/stock/images/volvo-p1800-1775666373031-095937.jpg"
+        "assets/stock/images/volvo-p1800-1775666289150-ad886d.jpg",
+        "assets/stock/images/volvo-p1800-1775666311006-7048d8.jpg",
+        "assets/stock/images/volvo-p1800-1775666327070-201407.jpg",
+        "assets/stock/images/volvo-p1800-1775666337550-eeb509.jpg",
+        "assets/stock/images/volvo-p1800-1775666347025-bfbd4a.jpg",
+        "assets/stock/images/volvo-p1800-1775666358003-d03ec6.jpg",
+        "assets/stock/images/volvo-p1800-1775666373031-095937.jpg"
       ],
       "title": {
         "fr": "VOLVO P1800ES",
