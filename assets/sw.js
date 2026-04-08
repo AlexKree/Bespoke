@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bespoke-v2';
+const CACHE_NAME = 'bespoke-v3';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

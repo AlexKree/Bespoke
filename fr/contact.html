@@ -3,128 +3,204 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Contact — The Bespoke Car</title>
-  <style>
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 1.5rem; max-width: 800px; margin: 0 auto; color: #111; }
-    h1 { margin-top: 0; }
-    form p { margin: 0.75rem 0; }
-    label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
-    input[type="text"], input[type="email"], textarea { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-    textarea { min-height: 140px; resize: vertical; }
-    button { background: #0b74de; color: white; border: none; padding: 0.6rem 1rem; border-radius: 4px; cursor: pointer; }
-    button[disabled] { opacity: 0.6; cursor: not-allowed; }
-    .status { margin-top: 1rem; padding: 0.75rem; border-radius: 4px; display: none; }
-    .status.error { background: #ffdede; color: #8a1f1f; display: none; }
-    .status.success { background: #e6ffed; color: #1f6f3a; display: none; }
-  </style>
+  <title>Contact — Bespoke (FR)</title>
+  <meta name="description" content="Contactez Bespoke pour une demande de sourcing, mandat ou importation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/styles.css?v=3" />
   <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#071526" />
+  <meta name="theme-color" content="#0a0c10" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Bespoke" />
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.svg" />
+  <style>
+    .form-status{margin-top:16px;padding:14px 18px;font-size:13.5px;display:none}
+    .form-status.error{border-left:2px solid var(--red);background:rgba(200,88,88,.08);color:var(--red)}
+    .form-status.success{border-left:2px solid var(--green);background:rgba(78,158,114,.08);color:var(--green)}
+    .form label{display:block;font-size:10px;letter-spacing:.20em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;font-weight:500}
+    .form .field{display:grid;gap:7px}
+    button[disabled]{opacity:.55;cursor:not-allowed}
+  </style>
 </head>
 <body>
-  <h1>Contact</h1>
-  <p>Utilisez le formulaire ci‑dessous pour nous envoyer un message. Nous répondrons dans les meilleurs délais.</p>
-
-  <form id="contact-form" novalidate>
-    <!-- Honeypot anti‑spam (ne pas remplir) -->
-    <div style="display:none;" aria-hidden="true">
-      <label for="bot-field">Ne pas remplir</label>
-      <input type="text" name="bot-field" id="bot-field" autocomplete="off">
+<header>
+  <div class="container">
+    <div class="navbar">
+      <a class="brand" href="index.html">
+        <img class="mark" src="../assets/photos/hero.jpg" alt="Bespoke" />
+        <div>
+          <div class="name">BESPOKE</div>
+          <div class="tag">Sourcing • Mandats • Import • Collection & Prestige</div>
+        </div>
+      </a>
+      <nav>
+        <a data-nav class="navlink" href="index.html">Accueil</a>
+        <a data-nav class="navlink" href="services.html">Services</a>
+        <a data-nav class="navlink" href="stock.html">Stock</a>
+        <a data-nav class="navlink" href="track-record.html">Track record</a>
+        <a data-nav class="navlink" href="partenaires.html">Partenaires</a>
+        <a data-nav class="navlink" href="a-propos.html">À propos</a>
+        <a data-nav class="navlink active" href="contact.html">Contact</a>
+        <div class="lang">
+          <a class="active" href="../fr/contact.html">FR</a>
+          <a class="" href="../en/contact.html">EN</a>
+        </div>
+      </nav>
     </div>
+  </div>
+  <div class="ribbon">
+    <div class="container">
+      <div class="inner">Positionnement : sourcing & importation de véhicules de collection / prestige — collaboration atelier en France & Italie. <span class="gold">Ce site ne constitue pas un conseil financier réglementé.</span></div>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="container">
+    <div class="card pad-lg" style="max-width:680px;margin:0 auto">
+      <div class="kicker">Contact</div>
+      <h1>Soumettre une demande</h1>
+      <p class="lead" style="margin-bottom:0">Utilisez le formulaire ci-dessous pour nous adresser votre demande. Nous vous répondrons dans les meilleurs délais.</p>
 
-    <p>
-      <label for="name">Nom</label>
-      <input type="text" id="name" name="name" required placeholder="Votre nom">
-    </p>
+      <form id="contact-form" class="form" novalidate style="margin-top:32px">
+        <!-- Honeypot anti-spam -->
+        <div style="display:none;" aria-hidden="true">
+          <label for="bot-field">Ne pas remplir</label>
+          <input type="text" name="bot-field" id="bot-field" autocomplete="off">
+        </div>
 
-    <p>
-      <label for="email">Adresse e‑mail</label>
-      <input type="email" id="email" name="email" required placeholder="votre@exemple.com">
-    </p>
+        <div class="field">
+          <label for="name">Nom <span style="color:var(--red)">*</span></label>
+          <input type="text" id="name" name="name" required placeholder="Votre nom">
+        </div>
 
-    <p>
-      <label for="subject">Sujet (optionnel)</label>
-      <input type="text" id="subject" name="subject" placeholder="Sujet du message">
-    </p>
+        <div class="field">
+          <label for="email">Adresse e-mail <span style="color:var(--red)">*</span></label>
+          <input type="email" id="email" name="email" required placeholder="votre@exemple.com">
+        </div>
 
-    <p>
-      <label for="message">Message</label>
-      <textarea id="message" name="message" required placeholder="Votre message"></textarea>
-    </p>
+        <div class="field">
+          <label for="subject">Sujet (optionnel)</label>
+          <input type="text" id="subject" name="subject" placeholder="Sujet du message">
+        </div>
 
-    <p>
-      <button type="submit" id="submit-btn">Envoyer</button>
-    </p>
+        <div class="field">
+          <label for="message">Message <span style="color:var(--red)">*</span></label>
+          <textarea id="message" name="message" required placeholder="Votre message…"></textarea>
+        </div>
 
-    <div id="form-status" class="status" role="status" aria-live="polite"></div>
-  </form>
+        <div class="ctaRow" style="margin-top:8px">
+          <button type="submit" id="submit-btn" class="btn primary">Envoyer</button>
+        </div>
 
-  <script>
-  (function () {
-    const form = document.getElementById('contact-form');
-    const btn = document.getElementById('submit-btn');
-    const statusEl = document.getElementById('form-status');
+        <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="container">
+    <div class="footerGrid">
+      <div>
+        <div class="footerTitle">Bespoke</div>
+        <div class="footerText">
+          Sourcing, mandats et importation de véhicules de prestige et de collection, en partenariat avec des ateliers spécialisés en France et en Italie.
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+            <span class="badge">Due diligence / PPI</span>
+            <span class="badge">Logistics & import</span>
+            <span class="badge">Mandat d'acquisition</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="footerTitle">Coordonnées</div>
+        <div class="footerText">
+          Adresse : <strong>1530 Chemin de Peyniblou 06560 Sophia-Antipolis</strong><br/>
+          Email : contact@thebespokecar.com<br/>
+          Téléphone : (nos coordonnées sont transmises après réception d'une demande écrite)<br/>
+        </div>
+      </div>
+      <div>
+        <div class="footerTitle">Légal</div>
+        <div class="footerLinks">
+          <a class="navlink" href="legal/mentions-legales.html">Mentions légales</a>
+          <a class="navlink" href="legal/confidentialite.html">Confidentialité</a>
+        </div>
+        <div class="footerText">
+          Ateliers partenaires : <span class="gold">France & Italie</span>
+        </div>
+      </div>
+    </div>
+    <div class="sep"></div>
+    <div class="mini">© 2026 Bespoke — Tous droits réservés.</div>
+  </div>
+</footer>
 
-    function showStatus(message, type) {
-      statusEl.textContent = message;
-      statusEl.className = 'status ' + (type === 'error' ? 'error' : 'success');
-      statusEl.style.display = 'block';
+<script src="../assets/site.js"></script>
+<script>
+(function () {
+  const form = document.getElementById('contact-form');
+  const btn = document.getElementById('submit-btn');
+  const statusEl = document.getElementById('form-status');
+
+  function showStatus(message, type) {
+    statusEl.textContent = message;
+    statusEl.className = 'form-status ' + (type === 'error' ? 'error' : 'success');
+    statusEl.style.display = 'block';
+  }
+
+  function clearStatus() {
+    statusEl.textContent = '';
+    statusEl.style.display = 'none';
+  }
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    clearStatus();
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const subject = document.getElementById('subject').value.trim();
+    const message = document.getElementById('message').value.trim();
+    const bot = document.getElementById('bot-field') ? document.getElementById('bot-field').value : '';
+
+    if (bot) return;
+    if (!name || !email || !message) {
+      showStatus('Veuillez remplir les champs requis (nom, e-mail, message).', 'error');
+      return;
     }
 
-    function clearStatus() {
-      statusEl.textContent = '';
-      statusEl.style.display = 'none';
+    const payload = { name, email, subject, message, 'bot-field': bot };
+
+    try {
+      btn.disabled = true;
+      btn.textContent = 'Envoi…';
+
+      const res = await fetch('/.netlify/functions/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        window.location.href = '/fr/merci.html';
+      } else {
+        let json = {};
+        try { json = await res.json(); } catch (err) {}
+        const errMsg = (json && json.error) ? json.error : 'Erreur lors de l\'envoi.';
+        showStatus('Erreur : ' + errMsg, 'error');
+      }
+    } catch (err) {
+      showStatus('Erreur réseau lors de l\'envoi. Merci de réessayer plus tard.', 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Envoyer';
     }
-
-    form.addEventListener('submit', async function (e) {
-      e.preventDefault();
-      clearStatus();
-
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const subject = document.getElementById('subject').value.trim();
-      const message = document.getElementById('message').value.trim();
-      const bot = document.getElementById('bot-field') ? document.getElementById('bot-field').value : '';
-
-      if (bot) return; // honeypot -> ignore silently
-      if (!name || !email || !message) {
-        showStatus('Veuillez remplir les champs requis (nom, e‑mail, message).', 'error');
-        return;
-      }
-
-      const payload = { name, email, subject, message, 'bot-field': bot };
-
-      try {
-        btn.disabled = true;
-        btn.textContent = 'Envoi…';
-
-        const res = await fetch('/.netlify/functions/send-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        if (res.ok) {
-          window.location.href = '/fr/merci.html';
-        } else {
-          let json = {};
-          try { json = await res.json(); } catch (err) {}
-          const errMsg = (json && json.error) ? json.error : 'Erreur lors de l\'envoi.';
-          showStatus('Erreur : ' + errMsg, 'error');
-        }
-      } catch (err) {
-        showStatus('Erreur réseau lors de l\'envoi. Merci de réessayer plus tard.', 'error');
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Envoyer';
-      }
-    });
-  })();
-  </script>
+  });
+})();
+</script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
