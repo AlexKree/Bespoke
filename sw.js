@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bespoke-cache-v1';
+const CACHE_NAME = 'bespoke-cache-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -65,7 +65,24 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache first for static assets
+  // Network first for CSS/JS assets so updates always propagate; cache first for everything else
+  const isCssOrJs = url.pathname.endsWith('.css') || url.pathname.endsWith('.js');
+  if (isCssOrJs) {
+    event.respondWith(
+      fetch(event.request)
+        .then((res) => {
+          if (res && res.status === 200) {
+            const clone = res.clone();
+            caches.open(CACHE_NAME).then((c) => c.put(event.request, clone));
+          }
+          return res;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // Cache first for other static assets (images, fonts, etc.)
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
