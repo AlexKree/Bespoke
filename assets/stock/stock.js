@@ -15,7 +15,8 @@
       details: 'Détails',
       contact: 'Contacter',
       searchEmpty: 'Aucun résultat.',
-      error: 'Impossible de charger le stock.'
+      error: 'Impossible de charger le stock.',
+      views: 'vues'
     },
     en: {
       available: 'Available',
@@ -27,7 +28,8 @@
       details: 'Details',
       contact: 'Contact',
       searchEmpty: 'No results.',
-      error: 'Unable to load stock.'
+      error: 'Unable to load stock.',
+      views: 'views'
     }
   }[lang];
 
@@ -58,6 +60,7 @@
 
   let items = [];
   let filtered = [];
+  let viewCounts = {}; // { [carId]: number }
 
   function formatPrice(item) {
     if (item.status === 'sold') return T.sold;
@@ -157,6 +160,13 @@
     badge.textContent = statusLabel(item);
     imgWrap.appendChild(badge);
 
+    const viewsBadge = document.createElement('div');
+    viewsBadge.className = 'viewsBadge';
+    viewsBadge.setAttribute('data-views-id', item.id);
+    const count = viewCounts[item.id] || 0;
+    viewsBadge.textContent = count + '\u00a0' + T.views;
+    imgWrap.appendChild(viewsBadge);
+
     card.appendChild(imgWrap);
 
     const body = document.createElement('div');
@@ -233,6 +243,9 @@
   function openModal(item) {
     if (!modal) return;
 
+    // Increment view counter (fire-and-forget, silent on error)
+    incrementView(item.id);
+
     modalTitle.textContent = itemTitle(item);
     modalStatus.textContent = statusLabel(item);
     modalStatus.className = 'kicker ' + (item.status === 'sold' ? 'sold' : 'available');
@@ -289,6 +302,41 @@
     });
   }
 
+  async function fetchViews(ids) {
+    if (!ids.length) return;
+    try {
+      const res = await fetch('/.netlify/functions/views?ids=' + ids.map(encodeURIComponent).join(','));
+      if (!res.ok) return;
+      const data = await res.json();
+      Object.assign(viewCounts, data);
+      // Update already-rendered badges in the grid
+      ids.forEach((id) => {
+        const el = grid.querySelector('[data-views-id="' + id + '"]');
+        if (el) el.textContent = (viewCounts[id] || 0) + '\u00a0' + T.views;
+      });
+    } catch (_) { /* fail silently */ }
+  }
+
+  function incrementView(carId) {
+    fetch('/.netlify/functions/view', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ carId }),
+    })
+      .then((res) => {
+        if (!res.ok) return;
+        return res.json();
+      })
+      .then((data) => {
+        if (!data || typeof data.views !== 'number') return;
+        viewCounts[carId] = data.views;
+        // Update the badge in the grid if it's visible
+        const el = grid.querySelector('[data-views-id="' + carId + '"]');
+        if (el) el.textContent = data.views + '\u00a0' + T.views;
+      })
+      .catch(() => { /* fail silently */ });
+  }
+
   async function init() {
     try {
       const res = await fetch(dataUrl, { cache: 'no-cache' });
@@ -296,6 +344,8 @@
       items = (data && data.items) ? data.items : [];
       applyFilters();
       wireModal();
+      // Batch-fetch view counts for all cars (silent fail)
+      fetchViews(items.map((it) => it.id));
     } catch (e) {
       grid.innerHTML = '<div class="card pad">' + T.error + '</div>';
     }
