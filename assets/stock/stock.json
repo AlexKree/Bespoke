@@ -166,14 +166,22 @@
         "en": "France / Europe"
       },
       "headline": {
-        "fr": "",
-        "en": ""
+        "fr": "Volvo P1800 ES",
+        "en": "Volvo P1800 ES"
       },
       "description": {
-        "fr": "",
-        "en": ""
+        "fr": "Magnifique voiture- Import Canada - Entièrement restaurée - Peinture complète - moteur.",
+        "en": "Beautiful Car - Fully Restored - Paint - Engine."
       },
-      "images": [],
+      "images": [
+        "/assets/stock/images/volvo-p1800-1775666289150-ad886d.jpg",
+        "/assets/stock/images/volvo-p1800-1775666311006-7048d8.jpg",
+        "/assets/stock/images/volvo-p1800-1775666327070-201407.jpg",
+        "/assets/stock/images/volvo-p1800-1775666337550-eeb509.jpg",
+        "/assets/stock/images/volvo-p1800-1775666347025-bfbd4a.jpg",
+        "/assets/stock/images/volvo-p1800-1775666358003-d03ec6.jpg",
+        "/assets/stock/images/volvo-p1800-1775666373031-095937.jpg"
+      ],
       "title": {
         "fr": "VOLVO P1800ES",
         "en": "VOLVO P1800ES"
