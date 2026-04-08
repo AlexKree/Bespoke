@@ -146,6 +146,38 @@
         "fr": "Jaguar XJV12 VANDEN PLAS",
         "en": "Jaguar XJV12 VANDEN PLAS"
       }
+    },
+    {
+      "id": "Volvo P1800",
+      "make": {
+        "fr": "Volvo",
+        "en": "Volvo"
+      },
+      "model": {
+        "fr": "P1800 ES",
+        "en": "P1800 ES"
+      },
+      "year": 1970,
+      "mileage_km": 88000,
+      "price_eur": 22997,
+      "status": "available",
+      "location": {
+        "fr": "France / Europe",
+        "en": "France / Europe"
+      },
+      "headline": {
+        "fr": "",
+        "en": ""
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "images": [],
+      "title": {
+        "fr": "VOLVO P1800ES",
+        "en": "VOLVO P1800ES"
+      }
     }
   ]
 }
