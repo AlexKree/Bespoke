@@ -11,7 +11,8 @@ function getPool() {
   if (!pool) {
     pool = new Pool({
       connectionString: process.env.NEON_DATABASE_URL,
-      ssl: { rejectUnauthorized: false },
+      ssl: { rejectUnauthorized: true },
+      // max:1 is intentional for serverless — each invocation has its own instance
       max: 1,
     });
   }
