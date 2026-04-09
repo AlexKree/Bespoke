@@ -1,3 +1,7 @@
+-- Neon Postgres schema — run once against your NEON_DATABASE_URL
+-- psql "$NEON_DATABASE_URL" -f sql/schema.sql
+-- (or paste into the Neon SQL console: https://console.neon.tech)
+
 -- Users
 CREATE TABLE IF NOT EXISTS users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
