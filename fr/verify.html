@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Vérification email — Bespoke</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/styles.css?v=2"/>
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="navbar">
+      <a class="brand" href="index.html">
+        <img class="mark" src="../assets/photos/hero.jpg" alt="Bespoke"/>
+        <div>
+          <div class="name">BESPOKE</div>
+          <div class="tag">Sourcing • Mandats • Import • Collection & Prestige</div>
+        </div>
+      </a>
+      <nav>
+        <a data-nav class="navlink" href="index.html">Accueil</a>
+        <a data-nav class="navlink" href="stock.html">Stock</a>
+        <div class="lang">
+          <a class="active" href="../fr/verify.html">FR</a>
+          <a class="" href="../en/verify.html">EN</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="section authPage">
+  <div class="container">
+    <div class="authCard card pad-lg" style="text-align:center">
+      <div id="verifyStatus">
+        <div class="kicker">Vérification en cours…</div>
+        <p>Veuillez patienter.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="sep"></div>
+    <div class="mini">© 2026 Bespoke — Tous droits réservés.</div>
+  </div>
+</footer>
+
+<script src="../assets/site.js"></script>
+<script>
+(async function () {
+  var params = new URLSearchParams(location.search);
+  var token = params.get('token');
+  var el = document.getElementById('verifyStatus');
+
+  if (!token) {
+    el.innerHTML = '<div class="authMsg error">Token manquant. Veuillez utiliser le lien reçu par email.</div>';
+    return;
+  }
+
+  try {
+    var res = await fetch('/.netlify/functions/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'verify-email', token: token })
+    });
+    var data = await res.json();
+    if (data.ok) {
+      el.innerHTML = [
+        '<div class="kicker gold">Compte activé !</div>',
+        '<h2 style="margin:12px 0 8px">Email vérifié</h2>',
+        '<p>Vous pouvez maintenant vous connecter.</p>',
+        '<a class="btn primary" href="login.html" style="margin-top:16px;display:inline-block">Se connecter</a>'
+      ].join('');
+    } else {
+      el.innerHTML = '<div class="authMsg error">' + (data.error || 'Erreur de vérification') + '</div><p style="margin-top:12px"><a class="navlink" href="login.html">Retour à la connexion</a></p>';
+    }
+  } catch (err) {
+    el.innerHTML = '<div class="authMsg error">Erreur réseau. Réessayez.</div>';
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Configuration compte — Bespoke</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css?v=2"/>
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="navbar">
+      <a class="brand" href="fr/index.html">
+        <img class="mark" src="assets/photos/hero.jpg" alt="Bespoke"/>
+        <div>
+          <div class="name">BESPOKE</div>
+          <div class="tag">Sourcing • Mandats • Import • Collection & Prestige</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="section authPage">
+  <div class="container">
+    <div class="authCard card pad-lg">
+      <div id="setupContent">
+        <div class="kicker">Équipe Bespoke</div>
+        <h2>Configurer votre compte</h2>
+        <div id="setupError" class="authMsg error" style="display:none"></div>
+        <div id="setupSuccess" class="authMsg success" style="display:none"></div>
+        <form id="setupForm" class="form" novalidate>
+          <div class="formGroup">
+            <label for="setupPassword">Mot de passe <span class="mini">(min. 8 caractères)</span></label>
+            <input id="setupPassword" class="input" type="password" required autocomplete="new-password" placeholder="••••••••" minlength="8"/>
+          </div>
+          <div class="formGroup">
+            <label for="setupPasswordConfirm">Confirmer le mot de passe</label>
+            <input id="setupPasswordConfirm" class="input" type="password" required autocomplete="new-password" placeholder="••••••••"/>
+          </div>
+          <button class="btn primary" type="submit" id="setupSubmit">Configurer mon compte</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="sep"></div>
+    <div class="mini">© 2026 Bespoke — Tous droits réservés.</div>
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var token = params.get('token');
+
+  if (!token) {
+    document.getElementById('setupContent').innerHTML = '<div class="authMsg error">Token manquant ou lien invalide.</div>';
+    return;
+  }
+
+  document.getElementById('setupForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var btn = document.getElementById('setupSubmit');
+    var errEl = document.getElementById('setupError');
+    var sucEl = document.getElementById('setupSuccess');
+    errEl.style.display = 'none';
+    sucEl.style.display = 'none';
+
+    var password = document.getElementById('setupPassword').value;
+    var confirm = document.getElementById('setupPasswordConfirm').value;
+
+    if (password !== confirm) {
+      errEl.textContent = 'Les mots de passe ne correspondent pas.';
+      errEl.style.display = '';
+      return;
+    }
+    if (password.length < 8) {
+      errEl.textContent = 'Le mot de passe doit contenir au moins 8 caractères.';
+      errEl.style.display = '';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Configuration…';
+
+    try {
+      var res = await fetch('/.netlify/functions/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'setup-staff', token: token, password: password })
+      });
+      var data = await res.json();
+      if (data.ok) {
+        document.getElementById('setupForm').style.display = 'none';
+        sucEl.textContent = 'Compte configuré ! Vous pouvez vous connecter.';
+        sucEl.style.display = '';
+        var link = document.createElement('p');
+        link.style.marginTop = '14px';
+        link.innerHTML = '<a class="btn primary" href="/fr/login.html">Se connecter</a>';
+        sucEl.after(link);
+      } else {
+        errEl.textContent = data.error || 'Erreur lors de la configuration';
+        errEl.style.display = '';
+        btn.disabled = false;
+        btn.textContent = 'Configurer mon compte';
+      }
+    } catch (err) {
+      errEl.textContent = 'Erreur réseau. Réessayez.';
+      errEl.style.display = '';
+      btn.disabled = false;
+      btn.textContent = 'Configurer mon compte';
+    }
+  });
+})();
+</script>
+</body>
+</html>
