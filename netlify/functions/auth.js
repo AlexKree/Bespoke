@@ -3,15 +3,15 @@
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 
 // Module-level pool with lazy init
 let pool = null;
 
 function getPool() {
-  if (!process.env.DATABASE_URL) return null;
+  if (!process.env.NEON_DATABASE_URL) return null;
   if (!pool) {
-    pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+    pool = new Pool({ connectionString: process.env.NEON_DATABASE_URL, ssl: { rejectUnauthorized: true }, max: 1 });
   }
   return pool;
 }
@@ -57,14 +57,21 @@ async function getSessionUser(db, sessionId) {
 
 async function sendVerificationEmail(email, token, baseUrl) {
   const verifyUrl = `${baseUrl}/fr/verify.html?token=${token}`;
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.log('VERIFY LINK:', verifyUrl);
+  const host = process.env.SMTP_HOST;
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+  if (!host || !user || !pass) {
+    console.log('VERIFY LINK (dev fallback):', verifyUrl);
     return;
   }
-  const resend = new Resend(apiKey);
-  const from = process.env.RESEND_FROM_EMAIL || 'contact@thebespokecar.com';
-  await resend.emails.send({
+  const transporter = nodemailer.createTransport({
+    host,
+    port: parseInt(process.env.SMTP_PORT, 10) || 587,
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: { user, pass },
+  });
+  const from = process.env.EMAIL_FROM || 'contact@thebespokecar.com';
+  await transporter.sendMail({
     from,
     to: email,
     subject: 'Vérifiez votre adresse email — Bespoke',

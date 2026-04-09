@@ -1,5 +1,5 @@
 -- Seed staff invite tokens
--- Run this against your Supabase Postgres database to create invite tokens for staff members.
+-- Run this against your Neon Postgres database to create invite tokens for staff members.
 -- Replace the email addresses as needed.
 -- After running, share the setup URL with each staff member:
 --   https://thebespokecar.com/setup-staff.html?token=<token>

@@ -2,7 +2,7 @@
 -- Fix: Add "The Bespoke Investment Car Company" to the Neon database
 -- =============================================================================
 -- Run this script in your Neon SQL console (https://console.neon.tech)
--- or via psql: psql "$DATABASE_URL" -f fix-bespoke-company.sql
+-- or via psql: psql "$NEON_DATABASE_URL" -f fix-bespoke-company.sql
 -- =============================================================================
 
 -- Step 1: Enable pgcrypto extension (required for password hashing in auth.ts)

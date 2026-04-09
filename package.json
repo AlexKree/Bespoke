@@ -1,1 +1,1 @@
-{"name":"bespoke-site","private":true,"dependencies":{"bcryptjs":"^3.0.3","nodemailer":"^6.9.3","pg":"^8.20.0","resend":"^6.10.0"},"engines":{"node":"18.x"}}
+{"name":"bespoke-site","private":true,"dependencies":{"bcryptjs":"^3.0.3","nodemailer":"^6.9.3","pg":"^8.20.0"},"engines":{"node":"18.x"}}
