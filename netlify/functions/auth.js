@@ -60,7 +60,7 @@ async function sendVerificationEmail(email, token, baseUrl) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.log('VERIFY LINK:', verifyUrl);
-    return;
+    return verifyUrl;
   }
   const resend = new Resend(apiKey);
   const from = process.env.RESEND_FROM_EMAIL || 'contact@thebespokecar.com';
@@ -127,9 +127,9 @@ exports.handler = async function (event) {
       const proto = event.headers['x-forwarded-proto'] || 'https';
       const host = event.headers['x-forwarded-host'] || event.headers['host'] || 'thebespokecar.com';
       const baseUrl = `${proto}://${host}`;
-      await sendVerificationEmail(email.toLowerCase(), token, baseUrl);
+      const verifyUrl = await sendVerificationEmail(email.toLowerCase(), token, baseUrl);
 
-      return json(200, { ok: true, message: 'Vérifiez votre email' });
+      return json(200, { ok: true, message: 'Vérifiez votre email', ...(verifyUrl ? { verifyUrl } : {}) });
     }
 
     // ── verify-email ──────────────────────────────────────────────────────
