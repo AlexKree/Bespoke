@@ -36,6 +36,10 @@
         <a data-nav class="navlink" href="a-propos.html">À propos</a>
         <a data-nav class="navlink" href="contact.html">Contact</a>
         <a class="btn primary btnSm" href="login.html" id="navAuthBtn" style="margin-left:8px">Se connecter</a>
+        <div id="navUserWrap" class="navUser" style="display:none">
+          <span class="navUserEmail" id="navUserEmail"></span>
+          <button class="btn btnSm" id="navLogoutBtn" type="button">Déconnexion</button>
+        </div>
     <div class="lang">
       <a class="active" href="../fr/stock.html">FR</a>
       <a class="" href="../en/stock.html">EN</a>
@@ -58,32 +62,115 @@
       <p class="lead">Mises à jour régulières. Prix sur demande. Les véhicules vendus peuvent être affichés.</p>
     </div>
 
-    <div class="card pad stockControls">
-      <div class="stockControlsLeft">
-        <input id="stockSearch" class="input" type="search" placeholder="Rechercher (marque, modèle, année…)" autocomplete="off"/>
-        <div class="mini stockHint">Astuce : pour ajouter / retirer un véhicule, il suffit de mettre à jour le fichier stock.json et d’ajouter les photos dans /assets/stock/images.</div>
+    <!-- Dashboard tabs — affichés uniquement après connexion -->
+    <div id="dashTabsWrap" class="dashTabsWrap" style="display:none">
+      <div class="dashTabBar">
+        <button class="dashTabBtn active" id="dashTabBtn_stock" type="button" onclick="switchDashTab('stock')">Stock</button>
+        <button class="dashTabBtn" id="dashTabBtn_dashboard" type="button" onclick="switchDashTab('dashboard')">Dashboard</button>
+        <button class="dashTabBtn" id="dashTabBtn_messages" type="button" onclick="switchDashTab('messages')">Messages</button>
+        <button class="dashTabBtn" id="dashTabBtn_params" type="button" onclick="switchDashTab('params')">Paramètres</button>
       </div>
-      <div class="stockControlsRight">
-        <label class="toggle">
-          <input id="includeSold" type="checkbox"/>
-          <span>Inclure vendus</span>
-        </label>
-        <div class="stockSort">
-          <span class="mini">Trier</span>
-          <select id="stockSort" class="select">
-            <option value="year_desc">Année (récent → ancien)</option>
+    </div>
+
+    <!-- ── Onglet : Stock ──────────────────────────────────────────── -->
+    <div id="dashPanel_stock" class="dashPanel active">
+      <div class="card pad stockControls">
+        <div class="stockControlsLeft">
+          <input id="stockSearch" class="input" type="search" placeholder="Rechercher (marque, modèle, année…)" autocomplete="off"/>
+          <div class="mini stockHint">Astuce : pour ajouter / retirer un véhicule, il suffit de mettre à jour le fichier stock.json et d'ajouter les photos dans /assets/stock/images.</div>
+        </div>
+        <div class="stockControlsRight">
+          <label class="toggle">
+            <input id="includeSold" type="checkbox"/>
+            <span>Inclure vendus</span>
+          </label>
+          <div class="stockSort">
+            <span class="mini">Trier</span>
+            <select id="stockSort" class="select">
+              <option value="year_desc">Année (récent → ancien)</option>
 <option value="year_asc">Année (ancien → récent)</option>
 <option value="az">A → Z</option>
-          </select>
+            </select>
+          </div>
+        </div>
+      </div>
+      <noscript>
+        <div class="card pad">Activez JavaScript pour afficher le stock.</div>
+      </noscript>
+      <div id="stockGrid" class="stockGrid"></div>
+    </div>
+
+    <!-- ── Onglet : Dashboard ──────────────────────────────────────── -->
+    <div id="dashPanel_dashboard" class="dashPanel">
+      <div class="dashPanelInner">
+        <div class="dashGrid">
+          <div>
+            <div class="walletBalance">
+              <span class="walletBalanceLabel">Argent disponible</span>
+              <span class="walletBalanceAmt" id="dashBalance">—</span>
+            </div>
+            <div class="walletTxTitle">Activité récente</div>
+            <div id="dashTxList" class="txList"><div class="txEmpty">Chargement…</div></div>
+          </div>
+          <div>
+            <div class="dashProfileCard">
+              <div class="kicker">Profil</div>
+              <div id="dashProfile" style="margin-top:16px"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <noscript>
-      <div class="card pad">Activez JavaScript pour afficher le stock.</div>
-    </noscript>
+    <!-- ── Onglet : Messages ───────────────────────────────────────── -->
+    <div id="dashPanel_messages" class="dashPanel">
+      <div class="dashPanelInner">
+        <div class="msgWrap">
+          <div id="msgThread" class="msgThread">
+            <div class="msgEmpty">Chargement…</div>
+          </div>
+          <div class="msgCompose">
+            <textarea id="msgInput" placeholder="Votre message à l'équipe Bespoke…" rows="3"></textarea>
+            <button class="btn primary" id="msgSendBtn" type="button">Envoyer</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <div id="stockGrid" class="stockGrid"></div>
+    <!-- ── Onglet : Paramètres ─────────────────────────────────────── -->
+    <div id="dashPanel_params" class="dashPanel">
+      <div class="dashPanelInner">
+        <div class="paramsBalanceBar">
+          <span class="lbl">Solde actuel</span>
+          <span class="val" id="paramsBalance">—</span>
+        </div>
+        <div class="walletActions">
+          <div class="walletActionCard">
+            <h3>Ajouter des fonds</h3>
+            <div class="walletRow">
+              <label for="addFundsAmt">Montant (€)</label>
+              <input id="addFundsAmt" class="input" type="number" min="1" max="100000" placeholder="Ex : 5000" step="1"/>
+            </div>
+            <button class="btn primary" id="addFundsBtn" type="button" style="margin-top:16px">Ajouter</button>
+            <div id="addFundsMsg" class="authMsg" style="display:none;margin-top:12px"></div>
+          </div>
+          <div class="walletActionCard">
+            <h3>Allouer des fonds</h3>
+            <div class="walletRow">
+              <label for="allocAmt">Montant (€)</label>
+              <input id="allocAmt" class="input" type="number" min="1" placeholder="Ex : 2000" step="1"/>
+            </div>
+            <div class="walletRow">
+              <label for="allocLabel">Objet</label>
+              <input id="allocLabel" class="input" type="text" placeholder="Ex : Réservation Ferrari 308"/>
+            </div>
+            <button class="btn primary" id="allocBtn" type="button" style="margin-top:16px">Allouer</button>
+            <div id="allocMsg" class="authMsg" style="display:none;margin-top:12px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </main>
 
@@ -155,6 +242,228 @@
         .catch(err => console.warn('SW registration failed:', err));
     });
   }
+</script>
+<script>
+(function () {
+  'use strict';
+  var currentUser = null;
+  var dashLoaded = false;
+  var messagesLoaded = false;
+  var paramsLoaded = false;
+
+  // Check session
+  fetch('/.netlify/functions/auth', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'me' }),
+    credentials: 'same-origin'
+  }).then(function (r) { return r.json(); }).then(function (data) {
+    if (data.user) { currentUser = data.user; onLoggedIn(data.user); }
+  }).catch(function () {});
+
+  function onLoggedIn(user) {
+    var navBtn = document.getElementById('navAuthBtn');
+    if (navBtn) navBtn.style.display = 'none';
+    var navUser = document.getElementById('navUserWrap');
+    if (navUser) navUser.style.display = 'flex';
+    var navEmail = document.getElementById('navUserEmail');
+    if (navEmail) navEmail.textContent = user.email;
+    document.getElementById('dashTabsWrap').style.display = '';
+  }
+
+  // Logout
+  document.addEventListener('click', function (e) {
+    if (e.target && e.target.id === 'navLogoutBtn') {
+      fetch('/.netlify/functions/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'logout' }),
+        credentials: 'same-origin'
+      }).then(function () { window.location.reload(); }).catch(function () { window.location.reload(); });
+    }
+  });
+
+  // Tab switching
+  window.switchDashTab = function (tab) {
+    document.querySelectorAll('.dashTabBtn').forEach(function (b) { b.classList.remove('active'); });
+    document.querySelectorAll('.dashPanel').forEach(function (p) { p.classList.remove('active'); });
+    var btn = document.getElementById('dashTabBtn_' + tab);
+    var panel = document.getElementById('dashPanel_' + tab);
+    if (btn) btn.classList.add('active');
+    if (panel) panel.classList.add('active');
+    if (tab === 'dashboard' && !dashLoaded) loadDashboard();
+    if (tab === 'messages' && !messagesLoaded) loadMessages();
+    if (tab === 'params' && !paramsLoaded) loadParams();
+  };
+
+  function fmtEur(cents) {
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format((cents || 0) / 100);
+  }
+  function fmtDate(iso) {
+    return new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+  function showMsg(el, type, text) {
+    if (!el) return;
+    el.className = 'authMsg ' + type;
+    el.textContent = text;
+    el.style.display = '';
+  }
+
+  // Dashboard tab
+  function loadDashboard() {
+    dashLoaded = true;
+    var balEl = document.getElementById('dashBalance');
+    var txEl = document.getElementById('dashTxList');
+    var profEl = document.getElementById('dashProfile');
+    fetch('/.netlify/functions/wallet', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'get-balance' }),
+      credentials: 'same-origin'
+    }).then(function (r) { return r.json(); }).then(function (data) {
+      if (balEl) balEl.textContent = fmtEur(data.balance_cents);
+      if (txEl) {
+        if (!data.transactions || !data.transactions.length) {
+          txEl.innerHTML = '<div class="txEmpty">Aucune transaction pour l\'instant.</div>';
+        } else {
+          txEl.innerHTML = data.transactions.map(function (tx) {
+            var isDeposit = tx.type === 'deposit';
+            return '<div class="txRow"><span class="txLabel">' + escHtml(tx.label || tx.type) + '</span>' +
+              '<span class="txAmt ' + tx.type + '">' + (isDeposit ? '+' : '-') + fmtEur(Math.abs(tx.amount_cents)) + '</span>' +
+              '<span class="txDate">' + fmtDate(tx.created_at) + '</span></div>';
+          }).join('');
+        }
+      }
+    }).catch(function () { if (balEl) balEl.textContent = '—'; });
+    if (profEl && currentUser) {
+      profEl.innerHTML =
+        '<div class="dashProfileRow"><div class="lbl">Email</div><div class="val">' + escHtml(currentUser.email) + '</div></div>' +
+        '<div class="dashProfileRow"><div class="lbl">Rôle</div><div class="val">' + escHtml(currentUser.role) + '</div></div>' +
+        '<div class="dashProfileRow"><div class="lbl">Type de compte</div><div class="val">' + escHtml(currentUser.account_type || '—') + '</div></div>';
+    }
+  }
+
+  // Messages tab
+  function loadMessages() {
+    messagesLoaded = true;
+    renderMessages();
+  }
+  function renderMessages() {
+    var thread = document.getElementById('msgThread');
+    if (!thread) return;
+    thread.innerHTML = '<div class="msgEmpty">Chargement…</div>';
+    fetch('/.netlify/functions/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'list' }),
+      credentials: 'same-origin'
+    }).then(function (r) { return r.json(); }).then(function (data) {
+      if (!data.messages || !data.messages.length) {
+        thread.innerHTML = '<div class="msgEmpty">Aucun message. Envoyez votre premier message.</div>';
+        return;
+      }
+      thread.innerHTML = data.messages.map(function (msg) {
+        var isMine = currentUser && msg.author_id === currentUser.id;
+        return '<div class="msgBubble ' + (isMine ? 'mine' : 'theirs') + '">' +
+          '<div>' + escHtml(msg.content).replace(/\n/g, '<br>') + '</div>' +
+          '<div class="msgBubbleMeta">' + fmtDate(msg.created_at) + (isMine ? '' : ' · ' + escHtml(msg.author_role)) + '</div>' +
+          '</div>';
+      }).join('');
+      thread.scrollTop = thread.scrollHeight;
+    }).catch(function () {
+      thread.innerHTML = '<div class="msgEmpty">Erreur lors du chargement des messages.</div>';
+    });
+  }
+  document.addEventListener('click', function (e) {
+    if (e.target && e.target.id === 'msgSendBtn') {
+      var input = document.getElementById('msgInput');
+      if (!input) return;
+      var content = input.value.trim();
+      if (!content) return;
+      var btn = e.target;
+      btn.disabled = true; btn.textContent = '…';
+      fetch('/.netlify/functions/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'send', content: content }),
+        credentials: 'same-origin'
+      }).then(function (r) { return r.json(); }).then(function (data) {
+        if (data.ok) { input.value = ''; renderMessages(); }
+        btn.disabled = false; btn.textContent = 'Envoyer';
+      }).catch(function () { btn.disabled = false; btn.textContent = 'Envoyer'; });
+    }
+  });
+
+  // Params tab
+  function loadParams() {
+    paramsLoaded = true;
+    fetch('/.netlify/functions/wallet', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'get-balance' }),
+      credentials: 'same-origin'
+    }).then(function (r) { return r.json(); }).then(function (data) {
+      var el = document.getElementById('paramsBalance');
+      if (el) el.textContent = fmtEur(data.balance_cents);
+    }).catch(function () {});
+  }
+  document.addEventListener('click', function (e) {
+    if (e.target && e.target.id === 'addFundsBtn') {
+      var amtEl = document.getElementById('addFundsAmt');
+      var msgEl = document.getElementById('addFundsMsg');
+      var btn = e.target;
+      var amt = Math.round(parseFloat(amtEl.value) * 100);
+      if (!amt || amt <= 0) { showMsg(msgEl, 'error', 'Montant invalide.'); return; }
+      btn.disabled = true;
+      fetch('/.netlify/functions/wallet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'add-funds', amount_cents: amt }),
+        credentials: 'same-origin'
+      }).then(function (r) { return r.json(); }).then(function (data) {
+        btn.disabled = false;
+        if (data.ok) {
+          showMsg(msgEl, 'success', 'Fonds ajoutés ! Solde : ' + fmtEur(data.balance_cents));
+          amtEl.value = '';
+          var b = document.getElementById('paramsBalance');
+          var d = document.getElementById('dashBalance');
+          if (b) b.textContent = fmtEur(data.balance_cents);
+          if (d) d.textContent = fmtEur(data.balance_cents);
+        } else { showMsg(msgEl, 'error', data.error || 'Erreur'); }
+      }).catch(function () { btn.disabled = false; showMsg(msgEl, 'error', 'Erreur réseau.'); });
+    }
+  });
+  document.addEventListener('click', function (e) {
+    if (e.target && e.target.id === 'allocBtn') {
+      var amtEl = document.getElementById('allocAmt');
+      var labelEl = document.getElementById('allocLabel');
+      var msgEl = document.getElementById('allocMsg');
+      var btn = e.target;
+      var amt = Math.round(parseFloat(amtEl.value) * 100);
+      if (!amt || amt <= 0) { showMsg(msgEl, 'error', 'Montant invalide.'); return; }
+      btn.disabled = true;
+      fetch('/.netlify/functions/wallet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'allocate', amount_cents: amt, label: labelEl.value || 'Allocation' }),
+        credentials: 'same-origin'
+      }).then(function (r) { return r.json(); }).then(function (data) {
+        btn.disabled = false;
+        if (data.ok) {
+          showMsg(msgEl, 'success', 'Allocation effectuée ! Solde : ' + fmtEur(data.balance_cents));
+          amtEl.value = ''; labelEl.value = '';
+          var b = document.getElementById('paramsBalance');
+          var d = document.getElementById('dashBalance');
+          if (b) b.textContent = fmtEur(data.balance_cents);
+          if (d) d.textContent = fmtEur(data.balance_cents);
+        } else { showMsg(msgEl, 'error', data.error || 'Erreur'); }
+      }).catch(function () { btn.disabled = false; showMsg(msgEl, 'error', 'Erreur réseau.'); });
+    }
+  });
+})();
 </script>
 </body>
 </html>

@@ -588,4 +588,199 @@ footer{
 .modalText{
   font-size:14px; color:var(--muted); line-height:1.76;
   margin:0; flex:1;
+
 }
+/* ═══════════════════════════════════════════════════════════════════
+   AUTH PAGE
+═══════════════════════════════════════════════════════════════════ */
+.authPage{display:flex;align-items:center;padding:52px 0 64px}
+.authCard{max-width:480px;width:100%;margin:0 auto}
+
+.authTabBar{
+  display:flex; border-bottom:1px solid var(--line);
+  margin-bottom:28px; gap:0;
+}
+.authTabBtn{
+  flex:1; padding:13px 0; background:none; border:none; cursor:pointer;
+  font-family:inherit; font-size:14px; font-weight:500; color:var(--muted);
+  letter-spacing:.02em;
+  border-bottom:2px solid transparent; margin-bottom:-1px;
+  transition:color var(--transition), border-color var(--transition);
+}
+.authTabBtn.active{color:var(--gold-light);border-bottom-color:var(--gold)}
+.authTabBtn:hover:not(.active){color:var(--text)}
+.authPanel h2{font-size:clamp(22px,3vw,28px);margin-bottom:12px}
+.authMsg{
+  padding:12px 16px; border-radius:var(--r-md); font-size:13.5px; margin-top:12px;
+}
+.authMsg.error{background:rgba(217,95,95,.12);border:1px solid rgba(217,95,95,.35);color:#e87070}
+.authMsg.success{background:rgba(82,168,122,.12);border:1px solid rgba(82,168,122,.35);color:#6dcf9a}
+
+.formGroup{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.formGroup label{font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.03em}
+.input,.select{
+  width:100%; border-radius:var(--r-md);
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.045);
+  padding:12px 16px; color:var(--text); font-size:14px;
+  outline:none; font-family:inherit;
+  transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+}
+.input:focus,.select:focus{
+  border-color:rgba(201,161,74,.60);
+  background:rgba(255,255,255,.07);
+  box-shadow:0 0 0 3px rgba(201,161,74,.10);
+}
+.input::placeholder{color:var(--muted2)}
+.select option{background:#0a1726}
+.linkBtn{
+  background:none; border:none; cursor:pointer;
+  color:var(--gold-light); font-size:inherit; font-family:inherit;
+  padding:0; text-decoration:underline; text-underline-offset:2px;
+}
+.linkBtn:hover{color:var(--gold)}
+
+/* ── Nav user widget ─────────────────────────────────────────────── */
+.navUser{
+  display:flex; align-items:center; gap:8px; margin-left:8px;
+}
+.navUserEmail{
+  font-size:12px; color:var(--muted); max-width:160px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   DASHBOARD TABS (stock page, auth-gated)
+═══════════════════════════════════════════════════════════════════ */
+.dashTabsWrap{margin-top:22px}
+.dashTabBar{
+  display:flex; border-bottom:1px solid var(--line);
+  gap:0; overflow-x:auto; scrollbar-width:none;
+  background:var(--panel); border-radius:var(--r-xl) var(--r-xl) 0 0;
+  border:1px solid var(--line); border-bottom:none;
+  padding:0 12px;
+}
+.dashTabBar::-webkit-scrollbar{display:none}
+.dashTabBtn{
+  padding:14px 20px; background:none; border:none; cursor:pointer;
+  font-family:inherit; font-size:13.5px; font-weight:500; color:var(--muted);
+  white-space:nowrap; letter-spacing:.015em;
+  border-bottom:2px solid transparent; margin-bottom:-1px;
+  transition:color var(--transition), border-color var(--transition);
+}
+.dashTabBtn.active{color:var(--gold-light);border-bottom-color:var(--gold)}
+.dashTabBtn:hover:not(.active){color:var(--text)}
+.dashPanel{display:none}
+.dashPanel.active{display:block}
+.dashPanelInner{
+  padding-top:22px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   WALLET WIDGET
+═══════════════════════════════════════════════════════════════════ */
+.walletBalance{
+  display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+  padding:22px 28px;
+  background: linear-gradient(135deg, rgba(201,161,74,.12) 0%, rgba(201,161,74,.06) 100%);
+  border:1px solid var(--line-gold); border-radius:var(--r-xl);
+  margin-bottom:22px;
+}
+.walletBalanceLabel{
+  font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted); font-weight:600; align-self:center;
+}
+.walletBalanceAmt{
+  font-family:var(--serif); font-size:36px; font-weight:600;
+  color:var(--gold-light); letter-spacing:.025em;
+}
+.walletTxTitle{
+  font-size:11.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted); font-weight:600; margin-bottom:12px;
+}
+.txList{display:flex;flex-direction:column;gap:8px}
+.txRow{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:12px 16px; border-radius:var(--r-md);
+  background:rgba(255,255,255,.035); border:1px solid var(--line);
+  font-size:13px;
+}
+.txRow .txLabel{color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.txRow .txAmt{font-weight:600;white-space:nowrap}
+.txRow .txAmt.deposit{color:var(--green)}
+.txRow .txAmt.allocation,.txRow .txAmt.release{color:var(--red)}
+.txRow .txDate{font-size:11px;color:var(--muted2);white-space:nowrap}
+.txEmpty{color:var(--muted2);font-size:13.5px;text-align:center;padding:28px 0}
+
+/* ── Wallet actions (Paramètres) ────────────────────────────────── */
+.walletActions{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:640px){.walletActions{grid-template-columns:1fr}}
+.walletActionCard{
+  padding:24px; border-radius:var(--r-xl);
+  background:var(--panel); border:1px solid var(--line);
+}
+.walletActionCard h3{
+  font-size:11.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--gold-light); margin-bottom:18px;
+}
+.walletRow{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.walletRow label{font-size:13px;color:var(--muted)}
+.paramsBalanceBar{
+  padding:16px 20px; border-radius:var(--r-lg); margin-bottom:22px;
+  background:rgba(255,255,255,.03); border:1px solid var(--line);
+  display:flex; align-items:center; gap:12px;
+}
+.paramsBalanceBar .lbl{font-size:12px;color:var(--muted);letter-spacing:.10em;text-transform:uppercase}
+.paramsBalanceBar .val{font-family:var(--serif);font-size:24px;color:var(--gold-light);font-weight:500}
+
+/* ── Dashboard grid ──────────────────────────────────────────────── */
+.dashGrid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
+@media (max-width:840px){.dashGrid{grid-template-columns:1fr}}
+.dashProfileCard{padding:24px;border-radius:var(--r-xl);background:var(--panel);border:1px solid var(--line)}
+.dashProfileRow{margin-bottom:14px}
+.dashProfileRow .lbl{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.dashProfileRow .val{font-size:14px;color:var(--text);font-weight:500}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MESSAGES
+═══════════════════════════════════════════════════════════════════ */
+.msgWrap{display:flex;flex-direction:column;gap:14px}
+.msgThread{
+  display:flex; flex-direction:column; gap:10px;
+  max-height:440px; overflow-y:auto;
+  padding:20px; border-radius:var(--r-xl);
+  background:rgba(0,0,0,.22); border:1px solid var(--line);
+  scroll-behavior:smooth;
+}
+.msgThread::-webkit-scrollbar{width:4px}
+.msgThread::-webkit-scrollbar-track{background:transparent}
+.msgThread::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:4px}
+.msgBubble{
+  max-width:78%; padding:11px 16px;
+  border-radius:var(--r-lg); font-size:14px; line-height:1.58;
+}
+.msgBubble.mine{
+  align-self:flex-end;
+  background:linear-gradient(135deg,rgba(201,161,74,.18) 0%,rgba(201,161,74,.10) 100%);
+  border:1px solid var(--line-gold); color:var(--text);
+}
+.msgBubble.theirs{
+  align-self:flex-start;
+  background:rgba(255,255,255,.07); border:1px solid var(--line); color:var(--text);
+}
+.msgBubbleMeta{font-size:10.5px;color:var(--muted2);margin-top:5px;letter-spacing:.02em}
+.msgEmpty{color:var(--muted2);text-align:center;padding:32px 0;font-size:14px}
+.msgCompose{display:flex;gap:10px;align-items:flex-end}
+.msgCompose textarea{
+  flex:1; min-height:64px; max-height:160px; resize:vertical;
+  border-radius:var(--r-md); border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.05); padding:12px 16px;
+  color:var(--text); font-size:14px; font-family:inherit; outline:none;
+  transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+}
+.msgCompose textarea:focus{
+  border-color:rgba(201,161,74,.60);
+  background:rgba(255,255,255,.07);
+  box-shadow:0 0 0 3px rgba(201,161,74,.10);
+}
+.msgCompose textarea::placeholder{color:var(--muted2)}
