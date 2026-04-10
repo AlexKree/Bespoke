@@ -1,19 +1,18 @@
 -- Seed staff invite tokens
--- Run this against your Supabase Postgres database to create invite tokens for staff members.
--- Replace the email addresses as needed.
+-- Run this against your Neon Postgres database to create invite tokens for staff members.
 -- After running, share the setup URL with each staff member:
 --   https://thebespokecar.com/setup-staff.html?token=<token>
 
 INSERT INTO staff_invites (email, token, role, expires_at)
 VALUES
   (
-    'staff1@thebespokecar.com',
+    'pierre.cohen71@gmail.com',
     encode(gen_random_bytes(32), 'hex'),
     'staff',
     now() + interval '7 days'
   ),
   (
-    'staff2@thebespokecar.com',
+    'contact@thebespokecar.com',
     encode(gen_random_bytes(32), 'hex'),
     'staff',
     now() + interval '7 days'
@@ -23,5 +22,5 @@ ON CONFLICT (email) DO UPDATE
       used = FALSE,
       expires_at = now() + interval '7 days';
 
--- View the tokens after inserting:
+-- View the tokens after inserting (copy each token → setup URL above):
 SELECT email, token, role, expires_at FROM staff_invites;

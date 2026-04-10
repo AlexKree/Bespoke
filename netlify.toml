@@ -7,6 +7,42 @@
   to   = "/admin/index.html"
   status = 200
 
+# Clean URLs for auth pages
+[[redirects]]
+  from = "/fr/login"
+  to   = "/fr/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/en/login"
+  to   = "/en/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/fr/verify"
+  to   = "/fr/verify.html"
+  status = 200
+
+[[redirects]]
+  from = "/en/verify"
+  to   = "/en/verify.html"
+  status = 200
+
+[[redirects]]
+  from = "/fr/stock"
+  to   = "/fr/stock.html"
+  status = 200
+
+[[redirects]]
+  from = "/en/stock"
+  to   = "/en/stock.html"
+  status = 200
+
+[[redirects]]
+  from = "/setup-staff"
+  to   = "/setup-staff.html"
+  status = 200
+
 [[headers]]
   for = "/sw.js"
   [headers.values]
