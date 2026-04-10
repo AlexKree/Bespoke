@@ -37,7 +37,7 @@
         <a data-nav class="navlink" href="partenaires.html">Partners</a>
         <a data-nav class="navlink" href="a-propos.html">About</a>
         <a data-nav class="navlink" href="contact.html">Contact</a>
-        
+        <a class="btn primary btnSm" href="login.html" id="navAuthBtn" style="margin-left:8px">Sign In</a>
     <div class="lang">
       <a class="" href="../fr/index.html">FR</a>
       <a class="active" href="../en/index.html">EN</a>
@@ -68,6 +68,7 @@
       <a class="btn primary" href="contact.html">Submit a request (concierge)</a>
       <a class="btn" href="opportunites.html">View opportunities</a>
       <a class="btn" href="services.html">Discover the process</a>
+      <a class="btn" href="login.html" id="heroAuthBtn">Sign In / Create Account →</a>
     </div>
 
     <div class="grid3">
@@ -190,6 +191,25 @@
         .catch(err => console.warn('SW registration failed:', err));
     });
   }
+</script>
+<script>
+(async function () {
+  try {
+    var res = await fetch('/.netlify/functions/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'me' }),
+      credentials: 'same-origin'
+    });
+    var data = await res.json();
+    if (data.user) {
+      var btn = document.getElementById('navAuthBtn');
+      if (btn) { btn.textContent = 'My Account'; btn.href = 'stock.html'; }
+      var heroBtn = document.getElementById('heroAuthBtn');
+      if (heroBtn) heroBtn.style.display = 'none';
+    }
+  } catch (e) {}
+})();
 </script>
 </body>
 </html>

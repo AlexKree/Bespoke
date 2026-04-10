@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Connexion — Bespoke</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/styles.css?v=2"/>
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="navbar">
+      <a class="brand" href="index.html">
+        <img class="mark" src="../assets/photos/hero.jpg" alt="Bespoke"/>
+        <div>
+          <div class="name">BESPOKE</div>
+          <div class="tag">Sourcing • Mandats • Import • Collection & Prestige</div>
+        </div>
+      </a>
+      <nav>
+        <a data-nav class="navlink" href="index.html">Accueil</a>
+        <a data-nav class="navlink" href="services.html">Services</a>
+        <a data-nav class="navlink" href="stock.html">Stock</a>
+        <a data-nav class="navlink" href="contact.html">Contact</a>
+        <div class="lang">
+          <a class="active" href="../fr/login.html">FR</a>
+          <a class="" href="../en/login.html">EN</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="section authPage">
+  <div class="container">
+    <div class="authCard card pad-lg">
+
+      <div class="authTabBar">
+        <button class="authTabBtn active" id="tabLoginBtn" type="button">Connexion</button>
+        <button class="authTabBtn" id="tabSignupBtn" type="button">Créer un compte</button>
+      </div>
+
+      <!-- Login panel -->
+      <div id="panelLogin" class="authPanel">
+        <h2>Se connecter</h2>
+        <div id="loginError" class="authMsg error" style="display:none"></div>
+        <form id="loginForm" class="form" novalidate>
+          <div class="formGroup">
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" class="input" type="email" required autocomplete="email" placeholder="votre@email.com"/>
+          </div>
+          <div class="formGroup">
+            <label for="loginPassword">Mot de passe</label>
+            <input id="loginPassword" class="input" type="password" required autocomplete="current-password" placeholder="••••••••"/>
+          </div>
+          <button class="btn primary" type="submit" id="loginSubmit">Se connecter</button>
+        </form>
+        <p class="mini" style="margin-top:14px;text-align:center">
+          Pas encore de compte ? <button class="linkBtn" id="goSignup" type="button">Créer un compte →</button>
+        </p>
+      </div>
+
+      <!-- Signup panel -->
+      <div id="panelSignup" class="authPanel" style="display:none">
+        <h2>Créer un compte</h2>
+        <div id="signupError" class="authMsg error" style="display:none"></div>
+        <div id="signupSuccess" class="authMsg success" style="display:none"></div>
+        <form id="signupForm" class="form" novalidate>
+          <div class="formGroup">
+            <label for="signupEmail">Email</label>
+            <input id="signupEmail" class="input" type="email" required autocomplete="email" placeholder="votre@email.com"/>
+          </div>
+          <div class="formGroup">
+            <label for="signupPassword">Mot de passe <span class="mini">(min. 8 caractères)</span></label>
+            <input id="signupPassword" class="input" type="password" required autocomplete="new-password" placeholder="••••••••" minlength="8"/>
+          </div>
+          <div class="formGroup">
+            <label for="signupPasswordConfirm">Confirmer le mot de passe</label>
+            <input id="signupPasswordConfirm" class="input" type="password" required autocomplete="new-password" placeholder="••••••••"/>
+          </div>
+          <div class="formGroup">
+            <label for="signupAccountType">Type de compte</label>
+            <select id="signupAccountType" class="select">
+              <option value="Particulier">Particulier</option>
+              <option value="Entreprise">Entreprise</option>
+            </select>
+          </div>
+          <button class="btn primary" type="submit" id="signupSubmit">Créer mon compte</button>
+        </form>
+        <p class="mini" style="margin-top:14px;text-align:center">
+          Déjà inscrit ? <button class="linkBtn" id="goLogin" type="button">Se connecter →</button>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="sep"></div>
+    <div class="mini">© 2026 Bespoke — Tous droits réservés.</div>
+  </div>
+</footer>
+
+<script src="../assets/site.js"></script>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  if (params.get('tab') === 'signup') showTab('signup');
+
+  function showTab(tab) {
+    var isLogin = tab !== 'signup';
+    document.getElementById('panelLogin').style.display = isLogin ? '' : 'none';
+    document.getElementById('panelSignup').style.display = isLogin ? 'none' : '';
+    document.getElementById('tabLoginBtn').classList.toggle('active', isLogin);
+    document.getElementById('tabSignupBtn').classList.toggle('active', !isLogin);
+  }
+
+  document.getElementById('tabLoginBtn').addEventListener('click', function () { showTab('login'); });
+  document.getElementById('tabSignupBtn').addEventListener('click', function () { showTab('signup'); });
+  document.getElementById('goSignup').addEventListener('click', function () { showTab('signup'); });
+  document.getElementById('goLogin').addEventListener('click', function () { showTab('login'); });
+
+  document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var btn = document.getElementById('loginSubmit');
+    var errEl = document.getElementById('loginError');
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Connexion…';
+    try {
+      var res = await fetch('/.netlify/functions/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'login',
+          email: document.getElementById('loginEmail').value,
+          password: document.getElementById('loginPassword').value
+        }),
+        credentials: 'same-origin'
+      });
+      var data = await res.json();
+      if (data.ok) {
+        window.location.href = '/fr/stock.html';
+      } else {
+        errEl.textContent = data.error || 'Erreur de connexion';
+        errEl.style.display = '';
+        btn.disabled = false;
+        btn.textContent = 'Se connecter';
+      }
+    } catch (err) {
+      errEl.textContent = 'Erreur réseau. Réessayez.';
+      errEl.style.display = '';
+      btn.disabled = false;
+      btn.textContent = 'Se connecter';
+    }
+  });
+
+  document.getElementById('signupForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var btn = document.getElementById('signupSubmit');
+    var errEl = document.getElementById('signupError');
+    var sucEl = document.getElementById('signupSuccess');
+    errEl.style.display = 'none';
+    sucEl.style.display = 'none';
+
+    var password = document.getElementById('signupPassword').value;
+    var confirm = document.getElementById('signupPasswordConfirm').value;
+    if (password !== confirm) {
+      errEl.textContent = 'Les mots de passe ne correspondent pas.';
+      errEl.style.display = '';
+      return;
+    }
+    if (password.length < 8) {
+      errEl.textContent = 'Le mot de passe doit contenir au moins 8 caractères.';
+      errEl.style.display = '';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Création…';
+    try {
+      var res = await fetch('/.netlify/functions/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'register',
+          email: document.getElementById('signupEmail').value,
+          password: password,
+          account_type: document.getElementById('signupAccountType').value
+        }),
+        credentials: 'same-origin'
+      });
+      var data = await res.json();
+      if (data.ok) {
+        document.getElementById('signupForm').style.display = 'none';
+        sucEl.textContent = 'Vérifiez votre email pour activer votre compte.';
+        sucEl.style.display = '';
+      } else {
+        errEl.textContent = data.error || 'Erreur lors de la création du compte';
+        errEl.style.display = '';
+        btn.disabled = false;
+        btn.textContent = 'Créer mon compte';
+      }
+    } catch (err) {
+      errEl.textContent = 'Erreur réseau. Réessayez.';
+      errEl.style.display = '';
+      btn.disabled = false;
+      btn.textContent = 'Créer mon compte';
+    }
+  });
+})();
+</script>
+</body>
+</html>
