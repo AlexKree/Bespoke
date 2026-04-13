@@ -219,6 +219,10 @@
       background: rgba(224,92,92,.12); border: 1px solid rgba(224,92,92,.35);
       color: var(--red);
     }
+    .carStatus.reserved {
+      background: rgba(255,165,0,.12); border: 1px solid rgba(255,165,0,.35);
+      color: #ffa500;
+    }
     .carActions {
       display: flex; gap: 8px; flex-shrink: 0; flex-wrap: wrap;
       justify-content: flex-end;
@@ -507,6 +511,7 @@
       <button class="tab-btn" data-tab="stock">🚗 Stock</button>
       <button class="tab-btn" data-tab="users">👥 Utilisateurs</button>
       <button class="tab-btn" data-tab="messages">💬 Messages<span id="msgBadge" class="tab-badge" style="display:none"></span></button>
+      <button class="tab-btn" data-tab="reservations">🔖 Réservations</button>
     </nav>
   </div>
 </header>
@@ -635,6 +640,35 @@
       </div>
     </div>
 
+    <!-- ── Reservations ────────────────────────────────────────────────── -->
+    <div id="tabReservations" class="tab-panel container" style="display:none">
+      <div class="adminHeader">
+        <div>
+          <div class="kicker">Gestion des réservations</div>
+          <h1 style="font-size:36px;margin:4px 0 0">Réservations</h1>
+        </div>
+        <button class="btn btn-sm" id="refreshReservationsBtn">🔄 Actualiser</button>
+      </div>
+      <div class="card pad" style="overflow-x:auto">
+        <div id="reservationsLoading" style="text-align:center;padding:32px 0"><span class="spinner"></span></div>
+        <div id="reservationsEmpty" style="display:none;padding:32px;text-align:center;color:var(--muted)">Aucune réservation.</div>
+        <table class="userTable" id="reservationsTable" style="display:none">
+          <thead>
+            <tr>
+              <th>Véhicule</th>
+              <th>Client</th>
+              <th>Acompte</th>
+              <th>Solde restant</th>
+              <th>Statut</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="reservationsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </main>
 
@@ -710,6 +744,7 @@
           <label for="fieldStatus">Statut</label>
           <select id="fieldStatus">
             <option value="available">Disponible</option>
+            <option value="reserved">Réservé</option>
             <option value="sold">Vendu</option>
           </select>
         </div>
@@ -1212,8 +1247,8 @@
     info.appendChild(meta);
 
     const badge = document.createElement('span');
-    badge.className = 'carStatus ' + (car.status === 'sold' ? 'sold' : 'available');
-    badge.textContent = car.status === 'sold' ? 'Vendu' : 'Disponible';
+    badge.className = 'carStatus ' + (car.status === 'sold' ? 'sold' : car.status === 'reserved' ? 'reserved' : 'available');
+    badge.textContent = car.status === 'sold' ? 'Vendu' : car.status === 'reserved' ? 'Réservé' : 'Disponible';
     info.appendChild(badge);
 
     row.appendChild(info);
@@ -1230,22 +1265,42 @@
     editBtn.addEventListener('click', () => openForm(idx));
     actions.appendChild(editBtn);
 
-    // Toggle sold / available
-    if (car.status === 'sold') {
-      const availBtn = document.createElement('button');
-      availBtn.type = 'button';
-      availBtn.className = 'btn btn-sm avail-btn';
-      availBtn.textContent = '✅ Remettre disponible';
-      availBtn.addEventListener('click', () => toggleStatus(idx));
-      actions.appendChild(availBtn);
-    } else {
-      const soldBtn = document.createElement('button');
-      soldBtn.type = 'button';
-      soldBtn.className = 'btn btn-sm sold-btn';
-      soldBtn.textContent = '🔴 Marquer vendu';
-      soldBtn.addEventListener('click', () => toggleStatus(idx));
-      actions.appendChild(soldBtn);
-    }
+    // Toggle sold / available / reserved status
+    const statusSelect = document.createElement('select');
+    statusSelect.className = 'select';
+    statusSelect.style.cssText = 'font-size:12px;padding:6px 10px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--text);cursor:pointer;max-width:140px';
+    [
+      { value: 'available', label: '✅ Disponible' },
+      { value: 'reserved', label: '🟠 Réservé' },
+      { value: 'sold', label: '🔴 Vendu' },
+    ].forEach(opt => {
+      const o = document.createElement('option');
+      o.value = opt.value;
+      o.textContent = opt.label;
+      if (car.status === opt.value) o.selected = true;
+      statusSelect.appendChild(o);
+    });
+    statusSelect.addEventListener('change', () => {
+      const newStatus = statusSelect.value;
+      if (newStatus === car.status) return;
+      if (newStatus === 'reserved' || car.status === 'reserved') {
+        // Use the reservation-aware endpoint for reserved transitions
+        updateVehicleStatus(car.id, newStatus);
+      } else {
+        // Simple toggle via saveStock for available<->sold
+        const oldStatus = car.status;
+        stockData.items[idx] = { ...car, status: newStatus };
+        saveStock().then(ok => {
+          if (ok) {
+            showToast('Statut mis à jour.', 'success');
+          } else {
+            stockData.items[idx] = car;
+            renderList();
+          }
+        });
+      }
+    });
+    actions.appendChild(statusSelect);
 
     // Delete button
     const delBtn = document.createElement('button');
@@ -1470,7 +1525,7 @@
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.tab === name);
     });
-    ['dashboard', 'stock', 'users', 'messages'].forEach(t => {
+    ['dashboard', 'stock', 'users', 'messages', 'reservations'].forEach(t => {
       const el = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
       if (el) el.style.display = t === name ? '' : 'none';
     });
@@ -1478,6 +1533,7 @@
     if (name === 'stock') loadStock();
     if (name === 'users') loadUsers();
     if (name === 'messages') loadThreads();
+    if (name === 'reservations') loadReservations();
   }
 
   document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -1549,6 +1605,10 @@
   }
   function esc(s) {
     return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function escHtml(s) { return esc(s); }
+  function fmtEur(cents) {
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format((cents || 0) / 100);
   }
 
   function renderRecent(recent) {
@@ -1971,6 +2031,118 @@
       document.getElementById('msgSendBtn').click();
     }
   });
+
+  // ── Reservations ──────────────────────────────────────────────────────
+
+  const RESERVATIONS_API = '/.netlify/functions/admin-reservations';
+
+  async function loadReservations() {
+    const loading = document.getElementById('reservationsLoading');
+    const empty = document.getElementById('reservationsEmpty');
+    const table = document.getElementById('reservationsTable');
+    const body = document.getElementById('reservationsBody');
+    loading.style.display = 'block';
+    empty.style.display = 'none';
+    table.style.display = 'none';
+
+    const { ok, status, data } = await apiCallTo(RESERVATIONS_API, 'list-all')
+      .catch(() => ({ ok: false, status: 0, data: {} }));
+
+    loading.style.display = 'none';
+
+    if (!ok) {
+      if (status === 401) { handleUnauth(); return; }
+      showToast('Erreur lors du chargement des réservations.', 'error');
+      return;
+    }
+
+    const reservations = data.reservations || [];
+    if (!reservations.length) {
+      empty.style.display = 'block';
+      return;
+    }
+
+    body.innerHTML = '';
+    reservations.forEach(r => {
+      const v = r.vehicle || {};
+      const title = (v.title && (v.title.fr || v.title.en)) ||
+        [(v.make && (v.make.fr || v.make.en)), (v.model && (v.model.fr || v.model.en))].filter(Boolean).join(' ') ||
+        r.vehicle_slug;
+
+      const statusLabels = { pending: 'En attente', balance_requested: 'Solde demandé', paid: 'Payé', cancelled: 'Annulé', sold: 'Vendu' };
+      const statusColors = { pending: 'var(--gold)', balance_requested: '#ffa500', paid: 'var(--green)', cancelled: 'var(--red)', sold: 'var(--red)' };
+
+      const cancellationNote = r.cancellation_requested
+        ? `<div style="font-size:11px;color:#ffa500;margin-top:2px">⚠ Annulation demandée${r.cancellation_message ? ' : ' + escHtml(r.cancellation_message) : ''}</div>`
+        : '';
+
+      const actions = [];
+      if (r.status === 'pending') {
+        actions.push(`<button class="btn btn-sm" data-res-action="request-balance" data-res-id="${r.id}">Demander le solde</button>`);
+        actions.push(`<button class="btn btn-sm danger" data-res-action="cancel-reservation" data-res-id="${r.id}">Annuler</button>`);
+      } else if (r.status === 'balance_requested') {
+        actions.push(`<span style="font-size:12px;color:var(--muted)">Attente paiement</span>`);
+        actions.push(`<button class="btn btn-sm danger" data-res-action="cancel-reservation" data-res-id="${r.id}">Annuler</button>`);
+      } else if (r.status === 'paid') {
+        actions.push(`<button class="btn btn-sm" data-res-action="mark-as-sold" data-res-id="${r.id}">Marquer vendu</button>`);
+      }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escHtml(title)}</td>
+        <td>${escHtml(r.user_email || '—')}${cancellationNote}</td>
+        <td>${fmtEur(r.deposit_cents)}</td>
+        <td>${fmtEur(r.remaining_cents)}</td>
+        <td><span style="color:${statusColors[r.status] || 'inherit'};font-weight:600">${escHtml(statusLabels[r.status] || r.status)}</span></td>
+        <td>${fmtDateTime(r.created_at)}</td>
+        <td style="display:flex;gap:6px;flex-wrap:wrap">${actions.join('')}</td>
+      `;
+      body.appendChild(tr);
+    });
+
+    table.style.display = '';
+  }
+
+  document.getElementById('refreshReservationsBtn').addEventListener('click', loadReservations);
+
+  // Delegated handler for reservation action buttons
+  document.getElementById('reservationsBody').addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-res-action]');
+    if (!btn) return;
+    const action = btn.getAttribute('data-res-action');
+    const resId = btn.getAttribute('data-res-id');
+    btn.disabled = true;
+
+    const { ok, status, data } = await apiCallTo(RESERVATIONS_API, action, { reservation_id: resId })
+      .catch(() => ({ ok: false, status: 0, data: {} }));
+
+    btn.disabled = false;
+    if (!ok) {
+      if (status === 401) { handleUnauth(); return; }
+      showToast((data && data.error) || 'Erreur.', 'error');
+      return;
+    }
+
+    showToast('Opération réussie.', 'success');
+    loadReservations();
+  });
+
+  // ── Stock status change ───────────────────────────────────────────────
+
+  async function updateVehicleStatus(vehicleSlug, newStatus) {
+    const { ok, status, data } = await apiCallTo(RESERVATIONS_API, 'update-vehicle-status', {
+      vehicle_slug: vehicleSlug,
+      status: newStatus,
+    }).catch(() => ({ ok: false, status: 0, data: {} }));
+
+    if (!ok) {
+      if (status === 401) { handleUnauth(); return; }
+      showToast((data && data.error) || 'Erreur mise à jour statut.', 'error');
+      return;
+    }
+    showToast('Statut mis à jour.', 'success');
+    loadStock();
+  }
 
   // ── Init ──────────────────────────────────────────────────────────────
   if (token) {
