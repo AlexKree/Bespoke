@@ -168,9 +168,9 @@ exports.handler = async function (event) {
         params.push(Boolean(verified));
       }
       if (balance_cents !== undefined) {
-        const bal = parseInt(balance_cents, 10);
-        if (isNaN(bal) || bal < 0) {
-          return { statusCode: 400, headers, body: JSON.stringify({ error: 'Balance invalide' }) };
+        const bal = Number(balance_cents);
+        if (!Number.isInteger(bal) || bal < 0) {
+          return { statusCode: 400, headers, body: JSON.stringify({ error: 'Balance invalide (entier positif en centimes requis)' }) };
         }
         setClauses.push(`balance_cents = $${idx++}`);
         params.push(bal);

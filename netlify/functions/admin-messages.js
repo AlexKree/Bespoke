@@ -23,6 +23,7 @@ function json(statusCode, body) {
 
 // ── Token helpers (same algorithm as admin.js) ────────────────────────────
 const MS_PER_HOUR = 3_600_000;
+const MAX_MESSAGE_LENGTH = 5000;
 
 function deriveSigningKey(password) {
   return crypto.scryptSync(password, 'bespoke-admin-token-salt-v1', 32);
@@ -120,8 +121,8 @@ exports.handler = async function (event) {
       if (!thread_id) return { statusCode: 400, headers, body: JSON.stringify({ error: 'thread_id requis' }) };
       const trimmed = (content || '').trim();
       if (!trimmed) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Contenu vide' }) };
-      if (trimmed.length > 5000) {
-        return { statusCode: 400, headers, body: JSON.stringify({ error: 'Message trop long (max 5000 caractères)' }) };
+      if (trimmed.length > MAX_MESSAGE_LENGTH) {
+        return { statusCode: 400, headers, body: JSON.stringify({ error: `Message trop long (max ${MAX_MESSAGE_LENGTH} caractères)` }) };
       }
 
       // Find a staff/admin user to use as author

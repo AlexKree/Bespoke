@@ -1515,7 +1515,7 @@
     const items = [
       { label: 'Utilisateurs', value: stats.total_users || 0, sub: `${stats.verified_users || 0} vérifiés` },
       { label: 'Messages non lus', value: stats.unread_threads || 0, sub: 'threads en attente' },
-      { label: 'Solde total wallets', value: bal.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' }), sub: 'en centimes : ' + (stats.total_balance_cents || 0) },
+      { label: 'Solde total wallets', value: bal.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' }), sub: 'somme de tous les wallets' },
       { label: 'Comptes vérifiés', value: stats.verified_users || 0, sub: `sur ${stats.total_users || 0} comptes` },
     ];
     grid.innerHTML = items.map(i => `
@@ -1708,10 +1708,19 @@
 
     let result;
     if (userId) {
-      const extra = { user_id: userId, email, role, account_type, verified, balance_cents };
-      if (password) extra.new_password = password;
-      // Use update action; reset-password is separate
-      result = await apiCallTo(USERS_API, 'update', extra).catch(() => ({ ok: false, data: {} }));
+      result = await apiCallTo(USERS_API, 'update', { user_id: userId, email, role, account_type, verified, balance_cents })
+        .catch(() => ({ ok: false, data: {} }));
+      // If a new password was provided, reset it separately
+      if (result.ok && password) {
+        const pwdResult = await apiCallTo(USERS_API, 'reset-password', { user_id: userId, new_password: password })
+          .catch(() => ({ ok: false, data: {} }));
+        if (!pwdResult.ok) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Enregistrer';
+          showToast((pwdResult.data && pwdResult.data.error) || 'Erreur lors du changement de mot de passe.', 'error');
+          return;
+        }
+      }
     } else {
       if (!password) {
         showToast('Le mot de passe est requis.', 'error');
