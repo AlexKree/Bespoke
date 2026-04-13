@@ -351,6 +351,141 @@
       display: none; align-items: center; gap: 6px;
       font-size: 13px; color: var(--muted);
     }
+
+    /* ── Admin tabs ─────────────────────────────────────────────────────── */
+    .admin-tabs {
+      display: flex; gap: 0; padding: 0;
+      border-top: 1px solid var(--line);
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .admin-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      background: none; border: none; color: var(--muted);
+      font-size: 13px; font-family: inherit; cursor: pointer;
+      padding: 11px 18px; position: relative;
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+    .tab-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 18px; height: 18px; padding: 0 5px;
+      border-radius: 999px; font-size: 10px; font-weight: 600;
+      background: rgba(224,92,92,.2); border: 1px solid rgba(224,92,92,.4);
+      color: var(--red); margin-left: 5px; vertical-align: middle;
+    }
+
+    /* ── Dashboard / Stats ──────────────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 14px; margin-bottom: 28px;
+    }
+    .stat-card {
+      border: 1px solid var(--line); border-radius: var(--r-lg);
+      background: var(--panel); padding: 18px 20px;
+    }
+    .stat-label { font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+    .stat-value { font-family: var(--serif); font-size: 36px; font-weight: 600; color: var(--gold); line-height: 1; }
+    .stat-sub { font-size: 12px; color: var(--muted2); margin-top: 4px; }
+    .recent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .recent-card { border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--panel); overflow: hidden; }
+    .recent-card-title {
+      font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--gold); font-weight: 600; padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .recent-list { list-style: none; margin: 0; padding: 0; }
+    .recent-item {
+      padding: 9px 16px; border-bottom: 1px solid rgba(255,255,255,.05);
+      font-size: 13px; display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    }
+    .recent-item:last-child { border-bottom: none; }
+    .ri-main { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ri-meta { color: var(--muted2); font-size: 11px; flex-shrink: 0; }
+
+    /* ── Users ───────────────────────────────────────────────────────────── */
+    .usersHeader {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .userTable { width: 100%; border-collapse: collapse; min-width: 600px; }
+    .userTable th {
+      text-align: left; font-size: 11px; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--muted); padding: 10px 12px;
+      border-bottom: 1px solid var(--line); font-weight: 500; white-space: nowrap;
+    }
+    .userTable td { padding: 11px 12px; border-bottom: 1px solid rgba(255,255,255,.04); font-size: 13px; vertical-align: middle; }
+    .userTable tr:last-child td { border-bottom: none; }
+    .userTable tbody tr:hover td { background: rgba(255,255,255,.02); }
+    .role-badge {
+      display: inline-block; padding: 2px 8px; border-radius: 999px;
+      font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    }
+    .role-badge.client { background: rgba(255,255,255,.07); color: var(--muted); border: 1px solid rgba(255,255,255,.12); }
+    .role-badge.staff { background: rgba(198,176,122,.12); color: var(--gold); border: 1px solid rgba(198,176,122,.3); }
+    .role-badge.admin { background: rgba(224,92,92,.12); color: var(--red); border: 1px solid rgba(224,92,92,.3); }
+    .user-actions { display: flex; gap: 5px; flex-wrap: wrap; }
+
+    /* ── Messages ────────────────────────────────────────────────────────── */
+    .msg-layout {
+      display: grid; grid-template-columns: 300px 1fr;
+      height: calc(100vh - 220px); min-height: 400px;
+      border: 1px solid var(--line); border-radius: var(--r-xl);
+      background: var(--panel); overflow: hidden;
+    }
+    @media (max-width: 700px) {
+      .msg-layout { grid-template-columns: 1fr; height: auto; }
+    }
+    .msg-thread-list {
+      border-right: 1px solid var(--line);
+      overflow-y: auto; display: flex; flex-direction: column;
+    }
+    .msg-thread-header {
+      padding: 14px 16px; border-bottom: 1px solid var(--line);
+      font-size: 11px; color: var(--muted); letter-spacing: .14em;
+      text-transform: uppercase; font-weight: 600; flex-shrink: 0;
+    }
+    .thread-item {
+      padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,.05);
+      cursor: pointer; transition: background .12s;
+    }
+    .thread-item:hover { background: rgba(255,255,255,.04); }
+    .thread-item.active { background: rgba(198,176,122,.08); border-left: 2px solid var(--gold); padding-left: 14px; }
+    .thread-email { font-size: 13px; font-weight: 500; }
+    .thread-preview { font-size: 12px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .thread-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
+    .thread-date { font-size: 11px; color: var(--muted2); }
+    .thread-new { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 999px; background: rgba(224,92,92,.2); border: 1px solid rgba(224,92,92,.4); color: var(--red); letter-spacing: .06em; }
+    .msg-detail { display: flex; flex-direction: column; overflow: hidden; }
+    .msg-detail-header { padding: 14px 18px; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+    .msg-detail-email { font-weight: 500; font-size: 15px; }
+    .msg-messages { flex: 1; overflow-y: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 9px; }
+    .msg-bubble { max-width: 75%; padding: 9px 13px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
+    .msg-bubble.client { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); align-self: flex-start; }
+    .msg-bubble.admin, .msg-bubble.staff { background: rgba(198,176,122,.13); border: 1px solid rgba(198,176,122,.28); align-self: flex-end; }
+    .msg-bubble-time { font-size: 10px; color: var(--muted2); margin-top: 3px; }
+    .msg-bubble.client .msg-bubble-time { text-align: left; }
+    .msg-bubble.admin .msg-bubble-time, .msg-bubble.staff .msg-bubble-time { text-align: right; }
+    .msg-reply-area { padding: 10px 14px; border-top: 1px solid var(--line); display: flex; gap: 8px; flex-shrink: 0; align-items: flex-end; }
+    .msg-reply-area textarea { flex: 1; min-height: 52px; max-height: 100px; resize: vertical; font-size: 13px; }
+    .msg-empty-detail { display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 14px; flex: 1; }
+    .msg-loading { padding: 32px 16px; text-align: center; color: var(--muted); }
+    #msgDetailContent { flex-direction: column; height: 100%; flex: 1; overflow: hidden; }
+
+    /* ── User / Reset-pwd confirm modals ────────────────────────────────── */
+    #userConfirmModal {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,.8); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center;
+    }
+    #userConfirmModal.open { display: flex; }
   </style>
 </head>
 <body>
@@ -367,6 +502,12 @@
       </div>
       <button id="logoutBtn" class="btn btn-sm" style="display:none">Déconnexion</button>
     </div>
+    <nav id="adminTabs" class="admin-tabs" style="display:none">
+      <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
+      <button class="tab-btn" data-tab="stock">🚗 Stock</button>
+      <button class="tab-btn" data-tab="users">👥 Utilisateurs</button>
+      <button class="tab-btn" data-tab="messages">💬 Messages<span id="msgBadge" class="tab-badge" style="display:none"></span></button>
+    </nav>
   </div>
 </header>
 
@@ -391,23 +532,107 @@
   </div>
 
   <!-- ── Admin screen ───────────────────────────────────────────────── -->
-  <div id="adminScreen" class="container">
+  <div id="adminScreen">
 
-    <div class="adminHeader">
-      <div>
-        <div class="kicker">Gestion du stock</div>
-        <h1 style="font-size:36px;margin:4px 0 0">Véhicules</h1>
+    <!-- ── Dashboard ───────────────────────────────────────────────── -->
+    <div id="tabDashboard" class="tab-panel container">
+      <div class="adminHeader">
+        <div>
+          <div class="kicker">Vue d'ensemble</div>
+          <h1 style="font-size:36px;margin:4px 0 0">Dashboard</h1>
+        </div>
+        <button class="btn btn-sm" id="refreshDashBtn">🔄 Actualiser</button>
       </div>
-      <button id="addCarBtn" class="btn primary">+ Ajouter un véhicule</button>
+      <div id="dashLoading" style="text-align:center;padding:40px 0"><span class="spinner"></span></div>
+      <div id="dashContent" style="display:none">
+        <div id="statsGrid" class="stats-grid"></div>
+        <h2 style="font-family:var(--serif);font-size:22px;margin:24px 0 12px">Activité récente</h2>
+        <div id="recentGrid" class="recent-grid"></div>
+      </div>
     </div>
 
-    <div class="card pad">
-      <div id="stockLoading" style="text-align:center;padding:32px 0">
-        <span class="spinner"></span>
-        <div class="mini" style="margin-top:10px">Chargement du stock…</div>
+    <!-- ── Stock ───────────────────────────────────────────────────── -->
+    <div id="tabStock" class="tab-panel container" style="display:none">
+      <div class="adminHeader">
+        <div>
+          <div class="kicker">Gestion du stock</div>
+          <h1 style="font-size:36px;margin:4px 0 0">Véhicules</h1>
+        </div>
+        <button id="addCarBtn" class="btn primary">+ Ajouter un véhicule</button>
       </div>
-      <div id="carList" class="carList" style="display:none"></div>
-      <div id="carListEmpty" class="empty" style="display:none">Aucun véhicule dans le stock. Ajoutez-en un !</div>
+      <div class="card pad">
+        <div id="stockLoading" style="text-align:center;padding:32px 0">
+          <span class="spinner"></span>
+          <div class="mini" style="margin-top:10px">Chargement du stock…</div>
+        </div>
+        <div id="carList" class="carList" style="display:none"></div>
+        <div id="carListEmpty" class="empty" style="display:none">Aucun véhicule dans le stock. Ajoutez-en un !</div>
+      </div>
+    </div>
+
+    <!-- ── Users ───────────────────────────────────────────────────── -->
+    <div id="tabUsers" class="tab-panel container" style="display:none">
+      <div class="usersHeader">
+        <div>
+          <div class="kicker">Gestion des comptes</div>
+          <h1 style="font-size:36px;margin:4px 0 0">Utilisateurs</h1>
+        </div>
+        <button id="addUserBtn" class="btn primary">+ Créer un utilisateur</button>
+      </div>
+      <div class="card pad">
+        <div id="usersLoading" style="text-align:center;padding:32px 0">
+          <span class="spinner"></span>
+          <div class="mini" style="margin-top:10px">Chargement…</div>
+        </div>
+        <div id="usersTableWrap" style="display:none;overflow-x:auto">
+          <table id="usersTable" class="userTable">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Rôle</th>
+                <th>Type</th>
+                <th>Balance</th>
+                <th>Vérifié</th>
+                <th>Créé le</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersBody"></tbody>
+          </table>
+        </div>
+        <div id="usersEmpty" class="empty" style="display:none">Aucun utilisateur trouvé.</div>
+      </div>
+    </div>
+
+    <!-- ── Messages ─────────────────────────────────────────────────── -->
+    <div id="tabMessages" class="tab-panel" style="display:none">
+      <div class="container" style="padding-bottom:0">
+        <div class="kicker" style="margin-bottom:4px">Support client</div>
+        <h1 style="font-size:36px;margin:0 0 16px">Messages</h1>
+      </div>
+      <div style="max-width:var(--max);margin:0 auto;padding:0 20px 40px">
+        <div class="msg-layout">
+          <div class="msg-thread-list" id="msgThreadList">
+            <div class="msg-thread-header">Conversations</div>
+            <div id="msgThreadsLoading" class="msg-loading"><span class="spinner"></span></div>
+            <div id="msgThreadsEmpty" style="display:none;padding:32px 16px;text-align:center;color:var(--muted);font-size:14px">Aucune conversation.</div>
+            <div id="msgThreadItems"></div>
+          </div>
+          <div class="msg-detail" id="msgDetail">
+            <div class="msg-empty-detail" id="msgDetailEmpty">Sélectionnez une conversation</div>
+            <div id="msgDetailContent" style="display:none">
+              <div class="msg-detail-header">
+                <div class="msg-detail-email" id="msgDetailEmail"></div>
+              </div>
+              <div class="msg-messages" id="msgMessages"></div>
+              <div class="msg-reply-area">
+                <textarea id="msgReplyInput" placeholder="Votre réponse…" rows="3"></textarea>
+                <button class="btn primary" id="msgSendBtn">Envoyer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -557,6 +782,94 @@
   </div>
 </div>
 
+<!-- ── User create/edit modal ─────────────────────────────────────────── -->
+<div id="userModal" class="overlay" role="dialog" aria-modal="true" aria-label="Fiche utilisateur">
+  <div class="drawer">
+    <div class="drawerHeader">
+      <h2 id="userModalTitle" style="margin:0;font-size:24px">Nouvel utilisateur</h2>
+      <button class="drawerClose" id="closeUserModalBtn" aria-label="Fermer">&times;</button>
+    </div>
+    <form id="userForm" class="form" autocomplete="off" novalidate>
+      <input type="hidden" id="userEditId"/>
+      <div class="field">
+        <label for="userEmail">Email</label>
+        <input type="text" id="userEmail" placeholder="email@exemple.com"/>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="userRole">Rôle</label>
+          <select id="userRole">
+            <option value="client">Client</option>
+            <option value="staff">Staff</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="userAccountType">Type de compte</label>
+          <select id="userAccountType">
+            <option value="Particulier">Particulier</option>
+            <option value="Entreprise">Entreprise</option>
+          </select>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field" id="userPasswordField">
+          <label for="userPassword">Mot de passe <span id="userPasswordHint">(requis)</span></label>
+          <input type="password" id="userPassword" placeholder="••••••••" autocomplete="new-password"/>
+        </div>
+        <div class="field">
+          <label for="userBalance">Balance (€)</label>
+          <input type="number" id="userBalance" placeholder="0.00" min="0" step="0.01"/>
+        </div>
+      </div>
+      <div class="field">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="userVerified" style="width:auto;accent-color:var(--gold)"/>
+          <span>Email vérifié</span>
+        </label>
+      </div>
+      <div class="formActions">
+        <button type="button" class="btn" id="cancelUserModalBtn">Annuler</button>
+        <button type="submit" class="btn primary" id="saveUserBtn">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── Reset password modal ──────────────────────────────────────────────── -->
+<div id="resetPwdModal" class="overlay" role="dialog" aria-modal="true" aria-label="Réinitialiser le mot de passe">
+  <div class="drawer" style="max-width:440px">
+    <div class="drawerHeader">
+      <h2 style="margin:0;font-size:24px">Nouveau mot de passe</h2>
+      <button class="drawerClose" id="closeResetPwdBtn" aria-label="Fermer">&times;</button>
+    </div>
+    <form id="resetPwdForm" class="form" autocomplete="off" novalidate>
+      <input type="hidden" id="resetPwdUserId"/>
+      <div class="field">
+        <label for="newPassword">Nouveau mot de passe</label>
+        <input type="password" id="newPassword" placeholder="••••••••" autocomplete="new-password"/>
+        <div class="hint">Minimum 8 caractères</div>
+      </div>
+      <div class="formActions">
+        <button type="button" class="btn" id="cancelResetPwdBtn">Annuler</button>
+        <button type="submit" class="btn primary">Réinitialiser</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── User delete confirmation ──────────────────────────────────────────── -->
+<div id="userConfirmModal">
+  <div class="confirmBox">
+    <h3>Supprimer l'utilisateur ?</h3>
+    <p id="userConfirmMsg">Cette action supprimera définitivement le compte et toutes ses données associées.</p>
+    <div class="confirmActions">
+      <button class="btn" id="cancelUserDeleteBtn">Annuler</button>
+      <button class="btn danger" id="confirmUserDeleteBtn">Supprimer définitivement</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── Toast ─────────────────────────────────────────────────────────── -->
 <div id="toast"></div>
 
@@ -571,6 +884,9 @@
   'use strict';
 
   const API = '/.netlify/functions/admin';
+  const USERS_API = '/.netlify/functions/admin-users';
+  const MESSAGES_API = '/.netlify/functions/admin-messages';
+  const STATS_API = '/.netlify/functions/admin-stats';
   const SESSION_KEY = 'bespoke_admin_token';
 
   // ── State ────────────────────────────────────────────────────────────
@@ -579,6 +895,10 @@
   let stockSha  = '';
   let pendingDeleteIndex = null;
   let currentImages = []; // paths for the vehicle being edited/created
+  let currentTab = 'dashboard';
+  let usersData = [];
+  let pendingDeleteUserId = null;
+  let activeThreadId = null;
 
   // ── DOM refs ─────────────────────────────────────────────────────────
   const loginScreen  = document.getElementById('loginScreen');
@@ -607,6 +927,7 @@
   const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
   const toastEl = document.getElementById('toast');
+  const adminTabs = document.getElementById('adminTabs');
 
   // ── Toast ─────────────────────────────────────────────────────────────
   let toastTimer;
@@ -628,6 +949,24 @@
     });
     const data = await res.json().catch(() => ({}));
     return { ok: res.ok, status: res.status, data };
+  }
+
+  async function apiCallTo(url, action, extra = {}) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ action, ...extra }),
+    });
+    const data = await res.json().catch(() => ({}));
+    return { ok: res.ok, status: res.status, data };
+  }
+
+  function handleUnauth() {
+    token = '';
+    sessionStorage.removeItem(SESSION_KEY);
+    showLoginScreen();
   }
 
   // ── Image grid (upload area) ──────────────────────────────────────────
@@ -753,6 +1092,7 @@
     loginScreen.style.display = 'flex';
     adminScreen.style.display = 'none';
     logoutBtn.style.display = 'none';
+    adminTabs.style.display = 'none';
     passwordInput.value = '';
     loginBtn.disabled = false;
     loginBtn.textContent = 'Se connecter';
@@ -763,7 +1103,8 @@
     loginScreen.style.display = 'none';
     adminScreen.style.display = 'block';
     logoutBtn.style.display = '';
-    loadStock();
+    adminTabs.style.display = 'flex';
+    switchTab('dashboard');
   }
 
   // ── Load stock ────────────────────────────────────────────────────────
@@ -1120,6 +1461,514 @@
   document.getElementById('imageFileInput').addEventListener('change', function () {
     if (this.files && this.files.length) {
       handleImageUpload(Array.from(this.files));
+    }
+  });
+
+  // ── Tab switching ─────────────────────────────────────────────────────
+  function switchTab(name) {
+    currentTab = name;
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === name);
+    });
+    ['dashboard', 'stock', 'users', 'messages'].forEach(t => {
+      const el = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+      if (el) el.style.display = t === name ? '' : 'none';
+    });
+    if (name === 'dashboard') loadDashboard();
+    if (name === 'stock') loadStock();
+    if (name === 'users') loadUsers();
+    if (name === 'messages') loadThreads();
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+
+  document.getElementById('refreshDashBtn').addEventListener('click', loadDashboard);
+
+  // ── Dashboard ─────────────────────────────────────────────────────────
+  async function loadDashboard() {
+    const dashLoading = document.getElementById('dashLoading');
+    const dashContent = document.getElementById('dashContent');
+    dashLoading.style.display = 'block';
+    dashContent.style.display = 'none';
+
+    const { ok, status, data } = await apiCallTo(STATS_API, 'get-stats')
+      .catch(() => ({ ok: false, status: 0, data: {} }));
+
+    dashLoading.style.display = 'none';
+
+    if (!ok) {
+      if (status === 401) { handleUnauth(); return; }
+      showToast('Erreur lors du chargement du dashboard.', 'error');
+      return;
+    }
+
+    renderStats(data.stats || {});
+    renderRecent(data.recent || {});
+    dashContent.style.display = 'block';
+  }
+
+  function renderStats(stats) {
+    const grid = document.getElementById('statsGrid');
+    const bal = (stats.total_balance_cents || 0) / 100;
+    const items = [
+      { label: 'Utilisateurs', value: stats.total_users || 0, sub: `${stats.verified_users || 0} vérifiés` },
+      { label: 'Messages non lus', value: stats.unread_threads || 0, sub: 'threads en attente' },
+      { label: 'Solde total wallets', value: bal.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' }), sub: 'somme de tous les wallets' },
+      { label: 'Comptes vérifiés', value: stats.verified_users || 0, sub: `sur ${stats.total_users || 0} comptes` },
+    ];
+    grid.innerHTML = items.map(i => `
+      <div class="stat-card">
+        <div class="stat-label">${i.label}</div>
+        <div class="stat-value">${i.value}</div>
+        <div class="stat-sub">${i.sub}</div>
+      </div>
+    `).join('');
+
+    // Update message badge
+    const badge = document.getElementById('msgBadge');
+    if (stats.unread_threads > 0) {
+      badge.textContent = stats.unread_threads;
+      badge.style.display = '';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+  }
+  function fmtDateTime(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' }) + ' ' +
+      d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  }
+  function esc(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function renderRecent(recent) {
+    const grid = document.getElementById('recentGrid');
+
+    const usersHtml = (recent.users || []).map(u =>
+      `<li class="recent-item"><span class="ri-main">${esc(u.email)}</span><span class="ri-meta">${fmtDate(u.created_at)}</span></li>`
+    ).join('') || '<li class="recent-item" style="color:var(--muted2)">Aucun</li>';
+
+    const txHtml = (recent.transactions || []).map(t =>
+      `<li class="recent-item"><span class="ri-main">${esc(t.email)} — ${esc(t.type)}</span><span class="ri-meta">${(t.amount_cents / 100).toFixed(2)} €</span></li>`
+    ).join('') || '<li class="recent-item" style="color:var(--muted2)">Aucune</li>';
+
+    const msgHtml = (recent.messages || []).map(m =>
+      `<li class="recent-item"><span class="ri-main">${esc(m.email)} (${esc(m.author_role)})</span><span class="ri-meta">${fmtDate(m.created_at)}</span></li>`
+    ).join('') || '<li class="recent-item" style="color:var(--muted2)">Aucun</li>';
+
+    grid.innerHTML = `
+      <div class="recent-card">
+        <div class="recent-card-title">👤 Derniers utilisateurs</div>
+        <ul class="recent-list">${usersHtml}</ul>
+      </div>
+      <div class="recent-card">
+        <div class="recent-card-title">💸 Dernières transactions</div>
+        <ul class="recent-list">${txHtml}</ul>
+      </div>
+      <div class="recent-card">
+        <div class="recent-card-title">💬 Derniers messages</div>
+        <ul class="recent-list">${msgHtml}</ul>
+      </div>
+    `;
+  }
+
+  // ── Users ─────────────────────────────────────────────────────────────
+  async function loadUsers() {
+    const usersLoading = document.getElementById('usersLoading');
+    const usersTableWrap = document.getElementById('usersTableWrap');
+    const usersEmpty = document.getElementById('usersEmpty');
+    usersLoading.style.display = 'block';
+    usersTableWrap.style.display = 'none';
+    usersEmpty.style.display = 'none';
+
+    const { ok, status, data } = await apiCallTo(USERS_API, 'list')
+      .catch(() => ({ ok: false, status: 0, data: {} }));
+
+    usersLoading.style.display = 'none';
+
+    if (!ok) {
+      if (status === 401) { handleUnauth(); return; }
+      showToast('Erreur lors du chargement des utilisateurs.', 'error');
+      return;
+    }
+
+    usersData = data.users || [];
+    renderUsers();
+  }
+
+  function renderUsers() {
+    const usersBody = document.getElementById('usersBody');
+    const usersTableWrap = document.getElementById('usersTableWrap');
+    const usersEmpty = document.getElementById('usersEmpty');
+    usersBody.innerHTML = '';
+    if (!usersData.length) {
+      usersEmpty.style.display = 'block';
+      return;
+    }
+    usersTableWrap.style.display = 'block';
+    usersData.forEach(user => usersBody.appendChild(buildUserRow(user)));
+  }
+
+  function buildUserRow(user) {
+    const tr = document.createElement('tr');
+    const bal = ((user.balance_cents || 0) / 100).toFixed(2) + ' €';
+    const verified = user.email_verified ? '✅' : '❌';
+    const roleClass = ['client', 'staff', 'admin'].includes(user.role) ? user.role : 'client';
+
+    tr.innerHTML = `
+      <td>${esc(user.email)}</td>
+      <td><span class="role-badge ${roleClass}">${esc(user.role)}</span></td>
+      <td>${esc(user.account_type)}</td>
+      <td>${bal}</td>
+      <td style="text-align:center">${verified}</td>
+      <td>${fmtDate(user.created_at)}</td>
+      <td></td>
+    `;
+
+    const actions = document.createElement('div');
+    actions.className = 'user-actions';
+
+    const editBtn = document.createElement('button');
+    editBtn.type = 'button';
+    editBtn.className = 'btn btn-sm';
+    editBtn.textContent = '✏️ Modifier';
+    editBtn.addEventListener('click', () => openUserModal(user));
+    actions.appendChild(editBtn);
+
+    const pwdBtn = document.createElement('button');
+    pwdBtn.type = 'button';
+    pwdBtn.className = 'btn btn-sm';
+    pwdBtn.textContent = '🔑 MdP';
+    pwdBtn.addEventListener('click', () => openResetPwdModal(user));
+    actions.appendChild(pwdBtn);
+
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'btn btn-sm danger';
+    delBtn.textContent = '🗑';
+    delBtn.title = 'Supprimer';
+    delBtn.addEventListener('click', () => askUserDelete(user));
+    actions.appendChild(delBtn);
+
+    tr.cells[6].appendChild(actions);
+    return tr;
+  }
+
+  function openUserModal(user = null) {
+    const modal = document.getElementById('userModal');
+    const title = document.getElementById('userModalTitle');
+    const hint = document.getElementById('userPasswordHint');
+    document.getElementById('userEditId').value = user ? user.id : '';
+    document.getElementById('userEmail').value = user ? user.email : '';
+    document.getElementById('userRole').value = user ? user.role : 'client';
+    document.getElementById('userAccountType').value = user ? user.account_type : 'Particulier';
+    document.getElementById('userPassword').value = '';
+    document.getElementById('userBalance').value = user ? (user.balance_cents / 100).toFixed(2) : '0.00';
+    document.getElementById('userVerified').checked = user ? Boolean(user.email_verified) : false;
+    title.textContent = user ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur';
+    hint.textContent = user ? '(laisser vide pour ne pas changer)' : '(requis)';
+    modal.classList.add('open');
+    setTimeout(() => document.getElementById('userEmail').focus(), 50);
+  }
+
+  function closeUserModal() {
+    document.getElementById('userModal').classList.remove('open');
+  }
+
+  document.getElementById('closeUserModalBtn').addEventListener('click', closeUserModal);
+  document.getElementById('cancelUserModalBtn').addEventListener('click', closeUserModal);
+  document.getElementById('userModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('userModal')) closeUserModal();
+  });
+
+  document.getElementById('userForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const userId = document.getElementById('userEditId').value;
+    const email = document.getElementById('userEmail').value.trim();
+    const role = document.getElementById('userRole').value;
+    const account_type = document.getElementById('userAccountType').value;
+    const password = document.getElementById('userPassword').value;
+    const balVal = parseFloat(document.getElementById('userBalance').value);
+    const balance_cents = isNaN(balVal) ? 0 : Math.round(balVal * 100);
+    const verified = document.getElementById('userVerified').checked;
+
+    const saveBtn = document.getElementById('saveUserBtn');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner"></span> Enregistrement…';
+
+    let result;
+    if (userId) {
+      result = await apiCallTo(USERS_API, 'update', { user_id: userId, email, role, account_type, verified, balance_cents })
+        .catch(() => ({ ok: false, data: {} }));
+      // If a new password was provided, reset it separately
+      if (result.ok && password) {
+        const pwdResult = await apiCallTo(USERS_API, 'reset-password', { user_id: userId, new_password: password })
+          .catch(() => ({ ok: false, data: {} }));
+        if (!pwdResult.ok) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Enregistrer';
+          showToast((pwdResult.data && pwdResult.data.error) || 'Erreur lors du changement de mot de passe.', 'error');
+          return;
+        }
+      }
+    } else {
+      if (!password) {
+        showToast('Le mot de passe est requis.', 'error');
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Enregistrer';
+        return;
+      }
+      result = await apiCallTo(USERS_API, 'create', { email, password, role, account_type, verified })
+        .catch(() => ({ ok: false, data: {} }));
+    }
+
+    saveBtn.disabled = false;
+    saveBtn.textContent = 'Enregistrer';
+
+    if (!result.ok) {
+      if (result.status === 401) { handleUnauth(); return; }
+      showToast((result.data && result.data.error) || 'Erreur lors de la sauvegarde.', 'error');
+      return;
+    }
+
+    closeUserModal();
+    showToast(userId ? 'Utilisateur mis à jour.' : 'Utilisateur créé.', 'success');
+    loadUsers();
+  });
+
+  // Add user button
+  document.getElementById('addUserBtn').addEventListener('click', () => openUserModal(null));
+
+  // Reset password modal
+  function openResetPwdModal(user) {
+    document.getElementById('resetPwdUserId').value = user.id;
+    document.getElementById('newPassword').value = '';
+    document.getElementById('resetPwdModal').classList.add('open');
+    setTimeout(() => document.getElementById('newPassword').focus(), 50);
+  }
+
+  function closeResetPwdModal() {
+    document.getElementById('resetPwdModal').classList.remove('open');
+  }
+
+  document.getElementById('closeResetPwdBtn').addEventListener('click', closeResetPwdModal);
+  document.getElementById('cancelResetPwdBtn').addEventListener('click', closeResetPwdModal);
+  document.getElementById('resetPwdModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('resetPwdModal')) closeResetPwdModal();
+  });
+
+  document.getElementById('resetPwdForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const userId = document.getElementById('resetPwdUserId').value;
+    const new_password = document.getElementById('newPassword').value;
+    const submitBtn = e.target.querySelector('[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span>';
+
+    const { ok, status, data } = await apiCallTo(USERS_API, 'reset-password', { user_id: userId, new_password })
+      .catch(() => ({ ok: false, status: 0, data: {} }));
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Réinitialiser';
+
+    if (!ok) {
+      if (status === 401) { handleUnauth(); return; }
+      showToast((data && data.error) || 'Erreur lors de la réinitialisation.', 'error');
+      return;
+    }
+
+    closeResetPwdModal();
+    showToast('Mot de passe réinitialisé.', 'success');
+  });
+
+  // User delete confirmation
+  function askUserDelete(user) {
+    pendingDeleteUserId = user.id;
+    document.getElementById('userConfirmMsg').textContent =
+      `Supprimer "${user.email}" ? Cette action est irréversible et supprimera toutes ses données.`;
+    document.getElementById('userConfirmModal').classList.add('open');
+  }
+
+  document.getElementById('cancelUserDeleteBtn').addEventListener('click', () => {
+    document.getElementById('userConfirmModal').classList.remove('open');
+    pendingDeleteUserId = null;
+  });
+
+  document.getElementById('confirmUserDeleteBtn').addEventListener('click', async () => {
+    document.getElementById('userConfirmModal').classList.remove('open');
+    if (!pendingDeleteUserId) return;
+    const userId = pendingDeleteUserId;
+    pendingDeleteUserId = null;
+
+    const { ok, status, data } = await apiCallTo(USERS_API, 'delete', { user_id: userId })
+      .catch(() => ({ ok: false, status: 0, data: {} }));
+
+    if (!ok) {
+      if (status === 401) { handleUnauth(); return; }
+      showToast((data && data.error) || 'Erreur lors de la suppression.', 'error');
+      return;
+    }
+
+    showToast('Utilisateur supprimé.', 'success');
+    loadUsers();
+  });
+
+  // ── Messages ──────────────────────────────────────────────────────────
+  async function loadThreads() {
+    const loading = document.getElementById('msgThreadsLoading');
+    const empty = document.getElementById('msgThreadsEmpty');
+    const items = document.getElementById('msgThreadItems');
+    loading.style.display = 'block';
+    empty.style.display = 'none';
+    items.innerHTML = '';
+    activeThreadId = null;
+    resetMsgDetail();
+
+    const { ok, status, data } = await apiCallTo(MESSAGES_API, 'list')
+      .catch(() => ({ ok: false, status: 0, data: {} }));
+
+    loading.style.display = 'none';
+
+    if (!ok) {
+      if (status === 401) { handleUnauth(); return; }
+      showToast('Erreur lors du chargement des messages.', 'error');
+      return;
+    }
+
+    const threads = data.threads || [];
+    if (!threads.length) {
+      empty.style.display = 'block';
+      return;
+    }
+
+    // Update badge
+    const unread = threads.filter(t => t.last_author_role === 'client').length;
+    const badge = document.getElementById('msgBadge');
+    if (unread > 0) { badge.textContent = unread; badge.style.display = ''; }
+    else { badge.style.display = 'none'; }
+
+    threads.forEach(thread => {
+      const div = document.createElement('div');
+      div.className = 'thread-item';
+      div.dataset.threadId = thread.thread_id;
+      const isNew = thread.last_author_role === 'client';
+      const preview = (thread.last_content || '').substring(0, 60);
+      div.innerHTML = `
+        <div class="thread-email">${esc(thread.client_email || thread.thread_id)}</div>
+        <div class="thread-preview">${esc(preview)}</div>
+        <div class="thread-foot">
+          <span class="thread-date">${fmtDateTime(thread.last_at)}</span>
+          ${isNew ? '<span class="thread-new">Nouveau</span>' : ''}
+        </div>
+      `;
+      div.addEventListener('click', () => openThread(thread));
+      items.appendChild(div);
+    });
+  }
+
+  function resetMsgDetail() {
+    document.getElementById('msgDetailEmpty').style.display = 'flex';
+    document.getElementById('msgDetailContent').style.display = 'none';
+    document.querySelectorAll('.thread-item').forEach(el => el.classList.remove('active'));
+  }
+
+  async function openThread(thread) {
+    activeThreadId = thread.thread_id;
+    document.querySelectorAll('.thread-item').forEach(el => {
+      el.classList.toggle('active', el.dataset.threadId === thread.thread_id);
+    });
+
+    const detailEmpty = document.getElementById('msgDetailEmpty');
+    const detailContent = document.getElementById('msgDetailContent');
+    const detailEmail = document.getElementById('msgDetailEmail');
+    const msgMessages = document.getElementById('msgMessages');
+
+    detailEmpty.style.display = 'none';
+    detailContent.style.display = 'flex';
+    detailEmail.textContent = thread.client_email || thread.thread_id;
+    msgMessages.innerHTML = '<div class="msg-loading"><span class="spinner"></span></div>';
+
+    const { ok, status, data } = await apiCallTo(MESSAGES_API, 'get-thread', { thread_id: thread.thread_id })
+      .catch(() => ({ ok: false, status: 0, data: {} }));
+
+    if (!ok) {
+      if (status === 401) { handleUnauth(); return; }
+      msgMessages.innerHTML = '<div class="msg-loading" style="color:var(--red)">Erreur de chargement.</div>';
+      return;
+    }
+
+    renderMessages(data.messages || []);
+  }
+
+  function renderMessages(messages) {
+    const container = document.getElementById('msgMessages');
+    if (!messages.length) {
+      container.innerHTML = '<div class="msg-loading">Aucun message.</div>';
+      return;
+    }
+    container.innerHTML = '';
+    messages.forEach(msg => {
+      const wrap = document.createElement('div');
+      const role = msg.author_role || 'client';
+      wrap.className = 'msg-bubble ' + role;
+      wrap.innerHTML = `${esc(msg.content)}<div class="msg-bubble-time">${fmtDateTime(msg.created_at)}</div>`;
+      container.appendChild(wrap);
+    });
+    container.scrollTop = container.scrollHeight;
+  }
+
+  document.getElementById('msgSendBtn').addEventListener('click', async () => {
+    if (!activeThreadId) return;
+    const input = document.getElementById('msgReplyInput');
+    const content = input.value.trim();
+    if (!content) return;
+    const btn = document.getElementById('msgSendBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>';
+
+    const { ok, status, data } = await apiCallTo(MESSAGES_API, 'send', { thread_id: activeThreadId, content })
+      .catch(() => ({ ok: false, status: 0, data: {} }));
+
+    btn.disabled = false;
+    btn.textContent = 'Envoyer';
+
+    if (!ok) {
+      if (status === 401) { handleUnauth(); return; }
+      showToast((data && data.error) || 'Erreur lors de l\'envoi.', 'error');
+      return;
+    }
+
+    input.value = '';
+    // Reload the thread messages
+    const threadItem = document.querySelector(`.thread-item[data-thread-id="${activeThreadId}"]`);
+    const threadData = threadItem ? { thread_id: activeThreadId, client_email: document.getElementById('msgDetailEmail').textContent } : null;
+    if (threadData) {
+      const { ok: ok2, data: data2 } = await apiCallTo(MESSAGES_API, 'get-thread', { thread_id: activeThreadId })
+        .catch(() => ({ ok: false, data: {} }));
+      if (ok2) renderMessages(data2.messages || []);
+    }
+    showToast('Réponse envoyée.', 'success');
+    // Remove "new" badge from this thread
+    if (threadItem) {
+      const newBadge = threadItem.querySelector('.thread-new');
+      if (newBadge) newBadge.remove();
+    }
+  });
+
+  // Allow Ctrl+Enter to send in reply textarea
+  document.getElementById('msgReplyInput').addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      document.getElementById('msgSendBtn').click();
     }
   });
 
