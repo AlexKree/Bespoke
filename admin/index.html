@@ -1288,7 +1288,6 @@
         updateVehicleStatus(car.id, newStatus);
       } else {
         // Simple toggle via saveStock for available<->sold
-        const oldStatus = car.status;
         stockData.items[idx] = { ...car, status: newStatus };
         saveStock().then(ok => {
           if (ok) {

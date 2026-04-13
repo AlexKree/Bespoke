@@ -193,8 +193,8 @@ exports.handler = async function (event) {
           [reservation_id]
         );
 
-        // Refund deposit if not paid (i.e. status was not 'paid')
-        if (reservation.status !== 'paid') {
+        // Refund deposit if not paid and not already cancelled
+        if (reservation.status !== 'paid' && reservation.status !== 'cancelled') {
           await db.query(
             'UPDATE users SET balance_cents = balance_cents + $1 WHERE id = $2',
             [reservation.deposit_cents, reservation.user_id]

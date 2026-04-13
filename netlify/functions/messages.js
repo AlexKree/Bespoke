@@ -145,7 +145,7 @@ exports.handler = async function (event) {
          WHERE thread_id = $1 AND author_id = $2`,
         [user.id, user.id]
       );
-      const lastSent = lastSeenRes.rows[0].last_sent;
+      const lastSent = lastSeenRes.rows.length ? lastSeenRes.rows[0].last_sent : null;
 
       let unreadCount = 0;
       if (lastSent) {
