@@ -8,6 +8,7 @@
     fr: {
       available: 'Disponible',
       sold: 'Vendue',
+      reserved: 'Réservée',
       year: 'Année',
       location: 'Localisation',
       priceOnRequest: 'Prix sur demande',
@@ -21,6 +22,7 @@
     en: {
       available: 'Available',
       sold: 'Sold',
+      reserved: 'Reserved',
       year: 'Year',
       location: 'Location',
       priceOnRequest: 'Price on request',
@@ -93,7 +95,9 @@
   }
 
   function statusLabel(item) {
-    return item.status === 'sold' ? T.sold : T.available;
+    if (item.status === 'sold') return T.sold;
+    if (item.status === 'reserved') return T.reserved;
+    return T.available;
   }
 
   function matchesQuery(item, q) {
@@ -140,6 +144,7 @@
 
   function renderCard(item) {
     const isSold = item.status === 'sold';
+    const isReserved = item.status === 'reserved';
     const card = document.createElement('div');
     card.className = 'stockCard' + (isSold ? ' stockCardSold' : '');
     card.setAttribute('data-id', item.id);
@@ -156,7 +161,7 @@
     imgWrap.appendChild(img);
 
     const badge = document.createElement('div');
-    badge.className = 'stockBadge ' + (isSold ? 'sold' : 'available');
+    badge.className = 'stockBadge ' + (isSold ? 'sold' : isReserved ? 'reserved' : 'available');
     badge.textContent = statusLabel(item);
     imgWrap.appendChild(badge);
 
@@ -248,7 +253,7 @@
 
     modalTitle.textContent = itemTitle(item);
     modalStatus.textContent = statusLabel(item);
-    modalStatus.className = 'kicker ' + (item.status === 'sold' ? 'sold' : 'available');
+    modalStatus.className = 'kicker ' + (item.status === 'sold' ? 'sold' : item.status === 'reserved' ? 'reserved' : 'available');
 
     const loc = item.location ? (item.location[lang] || item.location.en || item.location.fr) : '';
     const metaBits = [];
@@ -261,6 +266,24 @@
 
     modalDescription.textContent = (item.description && (item.description[lang] || item.description.en || item.description.fr)) || '';
     modalContact.href = 'contact.html?vehicle=' + encodeURIComponent(item.id);
+
+    // ── Reserve button (shown only when user is logged in and vehicle is available) ──
+    const existingReserveBtn = modal.querySelector('.modalReserveBtn');
+    if (existingReserveBtn) existingReserveBtn.remove();
+    if (item.status === 'available' && item.price_eur && window.__bespokeOpenReserve) {
+      const reserveBtn = document.createElement('button');
+      reserveBtn.type = 'button';
+      reserveBtn.className = 'btn btnPrimary modalReserveBtn';
+      reserveBtn.textContent = lang === 'fr' ? 'Réserver ce véhicule' : 'Reserve this vehicle';
+      reserveBtn.style.marginTop = '10px';
+      reserveBtn.addEventListener('click', () => {
+        const title = itemTitle(item);
+        window.__bespokeOpenReserve(item.id, item.price_eur, title);
+      });
+      // Insert before or after the contact button
+      const modalInfo = modal.querySelector('.modalInfo');
+      if (modalInfo) modalInfo.appendChild(reserveBtn);
+    }
 
     const imgs = (item.images || []).map(resolveAsset);
     if (imgs.length) {
@@ -350,6 +373,16 @@
       grid.innerHTML = '<div class="card pad">' + T.error + '</div>';
     }
   }
+
+  // Expose a reload function for the reservation flow
+  window.__bespokeReloadStock = async function () {
+    try {
+      const res = await fetch(dataUrl, { cache: 'no-cache' });
+      const data = await res.json();
+      items = (data && data.items) ? data.items : [];
+      applyFilters();
+    } catch (_) {}
+  };
 
   function wireFilters() {
     if (searchEl) searchEl.addEventListener('input', applyFilters);

@@ -66,7 +66,8 @@
       <div class="dashTabBar">
         <button class="dashTabBtn active" id="dashTabBtn_stock" type="button" onclick="switchDashTab('stock')">Stock</button>
         <button class="dashTabBtn" id="dashTabBtn_dashboard" type="button" onclick="switchDashTab('dashboard')">Dashboard</button>
-        <button class="dashTabBtn" id="dashTabBtn_messages" type="button" onclick="switchDashTab('messages')">Messages</button>
+        <button class="dashTabBtn" id="dashTabBtn_messages" type="button" onclick="switchDashTab('messages')">Messages<span class="dashTabMsgBadge" id="dashMsgBadge" style="display:none">0</span></button>
+        <button class="dashTabBtn" id="dashTabBtn_mystock" type="button" onclick="switchDashTab('mystock')">🚗 Mon stock</button>
         <button class="dashTabBtn" id="dashTabBtn_params" type="button" onclick="switchDashTab('params')">Paramètres</button>
       </div>
     </div>
@@ -170,8 +171,72 @@
       </div>
     </div>
 
+    <!-- ── Onglet : Mon stock ──────────────────────────────────────── -->
+    <div id="dashPanel_mystock" class="dashPanel">
+      <div class="dashPanelInner">
+        <h2 style="font-family:var(--serif);margin-bottom:16px">Mes réservations</h2>
+        <div id="myReservationsGrid" class="stockGrid"></div>
+        <div id="myReservationsEmpty" style="display:none;padding:32px;text-align:center;color:var(--muted)">
+          Vous n'avez aucune réservation en cours.
+        </div>
+        <div id="myReservationsLoading" style="text-align:center;padding:32px;color:var(--muted)">Chargement…</div>
+      </div>
+    </div>
+
   </div>
 </main>
+
+<!-- ── Modal de réservation ──────────────────────────────────────────────── -->
+<div id="reserveModal" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:20px">
+  <div style="background:#071526;border:1px solid rgba(255,255,255,.12);border-radius:22px;max-width:480px;width:100%;padding:32px;position:relative">
+    <button id="reserveModalClose" type="button" style="position:absolute;top:16px;right:16px;background:none;border:none;color:rgba(255,255,255,.6);font-size:22px;cursor:pointer;line-height:1">×</button>
+    <div class="kicker">Réservation</div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:26px;margin:8px 0 20px" id="reserveModalTitle">Confirmer la réservation</h2>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)">
+        <span style="color:rgba(255,255,255,.6);font-size:14px">Prix du véhicule</span>
+        <span style="font-weight:600" id="reservePriceTotal">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)">
+        <span style="color:rgba(255,255,255,.6);font-size:14px">Acompte requis (10%)</span>
+        <span style="font-weight:600;color:#c6b07a" id="reserveDeposit">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0">
+        <span style="color:rgba(255,255,255,.6);font-size:14px">Votre balance actuelle</span>
+        <span style="font-weight:600" id="reserveCurrentBalance">—</span>
+      </div>
+    </div>
+    <div id="reserveInsufficientMsg" style="display:none;background:rgba(224,92,92,.12);border:1px solid rgba(224,92,92,.3);border-radius:12px;padding:14px;margin-bottom:16px;font-size:13px;color:#e05c5c">
+      Balance insuffisante. Veuillez ajouter des fonds.
+      <button class="btn primary" onclick="switchDashTab('params');document.getElementById('reserveModal').style.display='none'" style="margin-top:10px;width:100%">Ajouter des fonds</button>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn" id="cancelReserveBtn" type="button" style="flex:1">Annuler</button>
+      <button class="btn primary" id="confirmReserveBtn" type="button" style="flex:2">Confirmer et payer</button>
+    </div>
+    <div id="reserveMsg" class="authMsg" style="display:none;margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- ── Modal d'annulation ─────────────────────────────────────────────────── -->
+<div id="cancelModal" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:20px">
+  <div style="background:#071526;border:1px solid rgba(255,255,255,.12);border-radius:22px;max-width:480px;width:100%;padding:32px;position:relative">
+    <button id="cancelModalClose" type="button" style="position:absolute;top:16px;right:16px;background:none;border:none;color:rgba(255,255,255,.6);font-size:22px;cursor:pointer;line-height:1">×</button>
+    <div class="kicker">Annulation</div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:26px;margin:8px 0 16px">Demande d'annulation</h2>
+    <p style="color:rgba(255,255,255,.6);font-size:14px;margin-bottom:16px">Votre demande d'annulation sera examinée par l'administrateur. L'acompte sera remboursé si l'annulation est validée.</p>
+    <div style="margin-bottom:16px">
+      <label style="font-size:13px;color:rgba(255,255,255,.6);display:block;margin-bottom:6px">Motif (optionnel)</label>
+      <textarea id="cancelReason" rows="3" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px;color:inherit;font-family:inherit;font-size:14px;resize:vertical" placeholder="Expliquez votre raison…"></textarea>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn" id="cancelModalCancelBtn" type="button" style="flex:1">Retour</button>
+      <button class="btn" id="confirmCancelBtn" type="button" style="flex:2;border-color:rgba(224,92,92,.4);color:#e05c5c">Envoyer la demande</button>
+    </div>
+    <div id="cancelMsg" class="authMsg" style="display:none;margin-top:12px"></div>
+    <input type="hidden" id="cancelReservationId" value=""/>
+  </div>
+</div>
 
 <div id="stockModal" class="modal" aria-hidden="true">
   <div class="modalOverlay" data-close="1"></div>
@@ -250,6 +315,8 @@
   var dashLoaded = false;
   var messagesLoaded = false;
   var paramsLoaded = false;
+  var mystockLoaded = false;
+  var pendingReservation = null; // { vehicle_slug, price_eur, title }
 
   // Check session
   fetch('/.netlify/functions/auth', {
@@ -269,6 +336,27 @@
     var navEmail = document.getElementById('navUserEmail');
     if (navEmail) navEmail.textContent = user.email;
     document.getElementById('dashTabsWrap').style.display = '';
+    // Start polling for unread messages
+    pollUnreadMessages();
+    setInterval(pollUnreadMessages, 30000);
+  }
+
+  function pollUnreadMessages() {
+    fetch('/.netlify/functions/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'count-unread' }),
+      credentials: 'same-origin'
+    }).then(function (r) { return r.json(); }).then(function (data) {
+      var badge = document.getElementById('dashMsgBadge');
+      if (!badge) return;
+      if (data.unread && data.unread > 0) {
+        badge.textContent = data.unread;
+        badge.style.display = '';
+      } else {
+        badge.style.display = 'none';
+      }
+    }).catch(function () {});
   }
 
   // Logout
@@ -294,6 +382,7 @@
     if (tab === 'dashboard' && !dashLoaded) loadDashboard();
     if (tab === 'messages' && !messagesLoaded) loadMessages();
     if (tab === 'params' && !paramsLoaded) loadParams();
+    if (tab === 'mystock' && !mystockLoaded) loadMyStock();
   };
 
   function fmtEur(cents) {
@@ -463,6 +552,226 @@
       }).catch(function () { btn.disabled = false; showMsg(msgEl, 'error', 'Erreur réseau.'); });
     }
   });
+
+  // ── Mon Stock tab ──────────────────────────────────────────────────────
+  function loadMyStock() {
+    mystockLoaded = true;
+    var grid = document.getElementById('myReservationsGrid');
+    var empty = document.getElementById('myReservationsEmpty');
+    var loading = document.getElementById('myReservationsLoading');
+    if (loading) loading.style.display = '';
+    if (empty) empty.style.display = 'none';
+    if (grid) grid.innerHTML = '';
+
+    fetch('/.netlify/functions/reservations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'get-my-reservations' }),
+      credentials: 'same-origin'
+    }).then(function (r) { return r.json(); }).then(function (data) {
+      if (loading) loading.style.display = 'none';
+      var reservations = data.reservations || [];
+      if (!reservations.length) {
+        if (empty) empty.style.display = '';
+        return;
+      }
+      if (!grid) return;
+      grid.innerHTML = '';
+      reservations.forEach(function (res) {
+        var v = res.vehicle || {};
+        var title = (v.title && (v.title.fr || v.title.en)) ||
+          [(v.make && (v.make.fr || v.make.en)), (v.model && (v.model.fr || v.model.en))].filter(Boolean).join(' ') ||
+          res.vehicle_slug;
+        var img = (v.images && v.images.length) ? '../' + v.images[0] : '';
+
+        var statusLabels = { pending: 'En attente', balance_requested: 'Solde demandé', paid: 'Payé', cancelled: 'Annulé', sold: 'Vendu' };
+        var statusColors = { pending: '#ffa500', balance_requested: '#c6b07a', paid: '#5cb88a', cancelled: '#e05c5c', sold: '#e05c5c' };
+        var statusLabel = statusLabels[res.status] || res.status;
+        var statusColor = statusColors[res.status] || '#c6b07a';
+
+        var card = document.createElement('div');
+        card.className = 'stockCard';
+        card.style.cursor = 'default';
+        card.innerHTML =
+          '<div class="stockCardImage">' +
+          (img ? '<img src="' + escHtml(img) + '" alt="' + escHtml(title) + '" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>' : '') +
+          '<div class="stockBadge" style="background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.2);color:' + statusColor + '">' + escHtml(statusLabel) + '</div>' +
+          '</div>' +
+          '<div class="stockCardBody">' +
+          '<div class="stockCardTitle">' + escHtml(title) + '</div>' +
+          '<div class="stockCardMeta">Acompte payé : ' + fmtEur(res.deposit_cents) + ' · Solde : ' + fmtEur(res.remaining_cents) + '</div>' +
+          '<div style="margin-top:8px;font-size:12px;color:rgba(255,255,255,.45)">Réservé le ' + fmtDate(res.created_at) + '</div>' +
+          (res.cancellation_requested ? '<div style="margin-top:8px;font-size:12px;color:#ffa500">⏳ Demande d\'annulation en cours</div>' : '') +
+          '<div class="stockCardActions" style="margin-top:12px">' +
+          (res.status === 'balance_requested' && !res.cancellation_requested
+            ? '<button class="btn primary btnSm" data-pay-balance="' + res.id + '">Payer le solde (' + fmtEur(res.remaining_cents) + ')</button>'
+            : '') +
+          (( res.status === 'pending' || res.status === 'balance_requested') && !res.cancellation_requested
+            ? '<button class="btn btnSm" data-cancel-reservation="' + res.id + '" style="border-color:rgba(224,92,92,.4);color:#e05c5c">Demander l\'annulation</button>'
+            : '') +
+          '</div>' +
+          '</div>';
+        grid.appendChild(card);
+      });
+    }).catch(function () {
+      if (loading) loading.style.display = 'none';
+      if (grid) grid.innerHTML = '<div style="padding:32px;text-align:center;color:rgba(255,255,255,.4)">Erreur lors du chargement.</div>';
+    });
+  }
+
+  // ── Reserve button in stock modal ──────────────────────────────────────
+  // Exposed as global so stock.js can call it
+  window.__bespokeOpenReserve = function (vehicleSlug, priceEur, title) {
+    if (!currentUser) return;
+    pendingReservation = { vehicle_slug: vehicleSlug, price_eur: priceEur, title: title };
+    var deposit = Math.round(priceEur * 100 * 0.10);
+    document.getElementById('reserveModalTitle').textContent = title || 'Confirmer la réservation';
+    document.getElementById('reservePriceTotal').textContent = fmtEur(priceEur * 100);
+    document.getElementById('reserveDeposit').textContent = fmtEur(deposit);
+    document.getElementById('reserveCurrentBalance').textContent = '…';
+    document.getElementById('reserveInsufficientMsg').style.display = 'none';
+    document.getElementById('reserveMsg').style.display = 'none';
+    document.getElementById('confirmReserveBtn').disabled = false;
+    var modal = document.getElementById('reserveModal');
+    modal.style.display = 'flex';
+
+    // Fetch fresh balance
+    fetch('/.netlify/functions/wallet', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'get-balance' }),
+      credentials: 'same-origin'
+    }).then(function (r) { return r.json(); }).then(function (data) {
+      document.getElementById('reserveCurrentBalance').textContent = fmtEur(data.balance_cents);
+      if ((data.balance_cents || 0) < deposit) {
+        document.getElementById('reserveInsufficientMsg').style.display = '';
+        document.getElementById('confirmReserveBtn').disabled = true;
+      }
+    }).catch(function () {});
+  };
+
+  // Reserve modal buttons
+  document.getElementById('reserveModalClose').addEventListener('click', function () {
+    document.getElementById('reserveModal').style.display = 'none';
+  });
+  document.getElementById('cancelReserveBtn').addEventListener('click', function () {
+    document.getElementById('reserveModal').style.display = 'none';
+  });
+  document.getElementById('confirmReserveBtn').addEventListener('click', function () {
+    if (!pendingReservation) return;
+    var btn = this;
+    var msgEl = document.getElementById('reserveMsg');
+    btn.disabled = true;
+    btn.textContent = '…';
+    fetch('/.netlify/functions/reservations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'reserve-vehicle', vehicle_slug: pendingReservation.vehicle_slug }),
+      credentials: 'same-origin'
+    }).then(function (r) { return r.json(); }).then(function (data) {
+      btn.disabled = false;
+      btn.textContent = 'Confirmer et payer';
+      if (data.ok) {
+        document.getElementById('reserveModal').style.display = 'none';
+        showToastMsg('Véhicule réservé ! Consultez « Mon stock ».');
+        mystockLoaded = false; // force reload next time
+        // Reload stock to show updated status
+        if (window.__bespokeReloadStock) window.__bespokeReloadStock();
+      } else {
+        var errMsg = data.error === 'insufficient_balance'
+          ? 'Balance insuffisante (' + fmtEur(data.current) + ' disponible, ' + fmtEur(data.required) + ' requis).'
+          : (data.error || 'Erreur');
+        showMsg(msgEl, 'error', errMsg);
+        msgEl.style.display = '';
+      }
+    }).catch(function () {
+      btn.disabled = false;
+      btn.textContent = 'Confirmer et payer';
+      showMsg(document.getElementById('reserveMsg'), 'error', 'Erreur réseau.');
+      document.getElementById('reserveMsg').style.display = '';
+    });
+  });
+
+  // Cancel modal
+  document.getElementById('cancelModalClose').addEventListener('click', function () {
+    document.getElementById('cancelModal').style.display = 'none';
+  });
+  document.getElementById('cancelModalCancelBtn').addEventListener('click', function () {
+    document.getElementById('cancelModal').style.display = 'none';
+  });
+  document.getElementById('confirmCancelBtn').addEventListener('click', function () {
+    var reservationId = document.getElementById('cancelReservationId').value;
+    var reason = document.getElementById('cancelReason').value.trim();
+    var btn = this;
+    var msgEl = document.getElementById('cancelMsg');
+    btn.disabled = true;
+    fetch('/.netlify/functions/reservations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'request-cancellation', reservation_id: reservationId, message: reason }),
+      credentials: 'same-origin'
+    }).then(function (r) { return r.json(); }).then(function (data) {
+      btn.disabled = false;
+      if (data.ok) {
+        document.getElementById('cancelModal').style.display = 'none';
+        showToastMsg('Demande d\'annulation envoyée.');
+        mystockLoaded = false;
+        loadMyStock();
+      } else {
+        showMsg(msgEl, 'error', data.error || 'Erreur');
+        msgEl.style.display = '';
+      }
+    }).catch(function () {
+      btn.disabled = false;
+      showMsg(document.getElementById('cancelMsg'), 'error', 'Erreur réseau.');
+      document.getElementById('cancelMsg').style.display = '';
+    });
+  });
+
+  // Delegated click handlers for mystock grid buttons
+  document.addEventListener('click', function (e) {
+    var tgt = e.target;
+    if (tgt && tgt.getAttribute('data-cancel-reservation')) {
+      var rId = tgt.getAttribute('data-cancel-reservation');
+      document.getElementById('cancelReservationId').value = rId;
+      document.getElementById('cancelReason').value = '';
+      document.getElementById('cancelMsg').style.display = 'none';
+      document.getElementById('cancelModal').style.display = 'flex';
+    }
+    if (tgt && tgt.getAttribute('data-pay-balance')) {
+      var rId = tgt.getAttribute('data-pay-balance');
+      var btn = tgt;
+      btn.disabled = true;
+      fetch('/.netlify/functions/reservations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'pay-balance', reservation_id: rId }),
+        credentials: 'same-origin'
+      }).then(function (r) { return r.json(); }).then(function (data) {
+        btn.disabled = false;
+        if (data.ok) {
+          showToastMsg('Solde payé ! Votre véhicule est confirmé.');
+          mystockLoaded = false;
+          loadMyStock();
+        } else {
+          var errMsg = data.error === 'insufficient_balance'
+            ? 'Balance insuffisante. Ajoutez des fonds dans Paramètres.'
+            : (data.error || 'Erreur');
+          showToastMsg(errMsg);
+        }
+      }).catch(function () { btn.disabled = false; });
+    }
+  });
+
+  // Toast notification helper
+  function showToastMsg(msg) {
+    var t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:#071526;border:1px solid rgba(198,176,122,.4);color:#c6b07a;padding:14px 20px;border-radius:12px;font-size:13px;box-shadow:0 8px 32px rgba(0,0,0,.5);transition:opacity .3s';
+    document.body.appendChild(t);
+    setTimeout(function () { t.style.opacity = '0'; setTimeout(function () { t.remove(); }, 300); }, 3500);
+  }
+
 })();
 </script>
 </body>

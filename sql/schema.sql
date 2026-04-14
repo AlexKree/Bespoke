@@ -55,3 +55,21 @@ CREATE TABLE IF NOT EXISTS staff_invites (
   used BOOLEAN NOT NULL DEFAULT FALSE,
   expires_at TIMESTAMPTZ NOT NULL
 );
+
+-- Vehicle reservations
+CREATE TABLE IF NOT EXISTS vehicle_reservations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  vehicle_slug TEXT NOT NULL,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  deposit_cents INTEGER NOT NULL,
+  remaining_cents INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending',
+  cancellation_requested BOOLEAN DEFAULT FALSE,
+  cancellation_message TEXT,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_reservations_user ON vehicle_reservations(user_id);
+CREATE INDEX IF NOT EXISTS idx_reservations_vehicle ON vehicle_reservations(vehicle_slug);
+CREATE INDEX IF NOT EXISTS idx_reservations_status ON vehicle_reservations(status);

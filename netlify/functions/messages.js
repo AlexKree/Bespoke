@@ -131,6 +131,37 @@ exports.handler = async function (event) {
       return json(200, { ok: true, message: res.rows[0] });
     }
 
+    // ── count-unread ───────────────────────────────────────────────────────
+    if (action === 'count-unread') {
+      // Count messages in the user's thread that were written by admin/staff (not by the user)
+      const res = await db.query(
+        `SELECT COUNT(*) AS total FROM messages
+         WHERE thread_id = $1 AND author_role IN ('admin', 'staff')`,
+        [user.id]
+      );
+      // Compare against messages the user has already seen: last message they sent
+      const lastSeenRes = await db.query(
+        `SELECT MAX(created_at) AS last_sent FROM messages
+         WHERE thread_id = $1 AND author_id = $2`,
+        [user.id, user.id]
+      );
+      const lastSent = lastSeenRes.rows.length ? lastSeenRes.rows[0].last_sent : null;
+
+      let unreadCount = 0;
+      if (lastSent) {
+        const unreadRes = await db.query(
+          `SELECT COUNT(*) AS total FROM messages
+           WHERE thread_id = $1 AND author_role IN ('admin', 'staff') AND created_at > $2`,
+          [user.id, lastSent]
+        );
+        unreadCount = parseInt(unreadRes.rows[0].total, 10);
+      } else {
+        unreadCount = parseInt(res.rows[0].total, 10);
+      }
+
+      return json(200, { unread: unreadCount });
+    }
+
     return json(400, { error: 'Action inconnue' });
   } catch (err) {
     console.error('messages error:', err);
