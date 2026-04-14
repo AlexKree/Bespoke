@@ -180,7 +180,7 @@ exports.handler = async function (event) {
         );
         // Record transaction
         await db.query(
-          `INSERT INTO transactions (user_id, type, amount_cents, label)
+          `INSERT INTO wallet_transactions (user_id, type, amount_cents, label)
            VALUES ($1, 'allocation', $2, $3)`,
           [user.id, deposit_cents, `Acompte véhicule ${title}`]
         );
@@ -306,7 +306,7 @@ exports.handler = async function (event) {
           [reservation.remaining_cents, user.id]
         );
         await db.query(
-          `INSERT INTO transactions (user_id, type, amount_cents, label)
+          `INSERT INTO wallet_transactions (user_id, type, amount_cents, label)
            VALUES ($1, 'allocation', $2, $3)`,
           [user.id, reservation.remaining_cents, `Solde véhicule ${vehicleTitle}`]
         );
