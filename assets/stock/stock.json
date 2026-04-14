@@ -121,7 +121,7 @@
       "year": 1988,
       "mileage_km": 88000,
       "price_eur": 19000,
-      "status": "available",
+      "status": "reserved",
       "location": {
         "fr": "France / Europe",
         "en": "France / Europe"
@@ -145,7 +145,9 @@
       "title": {
         "fr": "Jaguar XJV12 VANDEN PLAS",
         "en": "Jaguar XJV12 VANDEN PLAS"
-      }
+      },
+      "reserved_by": "f98b48cb-4e75-4ab8-aa2d-82ffccdde0b2",
+      "reserved_at": "2026-04-14T17:36:06.511Z"
     },
     {
       "id": "volvo-p1800-es",
