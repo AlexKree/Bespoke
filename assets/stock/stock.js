@@ -63,6 +63,8 @@
   let items = [];
   let filtered = [];
   let viewCounts = {}; // { [carId]: number }
+  let historyModalAdded = false; // tracks whether we pushed a history entry for the open modal
+  let ignoreNextPopstate = false; // prevents double-close when closeModal calls history.back()
 
   function formatPrice(item) {
     if (item.status === 'sold') return T.sold;
@@ -237,12 +239,22 @@
     grid.appendChild(frag);
   }
 
-  function closeModal() {
+  function closeModalUI() {
     if (!modal) return;
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
     modalMainImage.src = '';
     modalThumbs.innerHTML = '';
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    closeModalUI();
+    if (historyModalAdded) {
+      historyModalAdded = false;
+      ignoreNextPopstate = true;
+      window.history.back();
+    }
   }
 
   function openModal(item) {
@@ -312,6 +324,10 @@
 
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
+
+    // Push a history entry so the browser back button closes the modal instead of navigating away
+    window.history.pushState({ modal: 'vehicle', id: item.id }, '', '#vehicle-' + encodeURIComponent(item.id));
+    historyModalAdded = true;
   }
 
   function wireModal() {
@@ -322,6 +338,17 @@
     });
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeModal();
+    });
+    // Handle browser back button: close modal without reloading the page
+    window.addEventListener('popstate', () => {
+      if (ignoreNextPopstate) {
+        ignoreNextPopstate = false;
+        return;
+      }
+      if (historyModalAdded && modal && modal.classList.contains('open')) {
+        historyModalAdded = false;
+        closeModalUI();
+      }
     });
   }
 
