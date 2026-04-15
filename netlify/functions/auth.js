@@ -58,26 +58,42 @@ async function getSessionUser(db, sessionId) {
 async function sendVerificationEmail(email, token, baseUrl) {
   const verifyUrl = `${baseUrl}/fr/verify.html?token=${token}`;
   const apiKey = process.env.RESEND_API_KEY;
+
   if (!apiKey) {
-    console.log('VERIFY LINK:', verifyUrl);
+    console.log('⚠️ RESEND_API_KEY not configured. Verification link:', verifyUrl);
     return verifyUrl;
   }
-  const resend = new Resend(apiKey);
-  const from = process.env.RESEND_FROM_EMAIL || 'contact@thebespokecar.com';
-  await resend.emails.send({
-    from,
-    to: email,
-    subject: 'Vérifiez votre adresse email — Bespoke',
-    html: `
-      <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#05101e;color:#fff;border-radius:12px">
-        <h2 style="color:#c9a14a;margin-bottom:16px">Bienvenue sur Bespoke</h2>
-        <p>Cliquez sur le lien ci-dessous pour activer votre compte :</p>
-        <a href="${verifyUrl}" style="display:inline-block;margin:20px 0;padding:12px 28px;background:#c9a14a;color:#05101e;border-radius:8px;text-decoration:none;font-weight:600">Vérifier mon email</a>
-        <p style="color:rgba(255,255,255,.58);font-size:13px">Ce lien expire dans 24 heures. Si vous n'avez pas créé de compte, ignorez cet email.</p>
-        <p style="color:rgba(255,255,255,.58);font-size:12px">Ou copiez ce lien : ${verifyUrl}</p>
-      </div>
-    `,
-  });
+
+  try {
+    const resend = new Resend(apiKey);
+    const from = process.env.RESEND_FROM_EMAIL || 'contact@thebespokecar.com';
+
+    console.log(`📧 Sending verification email to ${email} from ${from}`);
+
+    const result = await resend.emails.send({
+      from,
+      to: email,
+      subject: 'Vérifiez votre adresse email — Bespoke',
+      html: `
+        <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#05101e;color:#fff;border-radius:12px">
+          <h2 style="color:#c9a14a;margin-bottom:16px">Bienvenue sur Bespoke</h2>
+          <p>Cliquez sur le lien ci-dessous pour activer votre compte :</p>
+          <a href="${verifyUrl}" style="display:inline-block;margin:20px 0;padding:12px 28px;background:#c9a14a;color:#05101e;border-radius:8px;text-decoration:none;font-weight:600">Vérifier mon email</a>
+          <p style="color:rgba(255,255,255,.58);font-size:13px">Ce lien expire dans 24 heures. Si vous n'avez pas créé de compte, ignorez cet email.</p>
+          <p style="color:rgba(255,255,255,.58);font-size:12px">Ou copiez ce lien : ${verifyUrl}</p>
+        </div>
+      `,
+    });
+
+    console.log(`✅ Email sent successfully. Resend ID:`, result && result.id ? result.id : result);
+    return null;
+
+  } catch (error) {
+    console.error('❌ Failed to send verification email:', error.message);
+    console.error('Error details:', error);
+    console.log('📋 Fallback verification link:', verifyUrl);
+    return verifyUrl;
+  }
 }
 
 exports.handler = async function (event) {
@@ -129,7 +145,17 @@ exports.handler = async function (event) {
       const baseUrl = `${proto}://${host}`;
       const verifyUrl = await sendVerificationEmail(email.toLowerCase(), token, baseUrl);
 
-      return json(200, { ok: true, message: 'Vérifiez votre email', ...(verifyUrl ? { verifyUrl } : {}) });
+      if (verifyUrl) {
+        console.log(`⚠️ Email could not be sent. Returning verification link in response.`);
+        return json(200, {
+          ok: true,
+          message: 'Vérifiez votre email',
+          verifyUrl,
+          warning: 'Email non envoyé. Utilisez le lien ci-dessous pour vérifier votre compte.',
+        });
+      }
+
+      return json(200, { ok: true, message: 'Vérifiez votre email pour activer votre compte.' });
     }
 
     // ── verify-email ──────────────────────────────────────────────────────
