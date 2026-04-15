@@ -59,6 +59,9 @@ async function sendVerificationEmail(email, token, baseUrl) {
   const verifyUrl = `${baseUrl}/fr/verify.html?token=${token}`;
   const apiKey = process.env.RESEND_API_KEY;
 
+  // 🔍 DEBUG: Vérifier si la clé API est chargée
+  console.log('🔑 RESEND_API_KEY defined:', !!apiKey);
+
   if (!apiKey) {
     console.log('⚠️ RESEND_API_KEY not configured. Verification link:', verifyUrl);
     return verifyUrl;
@@ -68,7 +71,10 @@ async function sendVerificationEmail(email, token, baseUrl) {
     const resend = new Resend(apiKey);
     const from = process.env.RESEND_FROM_EMAIL || 'contact@thebespokecar.com';
 
-    console.log(`📧 Sending verification email to ${email} from ${from}`);
+    console.log(`📧 Attempting to send verification email`);
+    console.log(`   From: ${from}`);
+    console.log(`   To: ${email}`);
+    console.log(`   Resend instance created:`, !!resend);
 
     const result = await resend.emails.send({
       from,
@@ -85,12 +91,31 @@ async function sendVerificationEmail(email, token, baseUrl) {
       `,
     });
 
-    console.log(`✅ Email sent successfully. Resend ID:`, result && result.id ? result.id : result);
+    // 🔍 DEBUG: Afficher la réponse complète de Resend
+    console.log('✅ Resend API response:', JSON.stringify({ data: result.data, error: result.error }, null, 2));
+
+    // Resend SDK v6 returns { data, error } — check for API-level errors
+    if (result.error) {
+      console.error('❌ Resend API returned an error:', JSON.stringify(result.error, null, 2));
+      console.log('📋 Fallback verification link:', verifyUrl);
+      return verifyUrl;
+    }
+
+    console.log('✅ Email sent successfully. Resend ID:', result.data?.id);
     return null;
 
   } catch (error) {
-    console.error('❌ Failed to send verification email:', error.message);
-    console.error('Error details:', error);
+    // 🔍 DEBUG: Afficher l'erreur complète
+    console.error('❌ Failed to send verification email');
+    console.error('   Error name:', error.name);
+    console.error('   Error message:', error.message);
+    console.error('   Error stack:', error.stack);
+    if (error.statusCode) {
+      console.error('   HTTP status code:', error.statusCode);
+    }
+    if (error.response) {
+      console.error('   API response:', JSON.stringify(error.response, null, 2));
+    }
     console.log('📋 Fallback verification link:', verifyUrl);
     return verifyUrl;
   }
@@ -145,6 +170,7 @@ exports.handler = async function (event) {
       const baseUrl = `${proto}://${host}`;
       const verifyUrl = await sendVerificationEmail(email.toLowerCase(), token, baseUrl);
 
+      // 🔍 DEBUG: Indiquer si le lien a été retourné (= email non envoyé)
       if (verifyUrl) {
         console.log(`⚠️ Email could not be sent. Returning verification link in response.`);
         return json(200, {
@@ -155,6 +181,7 @@ exports.handler = async function (event) {
         });
       }
 
+      console.log('✅ Registration complete. Email sent successfully.');
       return json(200, { ok: true, message: 'Vérifiez votre email pour activer votre compte.' });
     }
 
