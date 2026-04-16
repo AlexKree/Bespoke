@@ -85,7 +85,7 @@
       "year": null,
       "mileage_km": null,
       "price_eur": null,
-      "status": "sold",
+      "status": "available",
       "location": {
         "fr": "France / Europe",
         "en": "France / Europe"
