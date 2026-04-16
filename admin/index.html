@@ -1285,9 +1285,18 @@
       if (newStatus === car.status) return;
       if (newStatus === 'reserved' || car.status === 'reserved') {
         // Use the reservation-aware endpoint for reserved transitions
-        updateVehicleStatus(car.id, newStatus);
+        console.log(`Admin: Changing status from "${car.status}" to "${newStatus}" for ${car.id}`);
+        statusSelect.disabled = true;
+        updateVehicleStatus(car.id, newStatus).then(() => {
+          statusSelect.disabled = false;
+        }).catch(err => {
+          console.error('Status update failed:', err);
+          statusSelect.value = car.status;
+          statusSelect.disabled = false;
+        });
       } else {
         // Simple toggle via saveStock for available<->sold
+        console.log(`Admin: Changing status via saveStock from "${car.status}" to "${newStatus}" for ${car.id}`);
         stockData.items[idx] = { ...car, status: newStatus };
         saveStock().then(ok => {
           if (ok) {
@@ -2129,18 +2138,30 @@
   // ── Stock status change ───────────────────────────────────────────────
 
   async function updateVehicleStatus(vehicleSlug, newStatus) {
+    console.log(`updateVehicleStatus: ${vehicleSlug} -> ${newStatus}`);
+
     const { ok, status, data } = await apiCallTo(RESERVATIONS_API, 'update-vehicle-status', {
       vehicle_slug: vehicleSlug,
       status: newStatus,
-    }).catch(() => ({ ok: false, status: 0, data: {} }));
+    }).catch(err => {
+      console.error('API call failed:', err);
+      return { ok: false, status: 0, data: {} };
+    });
+
+    console.log('updateVehicleStatus response:', { ok, status, data });
 
     if (!ok) {
       if (status === 401) { handleUnauth(); return; }
-      showToast((data && data.error) || 'Erreur mise à jour statut.', 'error');
-      return;
+      const errorMsg = (data && data.error) || 'Erreur lors de la mise à jour du statut.';
+      console.error('updateVehicleStatus error:', errorMsg);
+      showToast(errorMsg, 'error');
+      throw new Error(errorMsg);
     }
-    showToast('Statut mis à jour.', 'success');
-    loadStock();
+
+    showToast('Statut mis à jour avec succès.', 'success');
+    console.log('Reloading stock after status update...');
+    await loadStock();
+    console.log('Stock reloaded.');
   }
 
   // ── Init ──────────────────────────────────────────────────────────────

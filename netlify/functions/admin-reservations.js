@@ -311,6 +311,7 @@ exports.handler = async function (event) {
 
       // If switching to available, cancel any active reservation
       if (newStatus === 'available' && oldStatus === 'reserved') {
+        console.log(`Admin: Cancelling reservation for ${vehicle_slug}`);
         const db2 = getPool();
         const activeRes = await db2.query(
           `SELECT * FROM vehicle_reservations
@@ -320,6 +321,7 @@ exports.handler = async function (event) {
         );
         if (activeRes.rows.length) {
           const reservation = activeRes.rows[0];
+          console.log(`Found active reservation: ${reservation.id}`);
           let vehicleTitle = vehicle_slug;
           const v = stock.items[vehicleIdx];
           if (v) vehicleTitle = v.title ? (v.title.fr || v.title.en) : vehicleTitle;
@@ -330,20 +332,27 @@ exports.handler = async function (event) {
               `UPDATE vehicle_reservations SET status = 'cancelled', updated_at = now() WHERE id = $1`,
               [reservation.id]
             );
+            console.log(`Reservation ${reservation.id} cancelled.`);
             await db2.query(
               'UPDATE users SET balance_cents = balance_cents + $1 WHERE id = $2',
               [reservation.deposit_cents, reservation.user_id]
             );
+            console.log(`Refunded ${reservation.deposit_cents} cents to user ${reservation.user_id}`);
             await db2.query(
               `INSERT INTO transactions (user_id, type, amount_cents, label)
                VALUES ($1, 'deposit', $2, $3)`,
               [reservation.user_id, reservation.deposit_cents, `Remboursement acompte ${vehicleTitle}`]
             );
+            console.log(`Transaction recorded.`);
             await db2.query('COMMIT');
+            console.log(`Reservation cancellation committed.`);
           } catch (err) {
             await db2.query('ROLLBACK');
+            console.error(`Reservation cancellation failed:`, err);
             throw err;
           }
+        } else {
+          console.log(`No active reservation found for ${vehicle_slug}`);
         }
       }
 
