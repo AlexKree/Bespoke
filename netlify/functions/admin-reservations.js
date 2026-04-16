@@ -7,9 +7,10 @@ const crypto = require('crypto');
 let pool = null;
 
 function getPool() {
-  if (!process.env.DATABASE_URL) return null;
+  const dbUrl = process.env.DATABASE_URL || process.env.NEON_DATABASE_URL;
+  if (!dbUrl) return null;
   if (!pool) {
-    pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+    pool = new Pool({ connectionString: dbUrl, ssl: { rejectUnauthorized: false } });
   }
   return pool;
 }
@@ -200,7 +201,7 @@ exports.handler = async function (event) {
             [reservation.deposit_cents, reservation.user_id]
           );
           await db.query(
-            `INSERT INTO transactions (user_id, type, amount_cents, label)
+            `INSERT INTO wallet_transactions (user_id, type, amount_cents, label)
              VALUES ($1, 'deposit', $2, $3)`,
             [reservation.user_id, reservation.deposit_cents, `Remboursement acompte ${vehicleTitle}`]
           );
@@ -339,7 +340,7 @@ exports.handler = async function (event) {
             );
             console.log(`Refunded ${reservation.deposit_cents} cents to user ${reservation.user_id}`);
             await db2.query(
-              `INSERT INTO transactions (user_id, type, amount_cents, label)
+              `INSERT INTO wallet_transactions (user_id, type, amount_cents, label)
                VALUES ($1, 'deposit', $2, $3)`,
               [reservation.user_id, reservation.deposit_cents, `Remboursement acompte ${vehicleTitle}`]
             );
