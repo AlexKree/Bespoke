@@ -13,7 +13,7 @@
       "year": 1993,
       "mileage_km": 112500,
       "price_eur": 16900,
-      "status": "available",
+      "status": "reserved",
       "location": {
         "fr": "France / Europe",
         "en": "France / Europe"
@@ -34,7 +34,9 @@
       "title": {
         "fr": "Saab 900 Turbo Cabriolet",
         "en": "Saab 900 Turbo Cabriolet"
-      }
+      },
+      "reserved_by": "77884313-d29e-4bf7-ae2e-71cf01aea070",
+      "reserved_at": "2026-04-16T06:20:21.153Z"
     },
     {
       "id": "mercedes-c36-amg-w202",
