@@ -701,10 +701,59 @@ footer{
 /* ── Nav user widget ─────────────────────────────────────────────── */
 .navUser{
   display:flex; align-items:center; gap:8px; margin-left:8px;
+  position:relative;
 }
 .navUserEmail{
   font-size:12px; color:var(--muted); max-width:160px;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+
+/* ── User Card (navbar) ─────────────────────────────────────────── */
+.userCard{
+  min-width:280px; padding:14px;
+  border:1px solid rgba(255,255,255,.12); border-radius:14px;
+  background:rgba(255,255,255,.05); backdrop-filter:blur(8px);
+}
+.userCardHeader{
+  display:flex; align-items:center; gap:10px; margin-bottom:10px;
+}
+.userCardAvatar{
+  width:40px; height:40px; border-radius:50%;
+  background:linear-gradient(135deg,#c6b07a,#a08d5f);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:600; font-size:14px; color:#071526; flex-shrink:0;
+}
+.userCardInfo{
+  flex:1; min-width:0;
+}
+.userCardName{
+  font-weight:500; font-size:14px; color:rgba(255,255,255,.95);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.userCardEmail{
+  font-size:12px; color:rgba(255,255,255,.6);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.userCardBadge{
+  font-size:10px; font-weight:600; letter-spacing:.08em;
+  text-transform:uppercase; padding:3px 8px; border-radius:999px;
+  background:rgba(198,176,122,.15); border:1px solid rgba(198,176,122,.35);
+  color:#c6b07a; flex-shrink:0;
+}
+.userCardBadge.admin{
+  background:rgba(224,92,92,.15); border-color:rgba(224,92,92,.35); color:#e05c5c;
+}
+.userCardBadge.staff{
+  background:rgba(92,184,138,.15); border-color:rgba(92,184,138,.35); color:#5cb88a;
+}
+.userCardMeta{
+  padding:8px 0; border-top:1px solid rgba(255,255,255,.08); margin-top:8px;
+}
+.userCardMetaItem{
+  font-size:11px; color:rgba(255,255,255,.55); display:block;
+}
+@media(max-width:768px){
+  .userCard{min-width:240px}
 }
 .navMsgBadge{
   display:inline-flex; align-items:center; justify-content:center;

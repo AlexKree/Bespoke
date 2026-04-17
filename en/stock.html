@@ -39,8 +39,22 @@
         <a data-nav class="navlink" href="contact.html">Contact</a>
         <a class="btn primary btnSm" href="login.html" id="navAuthBtn" style="margin-left:8px">Sign In</a>
         <div id="navUserWrap" class="navUser" style="display:none">
-          <span class="navUserEmail" id="navUserEmail"></span>
-          <button class="btn btnSm" id="navLogoutBtn" type="button">Sign Out</button>
+          <div class="userCard">
+            <div class="userCardHeader">
+              <div class="userCardAvatar">
+                <span id="navUserInitials">?</span>
+              </div>
+              <div class="userCardInfo">
+                <div class="userCardName" id="navUserName">User</div>
+                <div class="userCardEmail" id="navUserEmail">email@example.com</div>
+              </div>
+              <span class="userCardBadge" id="navUserRole">Client</span>
+            </div>
+            <div class="userCardMeta">
+              <span class="userCardMetaItem">🕐 <span id="navUserConnectedSince">—</span></span>
+            </div>
+            <button class="btn btnSm" id="navLogoutBtn" type="button" style="width:100%;margin-top:8px">Sign Out</button>
+          </div>
         </div>
     <div class="lang">
       <a class="" href="../fr/stock.html">FR</a>
@@ -336,8 +350,57 @@
     if (navBtn) navBtn.style.display = 'none';
     var navUser = document.getElementById('navUserWrap');
     if (navUser) navUser.style.display = 'flex';
+
+    // Email
     var navEmail = document.getElementById('navUserEmail');
     if (navEmail) navEmail.textContent = user.email;
+
+    // Formatted name from email
+    var navName = document.getElementById('navUserName');
+    if (navName) {
+      var emailPart = user.email.split('@')[0];
+      var formattedName = emailPart
+        .replace(/[._]/g, ' ')
+        .split(' ')
+        .map(function (word) {
+          return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        })
+        .join(' ');
+      navName.textContent = formattedName;
+    }
+
+    // Initials
+    var navInitials = document.getElementById('navUserInitials');
+    if (navInitials && navName) {
+      var parts = navName.textContent.split(' ');
+      var initials = parts.length >= 2
+        ? parts[0].charAt(0) + parts[1].charAt(0)
+        : parts[0].charAt(0) + (parts[0].charAt(1) || '');
+      navInitials.textContent = initials.toUpperCase();
+    }
+
+    // Role badge
+    var navRole = document.getElementById('navUserRole');
+    if (navRole) {
+      var roleLabels = { client: 'Client', staff: 'Staff', admin: 'Admin' };
+      navRole.textContent = roleLabels[user.role] || 'Client';
+      navRole.className = 'userCardBadge ' + (user.role || 'client');
+    }
+
+    // Connection time
+    var connectedSince = document.getElementById('navUserConnectedSince');
+    if (connectedSince) {
+      var loginTime = sessionStorage.getItem('bespoke_user_login_time');
+      if (!loginTime) {
+        loginTime = new Date().toLocaleString('en-US', {
+          weekday: 'short', day: 'numeric', month: 'short',
+          hour: '2-digit', minute: '2-digit'
+        });
+        sessionStorage.setItem('bespoke_user_login_time', loginTime);
+      }
+      connectedSince.textContent = 'Connected since: ' + loginTime;
+    }
+
     document.getElementById('dashTabsWrap').style.display = '';
     pollUnreadMessages();
     setInterval(pollUnreadMessages, 30000);
@@ -363,6 +426,7 @@
 
   document.addEventListener('click', function (e) {
     if (e.target && e.target.id === 'navLogoutBtn') {
+      sessionStorage.removeItem('bespoke_user_login_time');
       fetch('/.netlify/functions/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
