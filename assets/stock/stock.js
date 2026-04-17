@@ -388,7 +388,7 @@
 
   async function init() {
     try {
-      const res = await fetch(dataUrl, { cache: 'no-cache' });
+      const res = await fetch(dataUrl + '&t=' + Date.now(), { cache: 'no-cache' });
       const data = await res.json();
       items = (data && data.items) ? data.items : [];
       applyFilters();
@@ -403,7 +403,7 @@
   // Expose a reload function for the reservation flow
   window.__bespokeReloadStock = async function () {
     try {
-      const res = await fetch(dataUrl, { cache: 'no-cache' });
+      const res = await fetch(dataUrl + '&t=' + Date.now(), { cache: 'no-cache' });
       const data = await res.json();
       items = (data && data.items) ? data.items : [];
       applyFilters();
