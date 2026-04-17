@@ -36,7 +36,7 @@
   }[lang];
 
   const basePrefix = '../';
-  const dataUrl = basePrefix + 'assets/stock/stock.json?v=' + Date.now();
+  const dataUrl = basePrefix + 'assets/stock/stock.json';
   const searchEl = document.getElementById('stockSearch');
   const includeSoldEl = document.getElementById('includeSold');
   const sortEl = document.getElementById('stockSort');
