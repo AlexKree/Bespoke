@@ -83,6 +83,7 @@
         <button class="dashTabBtn" id="dashTabBtn_messages" type="button" onclick="switchDashTab('messages')">Messages<span class="dashTabMsgBadge" id="dashMsgBadge" style="display:none">0</span></button>
         <button class="dashTabBtn" id="dashTabBtn_mystock" type="button" onclick="switchDashTab('mystock')">🚗 Mon stock</button>
         <button class="dashTabBtn" id="dashTabBtn_params" type="button" onclick="switchDashTab('params')">Paramètres</button>
+        <button class="dashTabBtn" id="dashTabBtn_alerts" type="button" onclick="switchDashTab('alerts')">🔔 Alertes</button>
       </div>
     </div>
 
@@ -180,6 +181,59 @@
             </div>
             <button class="btn primary" id="allocBtn" type="button" style="margin-top:16px">Allouer</button>
             <div id="allocMsg" class="authMsg" style="display:none;margin-top:12px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Onglet : Alertes ──────────────────────────────────────────── -->
+    <div id="dashPanel_alerts" class="dashPanel">
+      <div class="dashPanelInner">
+        <div class="card pad">
+          <h2 style="font-family:var(--serif);margin-bottom:8px">🔔 Alertes de nouveau stock</h2>
+          <p style="color:rgba(255,255,255,.6);font-size:14px;margin-bottom:24px">Recevez un email automatique quand un véhicule correspond à vos critères.</p>
+
+          <form id="alertsForm" style="display:flex;flex-direction:column;gap:20px">
+            <div>
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:500">
+                <input type="checkbox" id="alertsEnabled" style="width:auto;height:18px;accent-color:var(--gold);cursor:pointer"/>
+                <span>Activer les alertes email</span>
+              </label>
+            </div>
+
+            <div id="alertsSettings" style="display:none;padding:20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px">
+              <div style="margin-bottom:16px">
+                <label for="alertsBrands" style="display:block;margin-bottom:6px;font-size:13px;font-weight:500">Marques souhaitées (optionnel)</label>
+                <input type="text" id="alertsBrands" class="input" placeholder="Ex: Porsche, Ferrari, Mercedes (séparés par des virgules)" style="width:100%"/>
+                <div style="font-size:12px;color:rgba(255,255,255,.45);margin-top:4px">Laissez vide pour recevoir des alertes sur toutes les marques</div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                <div>
+                  <label for="alertsMaxPrice" style="display:block;margin-bottom:6px;font-size:13px;font-weight:500">Prix maximum (€)</label>
+                  <input type="number" id="alertsMaxPrice" class="input" placeholder="Ex: 50000" min="0" style="width:100%"/>
+                  <div style="font-size:12px;color:rgba(255,255,255,.45);margin-top:4px">Laissez vide pour tout prix</div>
+                </div>
+
+                <div>
+                  <label for="alertsMinYear" style="display:block;margin-bottom:6px;font-size:13px;font-weight:500">Année minimum</label>
+                  <input type="number" id="alertsMinYear" class="input" placeholder="Ex: 2000" min="1900" max="2030" style="width:100%"/>
+                  <div style="font-size:12px;color:rgba(255,255,255,.45);margin-top:4px">Laissez vide pour toute année</div>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn primary" id="saveAlertsBtn" style="align-self:flex-start">
+              Enregistrer mes préférences
+            </button>
+          </form>
+
+          <div id="alertsSuccess" style="display:none;margin-top:16px;padding:12px;background:rgba(92,184,138,.1);border:1px solid rgba(92,184,138,.3);border-radius:8px;color:#5cb88a;font-size:14px">
+            ✅ Vos préférences d'alerte ont été enregistrées !
+          </div>
+
+          <div id="alertsError" style="display:none;margin-top:16px;padding:12px;background:rgba(224,92,92,.1);border:1px solid rgba(224,92,92,.3);border-radius:8px;color:#e05c5c;font-size:14px">
+            ❌ Erreur lors de l'enregistrement. Veuillez réessayer.
           </div>
         </div>
       </div>
@@ -448,6 +502,7 @@
     if (tab === 'messages' && !messagesLoaded) loadMessages();
     if (tab === 'params' && !paramsLoaded) loadParams();
     if (tab === 'mystock' && !mystockLoaded) loadMyStock();
+    if (tab === 'alerts' && !alertsLoaded) loadAlerts();
   };
 
   function fmtEur(cents) {
@@ -835,6 +890,114 @@
     t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:#071526;border:1px solid rgba(198,176,122,.4);color:#c6b07a;padding:14px 20px;border-radius:12px;font-size:13px;box-shadow:0 8px 32px rgba(0,0,0,.5);transition:opacity .3s';
     document.body.appendChild(t);
     setTimeout(function () { t.style.opacity = '0'; setTimeout(function () { t.remove(); }, 300); }, 3500);
+  }
+
+  // ── Alerts tab ──────────────────────────────────────────────────────
+  var alertsLoaded = false;
+
+  function loadAlerts() {
+    if (alertsLoaded) return;
+    alertsLoaded = true;
+
+    fetch('/.netlify/functions/stock-alerts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'getAlerts' }),
+      credentials: 'same-origin'
+    }).then(function (r) {
+      if (!r.ok) throw new Error('Failed to load alerts');
+      return r.json();
+    }).then(function (data) {
+      if (data.alert) {
+        var alert = data.alert;
+        var enabledCheckbox = document.getElementById('alertsEnabled');
+        var settingsDiv = document.getElementById('alertsSettings');
+
+        if (enabledCheckbox) {
+          enabledCheckbox.checked = alert.enabled || false;
+          if (settingsDiv) {
+            settingsDiv.style.display = enabledCheckbox.checked ? 'block' : 'none';
+          }
+        }
+
+        if (alert.brands && alert.brands.length > 0) {
+          var brandsInput = document.getElementById('alertsBrands');
+          if (brandsInput) brandsInput.value = alert.brands.join(', ');
+        }
+        if (alert.max_price) {
+          var maxPriceInput = document.getElementById('alertsMaxPrice');
+          if (maxPriceInput) maxPriceInput.value = alert.max_price;
+        }
+        if (alert.min_year) {
+          var minYearInput = document.getElementById('alertsMinYear');
+          if (minYearInput) minYearInput.value = alert.min_year;
+        }
+      }
+    }).catch(function (err) {
+      console.error('Load alerts error:', err);
+    });
+  }
+
+  var alertsEnabledCheckbox = document.getElementById('alertsEnabled');
+  if (alertsEnabledCheckbox) {
+    alertsEnabledCheckbox.addEventListener('change', function () {
+      var settingsDiv = document.getElementById('alertsSettings');
+      if (settingsDiv) {
+        settingsDiv.style.display = this.checked ? 'block' : 'none';
+      }
+    });
+  }
+
+  var alertsForm = document.getElementById('alertsForm');
+  if (alertsForm) {
+    alertsForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var enabled = document.getElementById('alertsEnabled').checked;
+      var brandsInput = document.getElementById('alertsBrands').value.trim();
+      var brands = brandsInput ? brandsInput.split(',').map(function (b) { return b.trim(); }).filter(Boolean) : [];
+      var maxPriceVal = document.getElementById('alertsMaxPrice').value;
+      var maxPrice = maxPriceVal ? parseInt(maxPriceVal, 10) : null;
+      var minYearVal = document.getElementById('alertsMinYear').value;
+      var minYear = minYearVal ? parseInt(minYearVal, 10) : null;
+
+      var btn = document.getElementById('saveAlertsBtn');
+      var successMsg = document.getElementById('alertsSuccess');
+      var errorMsg = document.getElementById('alertsError');
+
+      if (btn) btn.disabled = true;
+      if (successMsg) successMsg.style.display = 'none';
+      if (errorMsg) errorMsg.style.display = 'none';
+
+      fetch('/.netlify/functions/stock-alerts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'saveAlerts',
+          enabled: enabled,
+          brands: brands,
+          max_price: maxPrice,
+          min_year: minYear
+        }),
+        credentials: 'same-origin'
+      }).then(function (r) {
+        if (!r.ok) throw new Error('Failed to save alerts');
+        return r.json();
+      }).then(function (data) {
+        if (btn) btn.disabled = false;
+        if (data.success && successMsg) {
+          successMsg.style.display = 'block';
+          setTimeout(function () { successMsg.style.display = 'none'; }, 5000);
+        }
+      }).catch(function (err) {
+        console.error('Save alerts error:', err);
+        if (btn) btn.disabled = false;
+        if (errorMsg) {
+          errorMsg.style.display = 'block';
+          setTimeout(function () { errorMsg.style.display = 'none'; }, 5000);
+        }
+      });
+    });
   }
 
 })();
