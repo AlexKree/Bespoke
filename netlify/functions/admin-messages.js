@@ -2,6 +2,7 @@
 
 const { Pool } = require('pg');
 const crypto = require('crypto');
+const { Resend } = require('resend');
 
 let pool = null;
 
@@ -140,6 +141,57 @@ exports.handler = async function (event) {
          RETURNING id, thread_id, author_id, author_role, content, created_at`,
         [thread_id, authorId, trimmed]
       );
+
+      // Send email notification to the client (non-blocking)
+      if (process.env.RESEND_API_KEY) {
+        db.query(
+          `SELECT email FROM users WHERE id = $1`,
+          [thread_id]
+        ).then(function (recipientResult) {
+          if (!recipientResult.rows.length) return;
+          const recipientEmail = recipientResult.rows[0].email;
+          const resend = new Resend(process.env.RESEND_API_KEY);
+          const emailHtml = `<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{font-family:Arial,sans-serif;color:#333;margin:0;padding:0}
+.container{max-width:600px;margin:0 auto}
+.header{background:linear-gradient(135deg,#071526,#0a1f38);color:white;padding:30px;text-align:center}
+.content{background:#f9f9f9;padding:30px}
+.message-box{background:white;padding:20px;border-left:4px solid #c6b07a;margin:20px 0}
+.button{display:inline-block;background:#c6b07a;color:white;padding:12px 24px;text-decoration:none;border-radius:6px;margin-top:20px}
+.footer{text-align:center;margin-top:30px;font-size:12px;color:#999}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header"><h1>BESPOKE</h1><p>Collection &amp; Prestige</p></div>
+<div class="content">
+<h2>&#x1F4EC; Nouveau message de l'équipe Bespoke</h2>
+<p>Bonjour,</p>
+<p>Vous avez reçu une réponse de notre équipe concernant votre demande.</p>
+<div class="message-box"><p><strong>Message :</strong></p><p>${trimmed.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</p></div>
+<a href="https://www.thebespokecar.com/fr/stock.html" class="button">Voir mes messages</a>
+<div class="footer">
+<p>Cet email a été envoyé automatiquement. Merci de ne pas y répondre directement.</p>
+<p>&copy; ${new Date().getFullYear()} Bespoke — Collection &amp; Prestige</p>
+</div>
+</div>
+</div>
+</body>
+</html>`;
+          return resend.emails.send({
+            from: 'noreply@thebespokecar.com',
+            to: recipientEmail,
+            subject: '📬 Nouveau message de Bespoke',
+            html: emailHtml,
+          });
+        }).catch(function (emailErr) {
+          console.error('Email notification failed:', emailErr);
+        });
+      }
+
       return { statusCode: 200, headers, body: JSON.stringify({ ok: true, message: res.rows[0] }) };
     }
 
