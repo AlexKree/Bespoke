@@ -213,7 +213,20 @@
         "fr": "",
         "en": ""
       },
-      "images": [],
+      "images": [
+        "/assets/stock/images/renault-megane-iii-convertible-1776618573721-1641ba.jpg",
+        "/assets/stock/images/renault-megane-iii-convertible-1776618579090-20ae75.jpg",
+        "/assets/stock/images/renault-megane-iii-convertible-1776618584174-81272e.jpg",
+        "/assets/stock/images/renault-megane-iii-convertible-1776618590151-201194.jpg",
+        "/assets/stock/images/renault-megane-iii-convertible-1776618598429-f9e963.jpg",
+        "/assets/stock/images/renault-megane-iii-convertible-1776618604819-022bc2.jpg",
+        "/assets/stock/images/renault-megane-iii-convertible-1776618614477-a113e7.jpg",
+        "/assets/stock/images/renault-megane-iii-convertible-1776618623156-961076.jpg",
+        "/assets/stock/images/renault-megane-iii-convertible-1776618631653-eda047.jpg",
+        "/assets/stock/images/renault-megane-iii-convertible-1776618641614-3665d4.jpg",
+        "/assets/stock/images/renault-megane-iii-convertible-1776619533777-0d167d.jpg",
+        "/assets/stock/images/renault-megane-iii-convertible-1776619545273-fad7d4.jpg"
+      ],
       "title": {
         "fr": "RENAULT MEGANE III Cabriolet",
         "en": "RENAULT MEGANE III Convertible"
