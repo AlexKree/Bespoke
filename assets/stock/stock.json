@@ -197,9 +197,9 @@
         "fr": "MEGANE III Cabriolet",
         "en": "MEGANE III Convertible"
       },
-      "year": null,
-      "mileage_km": null,
-      "price_eur": null,
+      "year": 2010,
+      "mileage_km": 146000,
+      "price_eur": 6300,
       "status": "available",
       "location": {
         "fr": "France / Europe",
