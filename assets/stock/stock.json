@@ -186,6 +186,38 @@
         "fr": "VOLVO P1800ES",
         "en": "VOLVO P1800ES"
       }
+    },
+    {
+      "id": "renault-megane-iii-convertible",
+      "make": {
+        "fr": "RENAULT",
+        "en": "RENAULT"
+      },
+      "model": {
+        "fr": "MEGANE III Cabriolet",
+        "en": "MEGANE III Convertible"
+      },
+      "year": null,
+      "mileage_km": null,
+      "price_eur": null,
+      "status": "available",
+      "location": {
+        "fr": "France / Europe",
+        "en": "France / Europe"
+      },
+      "headline": {
+        "fr": "",
+        "en": ""
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "images": [],
+      "title": {
+        "fr": "RENAULT MEGANE III Cabriolet",
+        "en": "RENAULT MEGANE III Convertible"
+      }
     }
   ]
 }
