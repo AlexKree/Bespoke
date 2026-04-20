@@ -978,3 +978,315 @@ footer{
     font-size: 0.9rem;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MARKET PAGE
+   ═══════════════════════════════════════════════════════════════════ */
+
+.market-hero {
+  background: linear-gradient(135deg, rgba(10,10,10,0.95) 0%, rgba(15,13,10,0.98) 100%);
+  padding: 120px 0 80px;
+  text-align: center;
+  border-bottom: 1px solid rgba(198, 176, 122, 0.15);
+}
+
+.market-hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 300;
+  color: var(--cream);
+  margin-bottom: 20px;
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: rgba(245, 240, 232, 0.7);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.market-section {
+  padding: 80px 0;
+}
+
+.market-section.dark {
+  background: linear-gradient(180deg, rgba(15,13,10,1) 0%, rgba(10,10,10,0.95) 100%);
+  border-top: 1px solid rgba(198, 176, 122, 0.08);
+  border-bottom: 1px solid rgba(198, 176, 122, 0.08);
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  color: var(--gold);
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.content-card {
+  background: rgba(198, 176, 122, 0.03);
+  border: 1px solid rgba(198, 176, 122, 0.1);
+  border-radius: 12px;
+  padding: 40px;
+  line-height: 1.8;
+  color: rgba(245, 240, 232, 0.75);
+}
+
+.content-card p {
+  margin-bottom: 16px;
+  font-size: 1rem;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin: 40px 0;
+}
+
+.stat-card {
+  background: rgba(198, 176, 122, 0.05);
+  border: 1px solid rgba(198, 176, 122, 0.15);
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  background: rgba(198, 176, 122, 0.08);
+  border-color: rgba(198, 176, 122, 0.3);
+  transform: translateY(-4px);
+}
+
+.stat-value {
+  font-family: var(--serif);
+  font-size: 3rem;
+  font-weight: 300;
+  color: var(--gold);
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: rgba(245, 240, 232, 0.6);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.stat-change {
+  font-size: 0.85rem;
+  color: #5cb88a;
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+/* Appreciation Card */
+.appreciation-card {
+  background: rgba(198, 176, 122, 0.04);
+  border: 1px solid rgba(198, 176, 122, 0.12);
+  border-radius: 12px;
+  padding: 40px;
+}
+
+.appreciation-card h3 {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  color: var(--gold);
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.appreciation-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.appreciation-item {
+  display: grid;
+  grid-template-columns: 200px 1fr 100px;
+  gap: 20px;
+  align-items: center;
+}
+
+.car-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(245, 240, 232, 0.9);
+}
+
+.appreciation-bar {
+  height: 12px;
+  background: rgba(198, 176, 122, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold) 0%, #d4b67c 100%);
+  border-radius: 6px;
+  transition: width 1s ease;
+}
+
+.appreciation-value {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  color: var(--gold);
+  text-align: right;
+  font-weight: 500;
+}
+
+/* Car Photo Grid */
+.car-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 40px 0;
+}
+
+.car-photo-item {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(198, 176, 122, 0.12);
+  aspect-ratio: 4/3;
+}
+
+.car-photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.car-photo-item:hover img {
+  transform: scale(1.04);
+}
+
+/* Opportunities Grid */
+.opportunities-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin: 40px 0;
+}
+
+.opportunity-card {
+  background: rgba(198, 176, 122, 0.04);
+  border: 1px solid rgba(198, 176, 122, 0.12);
+  border-radius: 12px;
+  padding: 32px;
+  transition: all 0.3s ease;
+}
+
+.opportunity-card:hover {
+  background: rgba(198, 176, 122, 0.07);
+  border-color: rgba(198, 176, 122, 0.25);
+  transform: translateY(-4px);
+}
+
+.opportunity-icon {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.opportunity-card h3 {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.opportunity-card p {
+  font-size: 0.95rem;
+  color: rgba(245, 240, 232, 0.7);
+  line-height: 1.6;
+}
+
+/* Differentiators Grid */
+.differentiators-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin: 40px 0;
+}
+
+.differentiator-card {
+  background: rgba(198, 176, 122, 0.04);
+  border: 1px solid rgba(198, 176, 122, 0.12);
+  border-radius: 12px;
+  padding: 32px;
+  transition: all 0.3s ease;
+}
+
+.differentiator-card:hover {
+  background: rgba(198, 176, 122, 0.07);
+  border-color: rgba(198, 176, 122, 0.25);
+  transform: translateY(-4px);
+}
+
+.diff-icon {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.differentiator-card h3 {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.differentiator-card p {
+  font-size: 0.95rem;
+  color: rgba(245, 240, 232, 0.7);
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .opportunities-grid,
+  .differentiators-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .car-photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .market-section {
+    padding: 60px 0;
+  }
+
+  .content-card {
+    padding: 24px;
+  }
+
+  .appreciation-item {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .appreciation-value {
+    text-align: left;
+  }
+
+  .stat-value {
+    font-size: 2.5rem;
+  }
+
+  .car-photo-grid {
+    grid-template-columns: 1fr;
+  }
+}
