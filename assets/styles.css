@@ -905,3 +905,76 @@ footer{
   box-shadow:0 0 0 3px rgba(201,161,74,.10);
 }
 .msgCompose textarea::placeholder{color:var(--muted2)}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MISSION SECTION
+   ═══════════════════════════════════════════════════════════════════ */
+
+.mission-section {
+  padding: 80px 0;
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.95) 0%, rgba(15, 13, 10, 1) 100%);
+  border-top: 1px solid rgba(198, 176, 122, 0.12);
+  border-bottom: 1px solid rgba(198, 176, 122, 0.12);
+}
+
+.mission-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.mission-card {
+  padding: 40px 32px;
+  background: rgba(198, 176, 122, 0.03);
+  border: 1px solid rgba(198, 176, 122, 0.1);
+  border-radius: 12px;
+  transition: all 0.4s ease;
+}
+
+.mission-card:hover {
+  background: rgba(198, 176, 122, 0.06);
+  border-color: rgba(198, 176, 122, 0.25);
+  transform: translateY(-4px);
+}
+
+.mission-title {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--gold);
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+
+.mission-text {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: rgba(245, 240, 232, 0.7);
+  font-weight: 300;
+}
+
+@media (max-width: 1024px) {
+  .mission-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .mission-card {
+    padding: 32px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mission-section {
+    padding: 60px 0;
+  }
+
+  .mission-title {
+    font-size: 1.3rem;
+  }
+
+  .mission-text {
+    font-size: 0.9rem;
+  }
+}
