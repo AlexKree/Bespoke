@@ -17,6 +17,68 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Bespoke" />
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.svg" />
+  <!-- SEO: Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://thebespokecar.com/en/index.html" />
+  <meta property="og:title" content="Bespoke — Collector Car Sourcing & Import" />
+  <meta property="og:description" content="Sourcing, mandates and importation of prestige and collector vehicles. Due diligence, negotiation, logistics — for discerning collectors." />
+  <meta property="og:image" content="https://thebespokecar.com/assets/photos/og-homepage.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:locale:alternate" content="fr_FR" />
+  <meta property="og:site_name" content="The Bespoke Car" />
+  <!-- SEO: Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@TheBespokeCar" />
+  <meta name="twitter:title" content="Bespoke — Collector Car Sourcing & Import" />
+  <meta name="twitter:description" content="Sourcing, mandates and importation of prestige and collector vehicles. Due diligence, negotiation, logistics — for discerning collectors." />
+  <meta name="twitter:image" content="https://thebespokecar.com/assets/photos/og-homepage.jpg" />
+  <!-- SEO: Canonical + hreflang -->
+  <link rel="canonical" href="https://thebespokecar.com/en/index.html" />
+  <link rel="alternate" hreflang="en" href="https://thebespokecar.com/en/index.html" />
+  <link rel="alternate" hreflang="fr" href="https://thebespokecar.com/fr/index.html" />
+  <link rel="alternate" hreflang="x-default" href="https://thebespokecar.com/en/index.html" />
+  <!-- Analytics -->
+  <script defer data-domain="thebespokecar.com" src="https://plausible.io/js/script.js"></script>
+  <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments); };</script>
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://thebespokecar.com/#organization",
+        "name": "The Bespoke Car",
+        "url": "https://thebespokecar.com",
+        "logo": "https://thebespokecar.com/assets/icons/icon-192.svg",
+        "email": "contact@thebespokecar.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "1530 Chemin de Peyniblou",
+          "addressLocality": "Sophia-Antipolis",
+          "postalCode": "06560",
+          "addressCountry": "FR"
+        },
+        "sameAs": [
+          "https://x.com/TheBespokeCar",
+          "https://www.linkedin.com/company/112966970"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://thebespokecar.com/#website",
+        "url": "https://thebespokecar.com",
+        "name": "The Bespoke Car",
+        "publisher": {
+          "@id": "https://thebespokecar.com/#organization"
+        },
+        "inLanguage": "en-GB"
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 <header>
@@ -68,7 +130,7 @@
     </p>
 
     <div class="ctaRow">
-      <a class="btn primary" href="contact.html">Submit a request (concierge)</a>
+      <a class="btn primary" href="contact.html" onclick="plausible('Lead')">Submit a request (concierge)</a>
       <a class="btn" href="opportunites.html">View opportunities</a>
       <a class="btn" href="services.html">Discover the process</a>
       <a class="btn" href="login.html" id="heroAuthBtn">Sign In / Create Account →</a>
