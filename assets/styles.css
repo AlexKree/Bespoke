@@ -241,6 +241,11 @@ h2{
 /* ── Lead text ───────────────────────────────────────────────────── */
 .lead{color:var(--muted);font-size:15.5px;max-width:66ch;line-height:1.72}
 
+/* ── Breadcrumb ──────────────────────────────────────────────────── */
+.breadcrumb{margin-bottom:16px}
+.breadcrumb ol{display:flex;gap:8px;list-style:none;padding:0;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--gold);text-decoration:none}
+
 /* ── CTA row ─────────────────────────────────────────────────────── */
 .ctaRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
 
