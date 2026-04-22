@@ -4,6 +4,8 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Stock — Bespoke</title>
+  <meta name="description" content="Browse our exclusive selection of collector cars and prestige vehicles: Porsche, Ferrari, Mercedes, Japanese classics (Nissan GT-R, Toyota Supra, Honda NSX). Import, due diligence and delivery across Europe. Stock updated regularly.">
+  <meta name="keywords" content="collector cars, prestige vehicles, Porsche collection, vintage Ferrari, classic Mercedes, Nissan GT-R, Toyota Supra, Honda NSX, Japan car import, buy collector car">
   <link rel="stylesheet" href="../assets/styles.css?v=3"/>
   <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest" />
@@ -15,8 +17,8 @@
   <!-- SEO: Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://thebespokecar.com/en/stock.html" />
-  <meta property="og:title" content="Stock — Available Collector Vehicles | Bespoke" />
-  <meta property="og:description" content="Browse our curated selection of prestige and collector vehicles. Regular updates. Price on request." />
+  <meta property="og:title" content="Collector Cars &amp; Prestige — Porsche, Ferrari, Japanese Classics | Bespoke" />
+  <meta property="og:description" content="Discover our exclusive selection: Porsche, Ferrari, Mercedes, Nissan GT-R, Toyota Supra, Honda NSX. Japan/Europe import, full due diligence, secure delivery." />
   <meta property="og:image" content="https://thebespokecar.com/assets/photos/og-inventory.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -40,6 +42,55 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Structured Data: Organization + Product Catalog -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Collector Cars - Bespoke Stock",
+    "description": "Catalog of collector cars and prestige vehicles available for purchase",
+    "url": "https://thebespokecar.com/en/stock.html",
+    "provider": {
+      "@type": "AutomotiveBusiness",
+      "name": "The Bespoke Car",
+      "url": "https://thebespokecar.com",
+      "logo": "https://thebespokecar.com/assets/icons/icon-192.svg",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "1530 Chemin de Peyniblou",
+        "addressLocality": "Sophia-Antipolis",
+        "postalCode": "06560",
+        "addressCountry": "FR"
+      },
+      "email": "contact@thebespokecar.com",
+      "sameAs": [
+        "https://x.com/TheBespokeCar",
+        "https://www.linkedin.com/company/112966970"
+      ]
+    },
+    "inLanguage": "en-GB"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://thebespokecar.com/en/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Stock",
+        "item": "https://thebespokecar.com/en/stock.html"
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 <header>
@@ -98,10 +149,18 @@
 </header>
 <main class="section">
   <div class="container">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="breadcrumb">
+      <ol>
+        <li><a href="index.html">Home</a></li>
+        <li>/</li>
+        <li aria-current="page">Stock</li>
+      </ol>
+    </nav>
     <div class="card pad-lg">
       <div class="kicker">Stock</div>
-      <h1>Vehicles</h1>
-      <p class="lead">Frequently updated. Price on request. Sold vehicles can be displayed.</p>
+      <h1>Collector Cars and Prestige Vehicles Available</h1>
+      <p class="lead">Discover our exclusive selection of collector cars, Japanese classics and prestige vehicles. Each vehicle is carefully selected, inspected (PPI) and comes with a complete file. Import, logistics and delivery across Europe. Regular updates. Price on request.</p>
     </div>
 
     <!-- Dashboard tabs — shown only when logged in -->
