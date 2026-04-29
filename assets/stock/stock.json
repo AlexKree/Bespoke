@@ -231,6 +231,38 @@
         "fr": "RENAULT MEGANE III Cabriolet",
         "en": "RENAULT MEGANE III Convertible"
       }
+    },
+    {
+      "id": "Etype",
+      "make": {
+        "fr": "Jaguar",
+        "en": "Jaguar"
+      },
+      "model": {
+        "fr": "",
+        "en": ""
+      },
+      "year": null,
+      "mileage_km": null,
+      "price_eur": null,
+      "status": "available",
+      "location": {
+        "fr": "France / Europe",
+        "en": "France / Europe"
+      },
+      "headline": {
+        "fr": "",
+        "en": ""
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "images": [],
+      "title": {
+        "fr": "Jaguar",
+        "en": "Jaguar"
+      }
     }
   ]
 }
