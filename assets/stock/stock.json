@@ -244,7 +244,7 @@
       },
       "year": null,
       "mileage_km": null,
-      "price_eur": 1,
+      "price_eur": 100000,
       "status": "available",
       "location": {
         "fr": "France / Europe",
