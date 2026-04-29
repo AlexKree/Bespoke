@@ -258,7 +258,9 @@
         "fr": "",
         "en": ""
       },
-      "images": [],
+      "images": [
+        "/assets/stock/images/etype-1777474310692-c89a4c.jpg"
+      ],
       "title": {
         "fr": "Jaguar",
         "en": "Jaguar"
