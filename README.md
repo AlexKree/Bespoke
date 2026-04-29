@@ -20,7 +20,7 @@
 | `GITHUB_TOKEN` | ✅ | Personal Access Token GitHub (scope `repo`) pour les commits stock |
 | `GITHUB_OWNER` | ✅ | Owner du dépôt GitHub (ex: `AlexKree`) |
 | `GITHUB_REPO` | ✅ | Nom du dépôt GitHub (ex: `Bespoke`) |
-| `RESEND_API_KEY` | ⚡ optionnel | Clé API Resend pour l'envoi des emails de vérification. Si absent, le lien est loggé en console. |
+| `RESEND_API_KEY_V2` | ⚡ optionnel | Clé API Resend pour l'envoi des emails de vérification. Si absent, le lien est loggé en console. |
 | `RESEND_FROM_EMAIL` | ⚡ optionnel | Adresse d'envoi (défaut : `contact@thebespokecar.com`) |
 
 À renseigner dans **Netlify → Site settings → Environment variables**.
@@ -82,7 +82,7 @@ npm install
 # GITHUB_TOKEN=...
 # GITHUB_OWNER=AlexKree
 # GITHUB_REPO=Bespoke
-# RESEND_API_KEY=... (optionnel)
+# RESEND_API_KEY_V2=... (optionnel)
 
 netlify dev
 ```

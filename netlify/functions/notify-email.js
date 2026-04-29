@@ -48,12 +48,12 @@ exports.handler = async function (event) {
     return json(400, { error: 'Missing required fields: to, subject, html' });
   }
 
-  if (!process.env.RESEND_API_KEY) {
-    console.error('RESEND_API_KEY not configured');
+  if (!process.env.RESEND_API_KEY_V2) {
+    console.error('RESEND_API_KEY_V2 not configured');
     return json(500, { error: 'Email service not configured' });
   }
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  const resend = new Resend(process.env.RESEND_API_KEY_V2);
 
   try {
     const result = await resend.emails.send({ from, to, subject, html });

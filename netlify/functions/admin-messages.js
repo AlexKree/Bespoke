@@ -143,14 +143,14 @@ exports.handler = async function (event) {
       );
 
       // Send email notification to the client (non-blocking)
-      if (process.env.RESEND_API_KEY) {
+      if (process.env.RESEND_API_KEY_V2) {
         db.query(
           `SELECT email FROM users WHERE id = $1`,
           [thread_id]
         ).then(function (recipientResult) {
           if (!recipientResult.rows.length) return;
           const recipientEmail = recipientResult.rows[0].email;
-          const resend = new Resend(process.env.RESEND_API_KEY);
+          const resend = new Resend(process.env.RESEND_API_KEY_V2);
           const emailHtml = `<!DOCTYPE html>
 <html>
 <head>

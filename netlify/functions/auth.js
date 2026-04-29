@@ -57,13 +57,13 @@ async function getSessionUser(db, sessionId) {
 
 async function sendVerificationEmail(email, token, baseUrl) {
   const verifyUrl = `${baseUrl}/fr/verify.html?token=${token}`;
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = process.env.RESEND_API_KEY_V2;
 
   // 🔍 DEBUG: Vérifier si la clé API est chargée
-  console.log('🔑 RESEND_API_KEY defined:', !!apiKey);
+  console.log('🔑 RESEND_API_KEY_V2 defined:', !!apiKey);
 
   if (!apiKey) {
-    console.log('⚠️ RESEND_API_KEY not configured. Verification link:', verifyUrl);
+    console.log('⚠️ RESEND_API_KEY_V2 not configured. Verification link:', verifyUrl);
     return verifyUrl;
   }
 
