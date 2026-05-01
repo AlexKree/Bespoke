@@ -331,23 +331,36 @@
         "fr": "R 1200 CL",
         "en": "R 1200 CL"
       },
-      "year": null,
-      "mileage_km": null,
-      "price_eur": null,
+      "year": 2003,
+      "mileage_km": 70000,
+      "price_eur": 4500,
       "status": "available",
       "location": {
         "fr": "France / Europe",
         "en": "France / Europe"
       },
       "headline": {
-        "fr": "",
-        "en": ""
+        "fr": "Belle R 1200 CL",
+        "en": "Nice R 1200 CL"
       },
       "description": {
-        "fr": "",
-        "en": ""
+        "fr": "Vends belle BMW R 1200 CL -\nFull package avec valises.\nFonctionne très bien.\nVisible sur Cannes.\nImmatriculation anglaise européenne (avant 2020).",
+        "en": "Nice R 1200 CL. Full package. UK DVLA but during Europe. Can be seen in Cannes."
       },
-      "images": [],
+      "images": [
+        "/assets/stock/images/cl1200-1777651645154-8591df.jpg",
+        "/assets/stock/images/cl1200-1777651646212-bd1813.jpg",
+        "/assets/stock/images/cl1200-1777651647135-3b65ed.jpg",
+        "/assets/stock/images/cl1200-1777651647988-421025.jpg",
+        "/assets/stock/images/cl1200-1777651660435-d70ee0.jpg",
+        "/assets/stock/images/cl1200-1777651661485-67a718.jpg",
+        "/assets/stock/images/cl1200-1777651662552-7646d0.jpg",
+        "/assets/stock/images/cl1200-1777651663706-ad2f3f.jpg",
+        "/assets/stock/images/cl1200-1777651671529-a9d0c8.jpg",
+        "/assets/stock/images/cl1200-1777651672490-bf9209.jpg",
+        "/assets/stock/images/cl1200-1777651673624-ae4bb7.jpg",
+        "/assets/stock/images/cl1200-1777651674716-b25999.jpg"
+      ],
       "title": {
         "fr": "BMW R 1200 CL",
         "en": "BMW R 1200 CL"
