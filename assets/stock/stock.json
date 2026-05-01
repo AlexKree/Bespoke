@@ -320,6 +320,38 @@
         "fr": "YAMAHA VMAX 1200 145cv",
         "en": "YAMAHA VMAX 1200 145cv"
       }
+    },
+    {
+      "id": "CL1200",
+      "make": {
+        "fr": "Bmw",
+        "en": "Bmw"
+      },
+      "model": {
+        "fr": "R 1200 CL",
+        "en": "R 1200 CL"
+      },
+      "year": null,
+      "mileage_km": null,
+      "price_eur": null,
+      "status": "available",
+      "location": {
+        "fr": "France / Europe",
+        "en": "France / Europe"
+      },
+      "headline": {
+        "fr": "",
+        "en": ""
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "images": [],
+      "title": {
+        "fr": "BMW R 1200 CL",
+        "en": "BMW R 1200 CL"
+      }
     }
   ]
 }
