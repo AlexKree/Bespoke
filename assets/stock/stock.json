@@ -272,6 +272,38 @@
         "fr": "Jaguar",
         "en": "Jaguar"
       }
+    },
+    {
+      "id": "VMAX",
+      "make": {
+        "fr": "Yamaha",
+        "en": "Yamaha"
+      },
+      "model": {
+        "fr": "VMAX 1200",
+        "en": "VMAX 1200"
+      },
+      "year": 1991,
+      "mileage_km": 34000,
+      "price_eur": 4500,
+      "status": "available",
+      "location": {
+        "fr": "Cannes/France",
+        "en": "Cannes/France"
+      },
+      "headline": {
+        "fr": "Très belle Yamaha Vmax 1200 145cv",
+        "en": "Very nice Yamaha 1200 145cv"
+      },
+      "description": {
+        "fr": "Belle VMAX 1200 de 1991. Très grosse révision faite en 2022 pour plus de 3000 euros. A voir absolument. Origine anglaise. FFVE",
+        "en": ""
+      },
+      "images": [],
+      "title": {
+        "fr": "YAMAHA VMAX 1200 145cv",
+        "en": "YAMAHA VMAX 1200 145cv"
+      }
     }
   ]
 }
