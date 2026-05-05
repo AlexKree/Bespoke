@@ -392,7 +392,14 @@
         "fr": "Mitsubishi GTO boîte manuelle. Importée du Japon. FFVE. Immatriculable en collection en France.",
         "en": "Mitsubishi GTO Manual gearbox. 1992. Imported from Japan. Ready to be french plated . FFVE"
       },
-      "images": [],
+      "images": [
+        "/assets/stock/images/gto-1777970989457-05caeb.jpg",
+        "/assets/stock/images/gto-1777970990476-bf4e90.jpg",
+        "/assets/stock/images/gto-1777971020101-62b4ad.jpg",
+        "/assets/stock/images/gto-1777971021294-bd308d.jpg",
+        "/assets/stock/images/gto-1777971022382-50ab64.jpg",
+        "/assets/stock/images/gto-1777971023355-ffc4c1.jpg"
+      ],
       "title": {
         "fr": "Mitsubishi GTO",
         "en": "Mitsubishi GTO"
