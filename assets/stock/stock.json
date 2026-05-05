@@ -365,6 +365,38 @@
         "fr": "BMW R 1200 CL",
         "en": "BMW R 1200 CL"
       }
+    },
+    {
+      "id": "GTO",
+      "make": {
+        "fr": "Mitsubishi",
+        "en": "Mitsubishi"
+      },
+      "model": {
+        "fr": "GTO",
+        "en": "GTO"
+      },
+      "year": null,
+      "mileage_km": null,
+      "price_eur": null,
+      "status": "available",
+      "location": {
+        "fr": "France / Europe",
+        "en": "France / Europe"
+      },
+      "headline": {
+        "fr": "",
+        "en": ""
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "images": [],
+      "title": {
+        "fr": "Mitsubishi GTO",
+        "en": "Mitsubishi GTO"
+      }
     }
   ]
 }
