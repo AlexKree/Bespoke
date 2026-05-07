@@ -414,6 +414,38 @@
         "fr": "Mitsubishi GTO",
         "en": "Mitsubishi GTO"
       }
+    },
+    {
+      "id": "SEL",
+      "make": {
+        "fr": "Mercedes",
+        "en": "Mercedes"
+      },
+      "model": {
+        "fr": "500 SEL",
+        "en": "500 SEL"
+      },
+      "year": null,
+      "mileage_km": null,
+      "price_eur": null,
+      "status": "available",
+      "location": {
+        "fr": "France / Europe",
+        "en": "France / Europe"
+      },
+      "headline": {
+        "fr": "",
+        "en": ""
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "images": [],
+      "title": {
+        "fr": "Mercedes 500 SEL",
+        "en": "Mercedes 500 SEL"
+      }
     }
   ]
 }
