@@ -425,21 +425,21 @@
         "fr": "500 SEL",
         "en": "500 SEL"
       },
-      "year": null,
-      "mileage_km": null,
-      "price_eur": null,
+      "year": 1986,
+      "mileage_km": 97000,
+      "price_eur": 18000,
       "status": "available",
       "location": {
-        "fr": "France / Europe",
-        "en": "France / Europe"
+        "fr": "France / Cannes",
+        "en": "France / Cannes"
       },
       "headline": {
-        "fr": "",
-        "en": ""
+        "fr": "Belle Mercedes 500 SEL",
+        "en": "Very nice Mercedes 500 SEL"
       },
       "description": {
-        "fr": "",
-        "en": ""
+        "fr": "Très belle Mercedes 500 SEL. Origine Japon. Faible kilométrage. FFVE. Immatriculable collection France.",
+        "en": "Very nice Mercedes 500 SEL. Imported from Japan. Low kms. FFVE."
       },
       "images": [],
       "title": {
