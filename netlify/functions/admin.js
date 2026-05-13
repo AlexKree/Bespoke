@@ -196,7 +196,10 @@ function githubRequest(method, path, token, body) {
       });
     });
 
-    req.on('error', reject);
+    req.on('error', (err) => {
+      console.error('GitHub API request error:', err);
+      reject(err);
+    });
     if (payload) req.write(payload);
     req.end();
   });
@@ -307,17 +310,22 @@ exports.handler = async function (event) {
       const ghPath   = `/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/assets/stock/images/${filename}`;
 
       try {
+        console.log(`Uploading image ${filename} to GitHub`);
         const res = await githubRequest('PUT', ghPath, GITHUB_TOKEN, {
           message: `Admin: upload image ${filename}`,
           content:  file.data.toString('base64'),
         });
 
+        console.log(`GitHub API response for ${filename}:`, res.status);
+
         if (res.status !== 200 && res.status !== 201) {
+          console.error(`Upload failed for ${filename}:`, res.status, res.body);
           uploadErrors.push(`${file.filename}: GitHub error (${res.status})`);
           continue;
         }
         uploadedPaths.push(`/assets/stock/images/${filename}`);
-      } catch (_) {
+      } catch (err) {
+        console.error(`Network error uploading ${filename}:`, err);
         uploadErrors.push(`${file.filename}: network error`);
       }
     }
@@ -396,15 +404,20 @@ exports.handler = async function (event) {
 
   // ── Get current stock ────────────────────────────────────────────────────
   if (action === 'getStock') {
+    console.log('getStock: fetching stock.json from GitHub');
     const res = await githubRequest('GET', filePath, GITHUB_TOKEN, null);
+    console.log('GitHub API response status:', res.status);
     if (res.status !== 200) {
-      return { statusCode: 502, headers, body: JSON.stringify({ error: 'GitHub API error', detail: res.body }) };
+      console.error('GitHub API error:', { status: res.status, body: res.body, filePath });
+      return { statusCode: 502, headers, body: JSON.stringify({ error: 'GitHub API error', status: res.status, detail: res.body }) };
     }
     let content, stock;
     try {
       content = Buffer.from(res.body.content, 'base64').toString('utf8');
       stock = JSON.parse(content);
-    } catch (_) {
+      console.log('getStock: success, items count:', stock.items?.length || 0);
+    } catch (err) {
+      console.error('getStock: malformed stock.json:', err);
       return { statusCode: 502, headers, body: JSON.stringify({ error: 'Malformed stock.json' }) };
     }
     return { statusCode: 200, headers, body: JSON.stringify({ stock, sha: res.body.sha }) };
@@ -413,11 +426,14 @@ exports.handler = async function (event) {
   // ── Save updated stock ───────────────────────────────────────────────────
   if (action === 'saveStock') {
     const { stock, sha } = body;
+    console.log('saveStock: updating stock.json with sha:', sha);
     if (!stock || typeof sha !== 'string') {
+      console.error('saveStock: missing stock or sha');
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing stock or sha' }) };
     }
     // Validate basic structure
     if (!Array.isArray(stock.items)) {
+      console.error('saveStock: stock.items is not an array');
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'stock.items must be an array' }) };
     }
 
@@ -428,9 +444,13 @@ exports.handler = async function (event) {
       sha,
     });
 
+    console.log('GitHub API response status:', res.status);
+
     if (res.status !== 200 && res.status !== 201) {
-      return { statusCode: 502, headers, body: JSON.stringify({ error: 'GitHub API error', detail: res.body }) };
+      console.error('GitHub API error:', { status: res.status, body: res.body, filePath, sha });
+      return { statusCode: 502, headers, body: JSON.stringify({ error: 'GitHub API error', status: res.status, detail: res.body }) };
     }
+    console.log('saveStock: success');
     return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
   }
 
