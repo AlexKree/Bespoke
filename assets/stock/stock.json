@@ -245,7 +245,7 @@
       "year": null,
       "mileage_km": null,
       "price_eur": 100000,
-      "status": "available",
+      "status": "sold",
       "location": {
         "fr": "Paris/France",
         "en": "Paris/France"
