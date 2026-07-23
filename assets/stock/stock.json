@@ -13,7 +13,7 @@
       "year": 1993,
       "mileage_km": 112500,
       "price_eur": 16900,
-      "status": "available",
+      "status": "sold",
       "location": {
         "fr": "France / Europe",
         "en": "France / Europe"
