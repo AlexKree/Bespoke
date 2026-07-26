@@ -108,9 +108,18 @@ Accessible à `/admin/` — requiert `ADMIN_PASSWORD`.
 - Upload de photos vers `assets/stock/images/` (max 5 Mo/fichier, 20 fichiers/requête)
 - Mise à jour de `stock.json` (les véhicules affichés sur la page Stock)
 
+### Accès admin (sans compte utilisateur)
+
+- L'accès admin est **password-only** : aucun login utilisateur n'est requis.
+- Le mot de passe est lu côté serveur depuis `ADMIN_PASSWORD` (Netlify).
+- Un mot de passe invalide retourne un refus d'accès (`401`).
+- Une session admin légère est conservée côté navigateur pour éviter de ressaisir le mot de passe à chaque rechargement.
+
+Configuration Netlify : **Site settings → Environment variables** puis ajouter `ADMIN_PASSWORD`.
+En local (`netlify dev`), définir `ADMIN_PASSWORD` dans `.env`.
+
 ---
 
 ## À compléter
 
 Adresse, email, téléphone, hébergeur (mentions légales). Les champs sont marqués `[À RENSEIGNER]`.
-

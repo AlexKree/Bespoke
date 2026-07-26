@@ -537,10 +537,6 @@
           <div class="sep"></div>
           <div class="form">
             <div class="field">
-              <label>Email</label>
-              <input type="text" id="emailInput" placeholder="admin@example.com" autocomplete="off"/>
-            </div>
-            <div class="field">
               <label>Mot de passe</label>
               <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="off"/>
             </div>
@@ -718,6 +714,7 @@
 
   let token = sessionStorage.getItem(SESSION_KEY);
   let stockData = { items: [] };
+  let stockSha = '';
   let currentImages = [];
   let editingIndex = null;
   let pendingDeleteIndex = null;
@@ -726,7 +723,6 @@
   const loginScreen = document.getElementById('loginScreen');
   const adminScreen = document.getElementById('adminScreen');
   const loginBtn = document.getElementById('loginBtn');
-  const emailInput = document.getElementById('emailInput');
   const passwordInput = document.getElementById('passwordInput');
   const loginError = document.getElementById('loginError');
   const editModal = document.getElementById('editModal');
@@ -746,12 +742,11 @@
 
   // ── Auth ──────────────────────────────────────────────────────────────
   loginBtn.addEventListener('click', async () => {
-    const email = emailInput.value.trim();
     const password = passwordInput.value;
     loginBtn.disabled = true;
     loginError.style.display = 'none';
 
-    const { ok, data } = await apiFetch(API, 'login', { email, password });
+    const { ok, data } = await apiFetch(API, 'auth', { password });
     loginBtn.disabled = false;
 
     if (ok && data.token) {
@@ -965,8 +960,15 @@
   // ── Stock management ──────────────────────────────────────────────────
   async function loadStock() {
     const { ok, data } = await apiFetch(API, 'getStock');
-    if (ok && data.items) {
+    if (ok && data.stock && Array.isArray(data.stock.items)) {
+      stockData = data.stock;
+      stockSha = data.sha || '';
+      renderList();
+      return;
+    }
+    if (ok && Array.isArray(data.items)) {
       stockData = data;
+      stockSha = data.sha || '';
       renderList();
     }
   }
@@ -1115,8 +1117,15 @@
       images: currentImages,
     };
 
+    const nextItems = Array.isArray(stockData.items) ? [...stockData.items] : [];
+    if (editingIndex !== null && editingIndex >= 0 && editingIndex < nextItems.length) {
+      nextItems[editingIndex] = car;
+    } else {
+      nextItems.push(car);
+    }
+
     document.getElementById('saveBtn').disabled = true;
-    const { ok } = await apiFetch(API, 'saveCar', { car, index: editingIndex });
+    const { ok } = await apiFetch(API, 'saveStock', { stock: { items: nextItems }, sha: stockSha });
     document.getElementById('saveBtn').disabled = false;
 
     if (ok) {
@@ -1147,8 +1156,11 @@
     confirmModal.classList.remove('open');
     if (pendingDeleteIndex === null) return;
 
+    const nextItems = Array.isArray(stockData.items) ? [...stockData.items] : [];
+    nextItems.splice(pendingDeleteIndex, 1);
+
     document.getElementById('confirmDeleteBtn').disabled = true;
-    const { ok } = await apiFetch(API, 'deleteCar', { index: pendingDeleteIndex });
+    const { ok } = await apiFetch(API, 'saveStock', { stock: { items: nextItems }, sha: stockSha });
     document.getElementById('confirmDeleteBtn').disabled = false;
 
     if (ok) {

@@ -352,7 +352,7 @@ exports.handler = async function (event) {
   const { action } = body;
 
   // ── Authentication ──────────────────────────────────────────────────────
-  if (action === 'auth') {
+  if (action === 'auth' || action === 'login') {
     if (!ADMIN_PASSWORD) {
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Admin not configured' }) };
     }
