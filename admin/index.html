@@ -65,7 +65,7 @@
 
     main { padding: 40px 0 60px; }
 
-    /* ── Cards ─────────────────────────────────────────────────────────── */
+    /* ── Cards ──────────────────────────────────────────────────────────── */
     .card {
       border: 1px solid var(--line);
       border-radius: var(--r-xl);
@@ -89,7 +89,7 @@
     .lead { color: var(--muted); font-size: 16px; max-width: 60ch; }
     .sep { height: 1px; background: var(--line); margin: 18px 0; }
 
-    /* ── Buttons ────────────────────────────────────────────────────────── */
+    /* ── Buttons ──────────────────────────────────────────────────────────[...] */
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
       border-radius: 14px; border: 1px solid var(--line);
@@ -334,19 +334,36 @@
       border-radius: 8px; overflow: hidden;
       border: 1px solid var(--line);
       background: rgba(255,255,255,.04); flex-shrink: 0;
+      cursor: grab; transition: all .15s;
     }
+    .img-thumb-wrap:hover { border-color: var(--gold); }
+    .img-thumb-wrap.dragging { opacity: .5; border-color: var(--gold); }
+    .img-thumb-wrap.drag-over { border-color: var(--gold); border-width: 2px; }
     .img-thumb-wrap img {
       width: 100%; height: 100%; object-fit: cover; display: block;
     }
-    .img-thumb-remove {
+    
+    .img-thumb-controls {
       position: absolute; top: 2px; right: 2px;
-      width: 18px; height: 18px; border-radius: 50%;
+      display: flex; gap: 2px;
+    }
+    .img-thumb-index {
+      position: absolute; bottom: 2px; left: 2px;
+      font-size: 10px; font-weight: 600; color: #fff;
+      background: rgba(0,0,0,.6); padding: 1px 4px;
+      border-radius: 3px;
+    }
+    .img-thumb-btn {
+      width: 16px; height: 16px; border-radius: 3px;
       background: rgba(0,0,0,.72); border: none;
-      color: #fff; font-size: 13px; line-height: 1;
+      color: #fff; font-size: 10px; line-height: 1;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
       padding: 0; transition: background .15s;
+      font-weight: bold;
     }
-    .img-thumb-remove:hover { background: rgba(224,92,92,.85); }
+    .img-thumb-btn:hover { background: rgba(198,176,122,.85); }
+    .img-thumb-btn.remove:hover { background: rgba(224,92,92,.85); }
+    
     .upload-bar {
       display: flex; gap: 8px; align-items: center;
       margin-top: 8px; flex-wrap: wrap;
@@ -414,7 +431,7 @@
     .ri-main { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .ri-meta { color: var(--muted2); font-size: 11px; flex-shrink: 0; }
 
-    /* ── Users ───────────────────────────────────────────────────────────── */
+    /* ── Users ──────────────────────────────────────────────────────────── */
     .usersHeader {
       display: flex; align-items: center; justify-content: space-between;
       gap: 12px; flex-wrap: wrap; margin-bottom: 16px;
@@ -437,7 +454,7 @@
     .role-badge.admin { background: rgba(224,92,92,.12); color: var(--red); border: 1px solid rgba(224,92,92,.3); }
     .user-actions { display: flex; gap: 5px; flex-wrap: wrap; }
 
-    /* ── Messages ────────────────────────────────────────────────────────── */
+    /* ── Messages ─────────────────────────────────────────────────────────── */
     .msg-layout {
       display: grid; grid-template-columns: 300px 1fr;
       height: calc(100vh - 220px); min-height: 400px;
@@ -466,7 +483,7 @@
     .thread-preview { font-size: 12px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .thread-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
     .thread-date { font-size: 11px; color: var(--muted2); }
-    .thread-new { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 999px; background: rgba(224,92,92,.2); border: 1px solid rgba(224,92,92,.4); color: var(--red); letter-spacing: .06em; }
+    .thread-new { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 999px; background: rgba(224,92,92,.2); border: 1px solid rgba(224,92,92,.4); color: var(--red); letter-spacin[...]
     .msg-detail { display: flex; flex-direction: column; overflow: hidden; }
     .msg-detail-header { padding: 14px 18px; border-bottom: 1px solid var(--line); flex-shrink: 0; }
     .msg-detail-email { font-weight: 500; font-size: 15px; }
@@ -498,495 +515,275 @@
   <div class="container">
     <div class="navbar">
       <div class="brand">
-        <div>
-          <div class="name">BESPOKE</div>
-          <div class="tag">Administration du stock</div>
-        </div>
-        <span class="admin-badge">Admin</span>
+        <div class="name">BESPOKE</div>
+        <div class="tag">Admin</div>
+        <span class="admin-badge">ADMIN</span>
       </div>
-      <button id="logoutBtn" class="btn btn-sm" style="display:none">Déconnexion</button>
+      <div>
+        <button type="button" id="navLogoutBtn" class="btn">Déconnexion</button>
+      </div>
     </div>
-    <nav id="adminTabs" class="admin-tabs" style="display:none">
-      <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
-      <button class="tab-btn" data-tab="stock">🚗 Stock</button>
-      <button class="tab-btn" data-tab="users">👥 Utilisateurs</button>
-      <button class="tab-btn" data-tab="messages">💬 Messages<span id="msgBadge" class="tab-badge" style="display:none"></span></button>
-      <button class="tab-btn" data-tab="reservations">🔖 Réservations</button>
-    </nav>
   </div>
 </header>
 
 <main>
-  <!-- ── Login screen ───────────────────────────────────────────────── -->
-  <div id="loginScreen">
-    <div class="loginBox card pad-lg">
-      <div class="kicker">Accès sécurisé</div>
-      <h2>Connexion</h2>
-      <p class="lead" style="font-size:14px;margin-bottom:16px">Entrez le mot de passe administrateur pour gérer le stock de véhicules.</p>
-      <form id="loginForm" class="form" autocomplete="off">
-        <div class="field">
-          <label for="passwordInput">Mot de passe</label>
-          <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="current-password" required/>
-        </div>
-        <button type="submit" class="btn primary" id="loginBtn">
-          Se connecter
-        </button>
-        <div id="loginError">Mot de passe incorrect.</div>
-      </form>
-    </div>
-  </div>
+  <div class="container">
 
-  <!-- ── Admin screen ───────────────────────────────────────────────── -->
-  <div id="adminScreen">
-
-    <!-- ── Dashboard ───────────────────────────────────────────────── -->
-    <div id="tabDashboard" class="tab-panel container">
-      <div class="adminHeader">
-        <div>
-          <div class="kicker">Vue d'ensemble</div>
-          <h1 style="font-size:36px;margin:4px 0 0">Dashboard</h1>
-        </div>
-        <button class="btn btn-sm" id="refreshDashBtn">🔄 Actualiser</button>
-      </div>
-      <div id="dashLoading" style="text-align:center;padding:40px 0"><span class="spinner"></span></div>
-      <div id="dashContent" style="display:none">
-        <div id="statsGrid" class="stats-grid"></div>
-        <h2 style="font-family:var(--serif);font-size:22px;margin:24px 0 12px">Activité récente</h2>
-        <div id="recentGrid" class="recent-grid"></div>
-      </div>
-    </div>
-
-    <!-- ── Stock ───────────────────────────────────────────────────── -->
-    <div id="tabStock" class="tab-panel container" style="display:none">
-      <div class="adminHeader">
-        <div>
-          <div class="kicker">Gestion du stock</div>
-          <h1 style="font-size:36px;margin:4px 0 0">Véhicules</h1>
-        </div>
-        <button id="addCarBtn" class="btn primary">+ Ajouter un véhicule</button>
-      </div>
-      <div class="card pad">
-        <div id="stockLoading" style="text-align:center;padding:32px 0">
-          <span class="spinner"></span>
-          <div class="mini" style="margin-top:10px">Chargement du stock…</div>
-        </div>
-        <div id="carList" class="carList" style="display:none"></div>
-        <div id="carListEmpty" class="empty" style="display:none">Aucun véhicule dans le stock. Ajoutez-en un !</div>
-      </div>
-    </div>
-
-    <!-- ── Users ───────────────────────────────────────────────────── -->
-    <div id="tabUsers" class="tab-panel container" style="display:none">
-      <div class="usersHeader">
-        <div>
-          <div class="kicker">Gestion des comptes</div>
-          <h1 style="font-size:36px;margin:4px 0 0">Utilisateurs</h1>
-        </div>
-        <button id="addUserBtn" class="btn primary">+ Créer un utilisateur</button>
-      </div>
-      <div class="card pad">
-        <div id="usersLoading" style="text-align:center;padding:32px 0">
-          <span class="spinner"></span>
-          <div class="mini" style="margin-top:10px">Chargement…</div>
-        </div>
-        <div id="usersTableWrap" style="display:none;overflow-x:auto">
-          <table id="usersTable" class="userTable">
-            <thead>
-              <tr>
-                <th>Email</th>
-                <th>Rôle</th>
-                <th>Type</th>
-                <th>Balance</th>
-                <th>Vérifié</th>
-                <th>Créé le</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="usersBody"></tbody>
-          </table>
-        </div>
-        <div id="usersEmpty" class="empty" style="display:none">Aucun utilisateur trouvé.</div>
-      </div>
-    </div>
-
-    <!-- ── Messages ─────────────────────────────────────────────────── -->
-    <div id="tabMessages" class="tab-panel" style="display:none">
-      <div class="container" style="padding-bottom:0">
-        <div class="kicker" style="margin-bottom:4px">Support client</div>
-        <h1 style="font-size:36px;margin:0 0 16px">Messages</h1>
-      </div>
-      <div style="max-width:var(--max);margin:0 auto;padding:0 20px 40px">
-        <div class="msg-layout">
-          <div class="msg-thread-list" id="msgThreadList">
-            <div class="msg-thread-header">Conversations</div>
-            <div id="msgThreadsLoading" class="msg-loading"><span class="spinner"></span></div>
-            <div id="msgThreadsEmpty" style="display:none;padding:32px 16px;text-align:center;color:var(--muted);font-size:14px">Aucune conversation.</div>
-            <div id="msgThreadItems"></div>
+    <!-- Login screen -->
+    <div id="loginScreen">
+      <div class="loginBox">
+        <div class="card pad-lg">
+          <h1>Admin</h1>
+          <div class="sep"></div>
+          <div class="form">
+            <div class="field">
+              <label>Email</label>
+              <input type="text" id="emailInput" placeholder="admin@example.com" autocomplete="off"/>
+            </div>
+            <div class="field">
+              <label>Mot de passe</label>
+              <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="off"/>
+            </div>
+            <div id="loginError"></div>
+            <button type="button" id="loginBtn" class="btn primary" style="margin-top:10px">Connexion</button>
           </div>
-          <div class="msg-detail" id="msgDetail">
-            <div class="msg-empty-detail" id="msgDetailEmpty">Sélectionnez une conversation</div>
-            <div id="msgDetailContent" style="display:none">
-              <div class="msg-detail-header">
-                <div class="msg-detail-email" id="msgDetailEmail"></div>
-              </div>
-              <div class="msg-messages" id="msgMessages"></div>
-              <div class="msg-reply-area">
-                <textarea id="msgReplyInput" placeholder="Votre réponse…" rows="3"></textarea>
-                <button class="btn primary" id="msgSendBtn">Envoyer</button>
-              </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin screen -->
+    <div id="adminScreen">
+
+      <!-- Tabs -->
+      <div class="admin-tabs" id="adminTabs">
+        <button type="button" class="tab-btn active" id="tab-stock" data-tab="stock">Stock</button>
+        <button type="button" class="tab-btn" id="tab-dashboard" data-tab="dashboard">Dashboard</button>
+        <button type="button" class="tab-btn" id="tab-users" data-tab="users">Users</button>
+        <button type="button" class="tab-btn" id="tab-messages" data-tab="messages">Messages</button>
+      </div>
+
+      <!-- Tab: Stock -->
+      <div id="tab-content-stock" class="tab-content active">
+        <div style="padding: 24px 0;">
+          <div class="adminHeader">
+            <h2>Gestion du stock</h2>
+            <button type="button" id="addCarBtn" class="btn primary">➕ Ajouter un véhicule</button>
+          </div>
+          <div id="carList" class="carList"></div>
+          <div id="emptyState" class="empty" style="display:none">Aucun véhicule</div>
+        </div>
+      </div>
+
+      <!-- Tab: Dashboard -->
+      <div id="tab-content-dashboard" class="tab-content" style="display:none">
+        <div style="padding: 24px 0;">
+          <h2>Dashboard</h2>
+          <p style="color:var(--muted)">Bienvenue sur le dashboard admin.</p>
+        </div>
+      </div>
+
+      <!-- Tab: Users -->
+      <div id="tab-content-users" class="tab-content" style="display:none">
+        <div style="padding: 24px 0;">
+          <h2>Gestion des utilisateurs</h2>
+          <p style="color:var(--muted)">Gérez les utilisateurs et leurs rôles.</p>
+        </div>
+      </div>
+
+      <!-- Tab: Messages -->
+      <div id="tab-content-messages" class="tab-content" style="display:none">
+        <div style="padding: 24px 0;">
+          <h2>Messages</h2>
+          <p style="color:var(--muted)">Consultez les messages des clients.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Modal: Edit/Add car -->
+    <div id="editModal" class="overlay">
+      <div class="drawer">
+        <div class="drawerHeader">
+          <h2 id="modalTitle">Éditer véhicule</h2>
+          <button type="button" id="closeModalBtn" class="drawerClose" title="Fermer">&times;</button>
+        </div>
+
+        <div class="form">
+          <div class="row2">
+            <div class="field">
+              <label>ID (identifiant unique)</label>
+              <input type="text" id="fieldId" placeholder="ex: ferrari-250"/>
+            </div>
+            <div class="field">
+              <label>Année</label>
+              <input type="number" id="fieldYear" min="1900" max="2100"/>
             </div>
           </div>
+
+          <div class="row2">
+            <div class="field">
+              <label>Titre (FR)</label>
+              <input type="text" id="fieldTitleFr" placeholder="Ferrari 250 GT"/>
+            </div>
+            <div class="field">
+              <label>Titre (EN)</label>
+              <input type="text" id="fieldTitleEn" placeholder="Ferrari 250 GT"/>
+            </div>
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <label>Kilométrage</label>
+              <input type="text" id="fieldMileage" placeholder="ex: 15.500"/>
+            </div>
+            <div class="field">
+              <label>Pays d'origine</label>
+              <input type="text" id="fieldCountry" placeholder="ex: Italy"/>
+            </div>
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <label>Prix (EUR, centimes)</label>
+              <input type="number" id="fieldPrice" min="0"/>
+            </div>
+            <div class="field">
+              <label>Statut</label>
+              <select id="fieldStatus">
+                <option value="available">Disponible</option>
+                <option value="sold">Vendu</option>
+                <option value="reserved">Réservé</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Description courte (FR)</label>
+            <textarea id="fieldDescFr" placeholder="Description courte..."></textarea>
+          </div>
+
+          <div class="field">
+            <label>Description courte (EN)</label>
+            <textarea id="fieldDescEn" placeholder="Short description..."></textarea>
+          </div>
+
+          <div class="section-label">Photos</div>
+          <div class="field">
+            <label for="imageFileInput" id="uploadLabel" style="cursor: pointer; display: block; padding: 10px; border: 1px dashed rgba(198,176,122,.4); border-radius: 8px; text-align: center; color: var(--gold);">
+              📸 Cliquez pour ajouter des photos
+            </label>
+            <input type="file" id="imageFileInput" multiple accept="image/*" style="display:none" onchange="handleImageUpload(this.files)"/>
+            <div id="uploadStatus">
+              <span class="spinner"></span>
+              <span>Upload en cours...</span>
+            </div>
+          </div>
+
+          <div id="imageGrid" class="image-grid"></div>
+        </div>
+
+        <div class="formActions">
+          <button type="button" id="cancelBtn" class="btn">Annuler</button>
+          <button type="button" id="saveBtn" class="btn primary">Enregistrer</button>
         </div>
       </div>
     </div>
 
-    <!-- ── Reservations ────────────────────────────────────────────────── -->
-    <div id="tabReservations" class="tab-panel container" style="display:none">
-      <div class="adminHeader">
-        <div>
-          <div class="kicker">Gestion des réservations</div>
-          <h1 style="font-size:36px;margin:4px 0 0">Réservations</h1>
+    <!-- Modal: Confirm delete -->
+    <div id="confirmModal">
+      <div class="confirmBox">
+        <h3>Confirmation</h3>
+        <p id="confirmMsg"></p>
+        <div class="confirmActions">
+          <button type="button" id="cancelDeleteBtn" class="btn">Annuler</button>
+          <button type="button" id="confirmDeleteBtn" class="btn danger">Supprimer</button>
         </div>
-        <button class="btn btn-sm" id="refreshReservationsBtn">🔄 Actualiser</button>
-      </div>
-      <div class="card pad" style="overflow-x:auto">
-        <div id="reservationsLoading" style="text-align:center;padding:32px 0"><span class="spinner"></span></div>
-        <div id="reservationsEmpty" style="display:none;padding:32px;text-align:center;color:var(--muted)">Aucune réservation.</div>
-        <table class="userTable" id="reservationsTable" style="display:none">
-          <thead>
-            <tr>
-              <th>Véhicule</th>
-              <th>Client</th>
-              <th>Acompte</th>
-              <th>Solde restant</th>
-              <th>Statut</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="reservationsBody"></tbody>
-        </table>
       </div>
     </div>
 
   </div>
 </main>
 
-<!-- ── Edit / Add drawer ─────────────────────────────────────────────── -->
-<div id="formOverlay" class="overlay" role="dialog" aria-modal="true" aria-label="Fiche véhicule">
-  <div class="drawer">
-    <div class="drawerHeader">
-      <h2 id="formTitle" style="margin:0;font-size:24px">Nouveau véhicule</h2>
-      <button class="drawerClose" id="closeFormBtn" aria-label="Fermer">&times;</button>
-    </div>
-
-    <form id="carForm" class="form" autocomplete="off" novalidate>
-      <input type="hidden" id="fieldEditIndex"/>
-
-      <!-- Identifiant -->
-      <div class="field">
-        <label for="fieldId">Identifiant unique (slug)</label>
-        <input type="text" id="fieldId" placeholder="ex: porsche-911-997-carrera-s"/>
-        <div class="hint">Minuscules, tirets uniquement. Généré automatiquement si laissé vide.</div>
-      </div>
-
-      <div class="section-label">Marque & Modèle</div>
-      <div class="row2">
-        <div class="field">
-          <label for="fieldMakeFr">Marque (FR)</label>
-          <input type="text" id="fieldMakeFr" placeholder="Porsche"/>
-        </div>
-        <div class="field">
-          <label for="fieldMakeEn">Marque (EN)</label>
-          <input type="text" id="fieldMakeEn" placeholder="Porsche"/>
-        </div>
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label for="fieldModelFr">Modèle (FR)</label>
-          <input type="text" id="fieldModelFr" placeholder="911 Carrera S"/>
-        </div>
-        <div class="field">
-          <label for="fieldModelEn">Modèle (EN)</label>
-          <input type="text" id="fieldModelEn" placeholder="911 Carrera S"/>
-        </div>
-      </div>
-
-      <div class="section-label">Titre affiché</div>
-      <div class="row2">
-        <div class="field">
-          <label for="fieldTitleFr">Titre (FR)</label>
-          <input type="text" id="fieldTitleFr" placeholder="Porsche 911 Carrera S"/>
-        </div>
-        <div class="field">
-          <label for="fieldTitleEn">Titre (EN)</label>
-          <input type="text" id="fieldTitleEn" placeholder="Porsche 911 Carrera S"/>
-        </div>
-      </div>
-
-      <div class="section-label">Informations principales</div>
-      <div class="row3">
-        <div class="field">
-          <label for="fieldYear">Année</label>
-          <input type="number" id="fieldYear" placeholder="2006" min="1900"/>
-        </div>
-        <div class="field">
-          <label for="fieldMileage">Kilométrage (km)</label>
-          <input type="number" id="fieldMileage" placeholder="Laisser vide = N/A" min="0"/>
-        </div>
-        <div class="field">
-          <label for="fieldPrice">Prix (€)</label>
-          <input type="number" id="fieldPrice" placeholder="Laisser vide = sur demande" min="0"/>
-        </div>
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label for="fieldStatus">Statut</label>
-          <select id="fieldStatus">
-            <option value="available">Disponible</option>
-            <option value="reserved">Réservé</option>
-            <option value="sold">Vendu</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="fieldLocationFr">Localisation (FR)</label>
-          <input type="text" id="fieldLocationFr" placeholder="France / Europe"/>
-        </div>
-      </div>
-      <div class="field">
-        <label for="fieldLocationEn">Localisation (EN)</label>
-        <input type="text" id="fieldLocationEn" placeholder="France / Europe"/>
-      </div>
-
-      <div class="section-label">Accroche</div>
-      <div class="row2">
-        <div class="field">
-          <label for="fieldHeadlineFr">Accroche (FR)</label>
-          <input type="text" id="fieldHeadlineFr" placeholder="Configuration élégante, historique limpide."/>
-        </div>
-        <div class="field">
-          <label for="fieldHeadlineEn">Accroche (EN)</label>
-          <input type="text" id="fieldHeadlineEn" placeholder="Elegant spec, clean history."/>
-        </div>
-      </div>
-
-      <div class="section-label">Description</div>
-      <div class="row2">
-        <div class="field">
-          <label for="fieldDescFr">Description (FR)</label>
-          <textarea id="fieldDescFr" placeholder="Informations complètes sur demande."></textarea>
-        </div>
-        <div class="field">
-          <label for="fieldDescEn">Description (EN)</label>
-          <textarea id="fieldDescEn" placeholder="Full details on request."></textarea>
-        </div>
-      </div>
-
-      <div class="section-label">Photos</div>
-      <div class="field">
-        <div id="imageGrid" class="image-grid"></div>
-        <div class="upload-bar">
-          <label class="btn btn-sm" for="imageFileInput" id="uploadLabel">
-            📷 Ajouter des photos
-          </label>
-          <input type="file" id="imageFileInput" multiple accept="image/*" style="display:none"/>
-          <span id="uploadStatus">
-            <span class="spinner" style="width:14px;height:14px;border-width:2px"></span> Envoi en cours…
-          </span>
-        </div>
-        <div class="hint">Formats acceptés : JPG, PNG, WebP, GIF, AVIF. Taille max : 5 Mo par photo.</div>
-      </div>
-
-      <div class="formActions">
-        <button type="button" class="btn" id="cancelFormBtn">Annuler</button>
-        <button type="submit" class="btn primary" id="saveFormBtn">Enregistrer</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- ── Delete confirmation modal ─────────────────────────────────────── -->
-<div id="confirmModal">
-  <div class="confirmBox">
-    <h3>Supprimer le véhicule ?</h3>
-    <p id="confirmMsg">Cette action est irréversible. Le véhicule sera retiré définitivement du stock.</p>
-    <div class="confirmActions">
-      <button class="btn" id="cancelDeleteBtn">Annuler</button>
-      <button class="btn danger" id="confirmDeleteBtn">Supprimer définitivement</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── User create/edit modal ─────────────────────────────────────────── -->
-<div id="userModal" class="overlay" role="dialog" aria-modal="true" aria-label="Fiche utilisateur">
-  <div class="drawer">
-    <div class="drawerHeader">
-      <h2 id="userModalTitle" style="margin:0;font-size:24px">Nouvel utilisateur</h2>
-      <button class="drawerClose" id="closeUserModalBtn" aria-label="Fermer">&times;</button>
-    </div>
-    <form id="userForm" class="form" autocomplete="off" novalidate>
-      <input type="hidden" id="userEditId"/>
-      <div class="field">
-        <label for="userEmail">Email</label>
-        <input type="text" id="userEmail" placeholder="email@exemple.com"/>
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label for="userRole">Rôle</label>
-          <select id="userRole">
-            <option value="client">Client</option>
-            <option value="staff">Staff</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="userAccountType">Type de compte</label>
-          <select id="userAccountType">
-            <option value="Particulier">Particulier</option>
-            <option value="Entreprise">Entreprise</option>
-          </select>
-        </div>
-      </div>
-      <div class="row2">
-        <div class="field" id="userPasswordField">
-          <label for="userPassword">Mot de passe <span id="userPasswordHint">(requis)</span></label>
-          <input type="password" id="userPassword" placeholder="••••••••" autocomplete="new-password"/>
-        </div>
-        <div class="field">
-          <label for="userBalance">Balance (€)</label>
-          <input type="number" id="userBalance" placeholder="0.00" min="0" step="0.01"/>
-        </div>
-      </div>
-      <div class="field">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-          <input type="checkbox" id="userVerified" style="width:auto;accent-color:var(--gold)"/>
-          <span>Email vérifié</span>
-        </label>
-      </div>
-      <div class="formActions">
-        <button type="button" class="btn" id="cancelUserModalBtn">Annuler</button>
-        <button type="submit" class="btn primary" id="saveUserBtn">Enregistrer</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- ── Reset password modal ──────────────────────────────────────────────── -->
-<div id="resetPwdModal" class="overlay" role="dialog" aria-modal="true" aria-label="Réinitialiser le mot de passe">
-  <div class="drawer" style="max-width:440px">
-    <div class="drawerHeader">
-      <h2 style="margin:0;font-size:24px">Nouveau mot de passe</h2>
-      <button class="drawerClose" id="closeResetPwdBtn" aria-label="Fermer">&times;</button>
-    </div>
-    <form id="resetPwdForm" class="form" autocomplete="off" novalidate>
-      <input type="hidden" id="resetPwdUserId"/>
-      <div class="field">
-        <label for="newPassword">Nouveau mot de passe</label>
-        <input type="password" id="newPassword" placeholder="••••••••" autocomplete="new-password"/>
-        <div class="hint">Minimum 8 caractères</div>
-      </div>
-      <div class="formActions">
-        <button type="button" class="btn" id="cancelResetPwdBtn">Annuler</button>
-        <button type="submit" class="btn primary">Réinitialiser</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- ── User delete confirmation ──────────────────────────────────────────── -->
-<div id="userConfirmModal">
-  <div class="confirmBox">
-    <h3>Supprimer l'utilisateur ?</h3>
-    <p id="userConfirmMsg">Cette action supprimera définitivement le compte et toutes ses données associées.</p>
-    <div class="confirmActions">
-      <button class="btn" id="cancelUserDeleteBtn">Annuler</button>
-      <button class="btn danger" id="confirmUserDeleteBtn">Supprimer définitivement</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── Toast ─────────────────────────────────────────────────────────── -->
 <div id="toast"></div>
 
 <footer>
-  <div class="container">
-    <div class="mini">© 2026 Bespoke — Interface d'administration</div>
+  <div class="container" style="text-align:center">
+    <p class="mini">© 2026 Bespoke Admin — All rights reserved.</p>
   </div>
 </footer>
 
 <script>
-(() => {
-  'use strict';
-
   const API = '/.netlify/functions/admin';
-  const USERS_API = '/.netlify/functions/admin-users';
-  const MESSAGES_API = '/.netlify/functions/admin-messages';
-  const STATS_API = '/.netlify/functions/admin-stats';
   const SESSION_KEY = 'bespoke_admin_token';
 
-  // ── State ────────────────────────────────────────────────────────────
-  let token = sessionStorage.getItem(SESSION_KEY) || '';
-  let stockData = null;   // { items: [...] }
-  let stockSha  = '';
+  let token = sessionStorage.getItem(SESSION_KEY);
+  let stockData = { items: [] };
+  let currentImages = [];
+  let editingIndex = null;
   let pendingDeleteIndex = null;
-  let currentImages = []; // paths for the vehicle being edited/created
-  let currentTab = 'dashboard';
-  let usersData = [];
-  let pendingDeleteUserId = null;
-  let activeThreadId = null;
 
-  // ── DOM refs ─────────────────────────────────────────────────────────
-  const loginScreen  = document.getElementById('loginScreen');
-  const adminScreen  = document.getElementById('adminScreen');
-  const loginForm    = document.getElementById('loginForm');
+  // ── UI Elements ──────────────────────────────────────────────────────────
+  const loginScreen = document.getElementById('loginScreen');
+  const adminScreen = document.getElementById('adminScreen');
+  const loginBtn = document.getElementById('loginBtn');
+  const emailInput = document.getElementById('emailInput');
   const passwordInput = document.getElementById('passwordInput');
-  const loginBtn     = document.getElementById('loginBtn');
-  const loginError   = document.getElementById('loginError');
-  const logoutBtn    = document.getElementById('logoutBtn');
+  const loginError = document.getElementById('loginError');
+  const editModal = document.getElementById('editModal');
+  const confirmModal = document.getElementById('confirmModal');
+  const carList = document.getElementById('carList');
+  const emptyState = document.getElementById('emptyState');
 
-  const stockLoading = document.getElementById('stockLoading');
-  const carListEl    = document.getElementById('carList');
-  const carListEmpty = document.getElementById('carListEmpty');
-  const addCarBtn    = document.getElementById('addCarBtn');
+  // ── Init ──────────────────────────────────────────────────────────────
+  (function init() {
+    if (token) {
+      showAdminScreen();
+      loadStock();
+    } else {
+      showLoginScreen();
+    }
+  })();
 
-  const formOverlay  = document.getElementById('formOverlay');
-  const formTitle    = document.getElementById('formTitle');
-  const carForm      = document.getElementById('carForm');
-  const closeFormBtn = document.getElementById('closeFormBtn');
-  const cancelFormBtn = document.getElementById('cancelFormBtn');
-  const saveFormBtn  = document.getElementById('saveFormBtn');
+  // ── Auth ──────────────────────────────────────────────────────────────
+  loginBtn.addEventListener('click', async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    loginBtn.disabled = true;
+    loginError.style.display = 'none';
 
-  const confirmModal     = document.getElementById('confirmModal');
-  const confirmMsg       = document.getElementById('confirmMsg');
-  const cancelDeleteBtn  = document.getElementById('cancelDeleteBtn');
-  const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const { ok, data } = await apiFetch(API, 'login', { email, password });
+    loginBtn.disabled = false;
 
-  const toastEl = document.getElementById('toast');
-  const adminTabs = document.getElementById('adminTabs');
+    if (ok && data.token) {
+      token = data.token;
+      sessionStorage.setItem(SESSION_KEY, token);
+      showAdminScreen();
+      loadStock();
+    } else {
+      loginError.textContent = data.error || 'Erreur de connexion';
+      loginError.style.display = 'block';
+    }
+  });
 
-  // ── Toast ─────────────────────────────────────────────────────────────
-  let toastTimer;
-  function showToast(msg, type = '') {
-    clearTimeout(toastTimer);
-    toastEl.textContent = msg;
-    toastEl.className = 'show' + (type ? ' ' + type : '');
-    toastTimer = setTimeout(() => { toastEl.className = ''; }, 3200);
+  document.getElementById('navLogoutBtn').addEventListener('click', () => {
+    token = '';
+    sessionStorage.removeItem(SESSION_KEY);
+    showLoginScreen();
+  });
+
+  // ── Screens ──────────────────────────────────────────────────────────
+  function showLoginScreen() {
+    loginScreen.style.display = 'flex';
+    adminScreen.style.display = 'none';
   }
 
-  // ── API calls ─────────────────────────────────────────────────────────
-  async function apiCall(action, extra = {}) {
-    const headers = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = 'Bearer ' + token;
-    const res = await fetch(API, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ action, ...extra }),
-    });
-    const data = await res.json().catch(() => ({}));
-    return { ok: res.ok, status: res.status, data };
+  function showAdminScreen() {
+    loginScreen.style.display = 'none';
+    adminScreen.style.display = 'block';
   }
 
-  async function apiCallTo(url, action, extra = {}) {
+  // ── API ──────────────────────────────────────────────────────────────
+  async function apiFetch(url, action, extra = {}) {
     const headers = { 'Content-Type': 'application/json' };
     if (token) headers['Authorization'] = 'Bearer ' + token;
     const res = await fetch(url, {
@@ -998,20 +795,17 @@
     return { ok: res.ok, status: res.status, data };
   }
 
-  function handleUnauth() {
-    token = '';
-    sessionStorage.removeItem(SESSION_KEY);
-    showLoginScreen();
-  }
-
-  // ── Image grid (upload area) ──────────────────────────────────────────
+  // ── Image grid with drag-and-drop and reordering ──────────────────────
   function renderImageGrid() {
     const grid = document.getElementById('imageGrid');
     grid.innerHTML = '';
     currentImages.forEach((path, i) => {
       const wrap = document.createElement('div');
       wrap.className = 'img-thumb-wrap';
+      wrap.draggable = true;
+      wrap.dataset.index = i;
 
+      // Image
       const img = document.createElement('img');
       img.src = '../' + path.replace(/^\//, '');
       img.alt = '';
@@ -1019,16 +813,92 @@
       img.onerror = () => { img.style.display = 'none'; };
       wrap.appendChild(img);
 
+      // Index badge
+      const indexBadge = document.createElement('div');
+      indexBadge.className = 'img-thumb-index';
+      indexBadge.textContent = (i + 1);
+      wrap.appendChild(indexBadge);
+
+      // Control buttons
+      const controls = document.createElement('div');
+      controls.className = 'img-thumb-controls';
+
+      // Up button
+      if (i > 0) {
+        const upBtn = document.createElement('button');
+        upBtn.type = 'button';
+        upBtn.className = 'img-thumb-btn';
+        upBtn.title = 'Monter';
+        upBtn.textContent = '↑';
+        upBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          [currentImages[i], currentImages[i - 1]] = [currentImages[i - 1], currentImages[i]];
+          renderImageGrid();
+        });
+        controls.appendChild(upBtn);
+      }
+
+      // Down button
+      if (i < currentImages.length - 1) {
+        const downBtn = document.createElement('button');
+        downBtn.type = 'button';
+        downBtn.className = 'img-thumb-btn';
+        downBtn.title = 'Descendre';
+        downBtn.textContent = '↓';
+        downBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          [currentImages[i], currentImages[i + 1]] = [currentImages[i + 1], currentImages[i]];
+          renderImageGrid();
+        });
+        controls.appendChild(downBtn);
+      }
+
+      // Remove button
       const removeBtn = document.createElement('button');
       removeBtn.type = 'button';
-      removeBtn.className = 'img-thumb-remove';
+      removeBtn.className = 'img-thumb-btn remove';
       removeBtn.title = 'Retirer';
-      removeBtn.innerHTML = '&times;';
-      removeBtn.addEventListener('click', () => {
+      removeBtn.textContent = '✕';
+      removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         currentImages = currentImages.filter((_, idx) => idx !== i);
         renderImageGrid();
       });
-      wrap.appendChild(removeBtn);
+      controls.appendChild(removeBtn);
+
+      wrap.appendChild(controls);
+
+      // Drag events
+      wrap.addEventListener('dragstart', (e) => {
+        wrap.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', i);
+      });
+
+      wrap.addEventListener('dragend', () => {
+        wrap.classList.remove('dragging');
+        document.querySelectorAll('.img-thumb-wrap').forEach(el => el.classList.remove('drag-over'));
+      });
+
+      wrap.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        wrap.classList.add('drag-over');
+      });
+
+      wrap.addEventListener('dragleave', () => {
+        wrap.classList.remove('drag-over');
+      });
+
+      wrap.addEventListener('drop', (e) => {
+        e.preventDefault();
+        wrap.classList.remove('drag-over');
+        const fromIndex = parseInt(e.dataTransfer.getData('text/plain'), 10);
+        if (fromIndex !== i) {
+          [currentImages[fromIndex], currentImages[i]] = [currentImages[i], currentImages[fromIndex]];
+          renderImageGrid();
+        }
+      });
 
       grid.appendChild(wrap);
     });
@@ -1088,1089 +958,219 @@
       uploadLabel.style.opacity = '';
       uploadStatus.style.display = 'none';
       fileInput.disabled = false;
-      fileInput.value = ''; // Allow re-selecting the same files
+      fileInput.value = '';
     }
   }
 
-  // ── Auth ──────────────────────────────────────────────────────────────
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    loginError.style.display = 'none';
-    loginBtn.disabled = true;
-    loginBtn.innerHTML = '<span class="spinner"></span> Connexion…';
-
-    const password = passwordInput.value;
-    const { ok, data } = await apiCall('auth', { password }).catch(() => ({ ok: false, data: {} }));
-
-    if (ok && data.token) {
-      token = data.token;
-      sessionStorage.setItem(SESSION_KEY, token);
-      showAdminScreen();
-    } else {
-      loginError.style.display = 'block';
-      loginBtn.disabled = false;
-      loginBtn.textContent = 'Se connecter';
-      passwordInput.value = '';
-      passwordInput.focus();
-    }
-  });
-
-  logoutBtn.addEventListener('click', () => {
-    token = '';
-    sessionStorage.removeItem(SESSION_KEY);
-    stockData = null;
-    showLoginScreen();
-  });
-
-  // ── Screen switching ──────────────────────────────────────────────────
-  function showLoginScreen() {
-    loginScreen.style.display = 'flex';
-    adminScreen.style.display = 'none';
-    logoutBtn.style.display = 'none';
-    adminTabs.style.display = 'none';
-    passwordInput.value = '';
-    loginBtn.disabled = false;
-    loginBtn.textContent = 'Se connecter';
-    loginError.style.display = 'none';
-  }
-
-  function showAdminScreen() {
-    loginScreen.style.display = 'none';
-    adminScreen.style.display = 'block';
-    logoutBtn.style.display = '';
-    adminTabs.style.display = 'flex';
-    switchTab('dashboard');
-  }
-
-  // ── Load stock ────────────────────────────────────────────────────────
+  // ── Stock management ──────────────────────────────────────────────────
   async function loadStock() {
-    stockLoading.style.display = 'block';
-    carListEl.style.display = 'none';
-    carListEmpty.style.display = 'none';
-
-    const { ok, status, data } = await apiCall('getStock').catch(() => ({ ok: false, status: 0, data: {} }));
-
-    stockLoading.style.display = 'none';
-
-    if (!ok) {
-      if (status === 401) {
-        token = '';
-        sessionStorage.removeItem(SESSION_KEY);
-        showLoginScreen();
-        return;
-      }
-      showToast('Erreur lors du chargement du stock.', 'error');
-      return;
-    }
-
-    stockData = data.stock;
-    stockSha  = data.sha;
-    renderList();
-  }
-
-  // ── Save stock ────────────────────────────────────────────────────────
-  async function saveStock() {
-    const { ok, status, data } = await apiCall('saveStock', { stock: stockData, sha: stockSha })
-      .catch(() => ({ ok: false, status: 0, data: {} }));
-
-    if (!ok) {
-      if (status === 401) {
-        token = '';
-        sessionStorage.removeItem(SESSION_KEY);
-        showLoginScreen();
-        return false;
-      }
-      const msg = (data && data.error) || 'Erreur lors de la sauvegarde.';
-      showToast(msg, 'error');
-      return false;
-    }
-    // Refresh sha after write
-    await loadStock();
-    return true;
-  }
-
-  // ── Render car list ───────────────────────────────────────────────────
-  function renderList() {
-    carListEl.innerHTML = '';
-    const items = (stockData && stockData.items) || [];
-
-    if (!items.length) {
-      carListEmpty.style.display = 'block';
-      return;
-    }
-
-    carListEl.style.display = 'grid';
-    items.forEach((car, idx) => {
-      carListEl.appendChild(buildCarRow(car, idx));
-    });
-  }
-
-  function buildCarRow(car, idx) {
-    const row = document.createElement('div');
-    row.className = 'carRow';
-
-    // Thumbnail
-    const thumbWrap = document.createElement('div');
-    if (car.images && car.images.length) {
-      const img = document.createElement('img');
-      img.className = 'carThumb';
-      img.src = '../' + car.images[0].replace(/^\//, '');
-      img.alt = '';
-      img.loading = 'lazy';
-      thumbWrap.appendChild(img);
-    } else {
-      const ph = document.createElement('div');
-      ph.className = 'carThumbPlaceholder';
-      ph.textContent = '🚗';
-      thumbWrap.appendChild(ph);
-    }
-    row.appendChild(thumbWrap);
-
-    // Info
-    const info = document.createElement('div');
-    info.className = 'carInfo';
-
-    const title = document.createElement('div');
-    title.className = 'carTitle';
-    title.textContent = (car.title && (car.title.fr || car.title.en)) ||
-      [(car.make && (car.make.fr || car.make.en)), (car.model && (car.model.fr || car.model.en))].filter(Boolean).join(' ') ||
-      car.id || 'Véhicule';
-    info.appendChild(title);
-
-    const meta = document.createElement('div');
-    meta.className = 'carMeta';
-    const parts = [];
-    if (car.year) parts.push(car.year);
-    if (car.mileage_km) parts.push(car.mileage_km.toLocaleString('fr-FR') + ' km');
-    if (car.price_eur) parts.push(car.price_eur.toLocaleString('fr-FR') + ' €');
-    meta.textContent = parts.join(' • ');
-    info.appendChild(meta);
-
-    const badge = document.createElement('span');
-    badge.className = 'carStatus ' + (car.status === 'sold' ? 'sold' : car.status === 'reserved' ? 'reserved' : 'available');
-    badge.textContent = car.status === 'sold' ? 'Vendu' : car.status === 'reserved' ? 'Réservé' : 'Disponible';
-    info.appendChild(badge);
-
-    row.appendChild(info);
-
-    // Actions
-    const actions = document.createElement('div');
-    actions.className = 'carActions';
-
-    // Edit button
-    const editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'btn btn-sm';
-    editBtn.textContent = '✏️ Modifier';
-    editBtn.addEventListener('click', () => openForm(idx));
-    actions.appendChild(editBtn);
-
-    // Toggle sold / available / reserved status
-    const statusSelect = document.createElement('select');
-    statusSelect.className = 'select';
-    statusSelect.style.cssText = 'font-size:12px;padding:6px 10px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--text);cursor:pointer;max-width:140px';
-    [
-      { value: 'available', label: '✅ Disponible' },
-      { value: 'reserved', label: '🟠 Réservé' },
-      { value: 'sold', label: '🔴 Vendu' },
-    ].forEach(opt => {
-      const o = document.createElement('option');
-      o.value = opt.value;
-      o.textContent = opt.label;
-      if (car.status === opt.value) o.selected = true;
-      statusSelect.appendChild(o);
-    });
-    statusSelect.addEventListener('change', () => {
-      const newStatus = statusSelect.value;
-      if (newStatus === car.status) return;
-      if (newStatus === 'reserved' || car.status === 'reserved') {
-        // Use the reservation-aware endpoint for reserved transitions
-        console.log(`Admin: Changing status from "${car.status}" to "${newStatus}" for ${car.id}`);
-        statusSelect.disabled = true;
-        updateVehicleStatus(car.id, newStatus).then(() => {
-          statusSelect.disabled = false;
-        }).catch(err => {
-          console.error('Status update failed:', err);
-          statusSelect.value = car.status;
-          statusSelect.disabled = false;
-        });
-      } else {
-        // Simple toggle via saveStock for available<->sold
-        console.log(`Admin: Changing status via saveStock from "${car.status}" to "${newStatus}" for ${car.id}`);
-        stockData.items[idx] = { ...car, status: newStatus };
-        saveStock().then(ok => {
-          if (ok) {
-            showToast('Statut mis à jour.', 'success');
-          } else {
-            stockData.items[idx] = car;
-            renderList();
-          }
-        });
-      }
-    });
-    actions.appendChild(statusSelect);
-
-    // Delete button
-    const delBtn = document.createElement('button');
-    delBtn.type = 'button';
-    delBtn.className = 'btn btn-sm danger';
-    delBtn.textContent = '🗑 Supprimer';
-    delBtn.addEventListener('click', () => askDelete(idx));
-    actions.appendChild(delBtn);
-
-    row.appendChild(actions);
-    return row;
-  }
-
-  // ── Toggle sold / available ───────────────────────────────────────────
-  async function toggleStatus(idx) {
-    const car = stockData.items[idx];
-    const newStatus = car.status === 'sold' ? 'available' : 'sold';
-    const label = newStatus === 'sold' ? '"Vendu"' : '"Disponible"';
-
-    stockData.items[idx] = { ...car, status: newStatus };
-    const ok = await saveStock();
-    if (ok) {
-      showToast(`Statut mis à jour : ${label}`, 'success');
-    } else {
-      // Revert on failure
-      stockData.items[idx] = car;
+    const { ok, data } = await apiFetch(API, 'getStock');
+    if (ok && data.items) {
+      stockData = data;
       renderList();
     }
   }
 
-  // ── Delete ────────────────────────────────────────────────────────────
+  function renderList() {
+    carList.innerHTML = '';
+    if (!stockData.items || stockData.items.length === 0) {
+      emptyState.style.display = 'block';
+      return;
+    }
+    emptyState.style.display = 'none';
+
+    stockData.items.forEach((car, idx) => {
+      const row = document.createElement('div');
+      row.className = 'carRow';
+
+      // Thumb
+      let thumb;
+      if (car.images && car.images.length > 0) {
+        thumb = document.createElement('img');
+        thumb.className = 'carThumb';
+        thumb.src = '../' + car.images[0].replace(/^\//, '');
+        thumb.alt = car.title?.fr || '';
+        thumb.onerror = () => { thumb.style.display = 'none'; };
+      } else {
+        thumb = document.createElement('div');
+        thumb.className = 'carThumbPlaceholder';
+        thumb.textContent = '🚗';
+      }
+      row.appendChild(thumb);
+
+      // Info
+      const info = document.createElement('div');
+      info.className = 'carInfo';
+      const title = document.createElement('div');
+      title.className = 'carTitle';
+      title.textContent = car.title?.fr || car.id || '(sans titre)';
+      info.appendChild(title);
+
+      const meta = document.createElement('div');
+      meta.className = 'carMeta';
+      meta.textContent = `${car.year || '–'} • ${car.country || 'unknown'} • ID: ${car.id}`;
+      info.appendChild(meta);
+
+      const status = document.createElement('div');
+      status.className = `carStatus ${car.status || 'available'}`;
+      const statusLabels = { available: '✓ Disponible', sold: '✗ Vendu', reserved: '⏳ Réservé' };
+      status.textContent = statusLabels[car.status] || car.status;
+      info.appendChild(status);
+
+      row.appendChild(info);
+
+      // Actions
+      const actions = document.createElement('div');
+      actions.className = 'carActions';
+
+      const editBtn = document.createElement('button');
+      editBtn.type = 'button';
+      editBtn.className = 'btn btn-sm';
+      editBtn.textContent = '✏️ Éditer';
+      editBtn.addEventListener('click', () => openEditModal(idx));
+      actions.appendChild(editBtn);
+
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'btn btn-sm danger';
+      delBtn.textContent = '🗑 Supprimer';
+      delBtn.addEventListener('click', () => askDelete(idx));
+      actions.appendChild(delBtn);
+
+      row.appendChild(actions);
+      carList.appendChild(row);
+    });
+  }
+
+  // ── Modal ──────────────────────────────────────────────────────────
+  document.getElementById('addCarBtn').addEventListener('click', () => {
+    editingIndex = null;
+    currentImages = [];
+    document.getElementById('modalTitle').textContent = 'Ajouter un véhicule';
+    document.getElementById('fieldId').value = '';
+    document.getElementById('fieldYear').value = new Date().getFullYear();
+    document.getElementById('fieldTitleFr').value = '';
+    document.getElementById('fieldTitleEn').value = '';
+    document.getElementById('fieldMileage').value = '';
+    document.getElementById('fieldCountry').value = '';
+    document.getElementById('fieldPrice').value = '';
+    document.getElementById('fieldStatus').value = 'available';
+    document.getElementById('fieldDescFr').value = '';
+    document.getElementById('fieldDescEn').value = '';
+    renderImageGrid();
+    editModal.classList.add('open');
+  });
+
+  function openEditModal(idx) {
+    editingIndex = idx;
+    const car = stockData.items[idx];
+    document.getElementById('modalTitle').textContent = 'Éditer véhicule';
+    document.getElementById('fieldId').value = car.id;
+    document.getElementById('fieldYear').value = car.year || '';
+    document.getElementById('fieldTitleFr').value = car.title?.fr || '';
+    document.getElementById('fieldTitleEn').value = car.title?.en || '';
+    document.getElementById('fieldMileage').value = car.mileage || '';
+    document.getElementById('fieldCountry').value = car.country || '';
+    document.getElementById('fieldPrice').value = car.price || '';
+    document.getElementById('fieldStatus').value = car.status || 'available';
+    document.getElementById('fieldDescFr').value = car.description?.fr || '';
+    document.getElementById('fieldDescEn').value = car.description?.en || '';
+    currentImages = [...(car.images || [])];
+    renderImageGrid();
+    editModal.classList.add('open');
+  }
+
+  document.getElementById('closeModalBtn').addEventListener('click', () => {
+    editModal.classList.remove('open');
+    currentImages = [];
+  });
+
+  document.getElementById('cancelBtn').addEventListener('click', () => {
+    editModal.classList.remove('open');
+    currentImages = [];
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', async () => {
+    const id = document.getElementById('fieldId').value.trim();
+    if (!id) {
+      showToast('L\'ID est obligatoire.', 'error');
+      return;
+    }
+
+    const car = {
+      id,
+      year: parseInt(document.getElementById('fieldYear').value) || null,
+      title: {
+        fr: document.getElementById('fieldTitleFr').value,
+        en: document.getElementById('fieldTitleEn').value,
+      },
+      mileage: document.getElementById('fieldMileage').value,
+      country: document.getElementById('fieldCountry').value,
+      price: parseInt(document.getElementById('fieldPrice').value) || 0,
+      status: document.getElementById('fieldStatus').value,
+      description: {
+        fr: document.getElementById('fieldDescFr').value,
+        en: document.getElementById('fieldDescEn').value,
+      },
+      images: currentImages,
+    };
+
+    document.getElementById('saveBtn').disabled = true;
+    const { ok } = await apiFetch(API, 'saveCar', { car, index: editingIndex });
+    document.getElementById('saveBtn').disabled = false;
+
+    if (ok) {
+      showToast(editingIndex !== null ? 'Véhicule mis à jour.' : 'Véhicule ajouté.', 'success');
+      editModal.classList.remove('open');
+      currentImages = [];
+      loadStock();
+    } else {
+      showToast('Erreur lors de l\'enregistrement.', 'error');
+    }
+  });
+
+  // ── Delete ──────────────────────────────────────────────────────────
   function askDelete(idx) {
     pendingDeleteIndex = idx;
     const car = stockData.items[idx];
     const name = (car.title && (car.title.fr || car.title.en)) || car.id || 'ce véhicule';
-    confirmMsg.textContent = `Supprimer "${name}" ? Cette action est irréversible.`;
+    document.getElementById('confirmMsg').textContent = `Supprimer "${name}" ? Cette action est irréversible.`;
     confirmModal.classList.add('open');
   }
 
-  cancelDeleteBtn.addEventListener('click', () => {
+  document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
     confirmModal.classList.remove('open');
     pendingDeleteIndex = null;
   });
 
-  confirmDeleteBtn.addEventListener('click', async () => {
+  document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
     confirmModal.classList.remove('open');
     if (pendingDeleteIndex === null) return;
-    const idx = pendingDeleteIndex;
-    pendingDeleteIndex = null;
 
-    const car = stockData.items[idx];
-    stockData.items.splice(idx, 1);
-    const ok = await saveStock();
+    document.getElementById('confirmDeleteBtn').disabled = true;
+    const { ok } = await apiFetch(API, 'deleteCar', { index: pendingDeleteIndex });
+    document.getElementById('confirmDeleteBtn').disabled = false;
+
     if (ok) {
       showToast('Véhicule supprimé.', 'success');
+      loadStock();
     } else {
-      // Revert
-      stockData.items.splice(idx, 0, car);
-      renderList();
+      showToast('Erreur lors de la suppression.', 'error');
     }
+
+    pendingDeleteIndex = null;
   });
 
-  // ── Form open / close ─────────────────────────────────────────────────
-  function openForm(idx = null) {
-    carForm.reset();
-    document.getElementById('fieldEditIndex').value = idx !== null ? String(idx) : '';
-
-    if (idx !== null) {
-      formTitle.textContent = 'Modifier le véhicule';
-      const car = stockData.items[idx];
-      document.getElementById('fieldId').value = car.id || '';
-      document.getElementById('fieldMakeFr').value = (car.make && car.make.fr) || '';
-      document.getElementById('fieldMakeEn').value = (car.make && car.make.en) || '';
-      document.getElementById('fieldModelFr').value = (car.model && car.model.fr) || '';
-      document.getElementById('fieldModelEn').value = (car.model && car.model.en) || '';
-      document.getElementById('fieldTitleFr').value = (car.title && car.title.fr) || '';
-      document.getElementById('fieldTitleEn').value = (car.title && car.title.en) || '';
-      document.getElementById('fieldYear').value = car.year != null ? car.year : '';
-      document.getElementById('fieldMileage').value = car.mileage_km != null ? car.mileage_km : '';
-      document.getElementById('fieldPrice').value = car.price_eur != null ? car.price_eur : '';
-      document.getElementById('fieldStatus').value = car.status || 'available';
-      document.getElementById('fieldLocationFr').value = (car.location && car.location.fr) || '';
-      document.getElementById('fieldLocationEn').value = (car.location && car.location.en) || '';
-      document.getElementById('fieldHeadlineFr').value = (car.headline && car.headline.fr) || '';
-      document.getElementById('fieldHeadlineEn').value = (car.headline && car.headline.en) || '';
-      document.getElementById('fieldDescFr').value = (car.description && car.description.fr) || '';
-      document.getElementById('fieldDescEn').value = (car.description && car.description.en) || '';
-      currentImages = [...(car.images || [])];
-    } else {
-      formTitle.textContent = 'Nouveau véhicule';
-      document.getElementById('fieldStatus').value = 'available';
-      document.getElementById('fieldLocationFr').value = 'France / Europe';
-      document.getElementById('fieldLocationEn').value = 'France / Europe';
-      currentImages = [];
-    }
-
-    renderImageGrid();
-    formOverlay.classList.add('open');
-    // Focus first meaningful field
-    setTimeout(() => document.getElementById('fieldMakeFr').focus(), 50);
+  // ── Toast ──────────────────────────────────────────────────────────
+  function showToast(msg, type = 'success') {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = 'show ' + type;
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
   }
-
-  function closeForm() {
-    formOverlay.classList.remove('open');
-    currentImages = [];
-    renderImageGrid();
-  }
-
-  addCarBtn.addEventListener('click', () => openForm(null));
-  closeFormBtn.addEventListener('click', closeForm);
-  cancelFormBtn.addEventListener('click', closeForm);
-  formOverlay.addEventListener('click', (e) => { if (e.target === formOverlay) closeForm(); });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeForm();
-      confirmModal.classList.remove('open');
-    }
-  });
-
-  // ── Form submit ───────────────────────────────────────────────────────
-  carForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const makeFr  = document.getElementById('fieldMakeFr').value.trim();
-    const makeEn  = document.getElementById('fieldMakeEn').value.trim();
-    const modelFr = document.getElementById('fieldModelFr').value.trim();
-    const modelEn = document.getElementById('fieldModelEn').value.trim();
-
-    if (!makeFr && !makeEn) {
-      showToast('La marque est requise.', 'error');
-      document.getElementById('fieldMakeFr').focus();
-      return;
-    }
-
-    // Build id
-    let id = document.getElementById('fieldId').value.trim();
-    if (!id) {
-      id = [(makeEn || makeFr), (modelEn || modelFr), document.getElementById('fieldYear').value.trim()]
-        .filter(Boolean).join('-')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '');
-    }
-    if (!id) id = 'vehicle-' + Date.now();
-
-    const year     = document.getElementById('fieldYear').value.trim();
-    const mileage  = document.getElementById('fieldMileage').value.trim();
-    const price    = document.getElementById('fieldPrice').value.trim();
-    const images   = [...currentImages];
-
-    const car = {
-      id,
-      make:        { fr: makeFr || makeEn, en: makeEn || makeFr },
-      model:       { fr: modelFr || modelEn, en: modelEn || modelFr },
-      year:        year ? Number(year) : null,
-      mileage_km:  mileage ? Number(mileage) : null,
-      price_eur:   price ? Number(price) : null,
-      status:      document.getElementById('fieldStatus').value,
-      location:    {
-        fr: document.getElementById('fieldLocationFr').value.trim() || 'France / Europe',
-        en: document.getElementById('fieldLocationEn').value.trim() || 'France / Europe',
-      },
-      headline:    {
-        fr: document.getElementById('fieldHeadlineFr').value.trim(),
-        en: document.getElementById('fieldHeadlineEn').value.trim(),
-      },
-      description: {
-        fr: document.getElementById('fieldDescFr').value.trim(),
-        en: document.getElementById('fieldDescEn').value.trim(),
-      },
-      images,
-      title:       {
-        fr: document.getElementById('fieldTitleFr').value.trim() ||
-            [(makeFr || makeEn), (modelFr || modelEn)].filter(Boolean).join(' '),
-        en: document.getElementById('fieldTitleEn').value.trim() ||
-            [(makeEn || makeFr), (modelEn || modelFr)].filter(Boolean).join(' '),
-      },
-    };
-
-    saveFormBtn.disabled = true;
-    saveFormBtn.innerHTML = '<span class="spinner"></span> Enregistrement…';
-
-    const editIndexVal = document.getElementById('fieldEditIndex').value;
-    const editIndex = editIndexVal !== '' ? parseInt(editIndexVal, 10) : null;
-
-    if (editIndex !== null) {
-      stockData.items[editIndex] = car;
-    } else {
-      stockData.items.push(car);
-    }
-
-    const ok = await saveStock();
-
-    saveFormBtn.disabled = false;
-    saveFormBtn.textContent = 'Enregistrer';
-
-    if (ok) {
-      closeForm();
-      showToast(editIndex !== null ? 'Véhicule mis à jour.' : 'Véhicule ajouté.', 'success');
-    } else {
-      // Revert
-      if (editIndex !== null) {
-        // Can't easily revert here since saveStock already re-loaded;
-        // the list will be fresh after loadStock() called inside saveStock()
-      } else {
-        stockData.items.pop();
-        renderList();
-      }
-    }
-  });
-
-  // ── Image file input listener ─────────────────────────────────────────
-  document.getElementById('imageFileInput').addEventListener('change', function () {
-    if (this.files && this.files.length) {
-      handleImageUpload(Array.from(this.files));
-    }
-  });
-
-  // ── Tab switching ─────────────────────────────────────────────────────
-  function switchTab(name) {
-    currentTab = name;
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.tab === name);
-    });
-    ['dashboard', 'stock', 'users', 'messages', 'reservations'].forEach(t => {
-      const el = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
-      if (el) el.style.display = t === name ? '' : 'none';
-    });
-    if (name === 'dashboard') loadDashboard();
-    if (name === 'stock') loadStock();
-    if (name === 'users') loadUsers();
-    if (name === 'messages') loadThreads();
-    if (name === 'reservations') loadReservations();
-  }
-
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-  });
-
-  document.getElementById('refreshDashBtn').addEventListener('click', loadDashboard);
-
-  // ── Dashboard ─────────────────────────────────────────────────────────
-  async function loadDashboard() {
-    const dashLoading = document.getElementById('dashLoading');
-    const dashContent = document.getElementById('dashContent');
-    dashLoading.style.display = 'block';
-    dashContent.style.display = 'none';
-
-    const { ok, status, data } = await apiCallTo(STATS_API, 'get-stats')
-      .catch(() => ({ ok: false, status: 0, data: {} }));
-
-    dashLoading.style.display = 'none';
-
-    if (!ok) {
-      if (status === 401) { handleUnauth(); return; }
-      showToast('Erreur lors du chargement du dashboard.', 'error');
-      return;
-    }
-
-    renderStats(data.stats || {});
-    renderRecent(data.recent || {});
-    dashContent.style.display = 'block';
-  }
-
-  function renderStats(stats) {
-    const grid = document.getElementById('statsGrid');
-    const bal = (stats.total_balance_cents || 0) / 100;
-    const items = [
-      { label: 'Utilisateurs', value: stats.total_users || 0, sub: `${stats.verified_users || 0} vérifiés` },
-      { label: 'Messages non lus', value: stats.unread_threads || 0, sub: 'threads en attente' },
-      { label: 'Solde total wallets', value: bal.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' }), sub: 'somme de tous les wallets' },
-      { label: 'Comptes vérifiés', value: stats.verified_users || 0, sub: `sur ${stats.total_users || 0} comptes` },
-    ];
-    grid.innerHTML = items.map(i => `
-      <div class="stat-card">
-        <div class="stat-label">${i.label}</div>
-        <div class="stat-value">${i.value}</div>
-        <div class="stat-sub">${i.sub}</div>
-      </div>
-    `).join('');
-
-    // Update message badge
-    const badge = document.getElementById('msgBadge');
-    if (stats.unread_threads > 0) {
-      badge.textContent = stats.unread_threads;
-      badge.style.display = '';
-    } else {
-      badge.style.display = 'none';
-    }
-  }
-
-  function fmtDate(iso) {
-    if (!iso) return '—';
-    const d = new Date(iso);
-    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' });
-  }
-  function fmtDateTime(iso) {
-    if (!iso) return '—';
-    const d = new Date(iso);
-    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' }) + ' ' +
-      d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-  }
-  function esc(s) {
-    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-  function escHtml(s) { return esc(s); }
-  function fmtEur(cents) {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format((cents || 0) / 100);
-  }
-
-  function renderRecent(recent) {
-    const grid = document.getElementById('recentGrid');
-
-    const usersHtml = (recent.users || []).map(u =>
-      `<li class="recent-item"><span class="ri-main">${esc(u.email)}</span><span class="ri-meta">${fmtDate(u.created_at)}</span></li>`
-    ).join('') || '<li class="recent-item" style="color:var(--muted2)">Aucun</li>';
-
-    const txHtml = (recent.transactions || []).map(t =>
-      `<li class="recent-item"><span class="ri-main">${esc(t.email)} — ${esc(t.type)}</span><span class="ri-meta">${(t.amount_cents / 100).toFixed(2)} €</span></li>`
-    ).join('') || '<li class="recent-item" style="color:var(--muted2)">Aucune</li>';
-
-    const msgHtml = (recent.messages || []).map(m =>
-      `<li class="recent-item"><span class="ri-main">${esc(m.email)} (${esc(m.author_role)})</span><span class="ri-meta">${fmtDate(m.created_at)}</span></li>`
-    ).join('') || '<li class="recent-item" style="color:var(--muted2)">Aucun</li>';
-
-    grid.innerHTML = `
-      <div class="recent-card">
-        <div class="recent-card-title">👤 Derniers utilisateurs</div>
-        <ul class="recent-list">${usersHtml}</ul>
-      </div>
-      <div class="recent-card">
-        <div class="recent-card-title">💸 Dernières transactions</div>
-        <ul class="recent-list">${txHtml}</ul>
-      </div>
-      <div class="recent-card">
-        <div class="recent-card-title">💬 Derniers messages</div>
-        <ul class="recent-list">${msgHtml}</ul>
-      </div>
-    `;
-  }
-
-  // ── Users ─────────────────────────────────────────────────────────────
-  async function loadUsers() {
-    const usersLoading = document.getElementById('usersLoading');
-    const usersTableWrap = document.getElementById('usersTableWrap');
-    const usersEmpty = document.getElementById('usersEmpty');
-    usersLoading.style.display = 'block';
-    usersTableWrap.style.display = 'none';
-    usersEmpty.style.display = 'none';
-
-    const { ok, status, data } = await apiCallTo(USERS_API, 'list')
-      .catch(() => ({ ok: false, status: 0, data: {} }));
-
-    usersLoading.style.display = 'none';
-
-    if (!ok) {
-      if (status === 401) { handleUnauth(); return; }
-      showToast('Erreur lors du chargement des utilisateurs.', 'error');
-      return;
-    }
-
-    usersData = data.users || [];
-    renderUsers();
-  }
-
-  function renderUsers() {
-    const usersBody = document.getElementById('usersBody');
-    const usersTableWrap = document.getElementById('usersTableWrap');
-    const usersEmpty = document.getElementById('usersEmpty');
-    usersBody.innerHTML = '';
-    if (!usersData.length) {
-      usersEmpty.style.display = 'block';
-      return;
-    }
-    usersTableWrap.style.display = 'block';
-    usersData.forEach(user => usersBody.appendChild(buildUserRow(user)));
-  }
-
-  function buildUserRow(user) {
-    const tr = document.createElement('tr');
-    const bal = ((user.balance_cents || 0) / 100).toFixed(2) + ' €';
-    const verified = user.email_verified ? '✅' : '❌';
-    const roleClass = ['client', 'staff', 'admin'].includes(user.role) ? user.role : 'client';
-
-    tr.innerHTML = `
-      <td>${esc(user.email)}</td>
-      <td><span class="role-badge ${roleClass}">${esc(user.role)}</span></td>
-      <td>${esc(user.account_type)}</td>
-      <td>${bal}</td>
-      <td style="text-align:center">${verified}</td>
-      <td>${fmtDate(user.created_at)}</td>
-      <td></td>
-    `;
-
-    const actions = document.createElement('div');
-    actions.className = 'user-actions';
-
-    const editBtn = document.createElement('button');
-    editBtn.type = 'button';
-    editBtn.className = 'btn btn-sm';
-    editBtn.textContent = '✏️ Modifier';
-    editBtn.addEventListener('click', () => openUserModal(user));
-    actions.appendChild(editBtn);
-
-    const pwdBtn = document.createElement('button');
-    pwdBtn.type = 'button';
-    pwdBtn.className = 'btn btn-sm';
-    pwdBtn.textContent = '🔑 MdP';
-    pwdBtn.addEventListener('click', () => openResetPwdModal(user));
-    actions.appendChild(pwdBtn);
-
-    const delBtn = document.createElement('button');
-    delBtn.type = 'button';
-    delBtn.className = 'btn btn-sm danger';
-    delBtn.textContent = '🗑';
-    delBtn.title = 'Supprimer';
-    delBtn.addEventListener('click', () => askUserDelete(user));
-    actions.appendChild(delBtn);
-
-    tr.cells[6].appendChild(actions);
-    return tr;
-  }
-
-  function openUserModal(user = null) {
-    const modal = document.getElementById('userModal');
-    const title = document.getElementById('userModalTitle');
-    const hint = document.getElementById('userPasswordHint');
-    document.getElementById('userEditId').value = user ? user.id : '';
-    document.getElementById('userEmail').value = user ? user.email : '';
-    document.getElementById('userRole').value = user ? user.role : 'client';
-    document.getElementById('userAccountType').value = user ? user.account_type : 'Particulier';
-    document.getElementById('userPassword').value = '';
-    document.getElementById('userBalance').value = user ? (user.balance_cents / 100).toFixed(2) : '0.00';
-    document.getElementById('userVerified').checked = user ? Boolean(user.email_verified) : false;
-    title.textContent = user ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur';
-    hint.textContent = user ? '(laisser vide pour ne pas changer)' : '(requis)';
-    modal.classList.add('open');
-    setTimeout(() => document.getElementById('userEmail').focus(), 50);
-  }
-
-  function closeUserModal() {
-    document.getElementById('userModal').classList.remove('open');
-  }
-
-  document.getElementById('closeUserModalBtn').addEventListener('click', closeUserModal);
-  document.getElementById('cancelUserModalBtn').addEventListener('click', closeUserModal);
-  document.getElementById('userModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('userModal')) closeUserModal();
-  });
-
-  document.getElementById('userForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const userId = document.getElementById('userEditId').value;
-    const email = document.getElementById('userEmail').value.trim();
-    const role = document.getElementById('userRole').value;
-    const account_type = document.getElementById('userAccountType').value;
-    const password = document.getElementById('userPassword').value;
-    const balVal = parseFloat(document.getElementById('userBalance').value);
-    const balance_cents = isNaN(balVal) ? 0 : Math.round(balVal * 100);
-    const verified = document.getElementById('userVerified').checked;
-
-    const saveBtn = document.getElementById('saveUserBtn');
-    saveBtn.disabled = true;
-    saveBtn.innerHTML = '<span class="spinner"></span> Enregistrement…';
-
-    let result;
-    if (userId) {
-      result = await apiCallTo(USERS_API, 'update', { user_id: userId, email, role, account_type, verified, balance_cents })
-        .catch(() => ({ ok: false, data: {} }));
-      // If a new password was provided, reset it separately
-      if (result.ok && password) {
-        const pwdResult = await apiCallTo(USERS_API, 'reset-password', { user_id: userId, new_password: password })
-          .catch(() => ({ ok: false, data: {} }));
-        if (!pwdResult.ok) {
-          saveBtn.disabled = false;
-          saveBtn.textContent = 'Enregistrer';
-          showToast((pwdResult.data && pwdResult.data.error) || 'Erreur lors du changement de mot de passe.', 'error');
-          return;
-        }
-      }
-    } else {
-      if (!password) {
-        showToast('Le mot de passe est requis.', 'error');
-        saveBtn.disabled = false;
-        saveBtn.textContent = 'Enregistrer';
-        return;
-      }
-      result = await apiCallTo(USERS_API, 'create', { email, password, role, account_type, verified })
-        .catch(() => ({ ok: false, data: {} }));
-    }
-
-    saveBtn.disabled = false;
-    saveBtn.textContent = 'Enregistrer';
-
-    if (!result.ok) {
-      if (result.status === 401) { handleUnauth(); return; }
-      showToast((result.data && result.data.error) || 'Erreur lors de la sauvegarde.', 'error');
-      return;
-    }
-
-    closeUserModal();
-    showToast(userId ? 'Utilisateur mis à jour.' : 'Utilisateur créé.', 'success');
-    loadUsers();
-  });
-
-  // Add user button
-  document.getElementById('addUserBtn').addEventListener('click', () => openUserModal(null));
-
-  // Reset password modal
-  function openResetPwdModal(user) {
-    document.getElementById('resetPwdUserId').value = user.id;
-    document.getElementById('newPassword').value = '';
-    document.getElementById('resetPwdModal').classList.add('open');
-    setTimeout(() => document.getElementById('newPassword').focus(), 50);
-  }
-
-  function closeResetPwdModal() {
-    document.getElementById('resetPwdModal').classList.remove('open');
-  }
-
-  document.getElementById('closeResetPwdBtn').addEventListener('click', closeResetPwdModal);
-  document.getElementById('cancelResetPwdBtn').addEventListener('click', closeResetPwdModal);
-  document.getElementById('resetPwdModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('resetPwdModal')) closeResetPwdModal();
-  });
-
-  document.getElementById('resetPwdForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const userId = document.getElementById('resetPwdUserId').value;
-    const new_password = document.getElementById('newPassword').value;
-    const submitBtn = e.target.querySelector('[type="submit"]');
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner"></span>';
-
-    const { ok, status, data } = await apiCallTo(USERS_API, 'reset-password', { user_id: userId, new_password })
-      .catch(() => ({ ok: false, status: 0, data: {} }));
-
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Réinitialiser';
-
-    if (!ok) {
-      if (status === 401) { handleUnauth(); return; }
-      showToast((data && data.error) || 'Erreur lors de la réinitialisation.', 'error');
-      return;
-    }
-
-    closeResetPwdModal();
-    showToast('Mot de passe réinitialisé.', 'success');
-  });
-
-  // User delete confirmation
-  function askUserDelete(user) {
-    pendingDeleteUserId = user.id;
-    document.getElementById('userConfirmMsg').textContent =
-      `Supprimer "${user.email}" ? Cette action est irréversible et supprimera toutes ses données.`;
-    document.getElementById('userConfirmModal').classList.add('open');
-  }
-
-  document.getElementById('cancelUserDeleteBtn').addEventListener('click', () => {
-    document.getElementById('userConfirmModal').classList.remove('open');
-    pendingDeleteUserId = null;
-  });
-
-  document.getElementById('confirmUserDeleteBtn').addEventListener('click', async () => {
-    document.getElementById('userConfirmModal').classList.remove('open');
-    if (!pendingDeleteUserId) return;
-    const userId = pendingDeleteUserId;
-    pendingDeleteUserId = null;
-
-    const { ok, status, data } = await apiCallTo(USERS_API, 'delete', { user_id: userId })
-      .catch(() => ({ ok: false, status: 0, data: {} }));
-
-    if (!ok) {
-      if (status === 401) { handleUnauth(); return; }
-      showToast((data && data.error) || 'Erreur lors de la suppression.', 'error');
-      return;
-    }
-
-    showToast('Utilisateur supprimé.', 'success');
-    loadUsers();
-  });
-
-  // ── Messages ──────────────────────────────────────────────────────────
-  async function loadThreads() {
-    const loading = document.getElementById('msgThreadsLoading');
-    const empty = document.getElementById('msgThreadsEmpty');
-    const items = document.getElementById('msgThreadItems');
-    loading.style.display = 'block';
-    empty.style.display = 'none';
-    items.innerHTML = '';
-    activeThreadId = null;
-    resetMsgDetail();
-
-    const { ok, status, data } = await apiCallTo(MESSAGES_API, 'list')
-      .catch(() => ({ ok: false, status: 0, data: {} }));
-
-    loading.style.display = 'none';
-
-    if (!ok) {
-      if (status === 401) { handleUnauth(); return; }
-      showToast('Erreur lors du chargement des messages.', 'error');
-      return;
-    }
-
-    const threads = data.threads || [];
-    if (!threads.length) {
-      empty.style.display = 'block';
-      return;
-    }
-
-    // Update badge
-    const unread = threads.filter(t => t.last_author_role === 'client').length;
-    const badge = document.getElementById('msgBadge');
-    if (unread > 0) { badge.textContent = unread; badge.style.display = ''; }
-    else { badge.style.display = 'none'; }
-
-    threads.forEach(thread => {
-      const div = document.createElement('div');
-      div.className = 'thread-item';
-      div.dataset.threadId = thread.thread_id;
-      const isNew = thread.last_author_role === 'client';
-      const preview = (thread.last_content || '').substring(0, 60);
-      div.innerHTML = `
-        <div class="thread-email">${esc(thread.client_email || thread.thread_id)}</div>
-        <div class="thread-preview">${esc(preview)}</div>
-        <div class="thread-foot">
-          <span class="thread-date">${fmtDateTime(thread.last_at)}</span>
-          ${isNew ? '<span class="thread-new">Nouveau</span>' : ''}
-        </div>
-      `;
-      div.addEventListener('click', () => openThread(thread));
-      items.appendChild(div);
-    });
-  }
-
-  function resetMsgDetail() {
-    document.getElementById('msgDetailEmpty').style.display = 'flex';
-    document.getElementById('msgDetailContent').style.display = 'none';
-    document.querySelectorAll('.thread-item').forEach(el => el.classList.remove('active'));
-  }
-
-  async function openThread(thread) {
-    activeThreadId = thread.thread_id;
-    document.querySelectorAll('.thread-item').forEach(el => {
-      el.classList.toggle('active', el.dataset.threadId === thread.thread_id);
-    });
-
-    const detailEmpty = document.getElementById('msgDetailEmpty');
-    const detailContent = document.getElementById('msgDetailContent');
-    const detailEmail = document.getElementById('msgDetailEmail');
-    const msgMessages = document.getElementById('msgMessages');
-
-    detailEmpty.style.display = 'none';
-    detailContent.style.display = 'flex';
-    detailEmail.textContent = thread.client_email || thread.thread_id;
-    msgMessages.innerHTML = '<div class="msg-loading"><span class="spinner"></span></div>';
-
-    const { ok, status, data } = await apiCallTo(MESSAGES_API, 'get-thread', { thread_id: thread.thread_id })
-      .catch(() => ({ ok: false, status: 0, data: {} }));
-
-    if (!ok) {
-      if (status === 401) { handleUnauth(); return; }
-      msgMessages.innerHTML = '<div class="msg-loading" style="color:var(--red)">Erreur de chargement.</div>';
-      return;
-    }
-
-    renderMessages(data.messages || []);
-  }
-
-  function renderMessages(messages) {
-    const container = document.getElementById('msgMessages');
-    if (!messages.length) {
-      container.innerHTML = '<div class="msg-loading">Aucun message.</div>';
-      return;
-    }
-    container.innerHTML = '';
-    messages.forEach(msg => {
-      const wrap = document.createElement('div');
-      const role = msg.author_role || 'client';
-      wrap.className = 'msg-bubble ' + role;
-      wrap.innerHTML = `${esc(msg.content)}<div class="msg-bubble-time">${fmtDateTime(msg.created_at)}</div>`;
-      container.appendChild(wrap);
-    });
-    container.scrollTop = container.scrollHeight;
-  }
-
-  document.getElementById('msgSendBtn').addEventListener('click', async () => {
-    if (!activeThreadId) return;
-    const input = document.getElementById('msgReplyInput');
-    const content = input.value.trim();
-    if (!content) return;
-    const btn = document.getElementById('msgSendBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>';
-
-    const { ok, status, data } = await apiCallTo(MESSAGES_API, 'send', { thread_id: activeThreadId, content })
-      .catch(() => ({ ok: false, status: 0, data: {} }));
-
-    btn.disabled = false;
-    btn.textContent = 'Envoyer';
-
-    if (!ok) {
-      if (status === 401) { handleUnauth(); return; }
-      showToast((data && data.error) || 'Erreur lors de l\'envoi.', 'error');
-      return;
-    }
-
-    input.value = '';
-    // Reload the thread messages
-    const threadItem = document.querySelector(`.thread-item[data-thread-id="${activeThreadId}"]`);
-    const threadData = threadItem ? { thread_id: activeThreadId, client_email: document.getElementById('msgDetailEmail').textContent } : null;
-    if (threadData) {
-      const { ok: ok2, data: data2 } = await apiCallTo(MESSAGES_API, 'get-thread', { thread_id: activeThreadId })
-        .catch(() => ({ ok: false, data: {} }));
-      if (ok2) renderMessages(data2.messages || []);
-    }
-    showToast('Réponse envoyée.', 'success');
-    // Remove "new" badge from this thread
-    if (threadItem) {
-      const newBadge = threadItem.querySelector('.thread-new');
-      if (newBadge) newBadge.remove();
-    }
-  });
-
-  // Allow Ctrl+Enter to send in reply textarea
-  document.getElementById('msgReplyInput').addEventListener('keydown', (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-      document.getElementById('msgSendBtn').click();
-    }
-  });
-
-  // ── Reservations ──────────────────────────────────────────────────────
-
-  const RESERVATIONS_API = '/.netlify/functions/admin-reservations';
-
-  async function loadReservations() {
-    const loading = document.getElementById('reservationsLoading');
-    const empty = document.getElementById('reservationsEmpty');
-    const table = document.getElementById('reservationsTable');
-    const body = document.getElementById('reservationsBody');
-    loading.style.display = 'block';
-    empty.style.display = 'none';
-    table.style.display = 'none';
-
-    const { ok, status, data } = await apiCallTo(RESERVATIONS_API, 'list-all')
-      .catch(() => ({ ok: false, status: 0, data: {} }));
-
-    loading.style.display = 'none';
-
-    if (!ok) {
-      if (status === 401) { handleUnauth(); return; }
-      showToast('Erreur lors du chargement des réservations.', 'error');
-      return;
-    }
-
-    const reservations = data.reservations || [];
-    if (!reservations.length) {
-      empty.style.display = 'block';
-      return;
-    }
-
-    body.innerHTML = '';
-    reservations.forEach(r => {
-      const v = r.vehicle || {};
-      const title = (v.title && (v.title.fr || v.title.en)) ||
-        [(v.make && (v.make.fr || v.make.en)), (v.model && (v.model.fr || v.model.en))].filter(Boolean).join(' ') ||
-        r.vehicle_slug;
-
-      const statusLabels = { pending: 'En attente', balance_requested: 'Solde demandé', paid: 'Payé', cancelled: 'Annulé', sold: 'Vendu' };
-      const statusColors = { pending: 'var(--gold)', balance_requested: '#ffa500', paid: 'var(--green)', cancelled: 'var(--red)', sold: 'var(--red)' };
-
-      const cancellationNote = r.cancellation_requested
-        ? `<div style="font-size:11px;color:#ffa500;margin-top:2px">⚠ Annulation demandée${r.cancellation_message ? ' : ' + escHtml(r.cancellation_message) : ''}</div>`
-        : '';
-
-      const actions = [];
-      if (r.status === 'pending') {
-        actions.push(`<button class="btn btn-sm" data-res-action="request-balance" data-res-id="${r.id}">Demander le solde</button>`);
-        actions.push(`<button class="btn btn-sm danger" data-res-action="cancel-reservation" data-res-id="${r.id}">Annuler</button>`);
-      } else if (r.status === 'balance_requested') {
-        actions.push(`<span style="font-size:12px;color:var(--muted)">Attente paiement</span>`);
-        actions.push(`<button class="btn btn-sm danger" data-res-action="cancel-reservation" data-res-id="${r.id}">Annuler</button>`);
-      } else if (r.status === 'paid') {
-        actions.push(`<button class="btn btn-sm" data-res-action="mark-as-sold" data-res-id="${r.id}">Marquer vendu</button>`);
-      }
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${escHtml(title)}</td>
-        <td>${escHtml(r.user_email || '—')}${cancellationNote}</td>
-        <td>${fmtEur(r.deposit_cents)}</td>
-        <td>${fmtEur(r.remaining_cents)}</td>
-        <td><span style="color:${statusColors[r.status] || 'inherit'};font-weight:600">${escHtml(statusLabels[r.status] || r.status)}</span></td>
-        <td>${fmtDateTime(r.created_at)}</td>
-        <td style="display:flex;gap:6px;flex-wrap:wrap">${actions.join('')}</td>
-      `;
-      body.appendChild(tr);
-    });
-
-    table.style.display = '';
-  }
-
-  document.getElementById('refreshReservationsBtn').addEventListener('click', loadReservations);
-
-  // Delegated handler for reservation action buttons
-  document.getElementById('reservationsBody').addEventListener('click', async (e) => {
-    const btn = e.target.closest('[data-res-action]');
-    if (!btn) return;
-    const action = btn.getAttribute('data-res-action');
-    const resId = btn.getAttribute('data-res-id');
-    btn.disabled = true;
-
-    const { ok, status, data } = await apiCallTo(RESERVATIONS_API, action, { reservation_id: resId })
-      .catch(() => ({ ok: false, status: 0, data: {} }));
-
-    btn.disabled = false;
-    if (!ok) {
-      if (status === 401) { handleUnauth(); return; }
-      showToast((data && data.error) || 'Erreur.', 'error');
-      return;
-    }
-
-    showToast('Opération réussie.', 'success');
-    loadReservations();
-  });
-
-  // ── Stock status change ───────────────────────────────────────────────
-
-  async function updateVehicleStatus(vehicleSlug, newStatus) {
-    console.log(`updateVehicleStatus: ${vehicleSlug} -> ${newStatus}`);
-
-    const { ok, status, data } = await apiCallTo(RESERVATIONS_API, 'update-vehicle-status', {
-      vehicle_slug: vehicleSlug,
-      status: newStatus,
-    }).catch(err => {
-      console.error('API call failed:', err);
-      return { ok: false, status: 0, data: {} };
-    });
-
-    console.log('updateVehicleStatus response:', { ok, status, data });
-
-    if (!ok) {
-      if (status === 401) { handleUnauth(); return; }
-      const errorMsg = (data && data.error) || 'Erreur lors de la mise à jour du statut.';
-      console.error('updateVehicleStatus error:', errorMsg);
-      showToast(errorMsg, 'error');
-      throw new Error(errorMsg);
-    }
-
-    showToast('Statut mis à jour avec succès.', 'success');
-    console.log('Reloading stock after status update...');
-    await loadStock();
-    console.log('Stock reloaded.');
-  }
-
-  // ── Init ──────────────────────────────────────────────────────────────
-  if (token) {
-    showAdminScreen();
-  } else {
-    showLoginScreen();
-  }
-})();
 </script>
+
 </body>
 </html>
