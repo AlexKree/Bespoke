@@ -2,39 +2,24 @@
   "items": [
     {
       "id": "saab-900-turbo-cabriolet",
-      "make": {
-        "fr": "Saab",
-        "en": "Saab"
-      },
-      "model": {
-        "fr": "900 Turbo Cabriolet",
-        "en": "900 Turbo Cabriolet"
-      },
       "year": 1993,
-      "mileage_km": 112500,
-      "price_eur": 16900,
+      "title": {
+        "fr": "Saab 900 Turbo Cabriolet",
+        "en": "Saab 900 Turbo Cabriolet"
+      },
+      "mileage": "",
+      "country": "",
+      "price": 0,
       "status": "sold",
-      "location": {
-        "fr": "France / Europe",
-        "en": "France / Europe"
-      },
-      "headline": {
-        "fr": "Icône scandinave, rare et désirable.",
-        "en": "Scandinavian icon, rare and desirable."
-      },
       "description": {
         "fr": "Fiche indicative. Informations complètes sur demande.",
         "en": "Indicative listing. Full details on request."
       },
       "images": [
         "assets/stock/images/p8259754.jpg",
-        "assets/stock/images/p8259757.jpg",
-        "assets/stock/images/p8259771.jpg"
-      ],
-      "title": {
-        "fr": "Saab 900 Turbo Cabriolet",
-        "en": "Saab 900 Turbo Cabriolet"
-      }
+        "assets/stock/images/p8259771.jpg",
+        "assets/stock/images/p8259757.jpg"
+      ]
     },
     {
       "id": "mercedes-c36-amg-w202",
