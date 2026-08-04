@@ -159,26 +159,15 @@
     },
     {
       "id": "renault-megane-iii-convertible",
-      "make": {
-        "fr": "RENAULT",
-        "en": "RENAULT"
-      },
-      "model": {
-        "fr": "MEGANE III Cabriolet",
-        "en": "MEGANE III Convertible"
-      },
       "year": 2010,
-      "mileage_km": 146000,
-      "price_eur": 6300,
+      "title": {
+        "fr": "RENAULT MEGANE III Cabriolet",
+        "en": "RENAULT MEGANE III Convertible"
+      },
+      "mileage": "",
+      "country": "",
+      "price": 5850,
       "status": "available",
-      "location": {
-        "fr": "France / Europe",
-        "en": "France / Europe"
-      },
-      "headline": {
-        "fr": "MEGANE III CABRIOLET",
-        "en": "MEGANE III CONVERTIBLE"
-      },
       "description": {
         "fr": "Très belle Megane II Cabriolet - Entièrement révisée - Courroie, pompe à eau -vidange et filtres.",
         "en": "Very nice Megane III convertible - Fully serviced - Belt, water pump - oil change and filters."
@@ -196,11 +185,7 @@
         "/assets/stock/images/renault-megane-iii-convertible-1776619545273-fad7d4.jpg",
         "/assets/stock/images/renault-megane-iii-convertible-1784843770060-2221f8.jpg",
         "/assets/stock/images/renault-megane-iii-convertible-1784843771119-5db46a.jpg"
-      ],
-      "title": {
-        "fr": "RENAULT MEGANE III Cabriolet",
-        "en": "RENAULT MEGANE III Convertible"
-      }
+      ]
     },
     {
       "id": "Etype",
