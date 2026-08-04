@@ -394,6 +394,32 @@
         "/assets/stock/images/sel-1778160337488-91cffc.jpg",
         "/assets/stock/images/sel-1778160336400-e2cdeb.jpg"
       ]
+    },
+    {
+      "id": "mustang gt 2005",
+      "year": 2005,
+      "title": {
+        "fr": "Ford Mustang GT V8 4.6L",
+        "en": "Ford Mustang GT V8 4.6L"
+      },
+      "mileage": "133 000 km",
+      "country": "Canada",
+      "price": 19900,
+      "status": "available",
+      "description": {
+        "fr": "Véritable icône américaine, cette Mustang GT S197 est équipée du mythique V8 4.6L atmosphérique développant environ 300 ch.\n\nExemplaire volant à gauche (LHD), avec 133 000 km, boîte automatique, intérieur cuir et une configuration élégante blanc/gris.\n\nVéhicule actuellement immatriculé au Royaume-Uni. Nous pouvons accompagner gratuitement l’acheteur dans les démarches pour son immatriculation française, ou nous charger de la procédure complète à sa place contre un forfait fixe.\n\nUne belle opportunité d’acquérir une authentique Mustang V8 américaine.",
+        "en": "2005 Ford Mustang GT V8 4.6L – LHD – 300 hp – 133,000 km\n\nA true American icon, this S197 Mustang GT is powered by the legendary 4.6L naturally aspirated V8 producing around 300 hp.\n\nThis left-hand drive (LHD) example has 133,000 km, an automatic transmission, leather interior, and an elegant white/grey specification.\n\nThe vehicle is currently UK registered. We can provide free assistance to the buyer with the French registration process, or handle the complete procedure on their behalf for a fixed service fee.\n\nA great opportunity to own a genuine American V8 Mustang with strong character and collector appeal."
+      },
+      "images": [
+        "/assets/stock/images/mustang-gt-2005-1785805196528-ea9f3e.jpg",
+        "/assets/stock/images/mustang-gt-2005-1785805188531-d94e6b.png",
+        "/assets/stock/images/mustang-gt-2005-1785805204493-d8b86b.jpg",
+        "/assets/stock/images/mustang-gt-2005-1785805221135-77769e.jpg",
+        "/assets/stock/images/mustang-gt-2005-1785805173196-faa72e.png",
+        "/assets/stock/images/mustang-gt-2005-1785805249455-e5ef2c.jpg",
+        "/assets/stock/images/mustang-gt-2005-1785805265577-7ae33b.jpg",
+        "/assets/stock/images/mustang-gt-2005-1785805309933-76ac4f.jpg"
+      ]
     }
   ]
 }
