@@ -219,44 +219,29 @@
     },
     {
       "id": "Etype",
-      "make": {
+      "year": null,
+      "title": {
         "fr": "Jaguar",
         "en": "Jaguar"
       },
-      "model": {
-        "fr": "Type E 1.4.2",
-        "en": "E Type 1.4.2"
-      },
-      "year": null,
-      "mileage_km": null,
-      "price_eur": 100000,
+      "mileage": "",
+      "country": "",
+      "price": 0,
       "status": "sold",
-      "location": {
-        "fr": "Paris/France",
-        "en": "Paris/France"
-      },
-      "headline": {
-        "fr": "Superbe Type E entièrement restaurée",
-        "en": "Beautiful E Type fully restored"
-      },
       "description": {
         "fr": "Entièrement restaurée - Parfaite - A voir absolument.",
         "en": "Fully restored - Perfect"
       },
       "images": [
-        "/assets/stock/images/etype-1777474358451-446076.jpg",
         "/assets/stock/images/etype-1777474700389-62ec29.jpg",
+        "/assets/stock/images/etype-1777474358451-446076.jpg",
         "/assets/stock/images/etype-1777474744537-535ae7.jpg",
         "/assets/stock/images/etype-1777474778213-9c95a6.jpg",
         "/assets/stock/images/etype-1777474801631-a48821.jpg",
         "/assets/stock/images/etype-1777475983386-1001e3.jpg",
         "/assets/stock/images/etype-1777476032067-f1e7c6.jpg",
         "/assets/stock/images/etype-1777476060252-d62e01.jpg"
-      ],
-      "title": {
-        "fr": "Jaguar",
-        "en": "Jaguar"
-      }
+      ]
     },
     {
       "id": "VMAX",
