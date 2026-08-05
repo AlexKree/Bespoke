@@ -164,7 +164,6 @@
     },
     {
       "id": "renault-megane-iii-convertible",
-      "sale_category": "both",
       "year": 2010,
       "title": {
         "fr": "RENAULT MEGANE III Cabriolet",
@@ -174,6 +173,7 @@
       "country": "",
       "price": 5850,
       "status": "available",
+      "sale_category": "both",
       "description": {
         "fr": "Très belle Megane II Cabriolet - Entièrement révisée - Courroie, pompe à eau -vidange et filtres.",
         "en": "Very nice Megane III convertible - Fully serviced - Belt, water pump - oil change and filters."
