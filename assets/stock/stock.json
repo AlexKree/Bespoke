@@ -169,9 +169,9 @@
         "fr": "RENAULT MEGANE III Cabriolet",
         "en": "RENAULT MEGANE III Convertible"
       },
-      "mileage": "",
+      "mileage": "145 000",
       "country": "",
-      "price": 5850,
+      "price_eur": 5850,
       "status": "available",
       "sale_category": "both",
       "description": {
