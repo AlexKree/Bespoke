@@ -579,6 +579,45 @@ footer{
 .kicker.available{color:var(--green)}
 .kicker.reserved{color:#ffa500}
 
+/* ── Sale category badges ────────────────────────────────────────── */
+.stockCatBadge{
+  display:inline-flex; align-items:center;
+  font-size:10px; font-weight:600; letter-spacing:.10em; text-transform:uppercase;
+  padding:3px 8px; border-radius:999px; margin-top:6px;
+}
+.stockCatBadge--particulier{
+  background:rgba(92,148,255,.12); border:1px solid rgba(92,148,255,.30);
+  color:#7ab3ff;
+}
+.stockCatBadge--professionnel{
+  background:rgba(198,176,122,.12); border:1px solid rgba(198,176,122,.30);
+  color:var(--gold);
+}
+
+/* ── Category filter buttons ─────────────────────────────────────── */
+.stockCatFilter{
+  display:flex; gap:6px; flex-wrap:wrap; align-items:center;
+  padding:10px 0;
+}
+.stockCatFilter .catBtn{
+  display:inline-flex; align-items:center;
+  font-size:12px; font-weight:500; letter-spacing:.08em;
+  padding:6px 14px; border-radius:999px;
+  border:1px solid var(--line); background:var(--panel2);
+  color:var(--muted); cursor:pointer; transition:background var(--transition), border-color var(--transition), color var(--transition);
+  font-family:inherit;
+}
+.stockCatFilter .catBtn:hover{background:var(--panel);color:var(--text)}
+.stockCatFilter .catBtn.active{
+  border-color:rgba(198,176,122,.4); background:rgba(198,176,122,.12); color:var(--gold);
+}
+.stockCatFilter .catBtn.active.catBtn--particulier{
+  border-color:rgba(92,148,255,.4); background:rgba(92,148,255,.12); color:#7ab3ff;
+}
+.stockCatFilter .catBtn.active.catBtn--professionnel{
+  border-color:rgba(198,176,122,.4); background:rgba(198,176,122,.12); color:var(--gold);
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    MODAL
 ═══════════════════════════════════════════════════════════════════ */

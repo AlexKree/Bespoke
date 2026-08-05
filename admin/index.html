@@ -654,6 +654,15 @@
           </div>
 
           <div class="field">
+            <label>Catégorie de vente</label>
+            <select id="fieldSaleCategory">
+              <option value="both">Particulier &amp; Professionnel</option>
+              <option value="particulier">Particulier uniquement</option>
+              <option value="professionnel">Professionnel uniquement</option>
+            </select>
+          </div>
+
+          <div class="field">
             <label>Description courte (FR)</label>
             <textarea id="fieldDescFr" placeholder="Description courte..."></textarea>
           </div>
@@ -1010,7 +1019,9 @@
 
       const meta = document.createElement('div');
       meta.className = 'carMeta';
-      meta.textContent = `${car.year || '–'} • ${car.country || 'unknown'} • ID: ${car.id}`;
+      const catLabels = { both: 'Particulier & Pro', particulier: 'Particulier', professionnel: 'Professionnel' };
+      const catText = catLabels[car.sale_category] || 'Particulier & Pro';
+      meta.textContent = `${car.year || '–'} • ${car.country || 'unknown'} • ID: ${car.id} • ${catText}`;
       info.appendChild(meta);
 
       const status = document.createElement('div');
@@ -1057,6 +1068,7 @@
     document.getElementById('fieldCountry').value = '';
     document.getElementById('fieldPrice').value = '';
     document.getElementById('fieldStatus').value = 'available';
+    document.getElementById('fieldSaleCategory').value = 'both';
     document.getElementById('fieldDescFr').value = '';
     document.getElementById('fieldDescEn').value = '';
     renderImageGrid();
@@ -1075,6 +1087,7 @@
     document.getElementById('fieldCountry').value = car.country || '';
     document.getElementById('fieldPrice').value = car.price || '';
     document.getElementById('fieldStatus').value = car.status || 'available';
+    document.getElementById('fieldSaleCategory').value = car.sale_category || 'both';
     document.getElementById('fieldDescFr').value = car.description?.fr || '';
     document.getElementById('fieldDescEn').value = car.description?.en || '';
     currentImages = [...(car.images || [])];
@@ -1110,6 +1123,7 @@
       country: document.getElementById('fieldCountry').value,
       price: parseInt(document.getElementById('fieldPrice').value) || 0,
       status: document.getElementById('fieldStatus').value,
+      sale_category: document.getElementById('fieldSaleCategory').value,
       description: {
         fr: document.getElementById('fieldDescFr').value,
         en: document.getElementById('fieldDescEn').value,
