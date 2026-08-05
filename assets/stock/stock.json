@@ -363,7 +363,6 @@
     },
     {
       "id": "mustang gt 2005",
-      "sale_category": "both",
       "year": 2005,
       "title": {
         "fr": "Ford Mustang GT V8 4.6L",
@@ -371,8 +370,9 @@
       },
       "mileage": "133 000 km",
       "country": "Canada",
-      "price": 19900,
+      "price_eur": 16900,
       "status": "available",
+      "sale_category": "both",
       "description": {
         "fr": "Véritable icône américaine, cette Mustang GT S197 est équipée du mythique V8 4.6L atmosphérique développant environ 300 ch.\n\nExemplaire volant à gauche (LHD), avec 133 000 km, boîte automatique, intérieur cuir et une configuration élégante blanc/gris.\n\nVéhicule actuellement immatriculé au Royaume-Uni. Nous pouvons accompagner gratuitement l’acheteur dans les démarches pour son immatriculation française, ou nous charger de la procédure complète à sa place contre un forfait fixe.\n\nUne belle opportunité d’acquérir une authentique Mustang V8 américaine.",
         "en": "2005 Ford Mustang GT V8 4.6L – LHD – 300 hp – 133,000 km\n\nA true American icon, this S197 Mustang GT is powered by the legendary 4.6L naturally aspirated V8 producing around 300 hp.\n\nThis left-hand drive (LHD) example has 133,000 km, an automatic transmission, leather interior, and an elegant white/grey specification.\n\nThe vehicle is currently UK registered. We can provide free assistance to the buyer with the French registration process, or handle the complete procedure on their behalf for a fixed service fee.\n\nA great opportunity to own a genuine American V8 Mustang with strong character and collector appeal."
