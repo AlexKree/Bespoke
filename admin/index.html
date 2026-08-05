@@ -1085,7 +1085,7 @@
     document.getElementById('fieldTitleEn').value = car.title?.en || '';
     document.getElementById('fieldMileage').value = car.mileage || '';
     document.getElementById('fieldCountry').value = car.country || '';
-    document.getElementById('fieldPrice').value = car.price || '';
+    document.getElementById('fieldPrice').value = car.price_eur || car.price || '';
     document.getElementById('fieldStatus').value = car.status || 'available';
     document.getElementById('fieldSaleCategory').value = car.sale_category || 'both';
     document.getElementById('fieldDescFr').value = car.description?.fr || '';
@@ -1121,7 +1121,7 @@
       },
       mileage: document.getElementById('fieldMileage').value,
       country: document.getElementById('fieldCountry').value,
-      price: parseInt(document.getElementById('fieldPrice').value) || 0,
+      price_eur: parseInt(document.getElementById('fieldPrice').value) || null,
       status: document.getElementById('fieldStatus').value,
       sale_category: document.getElementById('fieldSaleCategory').value,
       description: {
