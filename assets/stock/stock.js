@@ -90,15 +90,16 @@
 
   function formatPrice(item) {
     if (item.status === 'sold') return T.sold;
-    if (item.price_eur && typeof item.price_eur === 'number') {
+    const priceValue = item.price_eur || item.price;
+    if (priceValue && typeof priceValue === 'number') {
       try {
         return new Intl.NumberFormat(lang === 'fr' ? 'fr-FR' : 'en-GB', {
           style: 'currency',
           currency: 'EUR',
           maximumFractionDigits: 0
-        }).format(item.price_eur);
+        }).format(priceValue);
       } catch (_) {
-        return item.price_eur + ' €';
+        return priceValue + ' €';
       }
     }
     return T.priceOnRequest;
@@ -374,7 +375,7 @@
     // ── Reserve button (shown only when user is logged in and vehicle is available) ──
     const existingReserveBtn = modal.querySelector('.modalReserveBtn');
     if (existingReserveBtn) existingReserveBtn.remove();
-    if (item.status === 'available' && item.price_eur && window.__bespokeOpenReserve) {
+    if (item.status === 'available' && (item.price_eur || item.price) && window.__bespokeOpenReserve) {
       const reserveBtn = document.createElement('button');
       reserveBtn.type = 'button';
       reserveBtn.className = 'btn btnPrimary modalReserveBtn';
@@ -382,7 +383,7 @@
       reserveBtn.style.marginTop = '10px';
       reserveBtn.addEventListener('click', () => {
         const title = itemTitle(item);
-        window.__bespokeOpenReserve(item.id, item.price_eur, title);
+        window.__bespokeOpenReserve(item.id, item.price_eur || item.price, title);
       });
       // Insert before or after the contact button
       const modalInfo = modal.querySelector('.modalInfo');
