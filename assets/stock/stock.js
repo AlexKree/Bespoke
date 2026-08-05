@@ -17,7 +17,11 @@
       contact: 'Contacter',
       searchEmpty: 'Aucun résultat.',
       error: 'Impossible de charger le stock.',
-      views: 'vues'
+      views: 'vues',
+      catAll: 'Tous',
+      catParticulier: 'Vente au Particulier',
+      catProfessionnel: 'Vente au Professionnel',
+      catLabel: 'Catégorie'
     },
     en: {
       available: 'Available',
@@ -31,7 +35,11 @@
       contact: 'Contact',
       searchEmpty: 'No results.',
       error: 'Unable to load stock.',
-      views: 'views'
+      views: 'views',
+      catAll: 'All',
+      catParticulier: 'Private Sale',
+      catProfessionnel: 'Trade Sale',
+      catLabel: 'Category'
     }
   }[lang];
 
@@ -40,6 +48,21 @@
   const searchEl = document.getElementById('stockSearch');
   const includeSoldEl = document.getElementById('includeSold');
   const sortEl = document.getElementById('stockSort');
+  const catFilterEl = document.getElementById('stockCatFilter');
+
+  // Active category filter: 'all' | 'particulier' | 'professionnel'
+  let activeCat = 'all';
+
+  if (catFilterEl) {
+    catFilterEl.querySelectorAll('[data-cat]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        activeCat = btn.getAttribute('data-cat');
+        catFilterEl.querySelectorAll('[data-cat]').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilters();
+      });
+    });
+  }
 
   if (includeSoldEl) {
     const label = includeSoldEl.closest('label');
@@ -132,15 +155,30 @@
     return [...sortGroup(available), ...sortGroup(sold)];
   }
 
+  function matchesCategory(item) {
+    if (activeCat === 'all') return true;
+    const cat = item.sale_category || 'both';
+    if (cat === 'both') return true;
+    return cat === activeCat;
+  }
+
   function applyFilters() {
     const q = (searchEl ? searchEl.value : '').trim().toLowerCase();
     const hideSold = !!(includeSoldEl && includeSoldEl.checked);
     filtered = items.filter((it) => {
       if (hideSold && it.status === 'sold') return false;
+      if (!matchesCategory(it)) return false;
       return matchesQuery(it, q);
     });
     filtered = sortItems(filtered);
     render();
+  }
+
+  function catLabel(cat) {
+    if (cat === 'particulier') return T.catParticulier;
+    if (cat === 'professionnel') return T.catProfessionnel;
+    // 'both' or unset
+    return null;
   }
 
   function renderCard(item) {
@@ -196,6 +234,28 @@
     price.textContent = formatPrice(item);
     if (isSold) price.style.color = '#e05c5c';
     body.appendChild(price);
+
+    const cat = item.sale_category || 'both';
+    if (cat !== 'both') {
+      const catBadge = document.createElement('div');
+      catBadge.className = 'stockCatBadge stockCatBadge--' + cat;
+      catBadge.textContent = cat === 'particulier' ? T.catParticulier : T.catProfessionnel;
+      body.appendChild(catBadge);
+    } else {
+      const catBadgeWrap = document.createElement('div');
+      catBadgeWrap.style.display = 'flex';
+      catBadgeWrap.style.gap = '4px';
+      catBadgeWrap.style.flexWrap = 'wrap';
+      const b1 = document.createElement('div');
+      b1.className = 'stockCatBadge stockCatBadge--particulier';
+      b1.textContent = T.catParticulier;
+      const b2 = document.createElement('div');
+      b2.className = 'stockCatBadge stockCatBadge--professionnel';
+      b2.textContent = T.catProfessionnel;
+      catBadgeWrap.appendChild(b1);
+      catBadgeWrap.appendChild(b2);
+      body.appendChild(catBadgeWrap);
+    }
 
     const actions = document.createElement('div');
     actions.className = 'stockCardActions';
@@ -274,6 +334,39 @@
 
     modalPrice.textContent = formatPrice(item);
     modalPrice.style.color = item.status === 'sold' ? '#e05c5c' : '';
+
+    // Sale category
+    const existingCatBadge = modal.querySelector('.modalCatBadge');
+    if (existingCatBadge) existingCatBadge.remove();
+    const cat = item.sale_category || 'both';
+    const modalInfo = modal.querySelector('.modalInfo');
+    if (modalInfo) {
+      const catWrap = document.createElement('div');
+      catWrap.className = 'modalCatBadge';
+      catWrap.style.display = 'flex';
+      catWrap.style.gap = '6px';
+      catWrap.style.flexWrap = 'wrap';
+      catWrap.style.margin = '8px 0';
+      if (cat === 'particulier' || cat === 'both') {
+        const b = document.createElement('div');
+        b.className = 'stockCatBadge stockCatBadge--particulier';
+        b.textContent = T.catParticulier;
+        catWrap.appendChild(b);
+      }
+      if (cat === 'professionnel' || cat === 'both') {
+        const b = document.createElement('div');
+        b.className = 'stockCatBadge stockCatBadge--professionnel';
+        b.textContent = T.catProfessionnel;
+        catWrap.appendChild(b);
+      }
+      // Insert after modalPrice
+      const priceEl = modal.querySelector('.price');
+      if (priceEl && priceEl.parentNode) {
+        priceEl.parentNode.insertBefore(catWrap, priceEl.nextSibling);
+      } else {
+        modalInfo.insertBefore(catWrap, modalInfo.firstChild);
+      }
+    }
 
     modalDescription.textContent = (item.description && (item.description[lang] || item.description.en || item.description.fr)) || '';
     modalContact.href = 'contact.html?vehicle=' + encodeURIComponent(item.id);
@@ -414,6 +507,7 @@
     if (searchEl) searchEl.addEventListener('input', applyFilters);
     if (includeSoldEl) includeSoldEl.addEventListener('change', applyFilters);
     if (sortEl) sortEl.addEventListener('change', applyFilters);
+    // catFilterEl buttons are wired above at declaration time
   }
 
   wireFilters();

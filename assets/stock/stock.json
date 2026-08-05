@@ -2,6 +2,7 @@
   "items": [
     {
       "id": "saab-900-turbo-cabriolet",
+      "sale_category": "both",
       "year": 1993,
       "title": {
         "fr": "Saab 900 Turbo Cabriolet",
@@ -23,6 +24,7 @@
     },
     {
       "id": "mercedes-c36-amg-w202",
+      "sale_category": "both",
       "make": {
         "fr": "Mercedes-Benz",
         "en": "Mercedes-Benz"
@@ -59,6 +61,7 @@
     },
     {
       "id": "chevrolet-corvette-stingray",
+      "sale_category": "both",
       "make": {
         "fr": "Chevrolet",
         "en": "Chevrolet"
@@ -95,6 +98,7 @@
     },
     {
       "id": "jaguar-xjv12-vanden-plas",
+      "sale_category": "both",
       "make": {
         "fr": "Jaguar",
         "en": "Jaguar"
@@ -134,6 +138,7 @@
     },
     {
       "id": "volvo-p1800-es",
+      "sale_category": "both",
       "year": 1970,
       "title": {
         "fr": "VOLVO P1800ES",
@@ -159,6 +164,7 @@
     },
     {
       "id": "renault-megane-iii-convertible",
+      "sale_category": "both",
       "year": 2010,
       "title": {
         "fr": "RENAULT MEGANE III Cabriolet",
@@ -189,6 +195,7 @@
     },
     {
       "id": "Etype",
+      "sale_category": "both",
       "year": null,
       "title": {
         "fr": "Jaguar",
@@ -215,6 +222,7 @@
     },
     {
       "id": "VMAX",
+      "sale_category": "both",
       "year": 1991,
       "title": {
         "fr": "YAMAHA VMAX 1200 145cv",
@@ -248,6 +256,7 @@
     },
     {
       "id": "CL1200",
+      "sale_category": "both",
       "make": {
         "fr": "Bmw",
         "en": "Bmw"
@@ -293,6 +302,7 @@
     },
     {
       "id": "GTO",
+      "sale_category": "both",
       "year": 1992,
       "title": {
         "fr": "Mitsubishi GTO",
@@ -327,6 +337,7 @@
     },
     {
       "id": "SEL",
+      "sale_category": "both",
       "year": 1986,
       "title": {
         "fr": "Mercedes 500 SEL",
@@ -352,6 +363,7 @@
     },
     {
       "id": "mustang gt 2005",
+      "sale_category": "both",
       "year": 2005,
       "title": {
         "fr": "Ford Mustang GT V8 4.6L",
