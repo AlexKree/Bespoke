@@ -302,16 +302,16 @@
     },
     {
       "id": "GTO",
-      "sale_category": "both",
       "year": 1992,
       "title": {
-        "fr": "Mitsubishi GTO",
-        "en": "Mitsubishi GTO"
+        "fr": "Mitsubishi GTO ",
+        "en": "Mitsubishi GTO "
       },
-      "mileage": "",
+      "mileage": "127500",
       "country": "",
-      "price": 0,
+      "price_eur": 12500,
       "status": "reserved",
+      "sale_category": "both",
       "description": {
         "fr": "Mitsubishi GTO boîte manuelle. Importée du Japon. FFVE. Immatriculable en collection en France.",
         "en": "Mitsubishi GTO Manual gearbox. 1992. Imported from Japan. Ready to be french plated . FFVE"
