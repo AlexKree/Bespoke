@@ -222,16 +222,16 @@
     },
     {
       "id": "VMAX",
-      "sale_category": "both",
       "year": 1991,
       "title": {
         "fr": "YAMAHA VMAX 1200 145cv",
         "en": "YAMAHA VMAX 1200 145cv"
       },
-      "mileage": "",
+      "mileage": "45 000",
       "country": "",
-      "price": 0,
+      "price_eur": 7990,
       "status": "available",
+      "sale_category": "both",
       "description": {
         "fr": "Belle VMAX 1200 de 1991. Très grosse révision faite en 2022 pour plus de 3000 euros. A voir absolument. Origine anglaise. FFVE",
         "en": "Nice VMAX 1200 from 1991. Large restoration realised in 2022 for more than 3000 euros. UK origin. FFVE"
