@@ -439,6 +439,31 @@
         "/assets/stock/images/r32-1786278815771-e60e41.jpg",
         "/assets/stock/images/r32-1786278823122-e8fc80.jpg"
       ]
+    },
+    {
+      "id": "eclipse",
+      "year": 2005,
+      "title": {
+        "fr": "Mitsubishi Eclipse Spyder V6 3.0",
+        "en": "Mitsubishi Eclipse Spyder V6 3.0"
+      },
+      "mileage": "105 000km",
+      "country": "",
+      "price_eur": 10000,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Mitsubishi Eclipse Spyder V6 3.0 de 2005, affichant 105 000 km. Équipée du moteur V6 3.0L développant environ 210 ch, avec boîte automatique et traction avant. Version cabriolet au style caractéristique, offrant une expérience de conduite agréable et une sonorité typique du V6. Un modèle original et plaisant, idéal pour amateur de voitures américaines/japonaises des années 2000.",
+        "en": "2005 Mitsubishi Eclipse Spyder V6 3.0 with 105,000 km. Powered by a 3.0L V6 producing approximately 210 hp, paired with an automatic gearbox and front-wheel drive. The distinctive convertible design, enjoyable driving experience and characteristic V6 sound make it an appealing example for enthusiasts of 2000s Japanese-American cars."
+      },
+      "images": [
+        "/assets/stock/images/eclipse-1786279612054-823270.png",
+        "/assets/stock/images/eclipse-1786279624189-21e8b6.jpg",
+        "/assets/stock/images/eclipse-1786279636749-2280a1.jpg",
+        "/assets/stock/images/eclipse-1786279645967-1c4edd.jpg",
+        "/assets/stock/images/eclipse-1786279657416-ffb74b.png",
+        "/assets/stock/images/eclipse-1786279668554-12ae96.jpg"
+      ]
     }
   ]
 }
