@@ -453,6 +453,31 @@
         "/assets/stock/images/eclipse-1786279657416-ffb74b.png",
         "/assets/stock/images/eclipse-1786279668554-12ae96.jpg"
       ]
+    },
+    {
+      "id": "s500 or",
+      "year": 1993,
+      "title": {
+        "fr": "Mercedes S500 w140",
+        "en": "Mercedes S500 w140"
+      },
+      "mileage": "195 000km",
+      "country": "Canada",
+      "price_eur": 12500,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Mercedes-Benz S500 de 1993, équipée du V8 5.0L développant environ 320 ch. Une grande berline luxueuse et performante, offrant le confort, la qualité de fabrication et le raffinement caractéristiques de la Classe S de cette époque. Un modèle emblématique des années 90, idéal pour amateur de Mercedes classiques recherchant une S500 au caractère authentique.",
+        "en": "1993 Mercedes-Benz S500, powered by the 5.0L V8 producing approximately 320 hp. A luxurious and powerful full-size sedan, offering the comfort, build quality and refinement that defined the S-Class of its era. An iconic 1990s Mercedes, ideal for enthusiasts looking for an authentic classic S500."
+      },
+      "images": [
+        "/assets/stock/images/s500-or-1786281080791-b040b9.jpg",
+        "/assets/stock/images/s500-or-1786281086771-ba5e2e.jpg",
+        "/assets/stock/images/s500-or-1786281096735-7bcc63.jpg",
+        "/assets/stock/images/s500-or-1786281104419-4c2be3.jpg",
+        "/assets/stock/images/s500-or-1786281115810-a203fc.jpg",
+        "/assets/stock/images/s500-or-1786281133090-7d9d6a.jpg"
+      ]
     }
   ]
 }
