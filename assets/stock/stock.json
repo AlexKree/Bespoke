@@ -61,40 +61,30 @@
     },
     {
       "id": "chevrolet-corvette-stingray",
-      "sale_category": "both",
-      "make": {
-        "fr": "Chevrolet",
-        "en": "Chevrolet"
-      },
-      "model": {
-        "fr": "Corvette Stingray",
-        "en": "Corvette Stingray"
-      },
-      "year": null,
-      "mileage_km": null,
-      "price_eur": null,
-      "status": "sold",
-      "location": {
-        "fr": "France / Europe",
-        "en": "France / Europe"
-      },
-      "headline": {
-        "fr": "Vendu. Historique disponible sur demande.",
-        "en": "Sold. History available on request."
-      },
-      "description": {
-        "fr": "Exemple de véhicule déjà placé. D’autres opportunités arrivent régulièrement.",
-        "en": "Example of a vehicle already placed. New opportunities arrive regularly."
-      },
-      "images": [
-        "assets/stock/images/img_20191225_132353.jpg",
-        "assets/stock/images/img_20191225_132401.jpg",
-        "assets/stock/images/img_20191224_110524.jpg"
-      ],
+      "year": 1976,
       "title": {
         "fr": "Chevrolet Corvette Stingray",
         "en": "Chevrolet Corvette Stingray"
-      }
+      },
+      "mileage": "",
+      "country": "",
+      "price_eur": null,
+      "status": "reserved",
+      "sale_category": "both",
+      "description": {
+        "fr": "Chevrolet Corvette Stingray de 1976, équipée du mythique V8 américain et arborant le style emblématique de la génération C3. Avec sa silhouette basse, ses lignes caractéristiques et son caractère typique des Corvette des années 70, elle représente parfaitement l’esprit des muscle cars américaines de cette époque. Un modèle de collection idéal pour amateur ou passionné de Corvette.",
+        "en": "1976 Chevrolet Corvette Stingray, powered by the iconic American V8 and featuring the unmistakable styling of the C3 generation. With its low stance, distinctive lines and classic 1970s Corvette character, it perfectly represents the spirit of American performance cars from the era. An excellent choice for any Corvette enthusiast or collector."
+      },
+      "images": [
+        "/assets/stock/images/chevrolet-corvette-stingray-1786280056768-50e557.jpg",
+        "assets/stock/images/img_20191225_132353.jpg",
+        "/assets/stock/images/chevrolet-corvette-stingray-1786280049870-7c0c2e.jpg",
+        "/assets/stock/images/chevrolet-corvette-stingray-1786280088035-0891a5.jpg",
+        "assets/stock/images/img_20191224_110524.jpg",
+        "/assets/stock/images/chevrolet-corvette-stingray-1786280032928-abd8b0.jpg",
+        "assets/stock/images/img_20191225_132401.jpg",
+        "/assets/stock/images/chevrolet-corvette-stingray-1786280070369-f7fce0.jpg"
+      ]
     },
     {
       "id": "jaguar-xjv12-vanden-plas",
