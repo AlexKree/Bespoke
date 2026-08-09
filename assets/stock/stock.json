@@ -413,6 +413,32 @@
         "/assets/stock/images/evo-7-1786277898527-f703b3.jpg",
         "/assets/stock/images/evo-7-1786277876319-a49b38.jpg"
       ]
+    },
+    {
+      "id": "r32",
+      "year": 2006,
+      "title": {
+        "fr": "Volkswagen Golf R32",
+        "en": "Volkswagen Golf R32"
+      },
+      "mileage": "90 000 miles",
+      "country": "UK",
+      "price_eur": null,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "images": [
+        "/assets/stock/images/r32-1786278842185-7a12e1.jpg",
+        "/assets/stock/images/r32-1786278851288-ebd845.jpg",
+        "/assets/stock/images/r32-1786278904124-8b3f10.jpg",
+        "/assets/stock/images/r32-1786278830231-18d1b7.jpg",
+        "/assets/stock/images/r32-1786278808605-f784e8.jpg",
+        "/assets/stock/images/r32-1786278815771-e60e41.jpg",
+        "/assets/stock/images/r32-1786278823122-e8fc80.jpg"
+      ]
     }
   ]
 }
