@@ -388,6 +388,32 @@
         "/assets/stock/images/mustang-gt-2005-1785805309933-76ac4f.jpg",
         "/assets/stock/images/mustang-gt-2005-1785805533618-cc9f95.jpg"
       ]
+    },
+    {
+      "id": "evo 7",
+      "year": 2002,
+      "title": {
+        "fr": "Mitsubishi Lancer Evo VII GT-A",
+        "en": "Mitsubishi Lancer Evo VII GT-A"
+      },
+      "mileage": "133 500 km",
+      "country": "Japon",
+      "price_eur": 16500,
+      "status": "reserved",
+      "sale_category": "both",
+      "description": {
+        "fr": "Rare Mitsubishi Lancer Evolution VII GTA de 2002, importée du Japon, avec 133 500 km. Cette version à boîte automatique 5 rapports et transmission intégrale est entièrement d’origine, sans aucune modification ni préparation. Très bel état général, mécanique irréprochable, châssis sain et aucune rouille. Un exemplaire rare et préservé, idéal pour collectionneur ou amateur d’Evo recherchant une configuration d’origine.",
+        "en": "Rare 2002 Mitsubishi Lancer Evolution VII GTA, originally imported from Japan, with 133,500 km. Equipped with the original 5-speed automatic gearbox and four-wheel drive, this example remains completely factory original, with no modifications or tuning. Excellent overall condition, mechanically sound, rust-free and well preserved. A rare opportunity for a collector or Evo enthusiast looking for an unmodified original example."
+      },
+      "images": [
+        "/assets/stock/images/evo-7-1786277854066-3b5e98.png",
+        "/assets/stock/images/evo-7-1786277876319-a49b38.jpg",
+        "/assets/stock/images/evo-7-1786277883899-dab88a.jpg",
+        "/assets/stock/images/evo-7-1786277892165-a0d092.jpg",
+        "/assets/stock/images/evo-7-1786277898527-f703b3.jpg",
+        "/assets/stock/images/evo-7-1786277903507-27162b.jpg",
+        "/assets/stock/images/evo-7-1786277917286-a3347c.jpg"
+      ]
     }
   ]
 }
