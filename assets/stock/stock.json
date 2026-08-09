@@ -478,6 +478,30 @@
         "/assets/stock/images/s500-or-1786281133090-7d9d6a.jpg",
         "/assets/stock/images/s500-or-1786281086771-ba5e2e.jpg"
       ]
+    },
+    {
+      "id": "rr sw",
+      "year": 1977,
+      "title": {
+        "fr": "Rolls Royce Silver Wraith II",
+        "en": "Rolls Royce Silver Wraith II"
+      },
+      "mileage": "125 000km",
+      "country": "",
+      "price_eur": null,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Rolls-Royce Silver Wraith II de 1977, affichant 125 000 km. Une berline de grand luxe emblématique de son époque, offrant un confort exceptionnel, une finition raffinée et le charme intemporel des Rolls-Royce classiques. Un modèle idéal pour amateur ou collectionneur recherchant une véritable automobile de prestige.",
+        "en": "1977 Rolls-Royce Silver Wraith II with 125,000 km. An iconic luxury saloon from its era, offering exceptional comfort, refined craftsmanship and the timeless character of a classic Rolls-Royce. An excellent choice for any enthusiast or collector looking for a true prestige automobile."
+      },
+      "images": [
+        "/assets/stock/images/img-1786281499575-bfecf2.jpg",
+        "/assets/stock/images/img-1786281625541-333af1.jpg",
+        "/assets/stock/images/img-1786281541139-877a15.jpg",
+        "/assets/stock/images/img-1786281533318-aca213.jpg",
+        "/assets/stock/images/img-1786281509200-fc6588.jpg"
+      ]
     }
   ]
 }
