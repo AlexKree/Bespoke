@@ -676,6 +676,24 @@
         "/assets/stock/images/mini-1786792418203-92c2f7.jpg",
         "/assets/stock/images/mini-1786792372840-901452.jpg"
       ]
+    },
+    {
+      "id": "350z",
+      "year": 2007,
+      "title": {
+        "fr": "Nissan 350Z 313 ch",
+        "en": "Nissan 350Z 313 ch"
+      },
+      "mileage": "65 000km",
+      "country": "",
+      "price_eur": 14486,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Nissan 350Z de 2007, affichant seulement 65 000 km. Équipée du V6 3.5L développant 313 ch, associé à une boîte manuelle et une transmission aux roues arrière. Véhicule RHD (volant à droite), actuellement UK plated. Un exemplaire en configuration recherchée, combinant performances, caractère et plaisir de conduite.",
+        "en": "2007 Nissan 350Z with only 65,000 km. Powered by the 3.5L V6 producing 313 hp, paired with a manual gearbox and rear-wheel drive. RHD (right-hand drive), currently UK plated. A desirable configuration combining performance, character and driving enjoyment."
+      },
+      "images": []
     }
   ]
 }
