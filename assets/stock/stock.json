@@ -650,6 +650,32 @@
         "/assets/stock/images/645i-cab-1786791138607-6b4ae6.jpg",
         "/assets/stock/images/645i-cab-1786791155931-4df192.jpg"
       ]
+    },
+    {
+      "id": "mini",
+      "year": 2011,
+      "title": {
+        "fr": "MINI Cooper S Countryman ALL4 184 ch",
+        "en": "MINI Cooper S Countryman ALL4 184 ch"
+      },
+      "mileage": "128 000km",
+      "country": "",
+      "price_eur": 9990,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "MINI Cooper S Countryman ALL4 de 2011, affichant 125 000 km. Équipée du moteur 1.6L turbo, d’une boîte manuelle et de la transmission intégrale ALL4. Véhicule actuellement immatriculé à Monaco. Une configuration polyvalente et dynamique, combinant le caractère sportif de la Cooper S avec l’espace et la polyvalence du Countryman.",
+        "en": "2011 MINI Cooper S Countryman ALL4 with 125,000 km. Powered by the 1.6L turbocharged engine, paired with a manual gearbox and ALL4 all-wheel drive. Currently registered in Monaco. A versatile and engaging configuration, combining the sporty character of the Cooper S with the practicality and space of the Countryman."
+      },
+      "images": [
+        "/assets/stock/images/mini-1786792346529-f4d74c.jpg",
+        "/assets/stock/images/mini-1786792406144-408f9d.jpg",
+        "/assets/stock/images/mini-1786792483740-79578f.jpg",
+        "/assets/stock/images/mini-1786792503068-62fd2c.jpg",
+        "/assets/stock/images/mini-1786792386086-9989da.jpg",
+        "/assets/stock/images/mini-1786792418203-92c2f7.jpg",
+        "/assets/stock/images/mini-1786792372840-901452.jpg"
+      ]
     }
   ]
 }
