@@ -624,6 +624,32 @@
         "/assets/stock/images/jaguar-xjr-1786790612381-b88367.jpg",
         "/assets/stock/images/jaguar-xjr-1786790472162-d2da77.jpg"
       ]
+    },
+    {
+      "id": "645i cab",
+      "year": 2005,
+      "title": {
+        "fr": "BMW 645Ci Cabriolet V8 4.4L 333ch",
+        "en": "BMW 645Ci Cabriolet V8 4.4L 333ch"
+      },
+      "mileage": "75 000km",
+      "country": "UK",
+      "price_eur": null,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "BMW 645Ci Cabriolet de 2005, affichant seulement 75 000 km. Équipée du V8 4.4L développant 333 ch, avec boîte automatique. Véhicule RHD (volant à droite), actuellement UK plated, en très bel état. Un cabriolet élégant et performant, offrant le plaisir d’un V8 associé au confort et au raffinement de la Série 6.",
+        "en": "2005 BMW 645Ci Convertible with only 75,000 km. Powered by the 4.4L V8 producing 333 hp, paired with an automatic gearbox. RHD (right-hand drive), currently UK plated and presented in very good condition. An elegant and powerful convertible, combining the character of a V8 with the comfort and refinement of the 6 Series."
+      },
+      "images": [
+        "/assets/stock/images/645i-cab-1786791180518-886821.jpg",
+        "/assets/stock/images/645i-cab-1786791173333-ecf1fb.jpg",
+        "/assets/stock/images/645i-cab-1786791187540-45e64d.jpg",
+        "/assets/stock/images/645i-cab-1786791192795-f667d0.jpg",
+        "/assets/stock/images/645i-cab-1786791167416-69419d.jpg",
+        "/assets/stock/images/645i-cab-1786791138607-6b4ae6.jpg",
+        "/assets/stock/images/645i-cab-1786791155931-4df192.jpg"
+      ]
     }
   ]
 }
