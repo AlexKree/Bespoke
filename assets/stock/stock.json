@@ -505,34 +505,6 @@
         "/assets/stock/images/img-1786281533318-aca213.jpg",
         "/assets/stock/images/img-1786281509200-fc6588.jpg"
       ]
-    },
-    {
-      "id": "porsge cayenne 2008",
-      "year": 2026,
-      "title": {
-        "fr": "",
-        "en": ""
-      },
-      "mileage": "",
-      "country": "",
-      "price_eur": null,
-      "status": "available",
-      "sale_category": "both",
-      "description": {
-        "fr": "",
-        "en": ""
-      },
-      "images": [
-        "/assets/stock/images/img-1786785823114-10fe30.jpg",
-        "/assets/stock/images/img-1786785828334-60307e.jpg",
-        "/assets/stock/images/img-1786785843513-322775.jpg",
-        null,
-        "/assets/stock/images/img-1786785883176-ab39de.jpg",
-        "/assets/stock/images/img-1786785899742-42f402.jpg",
-        "/assets/stock/images/img-1786785936975-3291df.jpg",
-        "/assets/stock/images/img-1786785943355-a045e8.jpg",
-        "/assets/stock/images/img-1786785949753-51b352.jpg"
-      ]
     }
   ]
 }
