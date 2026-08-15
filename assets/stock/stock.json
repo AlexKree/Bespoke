@@ -558,6 +558,31 @@
         "/assets/stock/images/img-1786786673873-0d1a66.jpg",
         "/assets/stock/images/img-1786786678457-dc59d6.jpg"
       ]
+    },
+    {
+      "id": "159",
+      "year": 2026,
+      "title": {
+        "fr": "",
+        "en": ""
+      },
+      "mileage": "",
+      "country": "",
+      "price_eur": null,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "images": [
+        "/assets/stock/images/img-1786788095535-cf08d5.jpg",
+        "/assets/stock/images/img-1786788100304-02be71.jpg",
+        "/assets/stock/images/img-1786788106274-61242c.jpg",
+        "/assets/stock/images/img-1786788111783-4cad59.jpg",
+        "/assets/stock/images/img-1786788118577-747671.jpg",
+        "/assets/stock/images/img-1786788125063-bebe4d.jpg"
+      ]
     }
   ]
 }
