@@ -629,12 +629,12 @@
       "id": "645i cab",
       "year": 2005,
       "title": {
-        "fr": "BMW 645Ci Cabriolet V8 4.4L 333ch",
-        "en": "BMW 645Ci Cabriolet V8 4.4L 333ch"
+        "fr": "BMW 645i M Sport Cabriolet V8 4.4L 333ch",
+        "en": "BMW 645i M Sport Cabriolet V8 4.4L 333ch"
       },
       "mileage": "75 000km",
       "country": "UK",
-      "price_eur": null,
+      "price_eur": 10847,
       "status": "available",
       "sale_category": "both",
       "description": {
