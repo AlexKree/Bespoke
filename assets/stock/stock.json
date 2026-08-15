@@ -531,6 +531,33 @@
         "/assets/stock/images/cayenne-2008-1786786167455-c70e62.jpg",
         "/assets/stock/images/cayenne-2008-1786786175800-4da66d.jpg"
       ]
+    },
+    {
+      "id": "cayenne 2012",
+      "year": 2026,
+      "title": {
+        "fr": "Porsche Cayenne Turbo V8 4.8L",
+        "en": "Porsche Cayenne Turbo V8 4.8L"
+      },
+      "mileage": "115 000km",
+      "country": "",
+      "price_eur": 24900,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Porsche Cayenne Turbo de 2012, affichant 115 000 km et présenté en excellent état. Équipé du V8 4.8L biturbo développant 500 ch, associé à la transmission intégrale et à une boîte automatique. Un SUV haut de gamme combinant performances, confort et polyvalence, avec le caractère sportif emblématique de Porsche.\nVéhicule non immatriculé en France, vendu exclusivement aux professionnels.",
+        "en": "2012 Porsche Cayenne Turbo with 115,000 km, presented in excellent condition. Powered by the 4.8L twin-turbo V8 producing 500 hp, paired with all-wheel drive and an automatic gearbox. A high-performance luxury SUV combining performance, comfort and everyday versatility with Porsche’s distinctive sporting character.\nhe vehicle is not registered in France and is offered exclusively to professional buyers."
+      },
+      "images": [
+        "/assets/stock/images/img-1786786660971-36e203.jpg",
+        "/assets/stock/images/img-1786786654698-83d1ed.jpg",
+        "/assets/stock/images/img-1786786648393-b5dc1d.jpg",
+        "/assets/stock/images/img-1786786642694-046bdf.jpg",
+        "/assets/stock/images/img-1786786630432-917c25.jpg",
+        "/assets/stock/images/img-1786786667111-520034.jpg",
+        "/assets/stock/images/img-1786786673873-0d1a66.jpg",
+        "/assets/stock/images/img-1786786678457-dc59d6.jpg"
+      ]
     }
   ]
 }
