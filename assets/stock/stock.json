@@ -583,6 +583,33 @@
         "/assets/stock/images/img-1786788118577-747671.jpg",
         "/assets/stock/images/img-1786788125063-bebe4d.jpg"
       ]
+    },
+    {
+      "id": "turbo r bleue",
+      "year": 1986,
+      "title": {
+        "fr": "Bentley Turbo R 6.75L V8",
+        "en": "Bentley Turbo R 6.75L V8"
+      },
+      "mileage": "106 000 miles",
+      "country": "UK",
+      "price_eur": 14900,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Bentley Turbo R de 1991, en configuration RHD (volant à droite) et actuellement UK plated. Équipée du V8 6.75L emblématique de Bentley, cette berline de grand luxe offre un caractère unique et une présence remarquable. L’état général présente quelques défauts liés à l’âge, notamment des traces de rouille sur la carrosserie. Un véhicule intéressant pour amateur de Bentley classiques, projet de restauration ou professionnel à la recherche d’un modèle de prestige à remettre en état.",
+        "en": "1991 Bentley Turbo R, RHD (right-hand drive) and currently UK plated. Powered by Bentley’s iconic 6.75L V8, this luxury saloon offers exceptional character and presence. The vehicle shows some age-related imperfections, including areas of surface rust on the bodywork. An interesting opportunity for a classic Bentley enthusiast, restoration project or professional looking for a prestigious model to bring back to its best condition."
+      },
+      "images": [
+        "/assets/stock/images/turbo-r-bleue-1786789439812-9b9eb3.jpg",
+        "/assets/stock/images/turbo-r-bleue-1786789367630-7d305d.jpg",
+        "/assets/stock/images/turbo-r-bleue-1786789385326-9dda3a.jpg",
+        "/assets/stock/images/turbo-r-bleue-1786789416626-23eb96.jpg",
+        "/assets/stock/images/turbo-r-bleue-1786789377991-9555de.jpg",
+        "/assets/stock/images/turbo-r-bleue-1786789459533-de2990.jpg",
+        "/assets/stock/images/turbo-r-bleue-1786789469430-70ae4e.jpg",
+        "/assets/stock/images/turbo-r-bleue-1786789477591-0db6eb.jpg"
+      ]
     }
   ]
 }
