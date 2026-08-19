@@ -694,6 +694,30 @@
         "en": "2007 Nissan 350Z with only 65,000 km. Powered by the 3.5L V6 producing 313 hp, paired with a manual gearbox and rear-wheel drive. RHD (right-hand drive), currently UK plated. A desirable configuration combining performance, character and driving enjoyment."
       },
       "images": []
+    },
+    {
+      "id": "honda rouge",
+      "year": 1999,
+      "title": {
+        "fr": "Honda VFR800 FI – V4 800cc",
+        "en": "Honda VFR800 FI – V4 800cc"
+      },
+      "mileage": "55 000 miles",
+      "country": "",
+      "price_eur": 4190,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Honda VFR800 FI de 1999, en très bon état général, affichant 55 000 miles (environ 88 500 km). Équipée du réputé moteur V4 800 cm³ à injection, développant environ 106 ch, cette sport-tourer offre un excellent équilibre entre performances, confort et fiabilité. Présentée en rouge et actuellement immatriculée au Royaume-Uni (UK plated), elle constitue un exemplaire intéressant pour amateur de motos Honda classiques et de V4.",
+        "en": "1999 Honda VFR800 FI, presented in very good overall condition with 55,000 miles (approximately 88,500 km). Powered by Honda’s renowned 800cc fuel-injected V4 engine producing around 106 hp, this sport-touring motorcycle offers an excellent balance of performance, comfort and reliability. Finished in red and currently UK registered, it is an interesting example for enthusiasts looking for a classic Honda V4."
+      },
+      "images": [
+        "/assets/stock/images/img-1787132886600-dd84dd.jpg",
+        "/assets/stock/images/img-1787132899956-3dfe62.jpg",
+        "/assets/stock/images/img-1787132909816-90c2f3.jpg",
+        "/assets/stock/images/img-1787132975020-cc0804.jpg",
+        "/assets/stock/images/honda-rouge-1787133066661-ce1717.jpg"
+      ]
     }
   ]
 }
