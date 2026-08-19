@@ -11,6 +11,7 @@
       reserved: 'Réservée',
       year: 'Année',
       location: 'Localisation',
+      mileage: 'Kilométrage',
       priceOnRequest: 'Prix sur demande',
       hideSold: 'Masquer vendues',
       details: 'Détails',
@@ -29,6 +30,7 @@
       reserved: 'Reserved',
       year: 'Year',
       location: 'Location',
+      mileage: 'Mileage',
       priceOnRequest: 'Price on request',
       hideSold: 'Hide sold',
       details: 'Details',
@@ -116,7 +118,7 @@
   }
 
   function resolveAsset(assetPath) {
-    return basePrefix + assetPath.replace(/^/, '');
+    return basePrefix + assetPath.replace(/^/, '');
   }
 
   function statusLabel(item) {
@@ -132,7 +134,8 @@
       itemTitle(item),
       item.make && (item.make[lang] || item.make.en || item.make.fr),
       item.model && (item.model[lang] || item.model.en || item.model.fr),
-      item.year ? String(item.year) : ''
+      item.year ? String(item.year) : '',
+      item.mileage ? String(item.mileage) : ''
     ].filter(Boolean).join(' ').toLowerCase();
     return hay.includes(q);
   }
@@ -226,8 +229,9 @@
     const meta = document.createElement('div');
     meta.className = 'stockCardMeta';
     const year = item.year ? `${T.year}: ${item.year}` : '';
+    const mileage = item.mileage ? `${T.mileage}: ${item.mileage}` : '';
     const loc = item.location ? (item.location[lang] || item.location.en || item.location.fr) : '';
-    meta.textContent = [year, loc ? `${T.location}: ${loc}` : ''].filter(Boolean).join(' • ');
+    meta.textContent = [year, mileage, loc ? `${T.location}: ${loc}` : ''].filter(Boolean).join(' • ');
     body.appendChild(meta);
 
     const price = document.createElement('div');
@@ -330,6 +334,7 @@
     const loc = item.location ? (item.location[lang] || item.location.en || item.location.fr) : '';
     const metaBits = [];
     if (item.year) metaBits.push(`${T.year}: ${item.year}`);
+    if (item.mileage) metaBits.push(`${T.mileage}: ${item.mileage}`);
     if (loc) metaBits.push(`${T.location}: ${loc}`);
     modalMeta.textContent = metaBits.join(' • ');
 
