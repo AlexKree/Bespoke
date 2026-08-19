@@ -742,6 +742,29 @@
         "/assets/stock/images/img-1787145024980-c095c0.jpg",
         "/assets/stock/images/img-1787145032587-d2ceb2.jpg"
       ]
+    },
+    {
+      "id": "honda integra",
+      "year": 2014,
+      "title": {
+        "fr": "Honda Integra 750 DCT – 2014 – 33 500 km",
+        "en": "Honda Integra 750 DCT – 2014 – 33 500 km"
+      },
+      "mileage": "33500",
+      "country": "",
+      "price_eur": 4000,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Honda Integra 750 de 2014, affichant seulement 33 500 km et présenté en très bon état général. Équipé du moteur bicylindre 745 cm³ et de la boîte automatique à double embrayage DCT, l’Integra combine le confort et la facilité d’utilisation d’un scooter avec le comportement routier et les performances d’une moto. Un modèle polyvalent, fiable et agréable à conduire, idéal aussi bien pour la ville que pour les trajets plus longs.",
+        "en": "2014 Honda Integra 750, showing only 33,500 km and presented in very good overall condition. Powered by Honda’s 745cc twin-cylinder engine and equipped with the renowned DCT dual-clutch automatic transmission, the Integra combines the convenience and comfort of a scooter with the road handling and performance of a motorcycle. A reliable, versatile and enjoyable two-wheeler, ideal for both city riding and longer journeys."
+      },
+      "images": [
+        "/assets/stock/images/honda-integra-1787146531877-64770d.jpg",
+        "/assets/stock/images/honda-integra-1787146633277-cac018.jpg",
+        "/assets/stock/images/honda-integra-1787146644953-aa32ba.jpg",
+        "/assets/stock/images/honda-integra-1787146664851-78a45f.jpg"
+      ]
     }
   ]
 }
