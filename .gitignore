@@ -2,3 +2,6 @@ node_modules/
 package-lock.json
 .env
 .env.local
+
+# Variantes d'images (regenerees par scripts/build-images.mjs)
+assets/_img/

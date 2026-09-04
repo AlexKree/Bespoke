@@ -117,9 +117,17 @@
     return item.id || 'Vehicle';
   }
 
+  // stock.json melange les formes "assets/..." et "/assets/..." : on normalise
+  // vers un chemin absolu depuis la racine du site.
   function resolveAsset(assetPath) {
-    return basePrefix + assetPath.replace(/^/, '');
+    if (!assetPath) return '';
+    if (/^https?:/i.test(assetPath)) return assetPath;
+    return '/' + String(assetPath).replace(/^\/+/, '');
   }
+
+  // Variantes WebP produites au build (assets/_img). BespokeImg gere le repli
+  // sur la conversion a la demande pour une photo pas encore construite.
+  const IMG = window.BespokeImg;
 
   function statusLabel(item) {
     if (item.status === 'sold') return T.sold;
@@ -178,6 +186,7 @@
     render();
   }
 
+
   function catLabel(cat) {
     if (cat === 'particulier') return T.catParticulier;
     if (cat === 'professionnel') return T.catProfessionnel;
@@ -199,7 +208,11 @@
     img.loading = 'lazy';
     img.decoding = 'async';
     img.alt = itemTitle(item);
-    img.src = item.images && item.images.length ? resolveAsset(item.images[0]) : '';
+    if (item.images && item.images.length) {
+      IMG.apply(img, item.images[0], 760, [400, 560, 760],
+                '(max-width: 620px) 100vw, (max-width: 1040px) 50vw, 361px');
+      img.width = 761; img.height = 476; // ratio 16/10, evite le saut de mise en page
+    }
     if (isSold) img.style.filter = 'grayscale(40%) opacity(0.75)';
     imgWrap.appendChild(img);
 
@@ -395,9 +408,9 @@
       if (modalInfo) modalInfo.appendChild(reserveBtn);
     }
 
-    const imgs = (item.images || []).map(resolveAsset);
+    const imgs = item.images || [];
     if (imgs.length) {
-      modalMainImage.src = imgs[0];
+      IMG.apply(modalMainImage, imgs[0], 1000, [500, 760, 1000], '(max-width: 700px) 100vw, 493px');
       modalMainImage.alt = itemTitle(item);
       modalMainImage.style.filter = item.status === 'sold' ? 'grayscale(30%) opacity(0.8)' : '';
 
@@ -407,12 +420,13 @@
         b.type = 'button';
         b.className = 'thumbBtn' + (idx === 0 ? ' active' : '');
         const im = document.createElement('img');
-        im.src = src;
+        IMG.apply(im, src, 160);
         im.alt = '';
         im.loading = 'lazy';
+        im.decoding = 'async';
         b.appendChild(im);
         b.addEventListener('click', () => {
-          modalMainImage.src = src;
+          IMG.apply(modalMainImage, src, 1000, [500, 760, 1000], '(max-width: 700px) 100vw, 493px');
           [...modalThumbs.querySelectorAll('.thumbBtn')].forEach((x) => x.classList.remove('active'));
           b.classList.add('active');
         });

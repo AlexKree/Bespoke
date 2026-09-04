@@ -1,5 +1,29 @@
 [build]
   functions = "netlify/functions"
+  # Produit les variantes WebP servies par le site (assets/_img).
+  command = "node scripts/build-images.mjs"
+
+# ── Langue d'arrivee selon le pays de l'IP ───────────────────────────
+# Netlify resout le pays a la peripherie ; aucune fonction n'est necessaire.
+#
+# force = true est indispensable : sans lui, "/" correspond au fichier
+# index.html existant et la regle serait ignoree.
+#
+# 302 et non 301 : une redirection qui depend du visiteur ne doit jamais
+# etre mise en cache de facon permanente par un navigateur ou un proxy.
+[[redirects]]
+  from = "/"
+  to = "/fr/index.html"
+  status = 302
+  force = true
+  conditions = {Country = ["FR", "MC", "GP", "MQ", "GF", "RE", "YT", "PM", "BL", "MF", "WF", "PF", "NC"]}
+
+# Tout le reste du monde, y compris quand le pays est indeterminable.
+[[redirects]]
+  from = "/"
+  to = "/en/index.html"
+  status = 302
+  force = true
 
 # Serve the admin page at /admin (without trailing slash)
 [[redirects]]
@@ -43,6 +67,23 @@
   to   = "/setup-staff.html"
   status = 200
 
+# Doublon supprimé -> page de remerciement canonique
+[[redirects]]
+  from = "/fr/fr_merci.html"
+  to   = "/fr/merci.html"
+  status = 301
+
+# "Opportunites" a toujours pointe sur le stock : 301 au lieu d'un meta-refresh
+[[redirects]]
+  from = "/fr/opportunites.html"
+  to   = "/fr/stock.html"
+  status = 301
+
+[[redirects]]
+  from = "/en/opportunites.html"
+  to   = "/en/stock.html"
+  status = 301
+
 [[headers]]
   for = "/sw.js"
   [headers.values]
@@ -57,13 +98,14 @@
     Cache-Control = "no-cache"
 
 [[headers]]
-  for = "/manifest.json"
-  [headers.values]
-    Content-Type = "application/manifest+json"
-    Cache-Control = "public, max-age=86400"
-
-[[headers]]
   for = "/manifest.webmanifest"
   [headers.values]
     Content-Type = "application/manifest+json"
     Cache-Control = "no-cache"
+
+# Les variantes portent la largeur dans leur nom : leur contenu ne change
+# jamais pour une URL donnee, on peut donc les mettre en cache indefiniment.
+[[headers]]
+  for = "/assets/_img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

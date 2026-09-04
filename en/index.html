@@ -8,11 +8,12 @@
   <meta name="robots" content="index,follow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/styles.css?v=3" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../assets/styles.css?v=6" />
   <!-- PWA -->
-  <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#c6b07a" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#05101e" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Bespoke" />
@@ -87,7 +88,7 @@
   <div class="container">
     <div class="navbar">
       <a class="brand" href="index.html">
-        <img class="mark" src="../assets/photos/hero.jpg" alt="Bespoke" />
+        <img class="mark" src="/assets/_img/photos/hero-88.webp" alt="Bespoke" width="88" height="117" fetchpriority="high" decoding="async"/>
         <div>
           <div class="name">BESPOKE</div>
           <div class="tag">Sourcing • Mandates • Import • Collector & Prestige</div>
@@ -115,7 +116,7 @@
   </div>
   <div class="ribbon">
     <div class="container">
-      <div class="inner">Positioning: sourcing & import of collector and premium cars — workshop collaborations in France & Italy. <span class='gold'>This website is not regulated financial adv[...]
+      <div class="inner">Positioning: sourcing & import of collector and premium cars — workshop collaborations in France & Italy. <span class='gold'>This website is not regulated financial advice.</span></div>
     </div>
   </div>
 </header>
@@ -132,10 +133,12 @@
     </p>
 
     <div class="ctaRow">
-      <a class="btn primary" href="contact.html" onclick="plausible('Lead')">Submit a request (concierge)</a>
-      <a class="btn" href="opportunites.html">View opportunities</a>
-      <a class="btn" href="services.html">Discover the process</a>
-      <a class="btn" href="login.html" id="heroAuthBtn">Sign In / Create Account →</a>
+      <a class="btn primary" href="contact.html" onclick="plausible('Lead')">Submit a request</a>
+      <a class="btn" href="stock.html">Browse the stock</a>
+      <a class="btn" href="services.html">See our method</a>
+    </div>
+    <div class="heroAside">
+      <a href="login.html" id="heroAuthBtn" class="heroAsideLink">Already a client? Access your account →</a>
     </div>
 
     <div class="grid3">
@@ -155,7 +158,7 @@
   </div>
 
   <div class="card media">
-    <img src="../assets/photos/hero.jpg" alt="Hero" />
+    <img src="/assets/_img/photos/hero-1040.webp" alt="Hero" srcset="/assets/_img/photos/hero-400.webp 400w, /assets/_img/photos/hero-640.webp 640w, /assets/_img/photos/hero-900.webp 900w, /assets/_img/photos/hero-1040.webp 1040w" sizes="(max-width: 940px) 100vw, 520px" width="1040" height="1388" fetchpriority="high" decoding="async"/>
   </div>
 </div>
 
@@ -173,21 +176,21 @@
 </div>
 
 <div class="section">
-  <div class="sectionTitle"><h2>Recent examples</h2><div class="sub">Imported photos • more to come</div></div>
+  <div class="sectionTitle"><h2>Recent examples</h2><div class="sub">Cars sourced, imported and delivered by our team</div></div>
   <div class="sep"></div>
   <div class="gallery">
-    <div class="tile"><img src="../assets/photos/car-01.jpg" alt="Car 01"/><div class="cap">Example — imported car / stock / mandate</div></div>
-    <div class="tile"><img src="../assets/photos/car-02.jpg" alt="Car 02"/><div class="cap">Example — imported car / stock / mandate</div></div>
-    <div class="tile"><img src="../assets/photos/car-03.jpg" alt="Car 03"/><div class="cap">Example — imported car / stock / mandate</div></div>
+    <div class="tile"><img src="/assets/_img/photos/car-01-760.webp" alt="Car 01" srcset="/assets/_img/photos/car-01-400.webp 400w, /assets/_img/photos/car-01-640.webp 640w, /assets/_img/photos/car-01-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="760" height="1013" loading="lazy" decoding="async"/></div>
+    <div class="tile"><img src="/assets/_img/photos/car-02-760.webp" alt="Car 02" srcset="/assets/_img/photos/car-02-400.webp 400w, /assets/_img/photos/car-02-640.webp 640w, /assets/_img/photos/car-02-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="640" height="480" loading="lazy" decoding="async"/></div>
+    <div class="tile"><img src="/assets/_img/photos/car-03-760.webp" alt="Car 03" srcset="/assets/_img/photos/car-03-400.webp 400w, /assets/_img/photos/car-03-640.webp 640w, /assets/_img/photos/car-03-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="760" height="1013" loading="lazy" decoding="async"/></div>
   </div>
-    <div class="tile"><img src="../assets/photos/car-04.jpg" alt="Car 04"/><div class="cap">Example — imported car / stock / mandate</div></div>
-    <div class="tile"><img src="../assets/photos/car-05.jpg" alt="Car 05"/><div class="cap">Example — imported car / stock / mandate</div></div>
-    <div class="tile"><img src="../assets/photos/car-06.jpg" alt="Car 06"/><div class="cap">Example — imported car / stock / mandate</div></div>
-    <div class="tile"><img src="../assets/photos/car-07.jpg" alt="Car 07"/><div class="cap">Example — sourcing & import</div></div>
-    <div class="tile"><img src="../assets/photos/car-08.jpg" alt="Car 08"/><div class="cap">Example — selected vehicle</div></div>
-    <div class="tile"><img src="../assets/photos/car-09.jpg" alt="Car 09"/><div class="cap">Example — inspection & prep</div></div>
-    <div class="tile"><img src="../assets/photos/car-10.jpg" alt="Car 10"/><div class="cap">Example — delivery / storage</div></div>
-    <div class="tile"><img src="../assets/photos/car-11.jpg" alt="Car 11"/><div class="cap">Example — checks & presentation</div></div>
+    <div class="tile"><img src="/assets/_img/photos/car-04-760.webp" alt="Car 04" srcset="/assets/_img/photos/car-04-400.webp 400w, /assets/_img/photos/car-04-640.webp 640w, /assets/_img/photos/car-04-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="640" height="480" loading="lazy" decoding="async"/></div>
+    <div class="tile"><img src="/assets/_img/photos/car-05-760.webp" alt="Car 05" srcset="/assets/_img/photos/car-05-400.webp 400w, /assets/_img/photos/car-05-640.webp 640w, /assets/_img/photos/car-05-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="760" height="1013" loading="lazy" decoding="async"/></div>
+    <div class="tile"><img src="/assets/_img/photos/car-06-760.webp" alt="Car 06" srcset="/assets/_img/photos/car-06-400.webp 400w, /assets/_img/photos/car-06-640.webp 640w, /assets/_img/photos/car-06-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="640" height="480" loading="lazy" decoding="async"/></div>
+    <div class="tile"><img src="/assets/_img/photos/car-07-760.webp" alt="Car 07" srcset="/assets/_img/photos/car-07-400.webp 400w, /assets/_img/photos/car-07-640.webp 640w, /assets/_img/photos/car-07-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="760" height="1013" loading="lazy" decoding="async"/></div>
+    <div class="tile"><img src="/assets/_img/photos/car-08-760.webp" alt="Car 08" srcset="/assets/_img/photos/car-08-400.webp 400w, /assets/_img/photos/car-08-640.webp 640w, /assets/_img/photos/car-08-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="760" height="796" loading="lazy" decoding="async"/></div>
+    <div class="tile"><img src="/assets/_img/photos/car-09-760.webp" alt="Car 09" srcset="/assets/_img/photos/car-09-400.webp 400w, /assets/_img/photos/car-09-640.webp 640w, /assets/_img/photos/car-09-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="480" height="640" loading="lazy" decoding="async"/></div>
+    <div class="tile"><img src="/assets/_img/photos/car-10-760.webp" alt="Car 10" srcset="/assets/_img/photos/car-10-400.webp 400w, /assets/_img/photos/car-10-640.webp 640w, /assets/_img/photos/car-10-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="760" height="570" loading="lazy" decoding="async"/></div>
+    <div class="tile"><img src="/assets/_img/photos/car-11-760.webp" alt="Car 11" srcset="/assets/_img/photos/car-11-400.webp 400w, /assets/_img/photos/car-11-640.webp 640w, /assets/_img/photos/car-11-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="760" height="570" loading="lazy" decoding="async"/></div>
 
 
 </div>
@@ -196,19 +199,17 @@
   <div class="sectionTitle"><h2>Workshops & partner network</h2><div class="sub">France / Italy</div></div>
   <div class="sep"></div>
   <div class="gallery">
-    <div class="tile"><img src="../assets/photos/workshop-01.jpg" alt="Workshop 01"/><div class="cap">Inspection / photo record</div></div>
-    <div class="tile"><img src="../assets/photos/workshop-02.jpg" alt="Workshop 02"/><div class="cap">Logistics & execution</div></div>
-    <div class="tile"><img src="../assets/photos/workshop-03.jpg" alt="Workshop 03"/><div class="cap">Control & traceability</div></div>
+    <div class="tile"><img src="/assets/_img/photos/workshop-01-760.webp" alt="Workshop 01" srcset="/assets/_img/photos/workshop-01-400.webp 400w, /assets/_img/photos/workshop-01-640.webp 640w, /assets/_img/photos/workshop-01-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="760" height="570" loading="lazy" decoding="async"/><div class="cap">Inspection / photo record</div></div>
+    <div class="tile"><img src="/assets/_img/photos/workshop-02-760.webp" alt="Workshop 02" srcset="/assets/_img/photos/workshop-02-400.webp 400w, /assets/_img/photos/workshop-02-640.webp 640w, /assets/_img/photos/workshop-02-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="612" height="792" loading="lazy" decoding="async"/><div class="cap">Logistics & execution</div></div>
+    <div class="tile"><img src="/assets/_img/photos/workshop-03-760.webp" alt="Workshop 03" srcset="/assets/_img/photos/workshop-03-400.webp 400w, /assets/_img/photos/workshop-03-640.webp 640w, /assets/_img/photos/workshop-03-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="624" height="416" loading="lazy" decoding="async"/><div class="cap">Control & traceability</div></div>
+    <div class="tile"><img src="/assets/_img/photos/workshop-04-760.webp" alt="Workshop 04" srcset="/assets/_img/photos/workshop-04-400.webp 400w, /assets/_img/photos/workshop-04-640.webp 640w, /assets/_img/photos/workshop-04-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="624" height="416" loading="lazy" decoding="async"/><div class="cap">Detail / instrumentation</div></div>
+    <div class="tile"><img src="/assets/_img/photos/workshop-05-760.webp" alt="Workshop 05" srcset="/assets/_img/photos/workshop-05-400.webp 400w, /assets/_img/photos/workshop-05-640.webp 640w, /assets/_img/photos/workshop-05-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="760" height="570" loading="lazy" decoding="async"/><div class="cap">Interior / checks</div></div>
+    <div class="tile"><img src="/assets/_img/photos/workshop-06-760.webp" alt="Workshop 06" srcset="/assets/_img/photos/workshop-06-400.webp 400w, /assets/_img/photos/workshop-06-640.webp 640w, /assets/_img/photos/workshop-06-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="760" height="428" loading="lazy" decoding="async"/><div class="cap">Inspection / intervention</div></div>
+    <div class="tile"><img src="/assets/_img/photos/workshop-08-760.webp" alt="Workshop 08" srcset="/assets/_img/photos/workshop-08-400.webp 400w, /assets/_img/photos/workshop-08-640.webp 640w, /assets/_img/photos/workshop-08-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="760" height="570" loading="lazy" decoding="async"/><div class="cap">Upholstery / interior</div></div>
+    <div class="tile"><img src="/assets/_img/photos/workshop-09-760.webp" alt="Workshop 09" srcset="/assets/_img/photos/workshop-09-400.webp 400w, /assets/_img/photos/workshop-09-640.webp 640w, /assets/_img/photos/workshop-09-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="760" height="570" loading="lazy" decoding="async"/><div class="cap">Detail / wheels & chassis</div></div>
+    <div class="tile"><img src="/assets/_img/photos/workshop-10-760.webp" alt="Workshop 10" srcset="/assets/_img/photos/workshop-10-400.webp 400w, /assets/_img/photos/workshop-10-640.webp 640w, /assets/_img/photos/workshop-10-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="760" height="570" loading="lazy" decoding="async"/><div class="cap">Bodywork / inspection</div></div>
+    <div class="tile"><img src="/assets/_img/photos/workshop-11-760.webp" alt="Workshop 11" srcset="/assets/_img/photos/workshop-11-400.webp 400w, /assets/_img/photos/workshop-11-640.webp 640w, /assets/_img/photos/workshop-11-760.webp 760w" sizes="(max-width: 940px) 100vw, 370px" width="760" height="570" loading="lazy" decoding="async"/><div class="cap">Detail / checks</div></div>
   </div>
-    <div class="tile"><img src="../assets/photos/workshop-04.jpg" alt="Workshop 04"/><div class="cap">Detail / instrumentation</div></div>
-    <div class="tile"><img src="../assets/photos/workshop-05.jpg" alt="Workshop 05"/><div class="cap">Interior / checks</div></div>
-    <div class="tile"><img src="../assets/photos/workshop-06.jpg" alt="Workshop 06"/><div class="cap">Inspection / intervention</div></div>
-    <div class="tile"><img src="../assets/photos/workshop-08.jpg" alt="Workshop 08"/><div class="cap">Upholstery / interior</div></div>
-    <div class="tile"><img src="../assets/photos/workshop-09.jpg" alt="Workshop 09"/><div class="cap">Detail / wheels & chassis</div></div>
-    <div class="tile"><img src="../assets/photos/workshop-10.jpg" alt="Workshop 10"/><div class="cap">Bodywork / inspection</div></div>
-    <div class="tile"><img src="../assets/photos/workshop-11.jpg" alt="Workshop 11"/><div class="cap">Detail / checks</div></div>
-
-
 </div>
 
   </div>

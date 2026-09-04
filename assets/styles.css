@@ -3,8 +3,6 @@
    Deep navy × warm gold × refined sans/serif typography
 ═══════════════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
-
 :root{
   /* ── Palette ─────────────────────────────────────────────────── */
   --bg0: #05101e;
@@ -146,6 +144,22 @@ nav{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
   border-color:var(--line-gold); background:var(--gold-dim); color:var(--gold-light);
 }
 .lang a:hover:not(.active){border-color:var(--line);background:var(--panel);color:var(--text)}
+
+/* ── Drapeaux du selecteur de langue ─────────────────────────────────
+   En CSS plutot qu'en SVG inline : une seule definition au lieu de 22
+   copies dans le HTML. Les emojis drapeau ne sont pas une option, ils ne
+   s'affichent pas sous Windows.                                        */
+.lang a{display:inline-flex;align-items:center;gap:7px}
+.lang a::before{
+  content:''; width:16px; height:11px; flex-shrink:0;
+  border-radius:2px; background-size:cover; background-position:center;
+  box-shadow:0 0 0 1px rgba(255,255,255,.16);
+  opacity:.75; transition:opacity var(--transition);
+}
+.lang a.active::before,
+.lang a:hover::before{opacity:1}
+.lang a[href$="/fr/index.html"]::before{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'><rect width='3' height='2' fill='%23fff'/><rect width='1' height='2' fill='%23002654'/><rect x='2' width='1' height='2' fill='%23ED2939'/></svg>")}
+.lang a[href$="/en/index.html"]::before{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 36'><rect width='60' height='36' fill='%23012169'/><path d='M0 0 60 36M60 0 0 36' stroke='%23fff' stroke-width='7'/><path d='M0 0 60 36M60 0 0 36' stroke='%23C8102E' stroke-width='4'/><path d='M30 0V36M0 18H60' stroke='%23fff' stroke-width='12'/><path d='M30 0V36M0 18H60' stroke='%23C8102E' stroke-width='7'/></svg>")}
 .ribbon{border-top:1px solid var(--line);background:rgba(255,255,255,.018)}
 .ribbon .inner{
   padding:8px 0; font-size:11.5px; letter-spacing:.055em; color:var(--muted);
@@ -465,7 +479,6 @@ footer{
   border-color:rgba(201,161,74,.60);
   box-shadow:0 0 0 3px rgba(201,161,74,.10);
 }
-.stockHint{display:none}
 
 /* ── Stock grid ──────────────────────────────────────────────────── */
 .stockGrid{
@@ -1298,3 +1311,56 @@ footer{
   .timeline-milestone{ flex-direction: column; gap: 8px; }
   .timeline-year{ font-size: 22px; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════════════════════════════════ */
+.contactLayout{
+  display:grid; grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);
+  gap:20px; align-items:start; margin-bottom:20px;
+}
+@media (max-width:900px){.contactLayout{grid-template-columns:1fr}}
+
+.contactForm{display:flex;flex-direction:column;gap:18px}
+.contactForm .field{display:flex;flex-direction:column;gap:7px}
+.contactForm label{
+  font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  font-weight:600; color:var(--muted);
+}
+.contactForm .fieldOpt{
+  text-transform:none; letter-spacing:.02em; font-weight:400; color:var(--muted2);
+}
+.contactForm .formRow{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:620px){.contactForm .formRow{grid-template-columns:1fr}}
+.contactForm textarea.input{min-height:170px;line-height:1.65}
+.contactForm .btn{align-self:flex-start;padding:13px 28px}
+.contactForm .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+.contactAside{display:flex;flex-direction:column;gap:14px}
+.contactList{margin-top:18px}
+.contactList dt{
+  font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted2); margin-top:16px;
+}
+.contactList dt:first-child{margin-top:0}
+.contactList dd{margin:5px 0 0;font-size:14px;color:var(--text);line-height:1.6}
+.contactList dd a{color:var(--gold-light);border-bottom:1px solid var(--line-gold)}
+.contactList dd a:hover{color:var(--gold)}
+.contactList dd.gold{color:var(--gold-light)}
+
+.contactPoints{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:16px}
+.contactPoints li{display:flex;flex-direction:column;gap:3px}
+.contactPoints strong{
+  font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  font-weight:600; color:var(--gold-light);
+}
+.contactPoints span{font-size:13.5px;color:var(--muted);line-height:1.6}
+
+/* ── Hero : lien secondaire discret sous les CTA ──────────────────── */
+.heroAside{margin-top:14px}
+.heroAsideLink{
+  font-size:13px; color:var(--muted);
+  border-bottom:1px solid transparent;
+  transition: color var(--transition), border-color var(--transition);
+}
+.heroAsideLink:hover{color:var(--gold-light);border-bottom-color:var(--line-gold)}

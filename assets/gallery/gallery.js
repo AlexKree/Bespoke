@@ -6,6 +6,8 @@
   const basePrefix = '../';
   const dataUrl = basePrefix + 'assets/gallery/gallery.json';
 
+  const IMG = window.BespokeImg;
+
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImage');
 
@@ -37,7 +39,7 @@
     const frag = document.createDocumentFragment();
     items.forEach((it) => {
       const a = document.createElement('a');
-      a.href = basePrefix + it.file;
+      a.href = '/' + String(it.file).replace(/^\/+/, '');
       a.className = 'galleryItem';
       a.target = '_self';
       a.rel = 'noopener';
@@ -45,13 +47,14 @@
       const img = document.createElement('img');
       img.loading = 'lazy';
       img.decoding = 'async';
-      img.src = basePrefix + it.thumb;
+      IMG.apply(img, it.thumb, 600, [300, 450, 600],
+                '(max-width: 620px) 50vw, (max-width: 1040px) 33vw, 260px');
       img.alt = it.alt || 'Photo';
       a.appendChild(img);
 
       a.addEventListener('click', (ev) => {
         ev.preventDefault();
-        openLightbox(basePrefix + it.file, img.alt);
+        openLightbox(IMG.variant(it.file, 1600), img.alt);
       });
 
       frag.appendChild(a);
