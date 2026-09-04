@@ -1,3 +1,0 @@
-# Netlify redirect - send root to French homepage
-
-/    /fr/index.html   301

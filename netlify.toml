@@ -3,6 +3,28 @@
   # Produit les variantes WebP servies par le site (assets/_img).
   command = "node scripts/build-images.mjs"
 
+# ── Langue d'arrivee selon le pays de l'IP ───────────────────────────
+# Netlify resout le pays a la peripherie ; aucune fonction n'est necessaire.
+#
+# force = true est indispensable : sans lui, "/" correspond au fichier
+# index.html existant et la regle serait ignoree.
+#
+# 302 et non 301 : une redirection qui depend du visiteur ne doit jamais
+# etre mise en cache de facon permanente par un navigateur ou un proxy.
+[[redirects]]
+  from = "/"
+  to = "/fr/index.html"
+  status = 302
+  force = true
+  conditions = {Country = ["FR", "MC", "GP", "MQ", "GF", "RE", "YT", "PM", "BL", "MF", "WF", "PF", "NC"]}
+
+# Tout le reste du monde, y compris quand le pays est indeterminable.
+[[redirects]]
+  from = "/"
+  to = "/en/index.html"
+  status = 302
+  force = true
+
 # Serve the admin page at /admin (without trailing slash)
 [[redirects]]
   from = "/admin"

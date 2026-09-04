@@ -144,6 +144,22 @@ nav{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
   border-color:var(--line-gold); background:var(--gold-dim); color:var(--gold-light);
 }
 .lang a:hover:not(.active){border-color:var(--line);background:var(--panel);color:var(--text)}
+
+/* ── Drapeaux du selecteur de langue ─────────────────────────────────
+   En CSS plutot qu'en SVG inline : une seule definition au lieu de 22
+   copies dans le HTML. Les emojis drapeau ne sont pas une option, ils ne
+   s'affichent pas sous Windows.                                        */
+.lang a{display:inline-flex;align-items:center;gap:7px}
+.lang a::before{
+  content:''; width:16px; height:11px; flex-shrink:0;
+  border-radius:2px; background-size:cover; background-position:center;
+  box-shadow:0 0 0 1px rgba(255,255,255,.16);
+  opacity:.75; transition:opacity var(--transition);
+}
+.lang a.active::before,
+.lang a:hover::before{opacity:1}
+.lang a[href$="/fr/index.html"]::before{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'><rect width='3' height='2' fill='%23fff'/><rect width='1' height='2' fill='%23002654'/><rect x='2' width='1' height='2' fill='%23ED2939'/></svg>")}
+.lang a[href$="/en/index.html"]::before{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 36'><rect width='60' height='36' fill='%23012169'/><path d='M0 0 60 36M60 0 0 36' stroke='%23fff' stroke-width='7'/><path d='M0 0 60 36M60 0 0 36' stroke='%23C8102E' stroke-width='4'/><path d='M30 0V36M0 18H60' stroke='%23fff' stroke-width='12'/><path d='M30 0V36M0 18H60' stroke='%23C8102E' stroke-width='7'/></svg>")}
 .ribbon{border-top:1px solid var(--line);background:rgba(255,255,255,.018)}
 .ribbon .inner{
   padding:8px 0; font-size:11.5px; letter-spacing:.055em; color:var(--muted);
