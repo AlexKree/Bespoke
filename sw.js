@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bespoke-cache-v3';
+const CACHE_NAME = 'bespoke-cache-v4';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -20,6 +20,7 @@ const STATIC_ASSETS = [
   '/en/track-record.html',
   '/assets/styles.css',
   '/assets/site.js',
+  '/assets/img.js',
   '/manifest.webmanifest',
   '/offline.html',
 ];

@@ -98,7 +98,7 @@
   <div class="container">
     <div class="navbar">
       <a class="brand" href="index.html">
-        <img class="mark" src="/.netlify/images?url=/assets/photos/hero.jpg&amp;w=88&amp;fm=webp&amp;q=72" alt="Bespoke" width="88" height="117" fetchpriority="high" decoding="async"/>
+        <img class="mark" src="/assets/_img/photos/hero-88.webp" alt="Bespoke" width="88" height="117" fetchpriority="high" decoding="async"/>
         <div>
           <div class="name">BESPOKE</div>
           <div class="tag">Sourcing • Mandats • Import • Collection & Prestige</div>
@@ -468,6 +468,7 @@
 </footer>
 <script>window.__BESPOKE_LANG__="fr";</script>
 <script src="../assets/site.js"></script>
+<script src="../assets/img.js"></script>
 <script src="../assets/stock/stock.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
@@ -803,7 +804,7 @@
           [(v.make && (v.make.fr || v.make.en)), (v.model && (v.model.fr || v.model.en))].filter(Boolean).join(' ') ||
           res.vehicle_slug;
         var img = (v.images && v.images.length)
-          ? '/.netlify/images?url=' + encodeURIComponent('/' + String(v.images[0]).replace(/^\/+/, '')) + '&w=760&fm=webp&q=72'
+          ? window.BespokeImg.variant(v.images[0], 760)
           : '';
 
         var statusLabels = { pending: 'En attente', balance_requested: 'Solde demandé', paid: 'Payé', cancelled: 'Annulé', sold: 'Vendu' };
@@ -816,7 +817,7 @@
         card.style.cursor = 'default';
         card.innerHTML =
           '<div class="stockCardImage">' +
-          (img ? '<img src="' + escHtml(img) + '" alt="' + escHtml(title) + '" loading="lazy" decoding="async" width="761" height="476" style="width:100%;height:100%;object-fit:cover"/>' : '') +
+          (img ? '<img src="' + escHtml(img) + '" alt="' + escHtml(title) + '" loading="lazy" decoding="async" width="761" height="476" onerror="this.onerror=null;this.src=window.BespokeImg.cdn(\'' + escHtml(v.images[0]) + '\', 760)" style="width:100%;height:100%;object-fit:cover"/>' : '') +
           '<div class="stockBadge" style="background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.2);color:' + statusColor + '">' + escHtml(statusLabel) + '</div>' +
           '</div>' +
           '<div class="stockCardBody">' +

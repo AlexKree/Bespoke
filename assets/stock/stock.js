@@ -125,18 +125,9 @@
     return '/' + String(assetPath).replace(/^\/+/, '');
   }
 
-  // Image CDN Netlify : conversion WebP + redimensionnement a la volee.
-  // Couvre aussi les photos uploadees par l'admin apres coup.
-  function cdn(assetPath, width, quality) {
-    const src = resolveAsset(assetPath);
-    if (!src || /^https?:/i.test(src)) return src;
-    return '/.netlify/images?url=' + encodeURIComponent(src) +
-           '&w=' + width + '&fm=webp&q=' + (quality || 72);
-  }
-
-  function cdnSrcset(assetPath, widths, quality) {
-    return widths.map((w) => cdn(assetPath, w, quality) + ' ' + w + 'w').join(', ');
-  }
+  // Variantes WebP produites au build (assets/_img). BespokeImg gere le repli
+  // sur la conversion a la demande pour une photo pas encore construite.
+  const IMG = window.BespokeImg;
 
   function statusLabel(item) {
     if (item.status === 'sold') return T.sold;
@@ -218,9 +209,8 @@
     img.decoding = 'async';
     img.alt = itemTitle(item);
     if (item.images && item.images.length) {
-      img.src = cdn(item.images[0], 760);
-      img.srcset = cdnSrcset(item.images[0], [400, 560, 760]);
-      img.sizes = '(max-width: 620px) 100vw, (max-width: 1040px) 50vw, 361px';
+      IMG.apply(img, item.images[0], 760, [400, 560, 760],
+                '(max-width: 620px) 100vw, (max-width: 1040px) 50vw, 361px');
       img.width = 761; img.height = 476; // ratio 16/10, evite le saut de mise en page
     }
     if (isSold) img.style.filter = 'grayscale(40%) opacity(0.75)';
@@ -420,9 +410,7 @@
 
     const imgs = item.images || [];
     if (imgs.length) {
-      modalMainImage.src = cdn(imgs[0], 1000);
-      modalMainImage.srcset = cdnSrcset(imgs[0], [500, 760, 1000]);
-      modalMainImage.sizes = '(max-width: 700px) 100vw, 493px';
+      IMG.apply(modalMainImage, imgs[0], 1000, [500, 760, 1000], '(max-width: 700px) 100vw, 493px');
       modalMainImage.alt = itemTitle(item);
       modalMainImage.style.filter = item.status === 'sold' ? 'grayscale(30%) opacity(0.8)' : '';
 
@@ -432,14 +420,13 @@
         b.type = 'button';
         b.className = 'thumbBtn' + (idx === 0 ? ' active' : '');
         const im = document.createElement('img');
-        im.src = cdn(src, 160);
+        IMG.apply(im, src, 160);
         im.alt = '';
         im.loading = 'lazy';
         im.decoding = 'async';
         b.appendChild(im);
         b.addEventListener('click', () => {
-          modalMainImage.src = cdn(src, 1000);
-          modalMainImage.srcset = cdnSrcset(src, [500, 760, 1000]);
+          IMG.apply(modalMainImage, src, 1000, [500, 760, 1000], '(max-width: 700px) 100vw, 493px');
           [...modalThumbs.querySelectorAll('.thumbBtn')].forEach((x) => x.classList.remove('active'));
           b.classList.add('active');
         });

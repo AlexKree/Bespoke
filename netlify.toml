@@ -1,5 +1,7 @@
 [build]
   functions = "netlify/functions"
+  # Produit les variantes WebP servies par le site (assets/_img).
+  command = "node scripts/build-images.mjs"
 
 # Serve the admin page at /admin (without trailing slash)
 [[redirects]]
@@ -78,3 +80,10 @@
   [headers.values]
     Content-Type = "application/manifest+json"
     Cache-Control = "no-cache"
+
+# Les variantes portent la largeur dans leur nom : leur contenu ne change
+# jamais pour une URL donnee, on peut donc les mettre en cache indefiniment.
+[[headers]]
+  for = "/assets/_img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
