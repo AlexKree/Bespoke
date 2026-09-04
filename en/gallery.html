@@ -4,10 +4,10 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Gallery — Bespoke</title>
-  <link rel="stylesheet" href="../assets/styles.css?v=3"/>
+  <link rel="stylesheet" href="../assets/styles.css?v=5"/>
   <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#071526" />
+  <meta name="theme-color" content="#05101e" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Bespoke" />
@@ -17,14 +17,15 @@
   <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments); };</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
 </head>
 <body>
 <header>
   <div class="container">
     <div class="navbar">
       <a class="brand" href="index.html">
-        <img class="mark" src="../assets/photos/hero.jpg" alt="Bespoke" />
+        <img class="mark" src="/.netlify/images?url=/assets/photos/hero.jpg&amp;w=88&amp;fm=webp&amp;q=72" alt="Bespoke" width="88" height="117" fetchpriority="high" decoding="async"/>
         <div>
           <div class="name">BESPOKE</div>
           <div class="tag">Sourcing • Mandates • Import • Collector & Prestige</div>
@@ -120,7 +121,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/assets/sw.js')
+      navigator.serviceWorker.register('/sw.js')
         .catch(err => console.warn('SW registration failed:', err));
     });
   }

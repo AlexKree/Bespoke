@@ -117,8 +117,25 @@
     return item.id || 'Vehicle';
   }
 
+  // stock.json melange les formes "assets/..." et "/assets/..." : on normalise
+  // vers un chemin absolu depuis la racine du site.
   function resolveAsset(assetPath) {
-    return basePrefix + assetPath.replace(/^/, '');
+    if (!assetPath) return '';
+    if (/^https?:/i.test(assetPath)) return assetPath;
+    return '/' + String(assetPath).replace(/^\/+/, '');
+  }
+
+  // Image CDN Netlify : conversion WebP + redimensionnement a la volee.
+  // Couvre aussi les photos uploadees par l'admin apres coup.
+  function cdn(assetPath, width, quality) {
+    const src = resolveAsset(assetPath);
+    if (!src || /^https?:/i.test(src)) return src;
+    return '/.netlify/images?url=' + encodeURIComponent(src) +
+           '&w=' + width + '&fm=webp&q=' + (quality || 72);
+  }
+
+  function cdnSrcset(assetPath, widths, quality) {
+    return widths.map((w) => cdn(assetPath, w, quality) + ' ' + w + 'w').join(', ');
   }
 
   function statusLabel(item) {
@@ -178,6 +195,7 @@
     render();
   }
 
+
   function catLabel(cat) {
     if (cat === 'particulier') return T.catParticulier;
     if (cat === 'professionnel') return T.catProfessionnel;
@@ -199,7 +217,12 @@
     img.loading = 'lazy';
     img.decoding = 'async';
     img.alt = itemTitle(item);
-    img.src = item.images && item.images.length ? resolveAsset(item.images[0]) : '';
+    if (item.images && item.images.length) {
+      img.src = cdn(item.images[0], 760);
+      img.srcset = cdnSrcset(item.images[0], [400, 560, 760]);
+      img.sizes = '(max-width: 620px) 100vw, (max-width: 1040px) 50vw, 361px';
+      img.width = 761; img.height = 476; // ratio 16/10, evite le saut de mise en page
+    }
     if (isSold) img.style.filter = 'grayscale(40%) opacity(0.75)';
     imgWrap.appendChild(img);
 
@@ -395,9 +418,11 @@
       if (modalInfo) modalInfo.appendChild(reserveBtn);
     }
 
-    const imgs = (item.images || []).map(resolveAsset);
+    const imgs = item.images || [];
     if (imgs.length) {
-      modalMainImage.src = imgs[0];
+      modalMainImage.src = cdn(imgs[0], 1000);
+      modalMainImage.srcset = cdnSrcset(imgs[0], [500, 760, 1000]);
+      modalMainImage.sizes = '(max-width: 700px) 100vw, 493px';
       modalMainImage.alt = itemTitle(item);
       modalMainImage.style.filter = item.status === 'sold' ? 'grayscale(30%) opacity(0.8)' : '';
 
@@ -407,12 +432,14 @@
         b.type = 'button';
         b.className = 'thumbBtn' + (idx === 0 ? ' active' : '');
         const im = document.createElement('img');
-        im.src = src;
+        im.src = cdn(src, 160);
         im.alt = '';
         im.loading = 'lazy';
+        im.decoding = 'async';
         b.appendChild(im);
         b.addEventListener('click', () => {
-          modalMainImage.src = src;
+          modalMainImage.src = cdn(src, 1000);
+          modalMainImage.srcset = cdnSrcset(src, [500, 760, 1000]);
           [...modalThumbs.querySelectorAll('.thumbBtn')].forEach((x) => x.classList.remove('active'));
           b.classList.add('active');
         });

@@ -6,6 +6,18 @@
   const basePrefix = '../';
   const dataUrl = basePrefix + 'assets/gallery/gallery.json';
 
+  // Image CDN Netlify : conversion WebP + redimensionnement a la volee.
+  function cdn(assetPath, width, quality) {
+    if (!assetPath) return '';
+    if (/^https?:/i.test(assetPath)) return assetPath;
+    const src = '/' + String(assetPath).replace(/^\/+/, '');
+    return '/.netlify/images?url=' + encodeURIComponent(src) +
+           '&w=' + width + '&fm=webp&q=' + (quality || 72);
+  }
+  function cdnSrcset(assetPath, widths, quality) {
+    return widths.map((w) => cdn(assetPath, w, quality) + ' ' + w + 'w').join(', ');
+  }
+
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImage');
 
@@ -37,7 +49,7 @@
     const frag = document.createDocumentFragment();
     items.forEach((it) => {
       const a = document.createElement('a');
-      a.href = basePrefix + it.file;
+      a.href = '/' + String(it.file).replace(/^\/+/, '');
       a.className = 'galleryItem';
       a.target = '_self';
       a.rel = 'noopener';
@@ -45,13 +57,15 @@
       const img = document.createElement('img');
       img.loading = 'lazy';
       img.decoding = 'async';
-      img.src = basePrefix + it.thumb;
+      img.src = cdn(it.thumb, 600);
+      img.srcset = cdnSrcset(it.thumb, [300, 450, 600]);
+      img.sizes = '(max-width: 620px) 50vw, (max-width: 1040px) 33vw, 260px';
       img.alt = it.alt || 'Photo';
       a.appendChild(img);
 
       a.addEventListener('click', (ev) => {
         ev.preventDefault();
-        openLightbox(basePrefix + it.file, img.alt);
+        openLightbox(cdn(it.file, 1600, 80), img.alt);
       });
 
       frag.appendChild(a);

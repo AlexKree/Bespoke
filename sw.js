@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bespoke-cache-v2';
+const CACHE_NAME = 'bespoke-cache-v3';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -9,18 +9,18 @@ const STATIC_ASSETS = [
   '/fr/a-propos.html',
   '/fr/marche.html',
   '/fr/track-record.html',
-  '/fr/opportunites.html',
   '/en/index.html',
   '/en/stock.html',
   '/en/services.html',
   '/en/contact.html',
   '/en/a-propos.html',
+  '/fr/galerie.html',
+  '/en/gallery.html',
   '/en/market.html',
   '/en/track-record.html',
-  '/en/opportunites.html',
   '/assets/styles.css',
   '/assets/site.js',
-  '/manifest.json',
+  '/manifest.webmanifest',
   '/offline.html',
 ];
 

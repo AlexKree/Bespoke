@@ -43,6 +43,23 @@
   to   = "/setup-staff.html"
   status = 200
 
+# Doublon supprimé -> page de remerciement canonique
+[[redirects]]
+  from = "/fr/fr_merci.html"
+  to   = "/fr/merci.html"
+  status = 301
+
+# "Opportunites" a toujours pointe sur le stock : 301 au lieu d'un meta-refresh
+[[redirects]]
+  from = "/fr/opportunites.html"
+  to   = "/fr/stock.html"
+  status = 301
+
+[[redirects]]
+  from = "/en/opportunites.html"
+  to   = "/en/stock.html"
+  status = 301
+
 [[headers]]
   for = "/sw.js"
   [headers.values]
@@ -55,12 +72,6 @@
     Content-Type = "application/javascript"
     Service-Worker-Allowed = "/"
     Cache-Control = "no-cache"
-
-[[headers]]
-  for = "/manifest.json"
-  [headers.values]
-    Content-Type = "application/manifest+json"
-    Cache-Control = "public, max-age=86400"
 
 [[headers]]
   for = "/manifest.webmanifest"

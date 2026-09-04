@@ -6,10 +6,10 @@
   <title>Stock — Bespoke</title>
   <meta name="description" content="Découvrez notre sélection exclusive de voitures de collection et véhicules de prestige disponibles : Porsche, Ferrari, Mercedes, classiques japonaises (Nissan GT-R, Toyota Supra, Honda NSX). Import, due diligence et livraison partout en Europe. Stock mis à jour régulièrement.">
   <meta name="keywords" content="voitures collection, véhicules prestige, Porsche collection, Ferrari vintage, Mercedes classique, Nissan GT-R, Toyota Supra, Honda NSX, import voitures Japon, achat voiture collection">
-  <link rel="stylesheet" href="../assets/styles.css?v=3"/>
+  <link rel="stylesheet" href="../assets/styles.css?v=5"/>
   <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#071526" />
+  <meta name="theme-color" content="#05101e" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Bespoke" />
@@ -41,7 +41,8 @@
   <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments); };</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
   <!-- Structured Data: Organization + Product Catalog -->
   <script type="application/ld+json">
   {
@@ -97,7 +98,7 @@
   <div class="container">
     <div class="navbar">
       <a class="brand" href="index.html">
-        <img class="mark" src="../assets/photos/hero.jpg" alt="Bespoke" />
+        <img class="mark" src="/.netlify/images?url=/assets/photos/hero.jpg&amp;w=88&amp;fm=webp&amp;q=72" alt="Bespoke" width="88" height="117" fetchpriority="high" decoding="async"/>
         <div>
           <div class="name">BESPOKE</div>
           <div class="tag">Sourcing • Mandats • Import • Collection & Prestige</div>
@@ -176,7 +177,6 @@
       <div class="card pad stockControls">
         <div class="stockControlsLeft">
           <input id="stockSearch" class="input" type="search" placeholder="Rechercher (marque, modèle, année…)" autocomplete="off"/>
-          <div class="mini stockHint">Astuce : pour ajouter / retirer un véhicule, il suffit de mettre à jour le fichier stock.json et d'ajouter les photos dans /assets/stock/images.</div>
         </div>
         <div class="stockControlsRight">
           <label class="toggle">
@@ -472,7 +472,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/assets/sw.js')
+      navigator.serviceWorker.register('/sw.js')
         .catch(err => console.warn('SW registration failed:', err));
     });
   }
@@ -802,7 +802,9 @@
         var title = (v.title && (v.title.fr || v.title.en)) ||
           [(v.make && (v.make.fr || v.make.en)), (v.model && (v.model.fr || v.model.en))].filter(Boolean).join(' ') ||
           res.vehicle_slug;
-        var img = (v.images && v.images.length) ? '../' + v.images[0] : '';
+        var img = (v.images && v.images.length)
+          ? '/.netlify/images?url=' + encodeURIComponent('/' + String(v.images[0]).replace(/^\/+/, '')) + '&w=760&fm=webp&q=72'
+          : '';
 
         var statusLabels = { pending: 'En attente', balance_requested: 'Solde demandé', paid: 'Payé', cancelled: 'Annulé', sold: 'Vendu' };
         var statusColors = { pending: '#ffa500', balance_requested: '#c6b07a', paid: '#5cb88a', cancelled: '#e05c5c', sold: '#e05c5c' };
@@ -814,7 +816,7 @@
         card.style.cursor = 'default';
         card.innerHTML =
           '<div class="stockCardImage">' +
-          (img ? '<img src="' + escHtml(img) + '" alt="' + escHtml(title) + '" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>' : '') +
+          (img ? '<img src="' + escHtml(img) + '" alt="' + escHtml(title) + '" loading="lazy" decoding="async" width="761" height="476" style="width:100%;height:100%;object-fit:cover"/>' : '') +
           '<div class="stockBadge" style="background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.2);color:' + statusColor + '">' + escHtml(statusLabel) + '</div>' +
           '</div>' +
           '<div class="stockCardBody">' +
