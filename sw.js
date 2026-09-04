@@ -1,6 +1,8 @@
-const CACHE_NAME = 'bespoke-cache-v4';
+const CACHE_NAME = 'bespoke-cache-v5';
 const STATIC_ASSETS = [
-  '/',
+  // Pas de '/' ici : la racine renvoie desormais une redirection 302 par pays
+  // (voir netlify.toml). cache.addAll suivrait le 302 et cache.put rejette une
+  // reponse redirigee — l'install du SW echouerait en entier.
   '/index.html',
   '/fr/index.html',
   '/fr/stock.html',
@@ -49,6 +51,11 @@ self.addEventListener('fetch', (event) => {
 
   // Never intercept admin or netlify functions — let the browser handle them normally
   if (url.pathname.startsWith('/admin') || url.pathname.startsWith('/.netlify')) return;
+
+  // La racine est une redirection 302 resolue par pays a la peripherie Netlify.
+  // Le SW ne doit jamais la mettre en cache ni la servir : la decision de langue
+  // doit rester fraiche a chaque visite.
+  if (url.pathname === '/') return;
 
   // Network first for HTML pages (keeps stock up to date)
   if (event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html')) {
