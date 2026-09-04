@@ -20,7 +20,8 @@ const ORIGINS = ['japon', 'coree-du-sud', 'etats-unis', 'canada', 'royaume-uni',
 const Params = z.object({
   vehicle_label: z.string().describe("Le vehicule tel que le client le decrit, ex. 'Nissan Skyline GT-R R34 1999'."),
   vehicle_price_eur: z.number().nullable().describe("Prix d'achat en euros. Convertis si le client donne une autre devise, et signale-le dans assumptions."),
-  origin: z.enum(ORIGINS).nullable().describe("Pays de depart. 'ue' pour tout Etat membre de l'Union europeenne. null si le client ne l'indique pas — ne le devine jamais."),
+  origin_stated_by_client: z.boolean().describe("true UNIQUEMENT si le client indique explicitement d'ou part le vehicule (pays, ville, vendeur, port). false si tu l'as deduit de la marque, du modele ou du pays de fabrication. Le pays de construction n'est PAS le pays de depart."),
+  origin: z.enum(ORIGINS).nullable().describe("Pays de depart, seulement si origin_stated_by_client est true. 'ue' pour tout Etat membre de l'Union europeenne. Sinon null."),
   first_registration_year: z.number().nullable(),
   co2_g_km: z.number().nullable().describe('CO2 homologue en g/km, seulement si le client le donne ou si le modele exact le rend certain.'),
   weight_kg: z.number().nullable().describe('Masse en ordre de marche en kg.'),
@@ -38,7 +39,7 @@ Regles strictes :
 - Tu n'inventes aucun chiffre. Si une donnee n'est pas dans la demande, mets null et ajoute une ligne dans "missing".
 - Exception unique : si le modele est identifie sans ambiguite et que sa fiche technique est un fait etabli et stable (masse, puissance fiscale, CO2 homologue), tu peux la renseigner — mais tu dois alors l'ecrire dans "assumptions".
 - Ne devine jamais un prix d'achat. Sans prix, mets null.
-- Ne devine jamais le pays de depart. S'il n'est pas donne, mets origin a null et ajoute une question dans "missing" : sans lui, ni le transport ni le regime douanier ne peuvent etre chiffres.
+- Le pays de FABRICATION n'est pas le pays de DEPART. Une R34 en vente au Royaume-Uni part du Royaume-Uni. Ne mets origin_stated_by_client a true que si le client dit ou se trouve la voiture ou d'ou elle expedie. Sinon : origin_stated_by_client = false, origin = null, et une question dans "missing".
 - Convertis les devises en euros si necessaire et note le taux utilise dans "assumptions".
 - "assumptions" et "missing" sont rediges dans la langue du client.`;
 
@@ -106,6 +107,10 @@ exports.handler = async function (event) {
     const params = extraction.parsed_output;
     if (!params) return json(502, { error: 'unparsable_response' });
 
+    // Garde deterministe : on ne retient le pays de depart que si le client
+    // l'a explicitement donne. Le modele a tendance a deduire "R34 => Japon".
+    if (!params.origin_stated_by_client) params.origin = null;
+
     if (params.vehicle_price_eur == null) {
       return json(200, {
         ok: true,
@@ -122,8 +127,10 @@ exports.handler = async function (event) {
     // 3. Explication redigee A PARTIR du chiffrage.
     const explanation = await client.messages.parse({
       model: MODEL,
-      max_tokens: 6000,
-      thinking: { type: 'adaptive' },
+      max_tokens: 3000,
+      // Redaction a partir d'un chiffrage deja calcule : pas besoin de thinking,
+      // et on reste ainsi sous le plafond temps de la fonction Netlify.
+      thinking: { type: 'disabled' },
       output_config: { effort: 'low', format: zodOutputFormat(Explanation) },
       system: EXPLAIN_SYSTEM,
       messages: [{
