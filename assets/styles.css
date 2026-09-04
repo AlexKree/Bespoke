@@ -1374,6 +1374,40 @@ footer{
   border-radius:0 var(--r-md) var(--r-md) 0;
   font-size:13.5px; color:var(--muted); line-height:1.65;
 }
+
+/* ── Sélecteur des trois outils ──────────────────────────────────── */
+.aiHub{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+@media (max-width:940px){.aiHub{grid-template-columns:1fr}}
+.aiHubCard{
+  display:flex; flex-direction:column; gap:9px;
+  padding:22px 20px 24px;
+  border:1px solid var(--line); border-radius:var(--r-lg);
+  background:var(--panel2); color:inherit; text-decoration:none;
+  transition: border-color var(--transition), background var(--transition), transform var(--transition);
+}
+a.aiHubCard:hover{border-color:var(--line-gold);background:var(--panel);transform:translateY(-2px)}
+.aiHubCard.current{border-color:var(--line-gold);background:var(--gold-glow)}
+.aiHubNum{
+  font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted2); font-variant-numeric:tabular-nums;
+}
+.aiHubName{font-family:var(--serif);font-size:21px;letter-spacing:.02em;color:var(--text)}
+.aiHubDesc{font-size:13px;line-height:1.62;color:var(--muted);flex:1}
+.aiHubCta{
+  margin-top:4px; font-size:11.5px; letter-spacing:.09em;
+  text-transform:uppercase; font-weight:600; color:var(--gold-light);
+}
+.aiHubCard.current .aiHubCta{color:var(--muted2)}
+
+/* ── Bandeau « assisté par IA · FR & EN » ────────────────────────── */
+.aiPoweredNote{
+  margin-top:18px; display:flex; gap:10px 14px; flex-wrap:wrap; align-items:center;
+  font-size:12.5px; color:var(--muted); letter-spacing:.02em; line-height:1.6;
+}
+.aiPoweredNote strong{color:var(--gold-light);font-weight:600}
+.aiPoweredNote a{color:var(--muted);border-bottom:1px solid var(--line-gold);transition:color var(--transition)}
+.aiPoweredNote a:hover{color:var(--gold-light)}
+
 .aiTool{margin-top:18px}
 .aiTool form{display:flex;flex-direction:column;gap:18px}
 .aiTool .field{display:flex;flex-direction:column;gap:7px}

@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/styles.css?v=5" />
+  <link rel="stylesheet" href="../assets/styles.css?v=7" />
   <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest" />
   <meta name="theme-color" content="#05101e" />
@@ -87,13 +87,38 @@
       </ol>
     </nav>
     <div class="card pad-lg">
-      <div class="kicker">Concierge de sourcing</div>
-      <h1>Décrivez la voiture que vous cherchez.</h1>
-      <p class="lead">Une phrase suffit. Nous en tirons un brief d'acquisition structuré, nous le confrontons à notre stock, et nous vous disons franchement ce qui correspond — ou ce qu'il faudrait aller chercher.</p>
-      <div class="aiIntroNote">Plutôt que des cases à cocher, écrivez comme vous le diriez à un professionnel : usage, budget, contraintes techniques, délai.</div>
+      <div class="kicker">Outils Bespoke · assistés par IA</div>
+      <h1>Trois outils pour préparer votre acquisition.</h1>
+      <p class="lead">Décrivez ce que vous cherchez en langage courant : nos outils s'appuient sur l'intelligence artificielle pour en tirer un document exploitable — brief de sourcing, chiffrage d'import, points à vérifier avant achat.</p>
+
+      <div class="aiHub">
+        <div class="aiHubCard current">
+          <span class="aiHubNum">01 · Vous êtes ici</span>
+          <span class="aiHubName">Concierge de sourcing</span>
+          <span class="aiHubDesc">Une phrase suffit. L'IA en tire un brief d'acquisition structuré et le confronte à notre stock.</span>
+          <span class="aiHubCta">Formulaire ci-dessous ↓</span>
+        </div>
+        <a class="aiHubCard" href="import.html">
+          <span class="aiHubNum">02</span>
+          <span class="aiHubName">Calculateur d'import</span>
+          <span class="aiHubDesc">Le coût complet d'une importation : TVA, douane, malus, homologation, transport. Barème daté et détaillé.</span>
+          <span class="aiHubCta">Ouvrir l'outil →</span>
+        </a>
+        <a class="aiHubCard" href="inspection.html">
+          <span class="aiHubNum">03</span>
+          <span class="aiHubName">Pré-rapport photo</span>
+          <span class="aiHubDesc">Envoyez les photos d'une annonce : l'IA repère les points à vérifier avant de vous déplacer ou de commander une expertise.</span>
+          <span class="aiHubCta">Ouvrir l'outil →</span>
+        </a>
+      </div>
+
+      <p class="aiPoweredNote"><strong>Assisté par IA</strong> · réponses en langage naturel, en <strong>français</strong> comme en <strong>anglais</strong> · <a href="../en/concierge.html">Read this in English</a></p>
     </div>
 
     <div class="card pad-lg aiTool">
+      <div class="kicker">01 · Concierge de sourcing</div>
+      <h2>Décrivez la voiture que vous cherchez.</h2>
+      <div class="aiIntroNote">Plutôt que des cases à cocher, écrivez comme vous le diriez à un professionnel : usage, budget, contraintes techniques, délai.</div>
       <form id="conciergeForm" novalidate>
         <div class="field">
           <label for="conciergeQuery">Votre recherche</label>
@@ -106,8 +131,6 @@
     </div>
 
     <div id="conciergeResult" class="aiResult" aria-live="polite"></div>
-
-    <div class="aiCrossLinks"><span class="aiCrossLabel">Autres outils</span><a href="import.html">Calculateur d'import</a><a href="inspection.html">Pré-rapport photo</a></div>
   </div>
 </main>
 <footer>
