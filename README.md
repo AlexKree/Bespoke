@@ -179,6 +179,49 @@ Le catalogue envoyé au concierge est mis en cache côté API (`cache_control`),
 
 ---
 
+## Fiches véhicule et SEO
+
+Chaque véhicule de `stock.json` a sa propre page, sa propre URL et son balisage `schema.org`.
+
+```
+/fr/stock/ford-mustang-gt-v8-4-6l-2005.html
+/en/stock/ford-mustang-gt-v8-4-6l-2005.html
+```
+
+### Génération
+
+Les pages sont **générées au build**, pas commitées (voir `.gitignore`) :
+
+```bash
+node scripts/build-stock-pages.mjs
+```
+
+C'est la commande `[build]` de `netlify.toml`. Un enregistrement depuis `/admin` commite `stock.json`, ce qui déclenche un déploiement Netlify, qui régénère les pages. Aucune action manuelle.
+
+Le script produit aussi `sitemap.xml` (69 URL, les véhicules vendus exclus) et `robots.txt`. Il repart d'un dossier vide à chaque exécution : un véhicule retiré de `stock.json` ne laisse pas de page orpheline.
+
+Il signale en fin d'exécution les fiches sans photo et les images référencées mais absentes du disque.
+
+### Schéma de `stock.json`
+
+Le fichier mélangeait trois générations de schéma. `scripts/normalize-stock.mjs` a convergé vers un format unique (idempotent, rejouable) :
+
+| Champ | Rôle |
+|-------|------|
+| `id` | **Clé stable — ne jamais modifier.** Référencée par `reservations.vehicle_slug` en base. |
+| `slug` | URL publique. Écrit une fois puis conservé, pour qu'une URL publiée ne se casse pas si le titre change. |
+| `vehicle_type` | `car` ou `motorcycle` — détermine le type `schema.org` (`Car` / `Motorcycle`). |
+| `make`, `model` | Chaînes simples (une marque ne se traduit pas). Alimentent le filtre par marque. |
+| `price_eur` | Entier ou `null` (= prix sur demande). |
+| `mileage`, `mileage_km` | Chaîne libre pour l'affichage, entier pour `schema.org`. |
+| `country`, `status`, `sale_category`, `images` | Inchangés. Chemins d'images normalisés en absolu. |
+
+### Référencement
+
+- `Car` / `Motorcycle` + `Offer` (prix, disponibilité, état) + `BreadcrumbList` sur chaque fiche.
+- Véhicules vendus en `noindex,follow` et exclus du sitemap : ils restent accessibles comme référence sans polluer l'index.
+- `hreflang` FR/EN croisé, canonique par page, Open Graph avec la photo du véhicule.
+
 ## À compléter
 
 Adresse, email, téléphone, hébergeur (mentions légales). Les champs sont marqués `[À RENSEIGNER]`.
