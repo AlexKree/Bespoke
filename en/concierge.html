@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Thank you — The Bespoke Car</title>
-  <meta name="robots" content="noindex,follow" />
+  <title>Sourcing concierge — describe the car you are looking for | Bespoke</title>
+  <meta name="description" content="Describe in one sentence the car you are looking for. Our concierge turns it into a structured acquisition brief and matches it against our stock. Collector car sourcing and import." />
+  <meta name="robots" content="index,follow" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="../assets/styles.css?v=6" />
+  <link rel="stylesheet" href="../assets/styles.css?v=5" />
   <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest" />
   <meta name="theme-color" content="#05101e" />
@@ -17,14 +17,34 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Bespoke" />
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.svg" />
+  <!-- SEO -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://thebespokecar.com/en/concierge.html" />
+  <meta property="og:title" content="Sourcing concierge — describe the car you are looking for | Bespoke" />
+  <meta property="og:description" content="Describe in one sentence the car you are looking for. Our concierge turns it into a structured acquisition brief and matches it against our stock. Collector car sourcing and import." />
+  <meta property="og:image" content="https://thebespokecar.com/assets/photos/og-homepage.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:locale" content="en_GB" />
+  <meta property="og:site_name" content="The Bespoke Car" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@TheBespokeCar" />
+  <meta name="twitter:title" content="Sourcing concierge — describe the car you are looking for | Bespoke" />
+  <meta name="twitter:description" content="Describe in one sentence the car you are looking for. Our concierge turns it into a structured acquisition brief and matches it against our stock. Collector car sourcing and import." />
+  <meta name="twitter:image" content="https://thebespokecar.com/assets/photos/og-homepage.jpg" />
+  <link rel="canonical" href="https://thebespokecar.com/en/concierge.html" />
+  <link rel="alternate" hreflang="fr" href="https://thebespokecar.com/fr/concierge.html" />
+  <link rel="alternate" hreflang="en" href="https://thebespokecar.com/en/concierge.html" />
+  <link rel="alternate" hreflang="x-default" href="https://thebespokecar.com/en/concierge.html" />
+  <script defer data-domain="thebespokecar.com" src="https://plausible.io/js/script.js"></script>
+  <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments); };</script>
 </head>
 <body>
 <header>
   <div class="container">
     <div class="navbar">
       <a class="brand" href="index.html">
-        <img class="mark" src="/assets/_img/photos/hero-88.webp" alt="Bespoke" width="88" height="117" fetchpriority="high" decoding="async"/>
+        <img class="mark" src="/.netlify/images?url=/assets/photos/hero.jpg&amp;w=88&amp;fm=webp&amp;q=72" alt="Bespoke" width="88" height="117" fetchpriority="high" decoding="async"/>
         <div>
           <div class="name">BESPOKE</div>
           <div class="tag">Sourcing • Mandates • Import • Collector & Prestige</div>
@@ -58,26 +78,36 @@
   </div>
 </header>
 <main>
-  <div class="container" style="padding-top:56px;padding-bottom:56px">
-    <div class="card pad-lg" style="max-width:760px;margin:0 auto">
-      <div class="kicker">Enquiry sent</div>
-      <h1>Thank you — your enquiry has reached us.</h1>
-      <p class="lead">A member of the team is reviewing it and will come back to you within one business day. If your enquiry concerns a specific car, it helps to gather what you already have (photos, history, service book).</p>
-
-      <div class="grid3">
-        <div class="stat"><div class="v">Next step</div><div class="l">First assessment and scoping questions.</div></div>
-        <div class="stat"><div class="v">Timing</div><div class="l">Within one business day.</div></div>
-        <div class="stat"><div class="v">Confidentiality</div><div class="l">Your brief stays confidential.</div></div>
-      </div>
-
-      <div class="sep"></div>
-
-      <div class="ctaRow">
-        <a class="btn primary" href="stock.html">Browse the stock</a>
-        <a class="btn" href="services.html">See our method</a>
-        <a class="btn" href="index.html">Back to home</a>
-      </div>
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Concierge">
+      <ol>
+        <li><a href="index.html">Home</a></li>
+        <li>/</li>
+        <li aria-current="page">Concierge</li>
+      </ol>
+    </nav>
+    <div class="card pad-lg">
+      <div class="kicker">Sourcing concierge</div>
+      <h1>Describe the car you are looking for.</h1>
+      <p class="lead">One sentence is enough. We turn it into a structured acquisition brief, match it against our stock, and tell you plainly what fits — or what we would need to go and find.</p>
+      <div class="aiIntroNote">Instead of tick boxes, write as you would to a professional: intended use, budget, technical constraints, timing.</div>
     </div>
+
+    <div class="card pad-lg aiTool">
+      <form id="conciergeForm" novalidate>
+        <div class="field">
+          <label for="conciergeQuery">Your search</label>
+          <textarea class="input" id="conciergeQuery" rows="5" placeholder="e.g. I am looking for a German youngtimer, manual gearbox, under £55,000, matching numbers, deliverable to France before the summer." required></textarea>
+        </div>
+      <div class="aiExamples"><span class="aiExamplesLabel">Examples</span><button type="button" class="aiExample" data-example="I am looking for a German youngtimer, manual gearbox, under 60,000 EUR, matching numbers, deliverable to France.">German youngtimer</button><button type="button" class="aiExample" data-example="First collector car, 30,000 EUR budget, something reliable I can use at weekends without ruinous maintenance.">First collector car</button><button type="button" class="aiExample" data-example="I want a 1990s Japanese car, ideally a GT-R or a Supra, mileage matters less if the history is documented.">1990s Japanese</button></div>
+        <button class="btn primary" type="submit" id="conciergeBtn">Analyse my request</button>
+        <div id="conciergeStatus" class="authMsg" role="status" aria-live="polite" style="display:none"></div>
+      </form>
+    </div>
+
+    <div id="conciergeResult" class="aiResult" aria-live="polite"></div>
+
+    <div class="aiCrossLinks"><span class="aiCrossLabel">Other tools</span><a href="import.html">Import calculator</a><a href="inspection.html">Photo pre-report</a></div>
   </div>
 </main>
 <footer>
@@ -139,6 +169,7 @@
   </div>
 </footer>
 <script src="../assets/site.js"></script>
+<script src="../assets/ai/concierge.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
