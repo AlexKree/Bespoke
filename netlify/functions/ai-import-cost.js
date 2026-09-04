@@ -20,7 +20,7 @@ const ORIGINS = ['japon', 'coree-du-sud', 'etats-unis', 'canada', 'royaume-uni',
 const Params = z.object({
   vehicle_label: z.string().describe("Le vehicule tel que le client le decrit, ex. 'Nissan Skyline GT-R R34 1999'."),
   vehicle_price_eur: z.number().nullable().describe("Prix d'achat en euros. Convertis si le client donne une autre devise, et signale-le dans assumptions."),
-  origin: z.enum(ORIGINS).describe("Pays de depart. 'ue' pour tout Etat membre de l'Union europeenne."),
+  origin: z.enum(ORIGINS).nullable().describe("Pays de depart. 'ue' pour tout Etat membre de l'Union europeenne. null si le client ne l'indique pas — ne le devine jamais."),
   first_registration_year: z.number().nullable(),
   co2_g_km: z.number().nullable().describe('CO2 homologue en g/km, seulement si le client le donne ou si le modele exact le rend certain.'),
   weight_kg: z.number().nullable().describe('Masse en ordre de marche en kg.'),
@@ -38,6 +38,7 @@ Regles strictes :
 - Tu n'inventes aucun chiffre. Si une donnee n'est pas dans la demande, mets null et ajoute une ligne dans "missing".
 - Exception unique : si le modele est identifie sans ambiguite et que sa fiche technique est un fait etabli et stable (masse, puissance fiscale, CO2 homologue), tu peux la renseigner — mais tu dois alors l'ecrire dans "assumptions".
 - Ne devine jamais un prix d'achat. Sans prix, mets null.
+- Ne devine jamais le pays de depart. S'il n'est pas donne, mets origin a null et ajoute une question dans "missing" : sans lui, ni le transport ni le regime douanier ne peuvent etre chiffres.
 - Convertis les devises en euros si necessaire et note le taux utilise dans "assumptions".
 - "assumptions" et "missing" sont rediges dans la langue du client.`;
 
@@ -49,6 +50,7 @@ Regles absolues :
 - Tu listes les documents a reunir et une chronologie realiste en semaines.
 - Tu signales franchement ce qui peut faire deraper le budget sur ce dossier precis.
 - Tu rappelles que le chiffrage est indicatif et doit etre confirme au moment du dedouanement.
+- Si un poste manque parce qu'une donnee n'a pas ete fournie (pays de depart, CV fiscaux, CO2, masse...), tu le dis clairement et tu indiques quoi fournir pour l'obtenir.
 - Ton sobre et professionnel, pas de superlatifs. Redige dans la langue demandee.`;
 
 const Explanation = z.object({

@@ -17,6 +17,7 @@
     docs: 'Documents to gather', timeline: 'Realistic timeline',
     risks: 'What could move the figure', assumptions: 'Assumptions made',
     missing: 'What would sharpen this estimate',
+    partialTotal: 'Partial total — some lines not costed',
     err: 'The calculator is unavailable right now. Please use the contact form.',
     short: 'Describe the vehicle, where it comes from and its price.',
     ask: 'Ask us to confirm this costing'
@@ -27,6 +28,7 @@
     docs: 'Documents à réunir', timeline: 'Délai réaliste',
     risks: 'Ce qui peut faire bouger le chiffre', assumptions: 'Hypothèses retenues',
     missing: 'Ce qui affinerait l’estimation',
+    partialTotal: 'Total partiel — certains postes non chiffrés',
     err: 'Le calculateur est momentanément indisponible. Merci d’utiliser le formulaire de contact.',
     short: 'Décrivez le véhicule, son pays de départ et son prix.',
     ask: 'Faire confirmer ce chiffrage'
@@ -75,7 +77,7 @@
       html += '<tr><th scope="row">' + esc(lang === 'en' ? l.label_en : l.label_fr) + '</th>' +
         '<td>' + esc(eur(l.amount)) + '</td></tr>';
     });
-    html += '<tr class="aiTableTotal"><th scope="row">' + esc(T.total) + '</th><td>' + esc(eur(c.total_eur)) + '</td></tr>';
+    html += '<tr class="aiTableTotal"><th scope="row">' + esc(c.partial ? T.partialTotal : T.total) + '</th><td>' + esc(eur(c.total_eur)) + '</td></tr>';
     html += '</table>';
     if (c.extra_over_price_eur != null) {
       html += '<div class="aiExtra">' + esc(T.extra) + ' : <strong>' + esc(eur(c.extra_over_price_eur)) + '</strong>' +

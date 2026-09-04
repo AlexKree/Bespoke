@@ -81,8 +81,9 @@ function computeImportCost(p) {
   const notes = [];
   const lines = [];
   const price = Math.max(0, Number(p.vehicle_price_eur) || 0);
-  const origin = String(p.origin || 'default').toLowerCase();
-  const outsideEu = HORS_UE.has(origin);
+  const origin = p.origin ? String(p.origin).toLowerCase() : null;
+  const originKnown = origin != null;
+  const outsideEu = originKnown && HORS_UE.has(origin);
   const year = RATES.reference_year;
 
   const age = p.first_registration_year ? year - Number(p.first_registration_year) : null;
@@ -100,17 +101,31 @@ function computeImportCost(p) {
   lines.push({ key: 'vehicle', label_fr: "Prix d'achat du vehicule", label_en: 'Vehicle purchase price', amount: round(price) });
 
   // ── Transport ───────────────────────────────────────────────────────
-  const transport = RATES.transport_eur[origin] != null ? RATES.transport_eur[origin] : RATES.transport_eur.default;
-  lines.push({
-    key: 'transport', amount: round(transport),
-    label_fr: 'Transport et manutention (estimation)', label_en: 'Transport and handling (estimate)',
-  });
+  // Sans pays de depart, on ne chiffre ni le transport ni le regime douanier :
+  // les deux en dependent entierement.
+  let transport = 0;
+  if (originKnown) {
+    transport = RATES.transport_eur[origin] != null ? RATES.transport_eur[origin] : RATES.transport_eur.default;
+    lines.push({
+      key: 'transport', amount: round(transport), partial: true,
+      label_fr: 'Transport et manutention (fourchette indicative, selon le port de depart)',
+      label_en: 'Transport and handling (broad estimate, depends on port of departure)',
+    });
+  } else {
+    notes.push({
+      level: 'warning',
+      fr: "Pays de depart non precise : le transport, les droits de douane et la TVA a l'import ne sont pas chiffres ici. Indiquez d'ou part le vehicule pour obtenir ces postes.",
+      en: 'Country of departure not specified: shipping, customs duty and import VAT are not costed here. State where the vehicle ships from to get those lines.',
+    });
+  }
 
   // ── Douane et TVA ───────────────────────────────────────────────────
   let duty = 0, vat = 0;
   const customsValue = price + transport; // valeur en douane : prix + acheminement jusqu'a la frontiere UE
 
-  if (outsideEu) {
+  if (!originKnown) {
+    // rien : l'avertissement ci-dessus couvre l'absence de ces postes
+  } else if (outsideEu) {
     const dutyRate = collection ? RATES.collection_customs_duty : RATES.customs_duty;
     const vatRate = collection ? RATES.collection_vat : RATES.standard_vat;
     duty = customsValue * dutyRate;
@@ -253,8 +268,13 @@ function computeImportCost(p) {
 
   return {
     reference_year: year,
-    regime: collection ? 'collection' : outsideEu ? 'hors_ue_standard' : 'intra_ue',
+    regime: !originKnown ? 'origine_inconnue'
+      : collection ? 'collection'
+      : outsideEu ? 'hors_ue_standard'
+      : 'intra_ue',
+    origin_known: originKnown,
     outside_eu: outsideEu,
+    partial: !originKnown, // total incomplet : transport + douane + TVA manquants
     lines,
     notes,
     total_eur: total,
