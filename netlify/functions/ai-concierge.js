@@ -85,7 +85,7 @@ exports.handler = async function (event) {
       model: MODEL,
       max_tokens: 8000,
       thinking: { type: 'adaptive' },
-      output_config: { effort: 'medium', format: zodOutputFormat(Brief) },
+      output_config: { effort: 'low', format: zodOutputFormat(Brief) },
       // Prefixe stable en premier : le catalogue est mis en cache entre les appels.
       system: [
         { type: 'text', text: SYSTEM },

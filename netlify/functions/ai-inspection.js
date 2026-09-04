@@ -100,7 +100,7 @@ exports.handler = async function (event) {
       model: MODEL,
       max_tokens: 8000,
       thinking: { type: 'adaptive' },
-      output_config: { effort: 'high', format: zodOutputFormat(Report) },
+      output_config: { effort: 'low', format: zodOutputFormat(Report) },
       system: SYSTEM,
       messages: [{ role: 'user', content }],
     });

@@ -92,7 +92,9 @@ exports.handler = async function (event) {
     const extraction = await client.messages.parse({
       model: MODEL,
       max_tokens: 4000,
-      thinking: { type: 'adaptive' },
+      // Extraction de champs structures : aucun raisonnement necessaire, on
+      // coupe le thinking pour tenir dans le budget temps de la fonction.
+      thinking: { type: 'disabled' },
       output_config: { effort: 'low', format: zodOutputFormat(Params) },
       system: EXTRACT_SYSTEM,
       messages: [{ role: 'user', content: langLine + '\n\nDemande :\n' + query }],
@@ -120,7 +122,7 @@ exports.handler = async function (event) {
       model: MODEL,
       max_tokens: 6000,
       thinking: { type: 'adaptive' },
-      output_config: { effort: 'medium', format: zodOutputFormat(Explanation) },
+      output_config: { effort: 'low', format: zodOutputFormat(Explanation) },
       system: EXPLAIN_SYSTEM,
       messages: [{
         role: 'user',

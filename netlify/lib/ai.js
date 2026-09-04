@@ -12,12 +12,22 @@
 const Anthropic = require('@anthropic-ai/sdk');
 const { Pool } = require('pg');
 
-const MODEL = process.env.ANTHROPIC_MODEL || 'claude-opus-5';
+// Sonnet par defaut : les fonctions synchrones Netlify sont plafonnees a 26 s,
+// et deux appels opus-5 avec thinking depassaient ce plafond. Surchargeable
+// via ANTHROPIC_MODEL si on veut repasser sur opus pour une tache precise.
+const MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-5';
 
 let client = null;
 function getClient() {
   if (!process.env.ANTHROPIC_API_KEY) return null;
-  if (!client) client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  if (!client) {
+    client = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+      // Sous le plafond Netlify : on prefere un echec propre et rapide au 504.
+      timeout: 23000,
+      maxRetries: 1,
+    });
+  }
   return client;
 }
 
