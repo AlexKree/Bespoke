@@ -20,7 +20,9 @@
     partialTotal: 'Partial total — some lines not costed',
     err: 'The calculator is unavailable right now. Please use the contact form.',
     short: 'Describe the vehicle, where it comes from and its price.',
-    ask: 'Ask us to confirm this costing'
+    ask: 'Ask us to confirm this costing',
+    analysing: 'Writing the detailed analysis…',
+    analysisOff: 'The written analysis is unavailable right now, but the figures above stand. Ask us to talk them through.'
   } : {
     sending: 'Calcul en cours…', send: 'Estimer le coût total',
     breakdown: 'Détail du chiffrage', total: 'Coût total rendu en France',
@@ -31,7 +33,9 @@
     partialTotal: 'Total partiel — certains postes non chiffrés',
     err: 'Le calculateur est momentanément indisponible. Merci d’utiliser le formulaire de contact.',
     short: 'Décrivez le véhicule, son pays de départ et son prix.',
-    ask: 'Faire confirmer ce chiffrage'
+    ask: 'Faire confirmer ce chiffrage',
+    analysing: 'Rédaction de l’analyse détaillée…',
+    analysisOff: 'L’analyse rédigée est momentanément indisponible, mais le chiffrage ci-dessus reste valable. Demandez-nous de le commenter.'
   };
 
   function esc(s) {
@@ -60,18 +64,12 @@
       arr.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
   }
 
-  function render(data) {
+  // Etape 1 : le chiffrage. Affiche immediatement, sans attendre la redaction.
+  function renderCosting(data) {
     var c = data.costing || {};
-    var x = data.explanation || {};
     var p = data.params || {};
     var html = '';
 
-    if (x.headline) {
-      html += '<div class="card pad-md aiBlock"><div class="kicker">' + esc(p.vehicle_label || '') + '</div>' +
-        '<p class="aiSummary">' + esc(x.headline) + '</p></div>';
-    }
-
-    // Chiffrage
     html += '<div class="card pad-md aiBlock"><div class="kicker">' + esc(T.breakdown) + '</div><table class="aiTable">';
     (c.lines || []).forEach(function (l) {
       html += '<tr><th scope="row">' + esc(lang === 'en' ? l.label_en : l.label_fr) + '</th>' +
@@ -88,6 +86,33 @@
     });
     html += '</div>';
 
+    // Emplacement de l'analyse redigee, remplie par l'etape 2.
+    html += '<div id="importExplain" class="aiBlock"><div class="aiSkeleton aiSkeleton--text"><span></span><span></span></div>' +
+      '<p class="aiPending">' + esc(T.analysing) + '</p></div>';
+
+    html += list(T.assumptions, p.assumptions);
+    html += list(T.missing, p.missing);
+
+    html += '<div class="aiDisclaimer">' + esc(lang === 'en' ? data.disclaimer_en : data.disclaimer_fr) + '</div>';
+    html += '<a class="btn primary" href="contact.html" onclick="plausible(\'Lead\')">' + esc(T.ask) + '</a>';
+
+    out.innerHTML = html;
+    out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Etape 2 : l'analyse redigee, injectee dans l'emplacement reserve.
+  function renderExplanation(data) {
+    var slot = document.getElementById('importExplain');
+    if (!slot) return;
+    var x = data.explanation || {};
+    var p = data.params || {};
+    var html = '';
+
+    if (x.headline) {
+      html += '<div class="card pad-md aiBlock"><div class="kicker">' + esc(p.vehicle_label || '') + '</div>' +
+        '<p class="aiSummary">' + esc(x.headline) + '</p></div>';
+    }
+
     if (x.steps && x.steps.length) {
       html += '<div class="card pad-md aiBlock"><div class="kicker">' + esc(T.steps) + '</div><ol class="aiSteps">';
       x.steps.forEach(function (s) {
@@ -102,14 +127,15 @@
 
     html += list(T.docs, x.documents);
     html += list(T.risks, x.risks, 'aiList--warn');
-    html += list(T.assumptions, p.assumptions);
-    html += list(T.missing, p.missing);
 
-    html += '<div class="aiDisclaimer">' + esc(lang === 'en' ? data.disclaimer_en : data.disclaimer_fr) + '</div>';
-    html += '<a class="btn primary" href="contact.html" onclick="plausible(\'Lead\')">' + esc(T.ask) + '</a>';
+    slot.innerHTML = html;
+  }
 
-    out.innerHTML = html;
-    out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Etape 2 indisponible : les chiffres restent affiches, on le dit sobrement.
+  function explanationUnavailable() {
+    var slot = document.getElementById('importExplain');
+    if (!slot) return;
+    slot.innerHTML = '<div class="aiNote aiNote--info">' + esc(T.analysisOff) + '</div>';
   }
 
   form.addEventListener('submit', async function (e) {
@@ -126,7 +152,7 @@
       var res = await fetch('/.netlify/functions/ai-import-cost', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: query, lang: lang }),
+        body: JSON.stringify({ step: 'quote', query: query, lang: lang }),
       });
       var data = await res.json();
       if (!res.ok || !data.ok) {
@@ -140,7 +166,26 @@
         return;
       }
       if (window.plausible) plausible('AI Import Cost');
-      render(data);
+      renderCosting(data);
+
+      // Etape 2 : l'analyse redigee, en requete separee pour tenir dans le
+      // budget temps des fonctions Netlify. Les chiffres sont deja a l'ecran ;
+      // un echec ici n'efface rien.
+      try {
+        var res2 = await fetch('/.netlify/functions/ai-import-cost', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ step: 'explain', query: query, lang: lang, params: data.params }),
+        });
+        var data2 = await res2.json();
+        if (res2.ok && data2.ok && data2.explanation) {
+          renderExplanation(data2);
+        } else {
+          explanationUnavailable();
+        }
+      } catch (_) {
+        explanationUnavailable();
+      }
     } catch (_) {
       out.innerHTML = '';
       setStatus(T.err, 'error');

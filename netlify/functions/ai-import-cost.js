@@ -8,6 +8,15 @@
  *   2. le calcul est fait en code, dans netlify/lib/import-cost.js ;
  *   3. le modele redige ensuite l'explication A PARTIR du chiffrage produit.
  * Le modele ne produit jamais un montant lui-meme.
+ *
+ * Deroulement en DEUX requetes pour tenir dans le budget temps des fonctions
+ * synchrones Netlify (~26 s) :
+ *   - step "quote"   : extraction (1 appel modele) + chiffrage en code.
+ *                      Renvoie les montants tout de suite.
+ *   - step "explain" : redaction de l'explication (1 appel modele) a partir
+ *                      des parametres deja extraits. Le client l'appelle
+ *                      juste apres et l'affiche en complement.
+ * Chaque requete ne fait donc qu'un seul aller-retour modele.
  */
 
 const { z } = require('zod');
@@ -43,7 +52,7 @@ Regles strictes :
 - Convertis les devises en euros si necessaire et note le taux utilise dans "assumptions".
 - "assumptions" et "missing" sont rediges dans la langue du client.`;
 
-const EXPLAIN_SYSTEM = `Tu es le specialiste import de The Bespoke Car. On te fournit un chiffrage DEJA CALCULE. 
+const EXPLAIN_SYSTEM = `Tu es le specialiste import de The Bespoke Car. On te fournit un chiffrage DEJA CALCULE.
 
 Regles absolues :
 - Tu ne recalcules rien et tu ne cites aucun montant qui ne figure pas dans le chiffrage fourni.
@@ -65,15 +74,23 @@ const Explanation = z.object({
   risks: z.array(z.string()).describe('Ce qui peut faire deraper le budget ou le calendrier sur ce dossier.'),
 });
 
-exports.handler = async function (event) {
-  const parsed = parseBody(event, 256 * 1024);
-  if (parsed.error) return parsed.error;
-  const body = parsed.body;
+// Garde deterministe : on ne retient le pays de depart que si le client l'a
+// explicitement donne. Le modele a tendance a deduire "R34 => Japon".
+function applyOriginGuard(params) {
+  if (!params.origin_stated_by_client) params.origin = null;
+  return params;
+}
 
-  const notReady = requireKey();
-  if (notReady) return notReady;
+function disclaimers() {
+  return {
+    rates_reference_year: RATES.reference_year,
+    disclaimer_fr: `Estimation indicative calculee sur les taux parametres pour ${RATES.reference_year}. Les droits, la TVA et le malus sont confirmes au dedouanement et a l'immatriculation. Ne constitue ni un devis, ni un conseil fiscal.`,
+    disclaimer_en: `Indicative estimate based on the rates configured for ${RATES.reference_year}. Duty, VAT and malus are confirmed at customs clearance and registration. This is neither a quote nor tax advice.`,
+  };
+}
 
-  const l = lang(body);
+/* ── Etape 1 : extraction + chiffrage, sans redaction ────────────────── */
+async function handleQuote(event, body, l) {
   const query = typeof body.query === 'string' ? body.query.trim() : '';
   if (query.length < 10) {
     return json(400, {
@@ -90,69 +107,109 @@ exports.handler = async function (event) {
   const client = getClient();
   const langLine = l === 'en' ? 'Answer in English.' : 'Reponds en francais.';
 
-  try {
-    // 1. Extraction des parametres — le modele ne voit aucun taux.
-    const extraction = await client.messages.parse({
-      model: MODEL,
-      max_tokens: 4000,
-      // Extraction de champs structures : aucun raisonnement necessaire, on
-      // coupe le thinking pour tenir dans le budget temps de la fonction.
-      thinking: { type: 'disabled' },
-      output_config: { effort: 'low', format: zodOutputFormat(Params) },
-      system: EXTRACT_SYSTEM,
-      messages: [{ role: 'user', content: langLine + '\n\nDemande :\n' + query }],
-    });
+  // Extraction des parametres — le modele ne voit aucun taux.
+  const extraction = await client.messages.parse({
+    model: MODEL,
+    max_tokens: 4000,
+    // Extraction de champs structures : aucun raisonnement necessaire, on
+    // coupe le thinking pour tenir dans le budget temps de la fonction.
+    thinking: { type: 'disabled' },
+    output_config: { effort: 'low', format: zodOutputFormat(Params) },
+    system: EXTRACT_SYSTEM,
+    messages: [{ role: 'user', content: langLine + '\n\nDemande :\n' + query }],
+  });
 
-    if (extraction.stop_reason === 'refusal') return json(422, { error: 'refused' });
-    const params = extraction.parsed_output;
-    if (!params) return json(502, { error: 'unparsable_response' });
+  if (extraction.stop_reason === 'refusal') return json(422, { error: 'refused' });
+  const params = extraction.parsed_output;
+  if (!params) return json(502, { error: 'unparsable_response' });
 
-    // Garde deterministe : on ne retient le pays de depart que si le client
-    // l'a explicitement donne. Le modele a tendance a deduire "R34 => Japon".
-    if (!params.origin_stated_by_client) params.origin = null;
+  applyOriginGuard(params);
 
-    if (params.vehicle_price_eur == null) {
-      return json(200, {
-        ok: true,
-        needs_price: true,
-        params,
-        message_fr: "Indiquez le prix d'achat du vehicule pour obtenir un chiffrage.",
-        message_en: 'Please provide the purchase price to get a costing.',
-      });
-    }
-
-    // 2. Le chiffrage, en code. Aucun montant ne vient du modele.
-    const costing = computeImportCost(params);
-
-    // 3. Explication redigee A PARTIR du chiffrage.
-    const explanation = await client.messages.parse({
-      model: MODEL,
-      max_tokens: 3000,
-      // Redaction a partir d'un chiffrage deja calcule : pas besoin de thinking,
-      // et on reste ainsi sous le plafond temps de la fonction Netlify.
-      thinking: { type: 'disabled' },
-      output_config: { effort: 'low', format: zodOutputFormat(Explanation) },
-      system: EXPLAIN_SYSTEM,
-      messages: [{
-        role: 'user',
-        content:
-          langLine + '\n\nDemande initiale du client :\n' + query +
-          '\n\nParametres retenus (JSON) :\n' + JSON.stringify(params) +
-          '\n\nCHIFFRAGE CALCULE — seule source de montants autorisee (JSON) :\n' + JSON.stringify(costing),
-      }],
-    });
-
-    if (explanation.stop_reason === 'refusal') return json(422, { error: 'refused' });
-
+  if (params.vehicle_price_eur == null) {
     return json(200, {
       ok: true,
+      needs_price: true,
       params,
-      costing,
-      explanation: explanation.parsed_output,
-      rates_reference_year: RATES.reference_year,
-      disclaimer_fr: `Estimation indicative calculee sur les taux parametres pour ${RATES.reference_year}. Les droits, la TVA et le malus sont confirmes au dedouanement et a l'immatriculation. Ne constitue ni un devis, ni un conseil fiscal.`,
-      disclaimer_en: `Indicative estimate based on the rates configured for ${RATES.reference_year}. Duty, VAT and malus are confirmed at customs clearance and registration. This is neither a quote nor tax advice.`,
+      message_fr: "Indiquez le prix d'achat du vehicule pour obtenir un chiffrage.",
+      message_en: 'Please provide the purchase price to get a costing.',
     });
+  }
+
+  // Le chiffrage, en code. Aucun montant ne vient du modele.
+  const costing = computeImportCost(params);
+
+  return json(200, {
+    ok: true,
+    step: 'quote',
+    needs_explain: true, // le client enchaine avec step:"explain"
+    params,
+    costing,
+    ...disclaimers(),
+  });
+}
+
+/* ── Etape 2 : redaction de l'explication a partir des parametres ────── */
+async function handleExplain(event, body, l) {
+  const query = typeof body.query === 'string' ? body.query.trim() : '';
+  // Les parametres reviennent du client (issus de l'etape 1). On les revalide
+  // et on RECALCULE le chiffrage ici : le client ne peut pas injecter de
+  // montants, il ne fait que transmettre les parametres extraits.
+  const check = Params.safeParse(body.params);
+  if (!check.success) return json(400, { error: 'invalid_params' });
+  const params = applyOriginGuard(check.data);
+
+  if (params.vehicle_price_eur == null) return json(400, { error: 'missing_price' });
+
+  const limited = await rateLimit(event, 'import-cost-explain', { limit: 12, windowMs: 3600000 });
+  if (!limited.ok) return limited.response;
+
+  const client = getClient();
+  const langLine = l === 'en' ? 'Answer in English.' : 'Reponds en francais.';
+  const costing = computeImportCost(params);
+
+  const explanation = await client.messages.parse({
+    model: MODEL,
+    max_tokens: 3000,
+    // Redaction a partir d'un chiffrage deja calcule : pas besoin de thinking,
+    // et on reste ainsi sous le plafond temps de la fonction Netlify.
+    thinking: { type: 'disabled' },
+    output_config: { effort: 'low', format: zodOutputFormat(Explanation) },
+    system: EXPLAIN_SYSTEM,
+    messages: [{
+      role: 'user',
+      content:
+        langLine + '\n\nDemande initiale du client :\n' + query +
+        '\n\nParametres retenus (JSON) :\n' + JSON.stringify(params) +
+        '\n\nCHIFFRAGE CALCULE — seule source de montants autorisee (JSON) :\n' + JSON.stringify(costing),
+    }],
+  });
+
+  if (explanation.stop_reason === 'refusal') return json(422, { error: 'refused' });
+
+  return json(200, {
+    ok: true,
+    step: 'explain',
+    params,
+    costing,
+    explanation: explanation.parsed_output,
+    ...disclaimers(),
+  });
+}
+
+exports.handler = async function (event) {
+  const parsed = parseBody(event, 256 * 1024);
+  if (parsed.error) return parsed.error;
+  const body = parsed.body;
+
+  const notReady = requireKey();
+  if (notReady) return notReady;
+
+  const l = lang(body);
+
+  try {
+    return body.step === 'explain'
+      ? await handleExplain(event, body, l)
+      : await handleQuote(event, body, l);
   } catch (err) {
     return apiError(err);
   }
