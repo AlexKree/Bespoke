@@ -1,21 +1,34 @@
 'use strict';
 
 /**
- * Pre-rapport photo.
+ * Pre-rapport photo — traitement en tache de fond.
  *
- * Analyse les photos d'une annonce ou d'un vehicule et produit une liste de
- * points a verifier. Ce n'est PAS une expertise : c'est ce qu'un professionnel
- * regarderait en premier sur un jeu de photos, pour orienter la vraie
- * inspection physique (PPI). Le prompt et l'interface le disent tous les deux.
+ * L'analyse de plusieurs photos par un modele vision depasse le budget temps
+ * d'une fonction Netlify synchrone. Cette fonction "background" (suffixe
+ * `-background`, plafond 15 min) fait le travail sans contrainte de temps et
+ * ecrit son resultat dans le magasin de jobs (Netlify Blobs). La page appelle
+ * ensuite `ai-inspection-status` toutes les 2-3 s jusqu'a ce qu'il soit pret.
+ *
+ * Ce n'est PAS une expertise : c'est ce qu'un professionnel regarderait en
+ * premier sur un jeu de photos, pour orienter la vraie inspection physique (PPI).
+ * Le prompt et l'interface le disent tous les deux.
  */
 
 const { z } = require('zod');
 const { zodOutputFormat } = require('@anthropic-ai/sdk/helpers/zod');
-const { MODEL, getClient, json, rateLimit, parseBody, requireKey, lang, apiError } = require('../lib/ai');
+const {
+  getBackgroundClient, jobStore, rateLimit, parseBody, lang, classifyError,
+} = require('../lib/ai');
+
+// Fonction background : on peut viser la qualite sans surveiller le chrono.
+// opus-5 + effort "medium" tient generalement en 1 a 2 min sur 6 photos.
+const MODEL = process.env.ANTHROPIC_MODEL_INSPECTION || 'claude-opus-5';
+const EFFORT = process.env.ANTHROPIC_EFFORT_INSPECTION || 'medium';
 
 const MAX_IMAGES = 6;
 const MAX_IMAGE_BYTES = 1.6 * 1024 * 1024; // apres redimensionnement cote client
 const ALLOWED_MEDIA = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 /** N'accepte qu'une URL http(s) plausible. Retourne '' si invalide. */
 function normalizeListingUrl(v) {
@@ -70,93 +83,115 @@ Remplissage interdit : n'ecris jamais de phrase de remplissage ni de texte gener
 
 Ton sobre et professionnel. Pas de flatterie, pas d'alarmisme. Redige dans la langue demandee.`;
 
+const DISCLAIMER_FR = "Pre-rapport indicatif etabli a partir de photos uniquement. Il ne remplace en aucun cas une inspection physique (PPI) ni une expertise. Aucune conclusion sur l'etat mecanique, l'historique ou l'authenticite ne peut etre tiree de photographies.";
+const DISCLAIMER_EN = 'Indicative pre-report based on photographs only. It is in no way a substitute for a physical pre-purchase inspection or a formal appraisal. No conclusion about mechanical condition, history or authenticity can be drawn from photographs.';
+
+function message(code) {
+  if (code === 'rate_limited') {
+    return {
+      message_fr: "Vous avez atteint la limite d'utilisation. Merci de reessayer dans une heure, ou de nous ecrire directement.",
+      message_en: 'You have reached the usage limit. Please try again in an hour, or write to us directly.',
+    };
+  }
+  return {
+    message_fr: "L’analyse est momentanement indisponible. Merci d’utiliser le formulaire de contact.",
+    message_en: 'The analysis is unavailable right now. Please use the contact form.',
+  };
+}
+
 exports.handler = async function (event) {
   const parsed = parseBody(event, 12 * 1024 * 1024);
-  if (parsed.error) return parsed.error;
+  if (parsed.error) return { statusCode: 202 };
   const body = parsed.body;
 
-  const notReady = requireKey();
-  if (notReady) return notReady;
+  const jobId = typeof body.job_id === 'string' && UUID_RE.test(body.job_id) ? body.job_id : null;
+  if (!jobId) {
+    console.error('ai-inspection-background : job_id absent ou invalide');
+    return { statusCode: 202 };
+  }
+
+  const store = jobStore(event);
+  if (!store) {
+    console.error('ai-inspection-background : magasin de jobs indisponible');
+    return { statusCode: 202 };
+  }
 
   const l = lang(body);
-  const images = Array.isArray(body.images) ? body.images : [];
-
-  if (!images.length) {
-    return json(400, {
-      error: 'no_images',
-      message_fr: 'Ajoutez au moins une photo.',
-      message_en: 'Please add at least one photo.',
-    });
-  }
-  if (images.length > MAX_IMAGES) {
-    return json(400, { error: 'too_many_images', max: MAX_IMAGES });
-  }
-
-  const content = [];
-  for (const img of images) {
-    if (!img || typeof img.data !== 'string' || !ALLOWED_MEDIA.has(img.media_type)) {
-      return json(400, { error: 'invalid_image', allowed: [...ALLOWED_MEDIA] });
-    }
-    // Une chaine base64 sans en-tete data: ; ~4/3 de la taille binaire.
-    if (img.data.length * 0.75 > MAX_IMAGE_BYTES) {
-      return json(413, { error: 'image_too_large' });
-    }
-    content.push({
-      type: 'image',
-      source: { type: 'base64', media_type: img.media_type, data: img.data },
-    });
-  }
-
-  const context = typeof body.context === 'string' ? body.context.trim().slice(0, 1500) : '';
-  const listingUrl = normalizeListingUrl(body.listing_url);
-  content.push({
-    type: 'text',
-    text:
-      (l === 'en' ? 'Answer in English.' : 'Reponds en francais.') +
-      '\n\n' + (context
-        ? "Ce que le client indique sur le vehicule (a prendre comme declaratif, non verifie) :\n" + context
-        : "Le client n'a fourni aucune information : travaille uniquement sur les photos.") +
-      (listingUrl
-        ? "\n\nLien de l'annonce indique par le client : " + listingUrl +
-          "\nTu ne peux pas ouvrir ce lien. Ne suppose rien de son contenu ; tout au plus, situe le marche d'origine d'apres le domaine si c'est utile pour les questions au vendeur ou les documents a demander."
-        : ''),
-  });
-
-  // Les images sont couteuses en tokens : quota plus serre que les autres outils.
-  const limited = await rateLimit(event, 'inspection', { limit: 5, windowMs: 3600000 });
-  if (!limited.ok) return limited.response;
+  const finish = (fields) => store.setJSON(jobId, { ...fields, updated_at: Date.now() });
+  const fail = (code) => finish({ status: 'error', error_code: code, ...message(code) });
 
   try {
-    const response = await getClient().messages.parse({
+    await finish({ status: 'pending' });
+
+    const client = getBackgroundClient();
+    if (!client) return void await fail('ai_not_configured');
+
+    const images = Array.isArray(body.images) ? body.images : [];
+    if (!images.length || images.length > MAX_IMAGES) return void await fail('invalid_request');
+
+    const content = [];
+    for (const img of images) {
+      if (!img || typeof img.data !== 'string' || !ALLOWED_MEDIA.has(img.media_type)) {
+        return void await fail('invalid_request');
+      }
+      // Une chaine base64 sans en-tete data: ; ~4/3 de la taille binaire.
+      if (img.data.length * 0.75 > MAX_IMAGE_BYTES) return void await fail('invalid_request');
+      content.push({
+        type: 'image',
+        source: { type: 'base64', media_type: img.media_type, data: img.data },
+      });
+    }
+
+    const context = typeof body.context === 'string' ? body.context.trim().slice(0, 1500) : '';
+    const listingUrl = normalizeListingUrl(body.listing_url);
+    content.push({
+      type: 'text',
+      text:
+        (l === 'en' ? 'Answer in English.' : 'Reponds en francais.') +
+        '\n\n' + (context
+          ? "Ce que le client indique sur le vehicule (a prendre comme declaratif, non verifie) :\n" + context
+          : "Le client n'a fourni aucune information : travaille uniquement sur les photos.") +
+        (listingUrl
+          ? "\n\nLien de l'annonce indique par le client : " + listingUrl +
+            "\nTu ne peux pas ouvrir ce lien. Ne suppose rien de son contenu ; tout au plus, situe le marche d'origine d'apres le domaine si c'est utile pour les questions au vendeur ou les documents a demander."
+          : ''),
+    });
+
+    // Les images sont couteuses en tokens : quota plus serre que les autres outils.
+    const limited = await rateLimit(event, 'inspection', { limit: 5, windowMs: 3600000 });
+    if (!limited.ok) return void await fail('rate_limited');
+
+    const response = await client.messages.parse({
       model: MODEL,
       max_tokens: 8000,
       thinking: { type: 'adaptive' },
-      // effort "low" : "medium" faisait deborder le budget temps (6 images +
-      // thinking > timeout SDK 23 s). La detection des defauts et l'absence de
-      // sections vides reposent desormais sur le prompt et le schema, pas sur
-      // l'effort.
-      output_config: { effort: 'low', format: zodOutputFormat(Report) },
+      output_config: { effort: EFFORT, format: zodOutputFormat(Report) },
       system: SYSTEM,
       messages: [{ role: 'user', content }],
     });
 
-    if (response.stop_reason === 'refusal') return json(422, { error: 'refused' });
+    if (response.stop_reason === 'refusal') return void await fail('refused');
     const report = response.parsed_output;
-    if (!report) return json(502, { error: 'unparsable_response' });
+    if (!report) return void await fail('unparsable_response');
 
-    return json(200, {
-      ok: true,
-      report,
-      image_count: images.length,
-      listing_url: listingUrl || null,
-      disclaimer_fr: "Pre-rapport indicatif etabli a partir de photos uniquement. Il ne remplace en aucun cas une inspection physique (PPI) ni une expertise. Aucune conclusion sur l'etat mecanique, l'historique ou l'authenticite ne peut etre tiree de photographies.",
-      disclaimer_en: 'Indicative pre-report based on photographs only. It is in no way a substitute for a physical pre-purchase inspection or a formal appraisal. No conclusion about mechanical condition, history or authenticity can be drawn from photographs.',
-      usage: {
-        input_tokens: response.usage.input_tokens,
-        output_tokens: response.usage.output_tokens,
+    await finish({
+      status: 'done',
+      result: {
+        report,
+        image_count: images.length,
+        listing_url: listingUrl || null,
+        disclaimer_fr: DISCLAIMER_FR,
+        disclaimer_en: DISCLAIMER_EN,
+        usage: {
+          input_tokens: response.usage.input_tokens,
+          output_tokens: response.usage.output_tokens,
+        },
       },
     });
   } catch (err) {
-    return apiError(err);
+    console.error('ai-inspection-background', err && err.message);
+    try { await fail(classifyError(err)); } catch (_) { /* rien de plus a faire */ }
   }
+
+  return { statusCode: 202 };
 };

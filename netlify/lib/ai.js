@@ -11,6 +11,7 @@
 
 const Anthropic = require('@anthropic-ai/sdk');
 const { Pool } = require('pg');
+const { getStore, connectLambda } = require('@netlify/blobs');
 
 // Sonnet par defaut : les fonctions synchrones Netlify sont plafonnees a 26 s,
 // et deux appels opus-5 avec thinking depassaient ce plafond. Surchargeable
@@ -29,6 +30,40 @@ function getClient() {
     });
   }
   return client;
+}
+
+// Client a long timeout pour les fonctions "background" (plafond Netlify 15 min).
+// getClient() garde son timeout court : il sert les fonctions synchrones, ou un
+// echec propre vaut mieux qu'un 504.
+let bgClient = null;
+function getBackgroundClient() {
+  if (!process.env.ANTHROPIC_API_KEY) return null;
+  if (!bgClient) {
+    bgClient = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+      timeout: 600000,
+      maxRetries: 1,
+    });
+  }
+  return bgClient;
+}
+
+/**
+ * Magasin de jobs (Netlify Blobs) partage entre la fonction "background" qui
+ * produit un resultat et la fonction de statut qui le sert par polling.
+ * Retourne null si Blobs n'est pas disponible : l'appelant renvoie alors vers
+ * le formulaire de contact.
+ */
+function jobStore(event) {
+  try {
+    // Fonctions "classic" (signature Lambda) : il faut passer l'event une fois
+    // pour que Blobs recupere son contexte.
+    if (event) connectLambda(event);
+    return getStore({ name: 'inspection-jobs', consistency: 'strong' });
+  } catch (err) {
+    console.error('Netlify Blobs indisponible:', err && err.message);
+    return null;
+  }
 }
 
 let pool = null;
@@ -148,20 +183,27 @@ function lang(body) {
 
 /* ── Erreurs SDK ─────────────────────────────────────────────────────── */
 
+/** Code court decrivant une erreur SDK — pour le journal et la file d'attente. */
+function classifyError(err) {
+  if (err instanceof Anthropic.RateLimitError) return 'upstream_rate_limited';
+  if (err instanceof Anthropic.AuthenticationError) return 'ai_not_configured';
+  if (err instanceof Anthropic.APIError) return 'upstream_error';
+  return 'internal_error';
+}
+
+const ERROR_STATUS = {
+  upstream_rate_limited: 429,
+  ai_not_configured: 503,
+  upstream_error: 502,
+  internal_error: 500,
+};
+
 function apiError(err) {
-  if (err instanceof Anthropic.RateLimitError) {
-    return json(429, { error: 'upstream_rate_limited' });
-  }
-  if (err instanceof Anthropic.AuthenticationError) {
-    console.error('Cle ANTHROPIC_API_KEY invalide');
-    return json(503, { error: 'ai_not_configured' });
-  }
-  if (err instanceof Anthropic.APIError) {
-    console.error('Erreur API Claude', err.status, err.message);
-    return json(502, { error: 'upstream_error' });
-  }
-  console.error('Erreur inattendue', err && err.message);
-  return json(500, { error: 'internal_error' });
+  const code = classifyError(err);
+  if (code === 'ai_not_configured') console.error('Cle ANTHROPIC_API_KEY invalide');
+  else if (code === 'upstream_error') console.error('Erreur API Claude', err.status, err.message);
+  else if (code === 'internal_error') console.error('Erreur inattendue', err && err.message);
+  return json(ERROR_STATUS[code], { error: code });
 }
 
 /* ── Catalogue ───────────────────────────────────────────────────────── */
@@ -204,6 +246,8 @@ function compactVehicle(item, l) {
 module.exports = {
   MODEL,
   getClient,
+  getBackgroundClient,
+  jobStore,
   getPool,
   json,
   clientIp,
@@ -212,6 +256,7 @@ module.exports = {
   requireKey,
   lang,
   apiError,
+  classifyError,
   loadStock,
   compactVehicle,
 };

@@ -26,6 +26,7 @@
     overall: 'Summary', remove: 'Remove', source: 'Listing',
     sev: { info: 'Note', attention: 'To watch', alerte: 'Alert' },
     err: 'The analysis is unavailable right now. Please use the contact form.',
+    slow: 'Analysing several photos — this can take up to a minute. Keep this tab open.',
     none: 'Add at least one photo.', tooMany: 'Maximum ' + MAX_FILES + ' photos.',
     notImage: 'Only JPEG, PNG and WebP images are accepted.',
     badUrl: 'The listing link must start with http:// or https://.',
@@ -39,6 +40,7 @@
     overall: 'Synthèse', remove: 'Retirer', source: 'Annonce',
     sev: { info: 'Note', attention: 'À surveiller', alerte: 'Alerte' },
     err: 'L’analyse est momentanément indisponible. Merci d’utiliser le formulaire de contact.',
+    slow: 'Analyse de plusieurs photos en cours — cela peut prendre jusqu’à une minute. Gardez cet onglet ouvert.',
     none: 'Ajoutez au moins une photo.', tooMany: 'Maximum ' + MAX_FILES + ' photos.',
     notImage: 'Seules les images JPEG, PNG et WebP sont acceptées.',
     badUrl: 'Le lien de l’annonce doit commencer par http:// ou https://.',
@@ -196,6 +198,20 @@
     out.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  // L'analyse de plusieurs photos depasse le budget temps d'une fonction Netlify
+  // synchrone : elle tourne dans une fonction "background" et la page interroge
+  // ai-inspection-status jusqu'a ce que le rapport soit pret.
+  var POLL_MS = 2500;
+  var POLL_MAX_MS = 300000; // au-dela, on abandonne cote client (la fonction a 15 min)
+
+  function uuid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = (Math.random() * 16) | 0;
+      return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+    });
+  }
+
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
     setStatus('');
@@ -208,31 +224,66 @@
     btn.textContent = T.sending;
     out.innerHTML = '<div class="aiSkeleton"><span></span><span></span><span></span><span></span></div>';
 
+    var jobId = uuid();
+    var started = Date.now();
+    var slowNoteShown = false;
+
+    function done() { btn.disabled = false; btn.textContent = T.send; }
+    function failOut(msg) { done(); out.innerHTML = ''; setStatus(msg || T.err, 'error'); }
+
+    function poll() {
+      fetch('/.netlify/functions/ai-inspection-status?id=' + encodeURIComponent(jobId), { cache: 'no-store' })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data.status === 'done') {
+            if (window.plausible) plausible('AI Inspection');
+            setStatus('');
+            done();
+            render(data);
+            return;
+          }
+          if (data.status === 'error') {
+            failOut(lang === 'en' ? data.message_en : data.message_fr);
+            return;
+          }
+          if (Date.now() - started > POLL_MAX_MS) { failOut(); return; }
+          if (!slowNoteShown && Date.now() - started > 20000) {
+            slowNoteShown = true;
+            setStatus(T.slow, 'info');
+          }
+          setTimeout(poll, POLL_MS);
+        })
+        .catch(function () {
+          if (Date.now() - started > POLL_MAX_MS) failOut();
+          else setTimeout(poll, POLL_MS);
+        });
+    }
+
     try {
-      var res = await fetch('/.netlify/functions/ai-inspection', {
+      var res = await fetch('/.netlify/functions/ai-inspection-background', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          job_id: jobId,
           lang: lang,
           context: context.value.trim(),
           listing_url: listingUrl,
           images: files.map(function (f) { return { media_type: f.media_type, data: f.base64 }; }),
         }),
       });
-      var data = await res.json();
-      if (!res.ok || !data.ok) {
-        out.innerHTML = '';
-        setStatus((lang === 'en' ? data.message_en : data.message_fr) || T.err, 'error');
+      // Fonction "background" : Netlify repond 202 sans corps. Tout autre code = le
+      // lancement a echoue (payload trop gros a la peripherie, fonction absente...).
+      if (res.status !== 202 && !res.ok) {
+        var d = {};
+        try { d = await res.json(); } catch (_) {}
+        failOut(lang === 'en' ? d.message_en : d.message_fr);
         return;
       }
-      if (window.plausible) plausible('AI Inspection');
-      render(data);
     } catch (_) {
-      out.innerHTML = '';
-      setStatus(T.err, 'error');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = T.send;
+      failOut();
+      return;
     }
+
+    poll();
   });
 })();
