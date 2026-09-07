@@ -1453,6 +1453,15 @@ a.aiHubCard:hover{border-color:var(--line-gold);background:var(--panel);transfor
 .aiChipRow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px}
 .aiChipLabel{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2)}
 
+/* Sous-titre a l'interieur d'un bloc (ex. facteurs de prix). */
+.kickerSub{margin:16px 0 8px}
+.aiMarketWhere{margin-top:14px;font-size:14px;line-height:1.65;color:var(--muted)}
+
+/* Champ de relance : repondre aux questions de cadrage sans quitter la page. */
+.aiRefine{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+.aiRefine textarea{resize:vertical;min-height:66px}
+.aiRefine .btn{align-self:flex-start}
+
 .aiList{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:9px}
 .aiList li{font-size:14px;line-height:1.65;color:var(--muted)}
 .aiList li::marker{color:var(--gold)}
