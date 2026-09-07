@@ -17,6 +17,20 @@ const MAX_IMAGES = 6;
 const MAX_IMAGE_BYTES = 1.6 * 1024 * 1024; // apres redimensionnement cote client
 const ALLOWED_MEDIA = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
+/** N'accepte qu'une URL http(s) plausible. Retourne '' si invalide. */
+function normalizeListingUrl(v) {
+  if (typeof v !== 'string') return '';
+  const s = v.trim();
+  if (!s || s.length > 2000) return '';
+  try {
+    const u = new URL(s);
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return '';
+    return u.toString();
+  } catch (_) {
+    return '';
+  }
+}
+
 const Report = z.object({
   identification: z.string().describe("Ce que montrent les photos : type de vehicule, epoque probable, modele si reconnaissable. Dis explicitement si tu n'es pas sur."),
   photo_quality: z.string().describe("Ce que le jeu de photos permet — et surtout ne permet pas — de juger. Angles manquants, eclairage, cadrage trop serre."),
@@ -82,13 +96,18 @@ exports.handler = async function (event) {
   }
 
   const context = typeof body.context === 'string' ? body.context.trim().slice(0, 1500) : '';
+  const listingUrl = normalizeListingUrl(body.listing_url);
   content.push({
     type: 'text',
     text:
       (l === 'en' ? 'Answer in English.' : 'Reponds en francais.') +
       '\n\n' + (context
         ? "Ce que le client indique sur le vehicule (a prendre comme declaratif, non verifie) :\n" + context
-        : "Le client n'a fourni aucune information : travaille uniquement sur les photos."),
+        : "Le client n'a fourni aucune information : travaille uniquement sur les photos.") +
+      (listingUrl
+        ? "\n\nLien de l'annonce indique par le client : " + listingUrl +
+          "\nTu ne peux pas ouvrir ce lien. Ne suppose rien de son contenu ; tout au plus, situe le marche d'origine d'apres le domaine si c'est utile pour les questions au vendeur ou les documents a demander."
+        : ''),
   });
 
   // Les images sont couteuses en tokens : quota plus serre que les autres outils.
@@ -113,6 +132,7 @@ exports.handler = async function (event) {
       ok: true,
       report,
       image_count: images.length,
+      listing_url: listingUrl || null,
       disclaimer_fr: "Pre-rapport indicatif etabli a partir de photos uniquement. Il ne remplace en aucun cas une inspection physique (PPI) ni une expertise. Aucune conclusion sur l'etat mecanique, l'historique ou l'authenticite ne peut etre tiree de photographies.",
       disclaimer_en: 'Indicative pre-report based on photographs only. It is in no way a substitute for a physical pre-purchase inspection or a formal appraisal. No conclusion about mechanical condition, history or authenticity can be drawn from photographs.',
       usage: {

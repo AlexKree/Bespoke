@@ -109,6 +109,11 @@
           <textarea class="input" id="inspectionContext" rows="3" placeholder="e.g. 1972 Alpine A110 listed at 95,000 EUR, private seller, 3 owners, restored in 2018."></textarea>
         </div>
 
+        <div class="field">
+          <label for="inspectionUrl">Link to the listing <span class="fieldOpt">(optional)</span></label>
+          <input class="input" type="url" id="inspectionUrl" inputmode="url" autocomplete="off" placeholder="https://…" />
+        </div>
+
         <button class="btn primary" type="submit" id="inspectionBtn">Generate the pre-report</button>
         <div id="inspectionStatus" class="authMsg" role="status" aria-live="polite" style="display:none"></div>
       </form>

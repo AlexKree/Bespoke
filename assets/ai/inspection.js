@@ -8,6 +8,7 @@
   var drop = document.getElementById('inspectionDrop');
   var thumbs = document.getElementById('inspectionThumbs');
   var context = document.getElementById('inspectionContext');
+  var urlInput = document.getElementById('inspectionUrl');
   var btn = document.getElementById('inspectionBtn');
   var out = document.getElementById('inspectionResult');
   var status = document.getElementById('inspectionStatus');
@@ -22,11 +23,12 @@
     id: 'What the photos show', quality: 'What these photos allow',
     obs: 'Observations', checks: 'To check physically',
     questions: 'Questions for the seller', docs: 'Documents to request',
-    overall: 'Summary', remove: 'Remove',
+    overall: 'Summary', remove: 'Remove', source: 'Listing',
     sev: { info: 'Note', attention: 'To watch', alerte: 'Alert' },
     err: 'The analysis is unavailable right now. Please use the contact form.',
     none: 'Add at least one photo.', tooMany: 'Maximum ' + MAX_FILES + ' photos.',
     notImage: 'Only JPEG, PNG and WebP images are accepted.',
+    badUrl: 'The listing link must start with http:// or https://.',
     ask: 'Have Bespoke inspect this car',
     count: function (n) { return n + ' / ' + MAX_FILES + ' photos'; }
   } : {
@@ -34,11 +36,12 @@
     id: 'Ce que montrent les photos', quality: 'Ce que ces photos permettent',
     obs: 'Observations', checks: 'À vérifier physiquement',
     questions: 'Questions à poser au vendeur', docs: 'Documents à demander',
-    overall: 'Synthèse', remove: 'Retirer',
+    overall: 'Synthèse', remove: 'Retirer', source: 'Annonce',
     sev: { info: 'Note', attention: 'À surveiller', alerte: 'Alerte' },
     err: 'L’analyse est momentanément indisponible. Merci d’utiliser le formulaire de contact.',
     none: 'Ajoutez au moins une photo.', tooMany: 'Maximum ' + MAX_FILES + ' photos.',
     notImage: 'Seules les images JPEG, PNG et WebP sont acceptées.',
+    badUrl: 'Le lien de l’annonce doit commencer par http:// ou https://.',
     ask: 'Faire inspecter ce véhicule par Bespoke',
     count: function (n) { return n + ' / ' + MAX_FILES + ' photos'; }
   };
@@ -136,6 +139,10 @@
       arr.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
   }
 
+  function hostOf(u) {
+    try { return new URL(u).host.replace(/^www\./, ''); } catch (_) { return u; }
+  }
+
   function render(data) {
     var r = data.report || {};
     var html = '';
@@ -143,6 +150,8 @@
     html += '<div class="card pad-md aiBlock"><div class="kicker">' + esc(T.id) + '</div>' +
       '<p class="aiSummary">' + esc(r.identification) + '</p>' +
       (r.photo_quality ? '<p class="aiMuted"><strong>' + esc(T.quality) + '</strong> — ' + esc(r.photo_quality) + '</p>' : '') +
+      (data.listing_url ? '<p class="aiMuted"><strong>' + esc(T.source) + '</strong> — <a href="' + esc(data.listing_url) +
+        '" target="_blank" rel="noopener noreferrer nofollow">' + esc(hostOf(data.listing_url)) + '</a></p>' : '') +
       '</div>';
 
     if (r.observations && r.observations.length) {
@@ -169,6 +178,11 @@
     html += '<a class="btn primary" href="contact.html" onclick="plausible(\'Lead\')">' + esc(T.ask) + '</a>';
 
     out.innerHTML = html;
+    // Repris par le formulaire de contact quand le pre-remplissage sera en place.
+    try {
+      if (data.listing_url) sessionStorage.setItem('bespoke_listing_url', data.listing_url);
+      else sessionStorage.removeItem('bespoke_listing_url');
+    } catch (_) {}
     out.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -176,6 +190,9 @@
     e.preventDefault();
     setStatus('');
     if (!files.length) { setStatus(T.none, 'error'); return; }
+
+    var listingUrl = (urlInput && urlInput.value.trim()) || '';
+    if (listingUrl && !/^https?:\/\/.+/i.test(listingUrl)) { setStatus(T.badUrl, 'error'); return; }
 
     btn.disabled = true;
     btn.textContent = T.sending;
@@ -188,6 +205,7 @@
         body: JSON.stringify({
           lang: lang,
           context: context.value.trim(),
+          listing_url: listingUrl,
           images: files.map(function (f) { return { media_type: f.media_type, data: f.base64 }; }),
         }),
       });
