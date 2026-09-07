@@ -243,7 +243,9 @@
             return;
           }
           if (data.status === 'error') {
-            failOut(lang === 'en' ? data.message_en : data.message_fr);
+            var m = (lang === 'en' ? data.message_en : data.message_fr) || T.err;
+            if (data.error_code) m += ' [' + data.error_code + (data.detail ? ': ' + data.detail : '') + ']';
+            failOut(m);
             return;
           }
           if (Date.now() - started > POLL_MAX_MS) { failOut(); return; }
@@ -276,7 +278,7 @@
       if (res.status !== 202 && !res.ok) {
         var d = {};
         try { d = await res.json(); } catch (_) {}
-        failOut(lang === 'en' ? d.message_en : d.message_fr);
+        failOut(((lang === 'en' ? d.message_en : d.message_fr) || T.err) + ' [kickoff HTTP ' + res.status + ']');
         return;
       }
     } catch (_) {

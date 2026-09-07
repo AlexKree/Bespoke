@@ -48,6 +48,8 @@ exports.handler = async function (event) {
   if (job.status === 'error') {
     return json(200, {
       status: 'error',
+      error_code: job.error_code || null,
+      detail: job.detail || null,
       message_fr: job.message_fr || UNAVAILABLE.message_fr,
       message_en: job.message_en || UNAVAILABLE.message_en,
     });

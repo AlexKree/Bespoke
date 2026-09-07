@@ -120,7 +120,12 @@ exports.handler = async function (event) {
 
   const l = lang(body);
   const finish = (fields) => store.setJSON(jobId, { ...fields, updated_at: Date.now() });
-  const fail = (code) => finish({ status: 'error', error_code: code, ...message(code) });
+  const fail = (code, detail) => finish({
+    status: 'error',
+    error_code: code,
+    detail: detail ? String(detail).slice(0, 300) : undefined,
+    ...message(code),
+  });
 
   try {
     await finish({ status: 'pending' });
@@ -191,8 +196,8 @@ exports.handler = async function (event) {
       },
     });
   } catch (err) {
-    console.error('ai-inspection-background', err && err.message);
-    try { await fail(classifyError(err)); } catch (_) { /* rien de plus a faire */ }
+    console.error('ai-inspection-background', err && err.status, err && err.message);
+    try { await fail(classifyError(err), (err && err.status ? err.status + ' ' : '') + (err && err.message)); } catch (_) { /* rien de plus a faire */ }
   }
 
   return { statusCode: 202 };
