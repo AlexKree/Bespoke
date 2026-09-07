@@ -15,7 +15,7 @@
   var lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
 
   var MAX_FILES = 6;
-  var MAX_EDGE = 1568;   // px — bord long optimal pour l'analyse visuelle du modele
+  var MAX_EDGE = 1400;   // px — suffisant pour l'analyse, garde l'appel sous le budget temps
   var QUALITY = 0.82;
 
   var T = lang === 'en' ? {

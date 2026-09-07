@@ -131,10 +131,11 @@ exports.handler = async function (event) {
       model: MODEL,
       max_tokens: 8000,
       thinking: { type: 'adaptive' },
-      // effort "medium" : "low" passait a cote de defauts pourtant nets sur les
-      // photos (scotch sur une capote) et remplissait parfois les listes de
-      // texte vide. Reste sous le plafond temps de la fonction.
-      output_config: { effort: 'medium', format: zodOutputFormat(Report) },
+      // effort "low" : "medium" faisait deborder le budget temps (6 images +
+      // thinking > timeout SDK 23 s). La detection des defauts et l'absence de
+      // sections vides reposent desormais sur le prompt et le schema, pas sur
+      // l'effort.
+      output_config: { effort: 'low', format: zodOutputFormat(Report) },
       system: SYSTEM,
       messages: [{ role: 'user', content }],
     });
