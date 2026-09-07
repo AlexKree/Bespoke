@@ -84,8 +84,8 @@ function applyOriginGuard(params) {
 function disclaimers() {
   return {
     rates_reference_year: RATES.reference_year,
-    disclaimer_fr: `Estimation indicative calculee sur les taux parametres pour ${RATES.reference_year}. Les droits, la TVA et le malus sont confirmes au dedouanement et a l'immatriculation. Ne constitue ni un devis, ni un conseil fiscal.`,
-    disclaimer_en: `Indicative estimate based on the rates configured for ${RATES.reference_year}. Duty, VAT and malus are confirmed at customs clearance and registration. This is neither a quote nor tax advice.`,
+    disclaimer_fr: `Estimation indicative calculee sur les taux parametres pour ${RATES.reference_year}. Les droits, la TVA et le malus sont confirmes au dedouanement et a l'immatriculation. Ce chiffrage s'entend sous reserve des pieces et travaux de mise aux normes que l'homologation ou le controle technique francais peuvent exiger (eclairage, depollution, freinage, compteur, securite...), variables selon le vehicule et son marche d'origine. Ne constitue ni un devis, ni un conseil fiscal.`,
+    disclaimer_en: `Indicative estimate based on the rates configured for ${RATES.reference_year}. Duty, VAT and malus are confirmed at customs clearance and registration. This costing is subject to any parts and compliance work that French type-approval or the roadworthiness test may require (lighting, emissions, braking, odometer, safety...), which vary by vehicle and country of origin. This is neither a quote nor tax advice.`,
   };
 }
 
