@@ -20,10 +20,12 @@ const {
   getBackgroundClient, jobStore, rateLimit, parseBody, lang, classifyError,
 } = require('../lib/ai');
 
-// Fonction background : on peut viser la qualite sans surveiller le chrono.
-// opus-5 + effort "medium" tient generalement en 1 a 2 min sur 6 photos.
-const MODEL = process.env.ANTHROPIC_MODEL_INSPECTION || 'claude-opus-5';
-const EFFORT = process.env.ANTHROPIC_EFFORT_INSPECTION || 'medium';
+// Fonction background : plus de contrainte de chrono, on peut monter l'effort.
+// Defaut sonnet-5 : c'est le modele prouve sur la cle du site (concierge, import).
+// opus-5 renvoyait une erreur API immediate sur le preview #67 (acces non active
+// sur la cle) — le repasser via ANTHROPIC_MODEL_INSPECTION une fois l'acces ok.
+const MODEL = process.env.ANTHROPIC_MODEL_INSPECTION || 'claude-sonnet-5';
+const EFFORT = process.env.ANTHROPIC_EFFORT_INSPECTION || 'high';
 
 const MAX_IMAGES = 6;
 const MAX_IMAGE_BYTES = 1.6 * 1024 * 1024; // apres redimensionnement cote client
