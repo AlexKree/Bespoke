@@ -15,7 +15,7 @@
   var lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
 
   var MAX_FILES = 6;
-  var MAX_EDGE = 1400;   // px — suffisant pour l'analyse, ~10x plus leger que l'original
+  var MAX_EDGE = 1568;   // px — bord long optimal pour l'analyse visuelle du modele
   var QUALITY = 0.82;
 
   var T = lang === 'en' ? {
@@ -132,11 +132,18 @@
     if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files);
   });
 
+  function clean(arr) {
+    return (Array.isArray(arr) ? arr : [])
+      .map(function (x) { return typeof x === 'string' ? x.trim() : ''; })
+      .filter(Boolean);
+  }
+
   function list(title, arr, cls) {
-    if (!arr || !arr.length) return '';
+    var items = clean(arr);
+    if (!items.length) return '';
     return '<div class="card pad-md aiBlock"><div class="kicker">' + esc(title) + '</div>' +
       '<ul class="aiList ' + (cls || '') + '">' +
-      arr.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
+      items.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
   }
 
   function hostOf(u) {
@@ -147,20 +154,23 @@
     var r = data.report || {};
     var html = '';
 
+    var ident = (r.identification || '').trim();
     html += '<div class="card pad-md aiBlock"><div class="kicker">' + esc(T.id) + '</div>' +
-      '<p class="aiSummary">' + esc(r.identification) + '</p>' +
-      (r.photo_quality ? '<p class="aiMuted"><strong>' + esc(T.quality) + '</strong> — ' + esc(r.photo_quality) + '</p>' : '') +
+      '<p class="aiSummary">' + esc(ident || (lang === 'en' ? 'The photos could not be read.' : 'Les photos n’ont pas pu être exploitées.')) + '</p>' +
+      ((r.photo_quality || '').trim() ? '<p class="aiMuted"><strong>' + esc(T.quality) + '</strong> — ' + esc(r.photo_quality.trim()) + '</p>' : '') +
       (data.listing_url ? '<p class="aiMuted"><strong>' + esc(T.source) + '</strong> — <a href="' + esc(data.listing_url) +
         '" target="_blank" rel="noopener noreferrer nofollow">' + esc(hostOf(data.listing_url)) + '</a></p>' : '') +
       '</div>';
 
-    if (r.observations && r.observations.length) {
+    var obs = (Array.isArray(r.observations) ? r.observations : [])
+      .filter(function (o) { return o && typeof o.finding === 'string' && o.finding.trim(); });
+    if (obs.length) {
       html += '<div class="card pad-md aiBlock"><div class="kicker">' + esc(T.obs) + '</div><div class="aiObs">';
-      r.observations.forEach(function (o) {
+      obs.forEach(function (o) {
         html += '<div class="aiObsRow aiObsRow--' + esc(o.severity) + '">' +
           '<span class="aiSev">' + esc((T.sev[o.severity]) || o.severity) + '</span>' +
-          '<div><div class="aiObsZone">' + esc(o.zone) + '</div>' +
-          '<p>' + esc(o.finding) + '</p></div></div>';
+          '<div><div class="aiObsZone">' + esc((o.zone || '').trim()) + '</div>' +
+          '<p>' + esc(o.finding.trim()) + '</p></div></div>';
       });
       html += '</div></div>';
     }
@@ -169,9 +179,9 @@
     html += list(T.questions, r.questions_for_seller);
     html += list(T.docs, r.documents_to_request);
 
-    if (r.overall) {
+    if ((r.overall || '').trim()) {
       html += '<div class="card pad-md aiBlock"><div class="kicker">' + esc(T.overall) + '</div>' +
-        '<p class="aiSummary">' + esc(r.overall) + '</p></div>';
+        '<p class="aiSummary">' + esc(r.overall.trim()) + '</p></div>';
     }
 
     html += '<div class="aiDisclaimer">' + esc(lang === 'en' ? data.disclaimer_en : data.disclaimer_fr) + '</div>';

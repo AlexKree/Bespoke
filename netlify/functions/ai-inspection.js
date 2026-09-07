@@ -35,28 +35,40 @@ const Report = z.object({
   identification: z.string().describe("Ce que montrent les photos : type de vehicule, epoque probable, modele si reconnaissable. Dis explicitement si tu n'es pas sur."),
   photo_quality: z.string().describe("Ce que le jeu de photos permet — et surtout ne permet pas — de juger. Angles manquants, eclairage, cadrage trop serre."),
   observations: z.array(z.object({
-    zone: z.string().describe('Carrosserie, interieur, moteur, trains roulants, pneumatiques, documents...'),
-    finding: z.string().describe('Ce qui est visible sur la photo. Descriptif, factuel.'),
+    zone: z.string().describe('Carrosserie, capote/toit, vitrage, interieur, moteur, trains roulants, pneumatiques, documents...'),
+    finding: z.string().describe("Ce qui est visible sur la photo, factuel et precis. Nomme explicitement tout defaut net : scotch ou reparation de fortune, dechirure, rouille, cloquage, impact, ecart de teinte, piece rapportee."),
     severity: z.enum(['info', 'attention', 'alerte']),
-  })).describe('Observations tirees uniquement de ce qui est visible.'),
-  checks: z.array(z.string()).describe("Points a verifier physiquement lors de l'inspection, classes du plus important au moins important."),
-  questions_for_seller: z.array(z.string()).describe('Questions precises a poser au vendeur, formulees pour obtenir une reponse verifiable.'),
-  documents_to_request: z.array(z.string()).describe('Documents a demander avant tout engagement.'),
-  overall: z.string().describe("Synthese en 2 a 3 phrases. Prudente : les photos ne permettent pas de conclure sur l'etat mecanique."),
+  })).describe("Observations tirees uniquement de ce qui est visible. Tout defaut nettement visible DOIT y figurer."),
+  checks: z.array(z.string()).describe("Points a verifier physiquement lors de l'inspection, classes du plus important au moins important. Chaque entree est une phrase complete et specifique a ce vehicule. Tableau vide si rien de pertinent — jamais d'entree vide."),
+  questions_for_seller: z.array(z.string()).describe("Questions precises a poser au vendeur, formulees pour obtenir une reponse verifiable. Chaque entree est une phrase complete. Tableau vide si rien de pertinent — jamais d'entree vide ni de texte passe-partout."),
+  documents_to_request: z.array(z.string()).describe("Documents a demander avant tout engagement. Chaque entree nomme un document precis. Tableau vide si rien de pertinent — jamais d'entree vide."),
+  overall: z.string().describe("Synthese en 2 a 3 phrases completes, specifiques a ce vehicule. Prudente : les photos ne permettent pas de conclure sur l'etat mecanique. Jamais vide, jamais un texte passe-partout."),
 });
 
 const SYSTEM = `Tu es inspecteur vehicules pour The Bespoke Car. On te soumet les photos d'un vehicule — souvent celles d'une annonce trouvee ailleurs.
 
 Ton travail : dire ce qu'un professionnel regarderait en premier, pour orienter une inspection physique. Pas rendre un verdict.
 
+Methode — pour chaque photo, examine activement :
+- Carrosserie : ecarts et alignement des ouvrants, difference de teinte ou de grain de peinture, cloquage, rouille, mastic, traces de choc ou de reparation.
+- Capote ou toit ouvrant : dechirures, scotch ou reparation de fortune, coutures qui laachent, pieces rapportees, toile detendue ou lustree, lunette arriere jaunie, rayee ou decollee, mauvais ajustement.
+- Vitrage : impacts, fissures, rayures d'essuie-glace, joints.
+- Interieur : usure et dechirures de sellerie, craquelures du cuir, etat de la planche de bord, tapis, signes d'infiltration d'eau.
+- Moteur si visible : fuites, corrosion, montages recents ou non conformes.
+- Trains roulants et pneumatiques : usure, craquelures, date des pneus si lisible, disques, corrosion.
+Ce qui est nettement visible et anormal DOIT apparaitre dans "observations". Ne minimise jamais un defaut evident — un scotch sur une capote, une dechirure, une trace de rouille — sous pretexte que les photos ne permettent pas de tout juger : decris ce que tu vois, puis renvoie la verification fine dans "checks".
+
 Regles absolues :
 - Tu ne decris QUE ce qui est visible sur les photos. Si une zone n'est pas photographiee, tu ne te prononces pas dessus : tu la mets dans "checks".
 - Tu ne conclus jamais sur l'etat mecanique, l'historique d'entretien, un accident, un kilometrage ou l'authenticite a partir de photos. Tu peux signaler un indice visuel et dire quoi verifier.
 - Tu n'estimes aucun prix et tu ne dis jamais si c'est une bonne affaire.
-- Une severite "alerte" est reservee a ce qui est nettement visible et couteux (corrosion structurelle apparente, ecarts de teinte ou d'ajustement marques, trace de choc). En cas de doute, "attention".
+- Severite : "alerte" pour un defaut nettement visible et couteux (corrosion structurelle, ecarts de teinte ou d'ajustement marques, choc, capote hors d'usage) ; "attention" pour un defaut visible a confirmer ; "info" pour un simple point de vigilance.
 - Tu signales franchement quand le jeu de photos est trop pauvre pour dire quoi que ce soit d'utile.
 - Si les images ne montrent pas de vehicule, dis-le dans "identification" et laisse les autres tableaux vides.
-- Ton sobre et professionnel. Pas de flatterie, pas d'alarmisme. Redige dans la langue demandee.`;
+
+Remplissage interdit : n'ecris jamais de phrase de remplissage ni de texte generique. Chaque entree de "checks", "questions_for_seller" et "documents_to_request" est une phrase complete et specifique. Si une de ces listes n'a rien de pertinent, renvoie un tableau vide plutot qu'une entree vide. "overall" est toujours une vraie synthese, jamais un espace ni un texte passe-partout.
+
+Ton sobre et professionnel. Pas de flatterie, pas d'alarmisme. Redige dans la langue demandee.`;
 
 exports.handler = async function (event) {
   const parsed = parseBody(event, 12 * 1024 * 1024);
@@ -119,7 +131,10 @@ exports.handler = async function (event) {
       model: MODEL,
       max_tokens: 8000,
       thinking: { type: 'adaptive' },
-      output_config: { effort: 'low', format: zodOutputFormat(Report) },
+      // effort "medium" : "low" passait a cote de defauts pourtant nets sur les
+      // photos (scotch sur une capote) et remplissait parfois les listes de
+      // texte vide. Reste sous le plafond temps de la fonction.
+      output_config: { effort: 'medium', format: zodOutputFormat(Report) },
       system: SYSTEM,
       messages: [{ role: 'user', content }],
     });
