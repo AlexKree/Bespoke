@@ -10,22 +10,28 @@
  *
  * Fonction SYNCHRONE volontairement : le detour par une fonction "background"
  * (plafond de requete 256 Ko, dependance a Netlify Blobs) a multiplie les modes
- * de panne. On tient dans le budget temps en coupant le thinking, en limitant le
- * nombre de photos et en plafonnant max_tokens. `netlify.toml` porte le timeout
- * de la fonction a 26 s ; l'appel vise ~8-10 s pour rester bon meme a 10 s.
+ * de panne. Le timeout Netlify (10 s par defaut, 26 s seulement sur demande au
+ * support) est la vraie contrainte : sonnet-5 en vision sur 3-4 photos deborde
+ * les 10 s (504). On tient donc dans le budget avec :
+ *  - Haiku 4.5 par defaut (surchargeable ANTHROPIC_MODEL_INSPECTION = claude-sonnet-5
+ *    le jour ou le site aura le timeout 26 s) ;
+ *  - un appel `messages.create` avec un outil force (pas la voie structured-output
+ *    `effort`, plus lente) ;
+ *  - thinking coupe, 4 photos max, max_tokens plafonne.
  */
 
 const { z } = require('zod');
 const { zodOutputFormat } = require('@anthropic-ai/sdk/helpers/zod');
-const { MODEL, getClient, json, rateLimit, parseBody, requireKey, lang, apiError } = require('../lib/ai');
+const { getClient, json, rateLimit, parseBody, requireKey, lang, classifyError } = require('../lib/ai');
 
 const MAX_IMAGES = 4; // aligne sur le client : au-dela, l'appel deborde les 10 s
 const MAX_IMAGE_BYTES = 1.6 * 1024 * 1024; // apres redimensionnement cote client
 const ALLOWED_MEDIA = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
-// Modele/effort surchargeables sans redeploy si besoin de retuner en prod.
-const INSPECTION_MODEL = process.env.ANTHROPIC_MODEL_INSPECTION || MODEL;
-const INSPECTION_EFFORT = process.env.ANTHROPIC_EFFORT_INSPECTION || 'low';
+// Haiku par defaut : seul modele qui tient dans les 10 s de la fonction sur ce
+// jeu de photos. Repasser sur claude-sonnet-5 via cette var d'env Netlify le
+// jour ou le site a le timeout 26 s active.
+const INSPECTION_MODEL = process.env.ANTHROPIC_MODEL_INSPECTION || 'claude-haiku-4-5-20251001';
 
 /** N'accepte qu'une URL http(s) plausible. Retourne '' si invalide. */
 function normalizeListingUrl(v) {
@@ -79,6 +85,9 @@ Regles absolues :
 Remplissage interdit : n'ecris jamais de phrase de remplissage ni de texte generique. Chaque entree de "checks", "questions_for_seller" et "documents_to_request" est une phrase complete et specifique. Si une de ces listes n'a rien de pertinent, renvoie un tableau vide plutot qu'une entree vide. "overall" est toujours une vraie synthese, jamais un espace ni un texte passe-partout.
 
 Ton sobre et professionnel. Pas de flatterie, pas d'alarmisme. Redige dans la langue demandee.`;
+
+// Schema JSON de l'outil force (reutilise la definition Zod).
+const REPORT_SCHEMA = zodOutputFormat(Report).schema;
 
 const DISCLAIMER_FR = "Pre-rapport indicatif etabli a partir de photos uniquement. Il ne remplace en aucun cas une inspection physique (PPI) ni une expertise. Aucune conclusion sur l'etat mecanique, l'historique ou l'authenticite ne peut etre tiree de photographies.";
 const DISCLAIMER_EN = 'Indicative pre-report based on photographs only. It is in no way a substitute for a physical pre-purchase inspection or a formal appraisal. No conclusion about mechanical condition, history or authenticity can be drawn from photographs.';
@@ -140,16 +149,17 @@ exports.handler = async function (event) {
   if (!limited.ok) return limited.response;
 
   try {
-    const response = await getClient().messages.parse({
+    const response = await getClient().messages.create({
       model: INSPECTION_MODEL,
       max_tokens: 2800,
-      // Thinking coupe et effort "low" : le rapport est court, l'enjeu est de
-      // tenir dans les 10 s de la fonction. La detection des defauts repose sur
-      // le prompt (methode zone par zone) et le schema, pas sur l'effort.
-      thinking: { type: 'disabled' },
-      output_config: { effort: INSPECTION_EFFORT, format: zodOutputFormat(Report) },
       system: SYSTEM,
       messages: [{ role: 'user', content }],
+      tools: [{
+        name: 'submit_report',
+        description: "Renvoie le pre-rapport photo structure. Seul moyen de repondre.",
+        input_schema: REPORT_SCHEMA,
+      }],
+      tool_choice: { type: 'tool', name: 'submit_report' },
     });
 
     if (response.stop_reason === 'refusal') {
@@ -159,14 +169,17 @@ exports.handler = async function (event) {
         message_en: 'The analysis could not be completed on these photos. Please use the contact form.',
       });
     }
-    const report = response.parsed_output;
-    if (!report) {
+    const block = (response.content || []).find((c) => c.type === 'tool_use');
+    const parsedReport = block ? Report.safeParse(block.input) : null;
+    if (!parsedReport || !parsedReport.success) {
+      console.error('ai-inspection : sortie outil invalide', parsedReport && parsedReport.error && parsedReport.error.message);
       return json(502, {
         error: 'unparsable_response',
         message_fr: "L’analyse est momentanement indisponible. Merci d’utiliser le formulaire de contact.",
         message_en: 'The analysis is unavailable right now. Please use the contact form.',
       });
     }
+    const report = parsedReport.data;
 
     return json(200, {
       ok: true,
@@ -181,6 +194,17 @@ exports.handler = async function (event) {
       },
     });
   } catch (err) {
-    return apiError(err);
+    // Debug temporaire : on fait remonter le vrai motif a l'ecran, sinon le
+    // client ne montre qu'un message generique. A retirer une fois l'outil OK.
+    const code = classifyError(err);
+    const apiMsg = (err && err.error && err.error.error && err.error.error.message)
+      || (err && err.message) || 'inconnu';
+    console.error('ai-inspection', code, err && err.status, apiMsg);
+    return json(502, {
+      error: code,
+      detail: (err && err.status ? err.status + ' ' : '') + code + ' — ' + String(apiMsg).slice(0, 200),
+      message_fr: "L’analyse est momentanement indisponible. Merci d’utiliser le formulaire de contact.",
+      message_en: 'The analysis is unavailable right now. Please use the contact form.',
+    });
   }
 };

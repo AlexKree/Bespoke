@@ -225,7 +225,11 @@
       try { data = await res.json(); } catch (_) {}
       if (!res.ok || !data.ok) {
         out.innerHTML = '';
-        setStatus((lang === 'en' ? data.message_en : data.message_fr) || T.err, 'error');
+        var msg = (lang === 'en' ? data.message_en : data.message_fr) || T.err;
+        // Debug temporaire : le motif reel entre crochets. A retirer une fois l'outil OK.
+        if (data.detail) msg += ' [' + data.detail + ']';
+        else if (!res.ok && res.status) msg += ' [HTTP ' + res.status + ']';
+        setStatus(msg, 'error');
         return;
       }
       if (window.plausible) plausible('AI Inspection');
