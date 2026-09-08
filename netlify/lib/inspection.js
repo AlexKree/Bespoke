@@ -17,7 +17,6 @@
  */
 
 const { z } = require('zod');
-const { zodOutputFormat } = require('@anthropic-ai/sdk/helpers/zod');
 
 // Le temps n'est plus la contrainte : 6 photos, pleine definition raisonnable.
 const MAX_IMAGES = 6;
@@ -84,8 +83,74 @@ Remplissage interdit : n'ecris jamais de phrase de remplissage ni de texte gener
 
 Ton sobre et professionnel. Pas de flatterie, pas d'alarmisme. Redige dans la langue demandee.`;
 
-// Schema JSON de l'outil force (reutilise la definition Zod).
-const REPORT_SCHEMA = zodOutputFormat(Report).schema;
+// Schema JSON de l'outil force, ecrit a la main.
+// NE PAS deriver de Zod via `zodOutputFormat` : ce helper vise la fonctionnalite
+// "structured outputs", pas un `input_schema` d'outil. Il rendait l'enum de
+// `severity` en simple texte et truffait le schema de $ref/$defs auto-nommes —
+// resultat, Sonnet emboitait tout le rapport sous une cle parasite. Un schema
+// plat et explicite reste la reference ; `Report` (Zod) ne sert plus qu'a
+// valider la reponse.
+const REPORT_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: [
+    'identification', 'photo_quality', 'observations',
+    'checks', 'questions_for_seller', 'documents_to_request', 'overall',
+  ],
+  properties: {
+    identification: {
+      type: 'string',
+      description: "Ce que montrent les photos : type de vehicule, epoque probable, modele si reconnaissable. Dis explicitement si tu n'es pas sur.",
+    },
+    photo_quality: {
+      type: 'string',
+      description: "Ce que le jeu de photos permet — et surtout ne permet pas — de juger. Angles manquants, eclairage, cadrage trop serre.",
+    },
+    observations: {
+      type: 'array',
+      description: "Observations tirees uniquement de ce qui est visible. Tout defaut nettement visible DOIT y figurer.",
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['zone', 'finding', 'severity'],
+        properties: {
+          zone: {
+            type: 'string',
+            description: 'Carrosserie, capote/toit, vitrage, interieur, moteur, trains roulants, pneumatiques, documents...',
+          },
+          finding: {
+            type: 'string',
+            description: "Ce qui est visible sur la photo, factuel et precis. Nomme explicitement tout defaut net : scotch ou reparation de fortune, dechirure, rouille, cloquage, impact, ecart de teinte, piece rapportee.",
+          },
+          severity: {
+            type: 'string',
+            enum: ['info', 'attention', 'alerte'],
+            description: "'alerte' = defaut net et couteux ; 'attention' = defaut visible a confirmer ; 'info' = simple point de vigilance.",
+          },
+        },
+      },
+    },
+    checks: {
+      type: 'array',
+      description: "Points a verifier physiquement lors de l'inspection, classes du plus important au moins important. Chaque entree est une phrase complete et specifique a ce vehicule. Tableau vide si rien de pertinent — jamais d'entree vide.",
+      items: { type: 'string' },
+    },
+    questions_for_seller: {
+      type: 'array',
+      description: "Questions precises a poser au vendeur, formulees pour obtenir une reponse verifiable. Chaque entree est une phrase complete. Tableau vide si rien de pertinent — jamais d'entree vide ni de texte passe-partout.",
+      items: { type: 'string' },
+    },
+    documents_to_request: {
+      type: 'array',
+      description: "Documents a demander avant tout engagement. Chaque entree nomme un document precis. Tableau vide si rien de pertinent — jamais d'entree vide.",
+      items: { type: 'string' },
+    },
+    overall: {
+      type: 'string',
+      description: "Synthese en 2 a 3 phrases completes, specifiques a ce vehicule. Prudente : les photos ne permettent pas de conclure sur l'etat mecanique. Jamais vide, jamais un texte passe-partout.",
+    },
+  },
+};
 
 const DISCLAIMER_FR = "Pre-rapport indicatif etabli a partir de photos uniquement. Il ne remplace en aucun cas une inspection physique (PPI) ni une expertise. Aucune conclusion sur l'etat mecanique, l'historique ou l'authenticite ne peut etre tiree de photographies.";
 const DISCLAIMER_EN = 'Indicative pre-report based on photographs only. It is in no way a substitute for a physical pre-purchase inspection or a formal appraisal. No conclusion about mechanical condition, history or authenticity can be drawn from photographs.';

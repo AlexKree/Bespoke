@@ -156,7 +156,19 @@ exports.handler = async function (event) {
       return { statusCode: 200, body: 'truncated' };
     }
 
-    const parsedReport = block ? Report.safeParse(block.input) : null;
+    // Filet de securite : si le modele a emboite le rapport sous une cle unique
+    // ({ report: {...} }, { finding: {...} }...), on deballe avant de valider.
+    let toolInput = block ? block.input : null;
+    if (toolInput && typeof toolInput === 'object' && !Array.isArray(toolInput)) {
+      const keys = Object.keys(toolInput);
+      if (keys.length === 1 && toolInput[keys[0]] && typeof toolInput[keys[0]] === 'object'
+          && 'identification' in toolInput[keys[0]]) {
+        console.warn('ai-inspection-run : rapport deballe de la cle', keys[0], jobId);
+        toolInput = toolInput[keys[0]];
+      }
+    }
+
+    const parsedReport = block ? Report.safeParse(toolInput) : null;
     if (!parsedReport || !parsedReport.success) {
       const zodMsg = (parsedReport && parsedReport.error && parsedReport.error.message) || 'pas de tool_use';
       const preview = block ? JSON.stringify(block.input || {}).slice(0, 300) : '(aucun bloc tool_use)';
