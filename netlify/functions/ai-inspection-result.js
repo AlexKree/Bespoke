@@ -27,6 +27,10 @@ const ERROR_MESSAGES = {
     fr: "L’analyse n’a pas pu aboutir sur ces photos. Merci d’utiliser le formulaire de contact.",
     en: 'The analysis could not be completed on these photos. Please use the contact form.',
   },
+  response_truncated: {
+    fr: "Le rapport était trop long pour aboutir. Réessayez avec moins de photos, ou utilisez le formulaire de contact.",
+    en: 'The report was too long to complete. Try again with fewer photos, or use the contact form.',
+  },
   upstream_rate_limited: {
     fr: "Le service d’analyse est temporairement saturé. Merci de réessayer dans quelques minutes.",
     en: 'The analysis service is temporarily overloaded. Please try again in a few minutes.',

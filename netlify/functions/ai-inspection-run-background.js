@@ -121,7 +121,9 @@ exports.handler = async function (event) {
 
     const response = await client.messages.create({
       model: INSPECTION_MODEL,
-      max_tokens: 2500,
+      // Le worker a 15 min : large marge pour un rapport complet sur 6 photos.
+      // A 2500, le JSON de l'outil etait tronque (tous les champs undefined).
+      max_tokens: 6000,
       system: SYSTEM,
       messages: [{ role: 'user', content }],
       tools: [{
@@ -138,13 +140,31 @@ exports.handler = async function (event) {
     }
 
     const block = (response.content || []).find((c) => c.type === 'tool_use');
+    console.log('ai-inspection-run : reponse', jobId,
+      'stop=' + response.stop_reason,
+      'out_tokens=' + (response.usage && response.usage.output_tokens),
+      'tool_keys=' + JSON.stringify(block ? Object.keys(block.input || {}) : null));
+
+    if (response.stop_reason === 'max_tokens') {
+      // JSON de l'outil coupe en cours : inutile d'essayer de le valider.
+      console.error('ai-inspection-run : reponse tronquee (max_tokens)', jobId);
+      await finish(pool, jobId, {
+        status: 'error',
+        error_code: 'response_truncated',
+        error_detail: 'max_tokens atteint, out_tokens=' + (response.usage && response.usage.output_tokens),
+      });
+      return { statusCode: 200, body: 'truncated' };
+    }
+
     const parsedReport = block ? Report.safeParse(block.input) : null;
     if (!parsedReport || !parsedReport.success) {
-      console.error('ai-inspection-run : sortie outil invalide', jobId, parsedReport && parsedReport.error && parsedReport.error.message);
+      const zodMsg = (parsedReport && parsedReport.error && parsedReport.error.message) || 'pas de tool_use';
+      const preview = block ? JSON.stringify(block.input || {}).slice(0, 300) : '(aucun bloc tool_use)';
+      console.error('ai-inspection-run : sortie outil invalide', jobId, zodMsg, '| recu:', preview);
       await finish(pool, jobId, {
         status: 'error',
         error_code: 'unparsable_response',
-        error_detail: (parsedReport && parsedReport.error && parsedReport.error.message) || 'pas de tool_use',
+        error_detail: 'stop=' + response.stop_reason + ' | ' + zodMsg.slice(0, 200) + ' | recu: ' + preview,
       });
       return { statusCode: 200, body: 'unparsable' };
     }
