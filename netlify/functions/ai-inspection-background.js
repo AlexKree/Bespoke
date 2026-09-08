@@ -9,6 +9,11 @@
  * ecrit son resultat dans le magasin de jobs (Netlify Blobs). La page appelle
  * ensuite `ai-inspection-status` toutes les 2-3 s jusqu'a ce qu'il soit pret.
  *
+ * Les fonctions background plafonnent la requete entrante a 256 Ko : les photos
+ * ne peuvent donc PAS transiter par le corps de la requete. C'est `ai-inspection-start`
+ * (synchrone, 6 Mo) qui les recoit, les depose dans Blobs sous `<job>/input`, puis
+ * declenche cette fonction avec le seul `job_id`.
+ *
  * Ce n'est PAS une expertise : c'est ce qu'un professionnel regarderait en
  * premier sur un jeu de photos, pour orienter la vraie inspection physique (PPI).
  * Le prompt et l'interface le disent tous les deux.
@@ -17,7 +22,7 @@
 const { z } = require('zod');
 const { zodOutputFormat } = require('@anthropic-ai/sdk/helpers/zod');
 const {
-  getBackgroundClient, jobStore, rateLimit, parseBody, lang, classifyError,
+  getBackgroundClient, jobStore, parseBody, lang, classifyError,
 } = require('../lib/ai');
 
 // Fonction background : plus de contrainte de chrono, on peut monter l'effort.
@@ -102,7 +107,8 @@ function message(code) {
 }
 
 exports.handler = async function (event) {
-  const parsed = parseBody(event, 12 * 1024 * 1024);
+  // Corps minuscule : juste { job_id }. Les photos sont dans Blobs (voir en-tete).
+  const parsed = parseBody(event, 64 * 1024);
   if (parsed.error) return { statusCode: 202 };
   const body = parsed.body;
 
@@ -118,7 +124,6 @@ exports.handler = async function (event) {
     return { statusCode: 202 };
   }
 
-  const l = lang(body);
   const finish = (fields) => store.setJSON(jobId, { ...fields, updated_at: Date.now() });
   const fail = (code, detail) => finish({
     status: 'error',
@@ -133,7 +138,14 @@ exports.handler = async function (event) {
     const client = getBackgroundClient();
     if (!client) return void await fail('ai_not_configured');
 
-    const images = Array.isArray(body.images) ? body.images : [];
+    let input;
+    try {
+      input = await store.get(jobId + '/input', { type: 'json', consistency: 'strong' });
+    } catch (_) { input = null; }
+    if (!input) return void await fail('invalid_request', 'entree du job introuvable');
+
+    const l = lang(input);
+    const images = Array.isArray(input.images) ? input.images : [];
     if (!images.length || images.length > MAX_IMAGES) return void await fail('invalid_request');
 
     const content = [];
@@ -149,8 +161,8 @@ exports.handler = async function (event) {
       });
     }
 
-    const context = typeof body.context === 'string' ? body.context.trim().slice(0, 1500) : '';
-    const listingUrl = normalizeListingUrl(body.listing_url);
+    const context = typeof input.context === 'string' ? input.context.trim().slice(0, 1500) : '';
+    const listingUrl = normalizeListingUrl(input.listing_url);
     content.push({
       type: 'text',
       text:
@@ -164,10 +176,8 @@ exports.handler = async function (event) {
           : ''),
     });
 
-    // Les images sont couteuses en tokens : quota plus serre que les autres outils.
-    const limited = await rateLimit(event, 'inspection', { limit: 5, windowMs: 3600000 });
-    if (!limited.ok) return void await fail('rate_limited');
-
+    // Le quota (5/h) est applique en amont par ai-inspection-start, synchrone,
+    // qui voit la vraie IP client.
     const response = await client.messages.parse({
       model: MODEL,
       max_tokens: 8000,
@@ -195,6 +205,9 @@ exports.handler = async function (event) {
         },
       },
     });
+
+    // Le rapport est ecrit : les photos n'ont plus a occuper le magasin.
+    try { await store.delete(jobId + '/input'); } catch (_) { /* sans consequence */ }
   } catch (err) {
     console.error('ai-inspection-background', err && err.status, err && err.message);
     try { await fail(classifyError(err), (err && err.status ? err.status + ' ' : '') + (err && err.message)); } catch (_) { /* rien de plus a faire */ }

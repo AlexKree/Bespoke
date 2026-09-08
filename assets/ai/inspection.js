@@ -15,12 +15,13 @@
   var lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
 
   var MAX_FILES = 6;
-  var MAX_EDGE = 1200;   // px — suffisant pour l'analyse visuelle
-  var QUALITY = 0.74;
-  // Netlify rejette a la peripherie (HTTP 413) toute requete de fonction au-dela
-  // de 6 Mo, base64 compris. On vise large en dessous : si le lot depasse, on
-  // recompresse par paliers avant l'envoi (ensurePayloadUnder).
-  var PAYLOAD_LIMIT = 3.8 * 1024 * 1024;
+  var MAX_EDGE = 1400;   // px — au-dela, l'API redimensionne de toute facon
+  var QUALITY = 0.8;
+  // ai-inspection-start est une fonction synchrone : Netlify rejette (HTTP 413)
+  // toute requete au-dela de 6 Mo. Ce qui part sur le reseau, c'est le base64
+  // (~4/3 du binaire) ; on plafonne donc la SOMME DES CARACTERES base64 bien en
+  // dessous, et on recompresse par paliers si le lot depasse (ensurePayloadUnder).
+  var PAYLOAD_LIMIT = 4.2 * 1024 * 1024;
 
   var T = lang === 'en' ? {
     sending: 'Analysing photos…', send: 'Generate the pre-report',
@@ -101,8 +102,10 @@
     });
   }
 
+  // Taille approximative de ce qui part sur le reseau : la chaine base64 elle-meme
+  // (1 caractere ~ 1 octet), pas le binaire qu'elle represente.
   function payloadBytes() {
-    return files.reduce(function (n, f) { return n + f.base64.length * 0.75; }, 0);
+    return files.reduce(function (n, f) { return n + f.base64.length; }, 0);
   }
 
   function reencode(dataUrl, edge, quality) {
@@ -125,7 +128,7 @@
       par paliers de plus en plus serres jusqu'a y arriver. Sans effet si le lot
       est deja assez leger (cas courant a 1200 px / q0.74). */
   async function ensurePayloadUnder() {
-    var steps = [[1100, 0.7], [1000, 0.64], [900, 0.58], [800, 0.5]];
+    var steps = [[1280, 0.74], [1100, 0.68], [1000, 0.6], [880, 0.5]];
     for (var s = 0; s < steps.length && payloadBytes() > PAYLOAD_LIMIT; s++) {
       for (var i = 0; i < files.length; i++) {
         var u = await reencode(files[i].dataUrl, steps[s][0], steps[s][1]);
@@ -304,7 +307,11 @@
     } catch (_) { /* on tente l'envoi tel quel */ }
 
     try {
-      var res = await fetch('/.netlify/functions/ai-inspection-background', {
+      // ai-inspection-start (synchrone, plafond 6 Mo) recoit les photos, les depose
+      // dans le magasin de jobs et lance le traitement en tache de fond. Les
+      // fonctions "background" plafonnent la requete a 256 Ko : on ne peut pas leur
+      // envoyer les photos directement.
+      var res = await fetch('/.netlify/functions/ai-inspection-start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -315,12 +322,10 @@
           images: files.map(function (f) { return { media_type: f.media_type, data: f.base64 }; }),
         }),
       });
-      // Fonction "background" : Netlify repond 202 sans corps. Tout autre code = le
-      // lancement a echoue (payload trop gros a la peripherie, fonction absente...).
-      if (res.status !== 202 && !res.ok) {
+      if (!res.ok) {
         var d = {};
         try { d = await res.json(); } catch (_) {}
-        failOut(((lang === 'en' ? d.message_en : d.message_fr) || T.err) + ' [kickoff HTTP ' + res.status + ']');
+        failOut(((lang === 'en' ? d.message_en : d.message_fr) || T.err) + ' [start HTTP ' + res.status + ']');
         return;
       }
     } catch (_) {
