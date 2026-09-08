@@ -3,12 +3,10 @@
   # Produit les variantes WebP servies par le site (assets/_img).
   command = "node scripts/build-images.mjs"
 
-# Le pre-rapport photo (ai-inspection) est un appel vision qui depasse parfois
-# les 10 s par defaut. 26 s est le maximum autorise pour une fonction synchrone.
-# Sur certains plans Netlify il faut le faire activer par le support ; sans quoi
-# la fonction reste plafonnee a 10 s et l'appel est calibre pour y tenir.
-[functions]
-  timeout = 26
+# NB : le timeout des fonctions (10 s par defaut, 26 s max) n'est PAS reglable
+# ici — c'est un parametre du dashboard Netlify (Site config -> Functions), et
+# seulement sur les plans qui l'autorisent. L'appel de ai-inspection est donc
+# calibre pour tenir dans les 10 s (thinking off, effort "low", 4 photos).
 
 # ── Langue d'arrivee selon le pays de l'IP ───────────────────────────
 # Netlify resout le pays a la peripherie ; aucune fonction n'est necessaire.

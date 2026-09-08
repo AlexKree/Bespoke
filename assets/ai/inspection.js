@@ -14,10 +14,10 @@
   var status = document.getElementById('inspectionStatus');
   var lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
 
-  // 5 photos / 1120 px : couvre l'essentiel d'une annonce tout en gardant l'appel
-  // vision sous le budget temps d'une fonction Netlify synchrone.
-  var MAX_FILES = 5;
-  var MAX_EDGE = 1120;
+  // 4 photos / 1024 px : couvre l'essentiel d'une annonce tout en gardant l'appel
+  // vision sous les 10 s d'une fonction Netlify synchrone (timeout non reglable).
+  var MAX_FILES = 4;
+  var MAX_EDGE = 1024;
   var QUALITY = 0.8;
 
   var T = lang === 'en' ? {

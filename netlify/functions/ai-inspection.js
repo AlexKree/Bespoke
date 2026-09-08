@@ -19,7 +19,7 @@ const { z } = require('zod');
 const { zodOutputFormat } = require('@anthropic-ai/sdk/helpers/zod');
 const { MODEL, getClient, json, rateLimit, parseBody, requireKey, lang, apiError } = require('../lib/ai');
 
-const MAX_IMAGES = 6;
+const MAX_IMAGES = 4; // aligne sur le client : au-dela, l'appel deborde les 10 s
 const MAX_IMAGE_BYTES = 1.6 * 1024 * 1024; // apres redimensionnement cote client
 const ALLOWED_MEDIA = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
@@ -142,10 +142,10 @@ exports.handler = async function (event) {
   try {
     const response = await getClient().messages.parse({
       model: INSPECTION_MODEL,
-      max_tokens: 3000,
+      max_tokens: 2800,
       // Thinking coupe et effort "low" : le rapport est court, l'enjeu est de
-      // tenir dans le budget temps de la fonction. La detection des defauts
-      // repose sur le prompt (methode zone par zone) et le schema.
+      // tenir dans les 10 s de la fonction. La detection des defauts repose sur
+      // le prompt (methode zone par zone) et le schema, pas sur l'effort.
       thinking: { type: 'disabled' },
       output_config: { effort: INSPECTION_EFFORT, format: zodOutputFormat(Report) },
       system: SYSTEM,
