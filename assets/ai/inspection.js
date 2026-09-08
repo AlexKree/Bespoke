@@ -14,11 +14,10 @@
   var status = document.getElementById('inspectionStatus');
   var lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
 
-  // 2 photos / 1300 px : au-dela, sonnet-5 en vision deborde les 10 s d'une
-  // fonction Netlify synchrone (timeout non reglable sans ticket au support).
-  // Mettre les 2 plus parlantes : une vue d'ensemble + la zone qui pose question
-  // en gros plan (ex. la partie de la capote avec le scotch).
-  var MAX_FILES = 2;
+  // 4 photos / 1300 px : Haiku 4.5 (le modele de la fonction) analyse ce lot en
+  // ~5-7 s, sous les 10 s d'une fonction Netlify synchrone. Mettre une vue
+  // d'ensemble + les zones qui posent question en gros plan.
+  var MAX_FILES = 4;
   var MAX_EDGE = 1300;
   var QUALITY = 0.82;
 

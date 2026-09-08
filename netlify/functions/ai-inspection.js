@@ -11,16 +11,16 @@
  * Fonction SYNCHRONE volontairement : le detour par une fonction "background"
  * (plafond de requete 256 Ko, dependance a Netlify Blobs) a multiplie les modes
  * de panne. Le timeout Netlify (10 s par defaut, 26 s seulement sur ticket au
- * support, plan Pro) est la vraie contrainte : sonnet-5 en vision sur 3 photos a
- * 1500 px debordait encore les 10 s (504). Haiku tenait le budget mais manquait
- * des defauts flagrants (capote scotchee decrite comme "reguliere").
- * Compromis retenu tant que le timeout est a 10 s :
- *  - sonnet-5, 2 photos max, 1300 px, max_tokens 2000, thinking coupe ;
+ * support, plan Pro) est la vraie contrainte. Constat apres essais successifs :
+ * sonnet-5 en vision ne tient PAS dans 10 s, meme a 2 photos (timeout ~9,5 s).
+ * => modele HAIKU 4.5 (rapide : ~5-7 s a 4 photos), avec un prompt durci pour
+ *    compenser (methode zone par zone, "cherche le scotch noir peu contraste",
+ *    formules qui minimisent un defaut interdites).
  *  - appel `messages.create` avec outil force (pas la voie `output_config.effort`,
  *    plus lente) ;
  *  - client SDK dedie a timeout 9,5 s -> echec en JSON propre plutot qu'un 504.
- * Le jour ou le site obtient le timeout 26 s : remonter MAX_IMAGES a 5-6 ici et
- * MAX_FILES cote client, garder sonnet.
+ * Repasser a sonnet-5 (meilleure detection fine) le jour ou le site obtient le
+ * timeout 26 s : `ANTHROPIC_MODEL_INSPECTION=claude-sonnet-5` + baisser MAX_IMAGES.
  */
 
 const Anthropic = require('@anthropic-ai/sdk');
@@ -40,14 +40,15 @@ function getVisionClient() {
   return visionClient;
 }
 
-const MAX_IMAGES = 2; // aligne sur le client ; au-dela, l'appel deborde les 10 s Netlify
+const MAX_IMAGES = 4; // Haiku tient large a 4 photos ; aligne sur le client
 const MAX_IMAGE_BYTES = 1.6 * 1024 * 1024; // apres redimensionnement cote client
 const ALLOWED_MEDIA = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
-// sonnet-5 : Haiku manquait des defauts flagrants (capote scotchee decrite comme
-// "reguliere"). On tient dans les 10 s en limitant a 3 photos + appel sans
-// thinking. Repasser a 4-6 photos si le site obtient le timeout 26 s de Netlify.
-const INSPECTION_MODEL = process.env.ANTHROPIC_MODEL_INSPECTION || 'claude-sonnet-5';
+// Haiku 4.5 : seul modele qui tient dans les 10 s de la fonction Netlify (sonnet-5
+// deborde meme a 2 photos). Le prompt durci ci-dessous compense sa vision plus
+// juste. Repasser a claude-sonnet-5 via cette var d'env si le timeout 26 s est
+// active sur le site.
+const INSPECTION_MODEL = process.env.ANTHROPIC_MODEL_INSPECTION || 'claude-haiku-4-5-20251001';
 
 /** N'accepte qu'une URL http(s) plausible. Retourne '' si invalide. */
 function normalizeListingUrl(v) {
@@ -169,7 +170,7 @@ exports.handler = async function (event) {
   try {
     const response = await getVisionClient().messages.create({
       model: INSPECTION_MODEL,
-      max_tokens: 2000,
+      max_tokens: 2400,
       system: SYSTEM,
       messages: [{ role: 'user', content }],
       tools: [{
