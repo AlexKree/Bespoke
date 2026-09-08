@@ -228,12 +228,16 @@
     var msg = document.getElementById('message');
     var subj = document.getElementById('subject');
     if (!msg || msg.value.trim()) return;
-    var brief = '', listing = '';
+    var brief = '', inspection = '', listing = '';
     try { brief = sessionStorage.getItem('bespoke_brief') || ''; } catch (e) {}
+    try { inspection = sessionStorage.getItem('bespoke_inspection') || ''; } catch (e) {}
     try { listing = sessionStorage.getItem('bespoke_listing_url') || ''; } catch (e) {}
     if (brief) {
       msg.value = brief;
       if (subj && !subj.value.trim()) subj.value = 'Vehicle search brief';
+    } else if (inspection) {
+      msg.value = inspection;
+      if (subj && !subj.value.trim()) subj.value = 'Photo pre-report — inspection request';
     } else if (listing) {
       msg.value = 'Enquiry about a car seen in a listing.\nListing link: ' + listing + '\n\n';
       if (subj && !subj.value.trim()) subj.value = 'Photo pre-report';

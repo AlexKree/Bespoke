@@ -197,15 +197,57 @@
     }
 
     html += '<div class="aiDisclaimer">' + esc(lang === 'en' ? data.disclaimer_en : data.disclaimer_fr) + '</div>';
-    html += '<a class="btn primary" href="contact.html" onclick="plausible(\'Lead\')">' + esc(T.ask) + '</a>';
+    html += '<a class="btn primary" href="contact.html?inspection=1" onclick="plausible(\'Lead\')">' + esc(T.ask) + '</a>';
 
     out.innerHTML = html;
-    // Repris par le formulaire de contact quand le pre-remplissage sera en place.
+
+    // Pre-remplissage du formulaire de contact : reprend ce que le client a
+    // saisi (contexte, lien) + l'identification du pre-rapport. Les photos ne
+    // passent pas par le formulaire ; on le signale, le client les transmet sur
+    // demande. Lu par contact.html (cle `bespoke_inspection`).
     try {
+      var prefill = buildContactPrefill(data, r);
+      if (prefill) sessionStorage.setItem('bespoke_inspection', prefill);
+      else sessionStorage.removeItem('bespoke_inspection');
+      sessionStorage.removeItem('bespoke_brief'); // evite un melange avec un ancien brief concierge
       if (data.listing_url) sessionStorage.setItem('bespoke_listing_url', data.listing_url);
       else sessionStorage.removeItem('bespoke_listing_url');
     } catch (_) {}
+
     out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Construit le message pre-rempli du formulaire de contact a partir du
+  // pre-rapport et de ce que le client a saisi dans le formulaire d'inspection.
+  function buildContactPrefill(data, r) {
+    var ctx = (context && context.value.trim()) || '';
+    var url = (urlInput && urlInput.value.trim()) || data.listing_url || '';
+    var ident = ((r && r.identification) || '').trim().slice(0, 400);
+    var n = data.image_count || files.length || 0;
+    var L = [];
+    L.push(lang === 'en'
+      ? 'Following a photo pre-report, I would like Bespoke to inspect this vehicle.'
+      : 'À la suite d’un pré-rapport photo, je souhaite faire inspecter ce véhicule par Bespoke.');
+    if (ident) {
+      L.push('');
+      L.push((lang === 'en' ? 'Vehicle (per the pre-report): ' : 'Véhicule (d’après le pré-rapport) : ') + ident);
+    }
+    if (ctx) {
+      L.push('');
+      L.push((lang === 'en' ? 'What I know about the vehicle:' : 'Ce que je sais du véhicule :'));
+      L.push(ctx);
+    }
+    if (url) {
+      L.push('');
+      L.push((lang === 'en' ? 'Listing link: ' : 'Lien de l’annonce : ') + url);
+    }
+    if (n) {
+      L.push('');
+      L.push(lang === 'en'
+        ? n + ' photo(s) were submitted for the pre-report — I can forward them on request.'
+        : n + ' photo(s) transmise(s) pour le pré-rapport — je peux les faire suivre sur demande.');
+    }
+    return L.join('\n');
   }
 
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
