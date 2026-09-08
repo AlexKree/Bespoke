@@ -10,23 +10,37 @@
  *
  * Fonction SYNCHRONE volontairement : le detour par une fonction "background"
  * (plafond de requete 256 Ko, dependance a Netlify Blobs) a multiplie les modes
- * de panne. Le timeout Netlify (10 s par defaut, 26 s seulement sur demande au
- * support) est la vraie contrainte : sonnet-5 en vision sur 3-4 photos deborde
- * les 10 s (504). Haiku 4.5 tenait le budget mais manquait des defauts flagrants.
- * Compromis retenu : sonnet-5, mais
- *  - 3 photos max (au-dela : 504) ;
- *  - appel `messages.create` avec outil force (pas la voie structured-output
- *    `effort`, plus lente) ;
- *  - thinking coupe, max_tokens 2400.
- * Repasser a 4-6 photos (voire Haiku pour la vitesse) se pilote par les vars
- * d'env / constantes le jour ou le site obtient le timeout 26 s de Netlify.
+ * de panne. Le timeout Netlify (10 s par defaut, 26 s seulement sur ticket au
+ * support, plan Pro) est la vraie contrainte : sonnet-5 en vision sur 3 photos a
+ * 1500 px debordait encore les 10 s (504). Haiku tenait le budget mais manquait
+ * des defauts flagrants (capote scotchee decrite comme "reguliere").
+ * Compromis retenu tant que le timeout est a 10 s :
+ *  - sonnet-5, 2 photos max, 1300 px, max_tokens 2000, thinking coupe ;
+ *  - appel `messages.create` avec outil force (pas la voie `output_config.effort`,
+ *    plus lente) ;
+ *  - client SDK dedie a timeout 9,5 s -> echec en JSON propre plutot qu'un 504.
+ * Le jour ou le site obtient le timeout 26 s : remonter MAX_IMAGES a 5-6 ici et
+ * MAX_FILES cote client, garder sonnet.
  */
 
+const Anthropic = require('@anthropic-ai/sdk');
 const { z } = require('zod');
 const { zodOutputFormat } = require('@anthropic-ai/sdk/helpers/zod');
-const { getClient, json, rateLimit, parseBody, requireKey, lang, classifyError } = require('../lib/ai');
+const { json, rateLimit, parseBody, requireKey, lang, classifyError } = require('../lib/ai');
 
-const MAX_IMAGES = 3; // sonnet-5 en vision : au-dela, l'appel deborde les 10 s Netlify
+// Client dedie a timeout court : Netlify tue la fonction a 10 s (504 HTML sans
+// message). En abandonnant a 9,5 s cote SDK, on renvoie a la place un JSON propre
+// avec un message et un `detail` — l'utilisateur voit une vraie erreur, pas un 504.
+let visionClient = null;
+function getVisionClient() {
+  if (!process.env.ANTHROPIC_API_KEY) return null;
+  if (!visionClient) {
+    visionClient = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY, timeout: 9500, maxRetries: 0 });
+  }
+  return visionClient;
+}
+
+const MAX_IMAGES = 2; // aligne sur le client ; au-dela, l'appel deborde les 10 s Netlify
 const MAX_IMAGE_BYTES = 1.6 * 1024 * 1024; // apres redimensionnement cote client
 const ALLOWED_MEDIA = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
@@ -153,9 +167,9 @@ exports.handler = async function (event) {
   if (!limited.ok) return limited.response;
 
   try {
-    const response = await getClient().messages.create({
+    const response = await getVisionClient().messages.create({
       model: INSPECTION_MODEL,
-      max_tokens: 2400,
+      max_tokens: 2000,
       system: SYSTEM,
       messages: [{ role: 'user', content }],
       tools: [{
@@ -200,9 +214,11 @@ exports.handler = async function (event) {
   } catch (err) {
     // Debug temporaire : on fait remonter le vrai motif a l'ecran, sinon le
     // client ne montre qu'un message generique. A retirer une fois l'outil OK.
-    const code = classifyError(err);
-    const apiMsg = (err && err.error && err.error.error && err.error.error.message)
-      || (err && err.message) || 'inconnu';
+    const isTimeout = err instanceof Anthropic.APIConnectionTimeoutError;
+    const code = isTimeout ? 'timeout' : classifyError(err);
+    const apiMsg = isTimeout
+      ? 'analyse > 9,5 s (limite fonction Netlify 10 s) — reduire le nombre/poids des photos'
+      : (err && err.error && err.error.error && err.error.error.message) || (err && err.message) || 'inconnu';
     console.error('ai-inspection', code, err && err.status, apiMsg);
     return json(502, {
       error: code,
