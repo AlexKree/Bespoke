@@ -2,44 +2,42 @@
   "items": [
     {
       "id": "saab-900-turbo-cabriolet",
-      "sale_category": "both",
+      "slug": "saab-900-turbo-cabriolet-1993",
+      "vehicle_type": "car",
+      "make": "Saab",
+      "model": "900 Turbo Cabriolet",
       "year": 1993,
       "title": {
         "fr": "Saab 900 Turbo Cabriolet",
         "en": "Saab 900 Turbo Cabriolet"
       },
-      "mileage": "",
-      "country": "",
-      "price": 0,
-      "status": "sold",
+      "headline": null,
       "description": {
         "fr": "Fiche indicative. Informations complètes sur demande.",
         "en": "Indicative listing. Full details on request."
       },
+      "price_eur": null,
+      "mileage": "",
+      "mileage_km": null,
+      "country": "",
+      "status": "sold",
+      "sale_category": "both",
       "images": [
-        "assets/stock/images/p8259754.jpg",
-        "assets/stock/images/p8259771.jpg",
-        "assets/stock/images/p8259757.jpg"
+        "/assets/stock/images/p8259754.jpg",
+        "/assets/stock/images/p8259771.jpg",
+        "/assets/stock/images/p8259757.jpg"
       ]
     },
     {
       "id": "mercedes-c36-amg-w202",
-      "sale_category": "both",
-      "make": {
-        "fr": "Mercedes-Benz",
-        "en": "Mercedes-Benz"
-      },
-      "model": {
-        "fr": "C36 AMG (W202)",
-        "en": "C36 AMG (W202)"
-      },
+      "slug": "mercedes-benz-c36-amg-w202-1995",
+      "vehicle_type": "car",
+      "make": "Mercedes-Benz",
+      "model": "C36 AMG (W202)",
       "year": 1995,
-      "mileage_km": null,
-      "price_eur": null,
-      "status": "sold",
-      "location": {
-        "fr": "France / Europe",
-        "en": "France / Europe"
+      "title": {
+        "fr": "Mercedes-Benz C36 AMG (W202)",
+        "en": "Mercedes-Benz C36 AMG (W202)"
       },
       "headline": {
         "fr": "Berline AMG de première génération, configuration authentique.",
@@ -49,109 +47,135 @@
         "fr": "Fiche indicative. Informations complètes sur demande.",
         "en": "Indicative listing. Full details on request."
       },
+      "price_eur": null,
+      "mileage": "",
+      "mileage_km": null,
+      "country": "France / Europe",
+      "status": "sold",
+      "sale_category": "both",
       "images": [
-        "assets/stock/images/p6180110.jpg",
-        "assets/stock/images/p6180120.jpg",
-        "assets/stock/images/p6180123.jpg"
-      ],
-      "title": {
-        "fr": "Mercedes-Benz C36 AMG (W202)",
-        "en": "Mercedes-Benz C36 AMG (W202)"
-      }
+        "/assets/stock/images/p6180110.jpg",
+        "/assets/stock/images/p6180120.jpg",
+        "/assets/stock/images/p6180123.jpg"
+      ]
     },
     {
       "id": "chevrolet-corvette-stingray",
+      "slug": "chevrolet-corvette-stingray-1976",
+      "vehicle_type": "car",
+      "make": "Chevrolet",
+      "model": "Corvette Stingray",
       "year": 1976,
       "title": {
         "fr": "Chevrolet Corvette Stingray",
         "en": "Chevrolet Corvette Stingray"
       },
-      "mileage": "",
-      "country": "",
-      "price_eur": null,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Chevrolet Corvette Stingray de 1976, équipée du mythique V8 américain et arborant le style emblématique de la génération C3. Avec sa silhouette basse, ses lignes caractéristiques et son caractère typique des Corvette des années 70, elle représente parfaitement l’esprit des muscle cars américaines de cette époque. Un modèle de collection idéal pour amateur ou passionné de Corvette.",
         "en": "1976 Chevrolet Corvette Stingray, powered by the iconic American V8 and featuring the unmistakable styling of the C3 generation. With its low stance, distinctive lines and classic 1970s Corvette character, it perfectly represents the spirit of American performance cars from the era. An excellent choice for any Corvette enthusiast or collector."
       },
+      "price_eur": null,
+      "mileage": "",
+      "mileage_km": null,
+      "country": "",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/chevrolet-corvette-stingray-1786280056768-50e557.jpg",
-        "assets/stock/images/img_20191225_132353.jpg",
+        "/assets/stock/images/img_20191225_132353.jpg",
         "/assets/stock/images/chevrolet-corvette-stingray-1786280049870-7c0c2e.jpg",
         "/assets/stock/images/chevrolet-corvette-stingray-1786280088035-0891a5.jpg",
         "/assets/stock/images/chevrolet-corvette-stingray-1786280032928-abd8b0.jpg",
-        "assets/stock/images/img_20191225_132401.jpg",
+        "/assets/stock/images/img_20191225_132401.jpg",
         "/assets/stock/images/chevrolet-corvette-stingray-1786280070369-f7fce0.jpg"
       ]
     },
     {
       "id": "jaguar-xjv12-vanden-plas",
+      "slug": "jaguar-xjv12-vanden-plas-1988",
+      "vehicle_type": "car",
+      "make": "Jaguar",
+      "model": "XJV12 VANDEN PLAS",
       "year": 1988,
       "title": {
         "fr": "Jaguar XJV12 VANDEN PLAS",
         "en": "Jaguar XJV12 VANDEN PLAS"
       },
-      "mileage": "",
-      "country": "",
-      "price_eur": 19900,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Origine canadienne - Carte grise française collection - révisée entièrement (bougies, vidange filtre). Fonctionne parfaitement. Peu de frais pour la mettre en état concours.",
         "en": "Canadian-market car – French collection registration – Fully serviced (spark plugs, oil & filter change). Runs flawlessly. Minimal investment needed to bring to concours standard."
       },
+      "price_eur": 19900,
+      "mileage": "",
+      "mileage_km": null,
+      "country": "",
+      "status": "available",
+      "sale_category": "both",
       "images": [
-        "assets/stock/images/IMG_7355.jpg",
-        "assets/stock/images/IMG_7330.jpg",
-        "assets/stock/images/IMG_7344.jpg",
-        "assets/stock/images/IMG_7346.jpg",
-        "assets/stock/images/IMG_7349.jpg",
-        "assets/stock/images/IMG_7354.jpg"
+        "/assets/stock/images/IMG_7355.jpg",
+        "/assets/stock/images/IMG_7330.jpg",
+        "/assets/stock/images/IMG_7344.jpg",
+        "/assets/stock/images/IMG_7346.jpg",
+        "/assets/stock/images/IMG_7349.jpg",
+        "/assets/stock/images/IMG_7354.jpg"
       ]
     },
     {
       "id": "volvo-p1800-es",
-      "sale_category": "both",
+      "slug": "volvo-p1800es-1970",
+      "vehicle_type": "car",
+      "make": "Volvo",
+      "model": "P1800ES",
       "year": 1970,
       "title": {
         "fr": "VOLVO P1800ES",
         "en": "VOLVO P1800ES"
       },
-      "mileage": "",
-      "country": "",
-      "price": 0,
-      "status": "sold",
+      "headline": null,
       "description": {
         "fr": "Magnifique voiture- Import Canada - Entièrement restaurée - Peinture complète - moteur.",
         "en": "Beautiful Car - Fully Restored - Paint - Engine."
       },
+      "price_eur": null,
+      "mileage": "",
+      "mileage_km": null,
+      "country": "",
+      "status": "sold",
+      "sale_category": "both",
       "images": [
-        "assets/stock/images/volvo-p1800-1775666347025-bfbd4a.jpg",
-        "assets/stock/images/volvo-p1800-1775666327070-201407.jpg",
-        "assets/stock/images/volvo-p1800-1775666337550-eeb509.jpg",
-        "assets/stock/images/volvo-p1800-1775666358003-d03ec6.jpg",
-        "assets/stock/images/volvo-p1800-1775666289150-ad886d.jpg",
-        "assets/stock/images/volvo-p1800-1775666311006-7048d8.jpg",
-        "assets/stock/images/volvo-p1800-1775666373031-095937.jpg"
+        "/assets/stock/images/volvo-p1800-1775666347025-bfbd4a.jpg",
+        "/assets/stock/images/volvo-p1800-1775666327070-201407.jpg",
+        "/assets/stock/images/volvo-p1800-1775666337550-eeb509.jpg",
+        "/assets/stock/images/volvo-p1800-1775666358003-d03ec6.jpg",
+        "/assets/stock/images/volvo-p1800-1775666289150-ad886d.jpg",
+        "/assets/stock/images/volvo-p1800-1775666311006-7048d8.jpg",
+        "/assets/stock/images/volvo-p1800-1775666373031-095937.jpg"
       ]
     },
     {
       "id": "renault-megane-iii-convertible",
+      "slug": "renault-megane-iii-cabriolet-2010",
+      "vehicle_type": "car",
+      "make": "Renault",
+      "model": "MEGANE III Cabriolet",
       "year": 2010,
       "title": {
         "fr": "RENAULT MEGANE III Cabriolet",
         "en": "RENAULT MEGANE III Convertible"
       },
-      "mileage": "145 000",
-      "country": "",
-      "price_eur": 5850,
-      "status": "sold",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Très belle Megane II Cabriolet - Entièrement révisée - Courroie, pompe à eau -vidange et filtres.",
         "en": "Very nice Megane III convertible - Fully serviced - Belt, water pump - oil change and filters."
       },
+      "price_eur": 5850,
+      "mileage": "145 000",
+      "mileage_km": 145000,
+      "country": "",
+      "status": "sold",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/renault-megane-iii-convertible-1776618584174-81272e.jpg",
         "/assets/stock/images/renault-megane-iii-convertible-1776618590151-201194.jpg",
@@ -169,20 +193,26 @@
     },
     {
       "id": "Etype",
-      "sale_category": "both",
+      "slug": "jaguar",
+      "vehicle_type": "car",
+      "make": "Jaguar",
+      "model": null,
       "year": null,
       "title": {
         "fr": "Jaguar",
         "en": "Jaguar"
       },
-      "mileage": "",
-      "country": "",
-      "price": 0,
-      "status": "sold",
+      "headline": null,
       "description": {
         "fr": "Entièrement restaurée - Parfaite - A voir absolument.",
         "en": "Fully restored - Perfect"
       },
+      "price_eur": null,
+      "mileage": "",
+      "mileage_km": null,
+      "country": "",
+      "status": "sold",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/etype-1777474700389-62ec29.jpg",
         "/assets/stock/images/etype-1777474358451-446076.jpg",
@@ -196,20 +226,26 @@
     },
     {
       "id": "VMAX",
+      "slug": "yamaha-vmax-1200-145cv-1991",
+      "vehicle_type": "motorcycle",
+      "make": "Yamaha",
+      "model": "VMAX 1200 145cv",
       "year": 1991,
       "title": {
         "fr": "YAMAHA VMAX 1200 145cv",
         "en": "YAMAHA VMAX 1200 145cv"
       },
-      "mileage": "45 000",
-      "country": "",
-      "price_eur": 5190,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Belle VMAX 1200 de 1991. Très grosse révision faite en 2022 pour plus de 3000 euros. A voir absolument. Origine anglaise. FFVE",
         "en": "Nice VMAX 1200 from 1991. Large restoration realised in 2022 for more than 3000 euros. UK origin. FFVE"
       },
+      "price_eur": 5190,
+      "mileage": "45 000",
+      "mileage_km": 45000,
+      "country": "",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/vmax-1777650772838-501610.jpg",
         "/assets/stock/images/vmax-1777650812016-2d8c87.jpg",
@@ -230,22 +266,14 @@
     },
     {
       "id": "CL1200",
-      "sale_category": "both",
-      "make": {
-        "fr": "Bmw",
-        "en": "Bmw"
-      },
-      "model": {
-        "fr": "R 1200 CL",
-        "en": "R 1200 CL"
-      },
+      "slug": "bmw-r-1200-cl-2003",
+      "vehicle_type": "motorcycle",
+      "make": "BMW",
+      "model": "R 1200 CL",
       "year": 2003,
-      "mileage_km": 70000,
-      "price_eur": 5400,
-      "status": "available",
-      "location": {
-        "fr": "France / Europe",
-        "en": "France / Europe"
+      "title": {
+        "fr": "BMW R 1200 CL",
+        "en": "BMW R 1200 CL"
       },
       "headline": {
         "fr": "Belle R 1200 CL",
@@ -255,6 +283,12 @@
         "fr": "Vends belle BMW R 1200 CL -\nFull package avec valises.\nFonctionne très bien.\nVisible sur Cannes.\nImmatriculation anglaise européenne (avant 2020).",
         "en": "Nice R 1200 CL. Full package. UK DVLA but during Europe. Can be seen in Cannes."
       },
+      "price_eur": 5400,
+      "mileage": "70000",
+      "mileage_km": 70000,
+      "country": "France / Europe",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/cl1200-1777651645154-8591df.jpg",
         "/assets/stock/images/cl1200-1777651646212-bd1813.jpg",
@@ -268,28 +302,30 @@
         "/assets/stock/images/cl1200-1777651672490-bf9209.jpg",
         "/assets/stock/images/cl1200-1777651673624-ae4bb7.jpg",
         "/assets/stock/images/cl1200-1777651674716-b25999.jpg"
-      ],
-      "title": {
-        "fr": "BMW R 1200 CL",
-        "en": "BMW R 1200 CL"
-      }
+      ]
     },
     {
       "id": "GTO",
+      "slug": "mitsubishi-gto-1992",
+      "vehicle_type": "car",
+      "make": "Mitsubishi",
+      "model": "GTO",
       "year": 1992,
       "title": {
         "fr": "Mitsubishi GTO ",
         "en": "Mitsubishi GTO "
       },
-      "mileage": "127500",
-      "country": "",
-      "price_eur": 12500,
-      "status": "sold",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Mitsubishi GTO boîte manuelle. Importée du Japon. FFVE. Immatriculable en collection en France.",
         "en": "Mitsubishi GTO Manual gearbox. 1992. Imported from Japan. Ready to be french plated . FFVE"
       },
+      "price_eur": 12500,
+      "mileage": "127500",
+      "mileage_km": 127500,
+      "country": "",
+      "status": "sold",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/gto-1777971115022-8935be.jpg",
         "/assets/stock/images/gto-1777971122763-a1630a.jpg",
@@ -311,20 +347,26 @@
     },
     {
       "id": "SEL",
+      "slug": "mercedes-500-sel-1986",
+      "vehicle_type": "car",
+      "make": "Mercedes",
+      "model": "500 SEL",
       "year": 1986,
       "title": {
         "fr": "Mercedes 500 SEL",
         "en": "Mercedes 500 SEL"
       },
-      "mileage": "97 000",
-      "country": "",
-      "price_eur": 15490,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Très belle Mercedes 500 SEL. Origine Japon. Faible kilométrage. FFVE. Immatriculable collection France.",
         "en": "Very nice Mercedes 500 SEL. Imported from Japan. Low kms. FFVE."
       },
+      "price_eur": 15490,
+      "mileage": "97 000",
+      "mileage_km": 97000,
+      "country": "",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/sel-1778160365819-a71f53.jpg",
         "/assets/stock/images/sel-1778160362016-48d843.jpg",
@@ -337,20 +379,26 @@
     },
     {
       "id": "mustang gt 2005",
+      "slug": "ford-mustang-gt-v8-4-6l-2005",
+      "vehicle_type": "car",
+      "make": "Ford",
+      "model": "Mustang GT V8 4.6L",
       "year": 2005,
       "title": {
         "fr": "Ford Mustang GT V8 4.6L",
         "en": "Ford Mustang GT V8 4.6L"
       },
-      "mileage": "133 000 km",
-      "country": "Canada",
-      "price_eur": 16900,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Véritable icône américaine, cette Mustang GT S197 est équipée du mythique V8 4.6L atmosphérique développant environ 300 ch.\n\nExemplaire volant à gauche (LHD), avec 133 000 km, boîte automatique, intérieur cuir et une configuration élégante blanc/gris.\n\nVéhicule actuellement immatriculé au Royaume-Uni. Nous pouvons accompagner gratuitement l’acheteur dans les démarches pour son immatriculation française, ou nous charger de la procédure complète à sa place contre un forfait fixe.\n\nUne belle opportunité d’acquérir une authentique Mustang V8 américaine.",
         "en": "2005 Ford Mustang GT V8 4.6L – LHD – 300 hp – 133,000 km\n\nA true American icon, this S197 Mustang GT is powered by the legendary 4.6L naturally aspirated V8 producing around 300 hp.\n\nThis left-hand drive (LHD) example has 133,000 km, an automatic transmission, leather interior, and an elegant white/grey specification.\n\nThe vehicle is currently UK registered. We can provide free assistance to the buyer with the French registration process, or handle the complete procedure on their behalf for a fixed service fee.\n\nA great opportunity to own a genuine American V8 Mustang with strong character and collector appeal."
       },
+      "price_eur": 16900,
+      "mileage": "133 000 km",
+      "mileage_km": 133000,
+      "country": "Canada",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/mustang-gt-2005-1785805196528-ea9f3e.jpg",
         "/assets/stock/images/mustang-gt-2005-1785805188531-d94e6b.jpg",
@@ -365,20 +413,26 @@
     },
     {
       "id": "evo 7",
+      "slug": "mitsubishi-lancer-evo-vii-gt-a-2002",
+      "vehicle_type": "car",
+      "make": "Mitsubishi",
+      "model": "Lancer Evo VII GT-A",
       "year": 2002,
       "title": {
         "fr": "Mitsubishi Lancer Evo VII GT-A",
         "en": "Mitsubishi Lancer Evo VII GT-A"
       },
-      "mileage": "133 500 km",
-      "country": "Japon",
-      "price_eur": 16500,
-      "status": "sold",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Rare Mitsubishi Lancer Evolution VII GTA de 2002, importée du Japon, avec 133 500 km. Cette version à boîte automatique 5 rapports et transmission intégrale est entièrement d’origine, sans aucune modification ni préparation. Très bel état général, mécanique irréprochable, châssis sain et aucune rouille. Un exemplaire rare et préservé, idéal pour collectionneur ou amateur d’Evo recherchant une configuration d’origine.",
         "en": "Rare 2002 Mitsubishi Lancer Evolution VII GTA, originally imported from Japan, with 133,500 km. Equipped with the original 5-speed automatic gearbox and four-wheel drive, this example remains completely factory original, with no modifications or tuning. Excellent overall condition, mechanically sound, rust-free and well preserved. A rare opportunity for a collector or Evo enthusiast looking for an unmodified original example."
       },
+      "price_eur": 16500,
+      "mileage": "133 500 km",
+      "mileage_km": 133500,
+      "country": "Japon",
+      "status": "sold",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/evo-7-1786277854066-3b5e98.jpg",
         "/assets/stock/images/evo-7-1786277883899-dab88a.jpg",
@@ -390,20 +444,26 @@
     },
     {
       "id": "r32",
+      "slug": "volkswagen-golf-r32-2006",
+      "vehicle_type": "car",
+      "make": "Volkswagen",
+      "model": "Golf R32",
       "year": 2006,
       "title": {
         "fr": "Volkswagen Golf R32",
         "en": "Volkswagen Golf R32"
       },
-      "mileage": "90 000 miles",
-      "country": "UK",
-      "price_eur": null,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Volkswagen Golf R32 de 2006, affichant 90 000 miles. Équipée du mythique moteur VR6 3.2L développant 250 ch, d’une boîte manuelle et de la transmission intégrale 4Motion. Véhicule RHD (volant à droite), actuellement immatriculé au Royaume-Uni. Une voiture appréciée pour sa sonorité, ses performances et son caractère, dans une configuration recherchée par les passionnés.",
         "en": "2006 Volkswagen Golf R32 with 90,000 miles. Powered by the iconic 3.2L VR6 producing 250 hp, paired with a manual gearbox and 4Motion all-wheel drive. RHD (right-hand drive), currently UK registered. A highly appreciated performance Golf, known for its distinctive sound, performance and character, with a sought-after enthusiast configuration."
       },
+      "price_eur": null,
+      "mileage": "90 000 miles",
+      "mileage_km": 90000,
+      "country": "UK",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/r32-1786278842185-7a12e1.jpg",
         "/assets/stock/images/r32-1786278851288-ebd845.jpg",
@@ -416,20 +476,26 @@
     },
     {
       "id": "eclipse",
+      "slug": "mitsubishi-eclipse-spyder-v6-3-0-2005",
+      "vehicle_type": "car",
+      "make": "Mitsubishi",
+      "model": "Eclipse Spyder V6 3.0",
       "year": 2005,
       "title": {
         "fr": "Mitsubishi Eclipse Spyder V6 3.0",
         "en": "Mitsubishi Eclipse Spyder V6 3.0"
       },
-      "mileage": "105 000km",
-      "country": "",
-      "price_eur": 10000,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Mitsubishi Eclipse Spyder V6 3.0 de 2005, affichant 105 000 km. Équipée du moteur V6 3.0L développant environ 210 ch, avec boîte automatique et traction avant. Version cabriolet au style caractéristique, offrant une expérience de conduite agréable et une sonorité typique du V6. Un modèle original et plaisant, idéal pour amateur de voitures américaines/japonaises des années 2000.",
         "en": "2005 Mitsubishi Eclipse Spyder V6 3.0 with 105,000 km. Powered by a 3.0L V6 producing approximately 210 hp, paired with an automatic gearbox and front-wheel drive. The distinctive convertible design, enjoyable driving experience and characteristic V6 sound make it an appealing example for enthusiasts of 2000s Japanese-American cars."
       },
+      "price_eur": 10000,
+      "mileage": "105 000km",
+      "mileage_km": 105000,
+      "country": "",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/eclipse-1786279612054-823270.jpg",
         "/assets/stock/images/eclipse-1786279624189-21e8b6.jpg",
@@ -441,20 +507,26 @@
     },
     {
       "id": "s500 or",
+      "slug": "mercedes-s500-w140-1993",
+      "vehicle_type": "car",
+      "make": "Mercedes",
+      "model": "S500 w140",
       "year": 1993,
       "title": {
         "fr": "Mercedes S500 w140",
         "en": "Mercedes S500 w140"
       },
-      "mileage": "195 000km",
-      "country": "Canada",
-      "price_eur": 12500,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Mercedes-Benz S500 de 1993, équipée du V8 5.0L développant environ 320 ch. Une grande berline luxueuse et performante, offrant le confort, la qualité de fabrication et le raffinement caractéristiques de la Classe S de cette époque. Un modèle emblématique des années 90, idéal pour amateur de Mercedes classiques recherchant une S500 au caractère authentique.",
         "en": "1993 Mercedes-Benz S500, powered by the 5.0L V8 producing approximately 320 hp. A luxurious and powerful full-size sedan, offering the comfort, build quality and refinement that defined the S-Class of its era. An iconic 1990s Mercedes, ideal for enthusiasts looking for an authentic classic S500."
       },
+      "price_eur": 12500,
+      "mileage": "195 000km",
+      "mileage_km": 195000,
+      "country": "Canada",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/s500-or-1786281080791-b040b9.jpg",
         "/assets/stock/images/s500-or-1786281806221-7749ca.jpg",
@@ -469,20 +541,26 @@
     },
     {
       "id": "rr sw",
+      "slug": "rolls-royce-silver-wraith-ii-1977",
+      "vehicle_type": "car",
+      "make": "Rolls Royce",
+      "model": "Silver Wraith II",
       "year": 1977,
       "title": {
         "fr": "Rolls Royce Silver Wraith II",
         "en": "Rolls Royce Silver Wraith II"
       },
-      "mileage": "125 000km",
-      "country": "",
-      "price_eur": null,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Rolls-Royce Silver Wraith II de 1977, affichant 125 000 km. Une berline de grand luxe emblématique de son époque, offrant un confort exceptionnel, une finition raffinée et le charme intemporel des Rolls-Royce classiques. Un modèle idéal pour amateur ou collectionneur recherchant une véritable automobile de prestige.",
         "en": "1977 Rolls-Royce Silver Wraith II with 125,000 km. An iconic luxury saloon from its era, offering exceptional comfort, refined craftsmanship and the timeless character of a classic Rolls-Royce. An excellent choice for any enthusiast or collector looking for a true prestige automobile."
       },
+      "price_eur": null,
+      "mileage": "125 000km",
+      "mileage_km": 125000,
+      "country": "",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/rr-sw-1787151024974-63bc93.jpg",
         "/assets/stock/images/rr-sw-1787151012987-c6a21d.jpg",
@@ -495,20 +573,26 @@
     },
     {
       "id": "cayenne 2008",
+      "slug": "porsche-cayenne-turbo-s-v8-550-ch-2008",
+      "vehicle_type": "car",
+      "make": "Porsche",
+      "model": "Cayenne Turbo S V8 550 ch",
       "year": 2008,
       "title": {
         "fr": "Porsche Cayenne Turbo S V8 550 ch",
         "en": "Porsche Cayenne Turbo S V8 550 ch"
       },
-      "mileage": "110 000",
-      "country": "",
-      "price_eur": 23900,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Porsche Cayenne Turbo S de 2008, affichant 110 000 km et présenté en excellent état. Équipé du puissant V8 4.5L biturbo développant 550 ch, associé à la transmission intégrale. Véhicule actuellement UK plated, importé au Royaume-Uni avant le Brexit. Une version haut de gamme offrant des performances impressionnantes, un grand confort et le caractère sportif propre à Porsche.",
         "en": "2008 Porsche Cayenne Turbo S with 110,000 km, presented in excellent condition. Powered by the powerful 4.5L twin-turbo V8 producing 550 hp, combined with all-wheel drive. Currently UK plated and imported into the UK before Brexit. A high-performance luxury SUV offering impressive performance, excellent comfort and Porsche's distinctive sporting character."
       },
+      "price_eur": 23900,
+      "mileage": "110 000",
+      "mileage_km": 110000,
+      "country": "",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/cayenne-2008-1786792188822-bdbcf7.jpg",
         "/assets/stock/images/cayenne-2008-1786786123235-51a857.jpg",
@@ -521,20 +605,26 @@
     },
     {
       "id": "cayenne 2012",
+      "slug": "porsche-cayenne-turbo-v8-4-8l-2012",
+      "vehicle_type": "car",
+      "make": "Porsche",
+      "model": "Cayenne Turbo V8 4.8L",
       "year": 2012,
       "title": {
         "fr": "Porsche Cayenne Turbo V8 4.8L",
         "en": "Porsche Cayenne Turbo V8 4.8L"
       },
-      "mileage": "115 000km",
-      "country": "",
-      "price_eur": 21900,
-      "status": "available",
-      "sale_category": "professionnel",
+      "headline": null,
       "description": {
         "fr": "Porsche Cayenne Turbo de 2012, affichant 115 000 km et présenté en excellent état. Équipé du V8 4.8L biturbo développant 500 ch, associé à la transmission intégrale et à une boîte automatique. Un SUV haut de gamme combinant performances, confort et polyvalence, avec le caractère sportif emblématique de Porsche.\nVéhicule non immatriculé en France, vendu exclusivement aux professionnels.",
         "en": "2012 Porsche Cayenne Turbo with 115,000 km, presented in excellent condition. Powered by the 4.8L twin-turbo V8 producing 500 hp, paired with all-wheel drive and an automatic gearbox. A high-performance luxury SUV combining performance, comfort and everyday versatility with Porsche’s distinctive sporting character.\nhe vehicle is not registered in France and is offered exclusively to professional buyers."
       },
+      "price_eur": 21900,
+      "mileage": "115 000km",
+      "mileage_km": 115000,
+      "country": "",
+      "status": "available",
+      "sale_category": "professionnel",
       "images": [
         "/assets/stock/images/img-1786786660971-36e203.jpg",
         "/assets/stock/images/img-1786786654698-83d1ed.jpg",
@@ -548,20 +638,26 @@
     },
     {
       "id": "159",
+      "slug": "alfa-romeo-159-3-2-v6-q4-260ch-manuelle-2008",
+      "vehicle_type": "car",
+      "make": "Alfa Romeo",
+      "model": "159 3.2 V6 Q4 260ch - Manuelle",
       "year": 2008,
       "title": {
         "fr": "Alfa Romeo 159 3.2 V6 Q4 260ch - Manuelle",
         "en": "Alfa Romeo 159 3.2 V6 Q4 260ch - Manual"
       },
-      "mileage": "104 000km",
-      "country": "",
-      "price_eur": 9990,
-      "status": "available",
-      "sale_category": "professionnel",
+      "headline": null,
       "description": {
         "fr": "Alfa Romeo 159 3.2 V6 Q4 de 2008, affichant 104 000 km. Équipée du V6 3.2L développant 260 ch, d’une boîte manuelle et de la transmission intégrale Q4. Véhicule non immatriculé en France, vendu exclusivement aux professionnels. Une configuration particulièrement recherchée, combinant le caractère du V6 atmosphérique, la transmission intégrale et le plaisir d’une boîte manuelle.",
         "en": "2008 Alfa Romeo 159 3.2 V6 Q4 with 104,000 km. Powered by the 3.2L naturally aspirated V6 producing 260 hp, paired with a manual gearbox and Q4 all-wheel drive. The vehicle is not registered in France and is offered exclusively to professional buyers. A highly desirable configuration combining the character of the naturally aspirated V6, all-wheel drive and the involvement of a manual gearbox."
       },
+      "price_eur": 9990,
+      "mileage": "104 000km",
+      "mileage_km": 104000,
+      "country": "",
+      "status": "available",
+      "sale_category": "professionnel",
       "images": [
         "/assets/stock/images/img-1786788111783-4cad59.jpg",
         "/assets/stock/images/img-1786788106274-61242c.jpg",
@@ -573,20 +669,26 @@
     },
     {
       "id": "turbo r bleue",
+      "slug": "bentley-turbo-r-6-75l-v8-1991",
+      "vehicle_type": "car",
+      "make": "Bentley",
+      "model": "Turbo R 6.75L V8",
       "year": 1991,
       "title": {
         "fr": "Bentley Turbo R 6.75L V8",
         "en": "Bentley Turbo R 6.75L V8"
       },
-      "mileage": "106 000 miles",
-      "country": "UK",
-      "price_eur": 14900,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Bentley Turbo R de 1991, en configuration RHD (volant à droite) et actuellement UK plated. Équipée du V8 6.75L emblématique de Bentley, cette berline de grand luxe offre un caractère unique et une présence remarquable. L’état général présente quelques défauts liés à l’âge, notamment des traces de rouille sur la carrosserie. Un véhicule intéressant pour amateur de Bentley classiques, projet de restauration ou professionnel à la recherche d’un modèle de prestige à remettre en état.",
         "en": "1991 Bentley Turbo R, RHD (right-hand drive) and currently UK plated. Powered by Bentley’s iconic 6.75L V8, this luxury saloon offers exceptional character and presence. The vehicle shows some age-related imperfections, including areas of surface rust on the bodywork. An interesting opportunity for a classic Bentley enthusiast, restoration project or professional looking for a prestigious model to bring back to its best condition."
       },
+      "price_eur": 14900,
+      "mileage": "106 000 miles",
+      "mileage_km": 106000,
+      "country": "UK",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/turbo-r-bleue-1786789439812-9b9eb3.jpg",
         "/assets/stock/images/turbo-r-bleue-1786789367630-7d305d.jpg",
@@ -600,20 +702,26 @@
     },
     {
       "id": "jaguar xjr",
+      "slug": "jaguar-xjr-4-0-supercharged-1999",
+      "vehicle_type": "car",
+      "make": "Jaguar",
+      "model": "XJR 4.0 Supercharged",
       "year": 1999,
       "title": {
         "fr": "Jaguar XJR 4.0 Supercharged",
         "en": "Jaguar XJR 4.0 Supercharged"
       },
-      "mileage": "75 000km",
-      "country": "",
-      "price_eur": 18900,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Jaguar XJR de 1999, affichant seulement 75 000 km, en configuration RHD (volant à droite) et actuellement UK plated. Équipée du mythique V8 4.0L suralimenté développant 370 ch, cette XJR combine performances, confort et élégance britannique. Un exemplaire particulièrement intéressant avec son faible kilométrage, idéal pour amateur ou collectionneur à la recherche d’une XJR authentique.",
         "en": "1999 Jaguar XJR with only 75,000 km, RHD (right-hand drive) and currently UK plated. Powered by the iconic supercharged 4.0L V8 producing 370 hp, this XJR combines performance, comfort and classic British elegance. An especially appealing example thanks to its low mileage, ideal for an enthusiast or collector looking for an authentic XJR."
       },
+      "price_eur": 18900,
+      "mileage": "75 000km",
+      "mileage_km": 75000,
+      "country": "",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/jaguar-xjr-1786790639523-86ecd1.jpg",
         "/assets/stock/images/jaguar-xjr-1786790418578-38c425.jpg",
@@ -629,20 +737,26 @@
     },
     {
       "id": "645i cab",
+      "slug": "bmw-645i-m-sport-cabriolet-v8-4-4l-333ch-2005",
+      "vehicle_type": "car",
+      "make": "BMW",
+      "model": "645i M Sport Cabriolet V8 4.4L 333ch",
       "year": 2005,
       "title": {
         "fr": "BMW 645i M Sport Cabriolet V8 4.4L 333ch",
         "en": "BMW 645i M Sport Cabriolet V8 4.4L 333ch"
       },
-      "mileage": "75 000km",
-      "country": "UK",
-      "price_eur": 10847,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "BMW 645Ci Cabriolet de 2005, affichant seulement 75 000 km. Équipée du V8 4.4L développant 333 ch, avec boîte automatique. Véhicule RHD (volant à droite), actuellement UK plated, en très bel état. Un cabriolet élégant et performant, offrant le plaisir d’un V8 associé au confort et au raffinement de la Série 6.",
         "en": "2005 BMW 645Ci Convertible with only 75,000 km. Powered by the 4.4L V8 producing 333 hp, paired with an automatic gearbox. RHD (right-hand drive), currently UK plated and presented in very good condition. An elegant and powerful convertible, combining the character of a V8 with the comfort and refinement of the 6 Series."
       },
+      "price_eur": 10847,
+      "mileage": "75 000km",
+      "mileage_km": 75000,
+      "country": "UK",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/645i-cab-1786791180518-886821.jpg",
         "/assets/stock/images/645i-cab-1786791173333-ecf1fb.jpg",
@@ -655,20 +769,26 @@
     },
     {
       "id": "mini",
+      "slug": "mini-cooper-s-countryman-all4-184-ch-2011",
+      "vehicle_type": "car",
+      "make": "MINI",
+      "model": "Cooper S Countryman ALL4 184 ch",
       "year": 2011,
       "title": {
         "fr": "MINI Cooper S Countryman ALL4 184 ch",
         "en": "MINI Cooper S Countryman ALL4 184 ch"
       },
-      "mileage": "128 000km",
-      "country": "",
-      "price_eur": 9990,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "MINI Cooper S Countryman ALL4 de 2011, affichant 125 000 km. Équipée du moteur 1.6L turbo, d’une boîte manuelle et de la transmission intégrale ALL4. Véhicule actuellement immatriculé à Monaco. Une configuration polyvalente et dynamique, combinant le caractère sportif de la Cooper S avec l’espace et la polyvalence du Countryman.",
         "en": "2011 MINI Cooper S Countryman ALL4 with 125,000 km. Powered by the 1.6L turbocharged engine, paired with a manual gearbox and ALL4 all-wheel drive. Currently registered in Monaco. A versatile and engaging configuration, combining the sporty character of the Cooper S with the practicality and space of the Countryman."
       },
+      "price_eur": 9990,
+      "mileage": "128 000km",
+      "mileage_km": 128000,
+      "country": "",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/mini-1786792346529-f4d74c.jpg",
         "/assets/stock/images/mini-1786792406144-408f9d.jpg",
@@ -681,38 +801,50 @@
     },
     {
       "id": "350z",
+      "slug": "nissan-350z-313-ch-2007",
+      "vehicle_type": "car",
+      "make": "Nissan",
+      "model": "350Z 313 ch",
       "year": 2007,
       "title": {
         "fr": "Nissan 350Z 313 ch",
         "en": "Nissan 350Z 313 ch"
       },
-      "mileage": "65 000km",
-      "country": "",
-      "price_eur": 14490,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Nissan 350Z de 2007, affichant seulement 65 000 km. Équipée du V6 3.5L développant 313 ch, associé à une boîte manuelle et une transmission aux roues arrière. Véhicule RHD (volant à droite), actuellement UK plated. Un exemplaire en configuration recherchée, combinant performances, caractère et plaisir de conduite.",
         "en": "2007 Nissan 350Z with only 65,000 km. Powered by the 3.5L V6 producing 313 hp, paired with a manual gearbox and rear-wheel drive. RHD (right-hand drive), currently UK plated. A desirable configuration combining performance, character and driving enjoyment."
       },
+      "price_eur": 14490,
+      "mileage": "65 000km",
+      "mileage_km": 65000,
+      "country": "",
+      "status": "available",
+      "sale_category": "both",
       "images": []
     },
     {
       "id": "honda rouge",
+      "slug": "honda-vfr800-fi-v4-800cc-1999",
+      "vehicle_type": "motorcycle",
+      "make": "Honda",
+      "model": "VFR800 FI – V4 800cc",
       "year": 1999,
       "title": {
         "fr": "Honda VFR800 FI – V4 800cc",
         "en": "Honda VFR800 FI – V4 800cc"
       },
-      "mileage": "55 000 miles",
-      "country": "",
-      "price_eur": 2000,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Honda VFR800 FI de 1999, en très bon état général, affichant 55 000 miles (environ 88 500 km). Équipée du réputé moteur V4 800 cm³ à injection, développant environ 106 ch, cette sport-tourer offre un excellent équilibre entre performances, confort et fiabilité. Présentée en rouge et actuellement immatriculée au Royaume-Uni (UK plated), elle constitue un exemplaire intéressant pour amateur de motos Honda classiques et de V4.",
         "en": "1999 Honda VFR800 FI, presented in very good overall condition with 55,000 miles (approximately 88,500 km). Powered by Honda’s renowned 800cc fuel-injected V4 engine producing around 106 hp, this sport-touring motorcycle offers an excellent balance of performance, comfort and reliability. Finished in red and currently UK registered, it is an interesting example for enthusiasts looking for a classic Honda V4."
       },
+      "price_eur": 2000,
+      "mileage": "55 000 miles",
+      "mileage_km": 55000,
+      "country": "",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/img-1787132886600-dd84dd.jpg",
         "/assets/stock/images/img-1787132899956-3dfe62.jpg",
@@ -723,20 +855,26 @@
     },
     {
       "id": "aprilia mana gt",
+      "slug": "aprilia-mana-850-gt-2016",
+      "vehicle_type": "motorcycle",
+      "make": "Aprilia",
+      "model": "Mana 850 GT",
       "year": 2016,
       "title": {
         "fr": "Aprilia Mana 850 GT",
         "en": "Aprilia Mana 850 GT"
       },
-      "mileage": "18500",
-      "country": "",
-      "price_eur": 5490,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Aprilia Mana 850 GT de 2016, affichant seulement 18 500 km. Équipée du bicylindre 850 cm³ et de la transmission automatique à variation continue, la Mana GT offre un excellent compromis entre le confort d’un maxi-scooter et le comportement routier d’une moto. Sa configuration GT apporte davantage de protection et de confort, idéale aussi bien pour les trajets quotidiens que pour les longues distances. Avec son très faible kilométrage, il s’agit d’un exemplaire particulièrement intéressant pour un amateur à la recherche d’une moto originale, confortable et polyvalente.",
         "en": "2016 Aprilia Mana 850 GT, showing only 18,500 km. Powered by an 850cc twin-cylinder engine and equipped with Aprilia’s automatic continuously variable transmission, the Mana GT offers an excellent combination of maxi-scooter convenience and motorcycle handling. Its GT configuration provides additional comfort and protection, making it ideal for both everyday riding and longer journeys. With its very low mileage, this is a particularly interesting example for anyone looking for an unusual, comfortable and versatile motorcycle."
       },
+      "price_eur": 5490,
+      "mileage": "18500",
+      "mileage_km": 18500,
+      "country": "",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/img-1787145052488-2486db.jpg",
         "/assets/stock/images/img-1787145066768-2878a1.jpg",
@@ -747,20 +885,26 @@
     },
     {
       "id": "honda integra",
+      "slug": "honda-integra-750-dct-2014-33-500-km-2014",
+      "vehicle_type": "motorcycle",
+      "make": "Honda",
+      "model": "Integra 750 DCT – 2014 – 33 500 km",
       "year": 2014,
       "title": {
         "fr": "Honda Integra 750 DCT – 2014 – 33 500 km",
         "en": "Honda Integra 750 DCT – 2014 – 33 500 km"
       },
-      "mileage": "33500",
-      "country": "",
-      "price_eur": 4000,
-      "status": "available",
-      "sale_category": "both",
+      "headline": null,
       "description": {
         "fr": "Honda Integra 750 de 2014, affichant seulement 33 500 km et présenté en très bon état général. Équipé du moteur bicylindre 745 cm³ et de la boîte automatique à double embrayage DCT, l’Integra combine le confort et la facilité d’utilisation d’un scooter avec le comportement routier et les performances d’une moto. Un modèle polyvalent, fiable et agréable à conduire, idéal aussi bien pour la ville que pour les trajets plus longs.",
         "en": "2014 Honda Integra 750, showing only 33,500 km and presented in very good overall condition. Powered by Honda’s 745cc twin-cylinder engine and equipped with the renowned DCT dual-clutch automatic transmission, the Integra combines the convenience and comfort of a scooter with the road handling and performance of a motorcycle. A reliable, versatile and enjoyable two-wheeler, ideal for both city riding and longer journeys."
       },
+      "price_eur": 4000,
+      "mileage": "33500",
+      "mileage_km": 33500,
+      "country": "",
+      "status": "available",
+      "sale_category": "both",
       "images": [
         "/assets/stock/images/honda-integra-1787146531877-64770d.jpg",
         "/assets/stock/images/honda-integra-1787146633277-cac018.jpg",
@@ -770,20 +914,26 @@
     },
     {
       "id": "audi",
+      "slug": "audi-s8-v10-quattro-5-2-fsi-450-ch-2007",
+      "vehicle_type": "car",
+      "make": "Audi",
+      "model": "S8 V10 Quattro 5.2 FSI – 450 ch",
       "year": 2007,
       "title": {
         "fr": "Audi S8 V10 Quattro 5.2 FSI – 450 ch",
         "en": "Audi S8 V10 Quattro 5.2 FSI – 450 ch"
       },
-      "mileage": "122 000km",
-      "country": "",
-      "price_eur": 18900,
-      "status": "available",
-      "sale_category": "professionnel",
+      "headline": null,
       "description": {
         "fr": "Magnifique Audi S8 V10 Quattro 5.2 FSI de 2007, affichant seulement 122 000 km, en conduite à gauche et importée du Japon. Le véhicule se présente dans un état exceptionnel, aussi bien esthétique que mécanique, et est équipé du mythique V10 atmosphérique 5.2 FSI développant 450 ch, associé à la transmission intégrale Quattro et à une boîte automatique. Son V10, issu de la même famille que celui équipant la Lamborghini Gallardo, offre une sonorité et des performances uniques. Le véhicule n’est pas encore immatriculé en France, mais tous les documents d’importation sont disponibles. Vente possible à un particulier ou à un professionnel, avec possibilité d’accompagnement dans les démarches d’immatriculation.",
         "en": "Magnificent 2007 Audi S8 V10 Quattro 5.2 FSI, showing only 122,000 km, left-hand drive and imported from Japan. The vehicle is presented in exceptional mechanical and cosmetic condition and is equipped with the legendary 5.2 FSI naturally aspirated V10 producing 450 hp, paired with Quattro all-wheel drive and an automatic transmission. The V10 belongs to the same engine family as the unit used in the Lamborghini Gallardo, giving the S8 an exceptional sound and character. The vehicle is not yet registered in France, but all import documentation is available. Available to both private buyers and professionals, with assistance with the French registration process if required."
       },
+      "price_eur": 18900,
+      "mileage": "122 000km",
+      "mileage_km": 122000,
+      "country": "",
+      "status": "available",
+      "sale_category": "professionnel",
       "images": [
         "/assets/stock/images/img-1787153543936-104222.jpg",
         "/assets/stock/images/img-1787154354344-41ba42.jpg",

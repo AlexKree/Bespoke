@@ -22,7 +22,12 @@
       catAll: 'Tous',
       catParticulier: 'Vente au Particulier',
       catProfessionnel: 'Vente au Professionnel',
-      catLabel: 'Catégorie'
+      catLabel: 'Catégorie',
+      allMakes: 'Toutes les marques',
+      anyPrice: 'Tous les prix',
+      anyYear: 'Toutes les années',
+      seeSheet: 'Voir la fiche',
+      quickView: 'Aperçu'
     },
     en: {
       available: 'Available',
@@ -41,13 +46,21 @@
       catAll: 'All',
       catParticulier: 'Private Sale',
       catProfessionnel: 'Trade Sale',
-      catLabel: 'Category'
+      catLabel: 'Category',
+      allMakes: 'All makes',
+      anyPrice: 'Any price',
+      anyYear: 'Any year',
+      seeSheet: 'View details',
+      quickView: 'Quick view'
     }
   }[lang];
 
   const basePrefix = '../';
   const dataUrl = basePrefix + 'assets/stock/stock.json';
   const searchEl = document.getElementById('stockSearch');
+  const makeEl = document.getElementById('stockMake');
+  const priceEl = document.getElementById('stockPrice');
+  const yearEl = document.getElementById('stockYear');
   const includeSoldEl = document.getElementById('includeSold');
   const sortEl = document.getElementById('stockSort');
   const catFilterEl = document.getElementById('stockCatFilter');
@@ -109,10 +122,8 @@
 
   function itemTitle(item) {
     if (item.title && item.title[lang]) return item.title[lang];
-    if (item.make && item.model) {
-      const make = item.make[lang] || item.make.en || item.make.fr || '';
-      const model = item.model[lang] || item.model.en || item.model.fr || '';
-      return (make + ' ' + model).trim();
+    if (item.make || item.model) {
+      return [item.make, item.model].filter(Boolean).join(' ').trim();
     }
     return item.id || 'Vehicle';
   }
@@ -140,8 +151,9 @@
     const hay = [
       item.id,
       itemTitle(item),
-      item.make && (item.make[lang] || item.make.en || item.make.fr),
-      item.model && (item.model[lang] || item.model.en || item.model.fr),
+      item.make,
+      item.model,
+      item.country,
       item.year ? String(item.year) : '',
       item.mileage ? String(item.mileage) : ''
     ].filter(Boolean).join(' ').toLowerCase();
@@ -174,18 +186,54 @@
     return cat === activeCat;
   }
 
+  function matchesMake(item) {
+    const v = makeEl ? makeEl.value : '';
+    return !v || item.make === v;
+  }
+
+  function matchesPrice(item) {
+    const v = priceEl ? priceEl.value : '';
+    if (!v) return true;
+    // Un vehicule sans prix affiche ("sur demande") ne peut pas etre filtre
+    // par tranche : on le garde plutot que de le faire disparaitre en silence.
+    if (item.price_eur == null) return true;
+    const [lo, hi] = v.split('-');
+    if (lo && item.price_eur < Number(lo)) return false;
+    if (hi && item.price_eur > Number(hi)) return false;
+    return true;
+  }
+
+  function matchesYear(item) {
+    const v = yearEl ? yearEl.value : '';
+    if (!v || item.year == null) return !v;
+    const [lo, hi] = v.split('-');
+    if (lo && item.year < Number(lo)) return false;
+    if (hi && item.year > Number(hi)) return false;
+    return true;
+  }
+
   function applyFilters() {
     const q = (searchEl ? searchEl.value : '').trim().toLowerCase();
     const hideSold = !!(includeSoldEl && includeSoldEl.checked);
     filtered = items.filter((it) => {
       if (hideSold && it.status === 'sold') return false;
       if (!matchesCategory(it)) return false;
+      if (!matchesMake(it)) return false;
+      if (!matchesPrice(it)) return false;
+      if (!matchesYear(it)) return false;
       return matchesQuery(it, q);
     });
     filtered = sortItems(filtered);
     render();
   }
 
+  /** Remplit le selecteur de marques avec celles reellement presentes. */
+  function populateMakes() {
+    if (!makeEl) return;
+    const makes = [...new Set(items.map((i) => i.make).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+    makeEl.innerHTML = '<option value="">' + T.allMakes + '</option>' +
+      makes.map((m) => '<option value="' + m.replace(/"/g, '&quot;') + '">' + m + '</option>').join('');
+  }
 
   function catLabel(cat) {
     if (cat === 'particulier') return T.catParticulier;
@@ -243,7 +291,7 @@
     meta.className = 'stockCardMeta';
     const year = item.year ? `${T.year}: ${item.year}` : '';
     const mileage = item.mileage ? `${T.mileage}: ${item.mileage}` : '';
-    const loc = item.location ? (item.location[lang] || item.location.en || item.location.fr) : '';
+    const loc = item.country || '';
     meta.textContent = [year, mileage, loc ? `${T.location}: ${loc}` : ''].filter(Boolean).join(' • ');
     body.appendChild(meta);
 
@@ -278,10 +326,21 @@
     const actions = document.createElement('div');
     actions.className = 'stockCardActions';
 
+    // Lien reel plutot que bouton : la fiche a une URL propre, indexable et
+    // partageable. La modale reste disponible en apercu rapide.
+    if (item.slug) {
+      const link = document.createElement('a');
+      link.className = 'btn btnSecondary btnSm';
+      link.href = 'stock/' + item.slug + '.html';
+      link.textContent = T.seeSheet;
+      link.addEventListener('click', (e) => e.stopPropagation());
+      actions.appendChild(link);
+    }
+
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'btn btnSecondary btnSm';
-    btn.textContent = T.details;
+    btn.className = 'btn btnSm';
+    btn.textContent = T.quickView;
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       openModal(item);
@@ -293,12 +352,19 @@
       contact.className = 'btn btnPrimary btnSm';
       contact.textContent = T.contact;
       contact.href = 'contact.html?vehicle=' + encodeURIComponent(item.id);
+      contact.addEventListener('click', (e) => e.stopPropagation());
       actions.appendChild(contact);
     }
 
     body.appendChild(actions);
     card.appendChild(body);
-    card.addEventListener('click', () => openModal(item));
+    // Clic sur la carte : on va sur la vraie fiche (URL propre, partageable,
+    // indexable). La modale reste accessible par le bouton « Apercu ». Sans
+    // slug (fiche pas encore normalisee), on retombe sur la modale.
+    card.addEventListener('click', () => {
+      if (item.slug) window.location.href = 'stock/' + item.slug + '.html';
+      else openModal(item);
+    });
     return card;
   }
 
@@ -344,7 +410,7 @@
     modalStatus.textContent = statusLabel(item);
     modalStatus.className = 'kicker ' + (item.status === 'sold' ? 'sold' : item.status === 'reserved' ? 'reserved' : 'available');
 
-    const loc = item.location ? (item.location[lang] || item.location.en || item.location.fr) : '';
+    const loc = item.country || '';
     const metaBits = [];
     if (item.year) metaBits.push(`${T.year}: ${item.year}`);
     if (item.mileage) metaBits.push(`${T.mileage}: ${item.mileage}`);
@@ -442,6 +508,16 @@
     historyModalAdded = true;
   }
 
+  // Un lien du type /fr/stock#vehicle-<id> a ete partage avant l'arrivee des
+  // fiches a URL propre : on rouvre la modale correspondante a l'ouverture.
+  function openFromHash() {
+    const m = (location.hash || '').match(/^#vehicle-(.+)$/);
+    if (!m) return;
+    const id = decodeURIComponent(m[1]);
+    const item = items.find((it) => String(it.id) === id);
+    if (item) openModal(item);
+  }
+
   function wireModal() {
     if (!modal) return;
     modal.addEventListener('click', (e) => {
@@ -504,8 +580,10 @@
       const res = await fetch(dataUrl + '?v=' + Date.now(), { cache: 'no-cache' });
       const data = await res.json();
       items = (data && data.items) ? data.items : [];
+      populateMakes();
       applyFilters();
       wireModal();
+      openFromHash(); // lien #vehicle-<id> partage : rouvrir la modale a l'arrivee
       // Batch-fetch view counts for all cars (silent fail)
       fetchViews(items.map((it) => it.id));
     } catch (e) {
@@ -519,6 +597,7 @@
       const res = await fetch(dataUrl + '?v=' + Date.now(), { cache: 'no-cache' });
       const data = await res.json();
       items = (data && data.items) ? data.items : [];
+      populateMakes();
       applyFilters();
     } catch (_) {}
   };
@@ -527,6 +606,9 @@
     if (searchEl) searchEl.addEventListener('input', applyFilters);
     if (includeSoldEl) includeSoldEl.addEventListener('change', applyFilters);
     if (sortEl) sortEl.addEventListener('change', applyFilters);
+    if (makeEl) makeEl.addEventListener('change', applyFilters);
+    if (priceEl) priceEl.addEventListener('change', applyFilters);
+    if (yearEl) yearEl.addEventListener('change', applyFilters);
     // catFilterEl buttons are wired above at declaration time
   }
 

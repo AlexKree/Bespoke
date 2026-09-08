@@ -5,3 +5,9 @@ package-lock.json
 
 # Variantes d'images (regenerees par scripts/build-images.mjs)
 assets/_img/
+
+# Artefacts de build (regeneres par scripts/build-stock-pages.mjs)
+fr/stock/
+en/stock/
+sitemap.xml
+robots.txt

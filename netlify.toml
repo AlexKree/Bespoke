@@ -1,7 +1,9 @@
 [build]
   functions = "netlify/functions"
-  # Produit les variantes WebP servies par le site (assets/_img).
-  command = "node scripts/build-images.mjs"
+  # 1. Produit les variantes WebP servies par le site (assets/_img).
+  # 2. Regenere les fiches vehicule, le sitemap et robots.txt : un
+  #    enregistrement depuis /admin commite stock.json, ce qui declenche un build.
+  command = "node scripts/build-images.mjs && node scripts/build-stock-pages.mjs"
 
 # NB : le timeout des fonctions synchrones (10 s par defaut, 26 s max) n'est PAS
 # reglable ici — c'est un parametre du dashboard Netlify, et seulement sur les
