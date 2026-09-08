@@ -11,7 +11,6 @@
 
 const Anthropic = require('@anthropic-ai/sdk');
 const { Pool } = require('pg');
-const { getStore, connectLambda } = require('@netlify/blobs');
 
 // Sonnet par defaut : les fonctions synchrones Netlify sont plafonnees a 26 s,
 // et deux appels opus-5 avec thinking depassaient ce plafond. Surchargeable
@@ -30,40 +29,6 @@ function getClient() {
     });
   }
   return client;
-}
-
-// Client a long timeout pour les fonctions "background" (plafond Netlify 15 min).
-// getClient() garde son timeout court : il sert les fonctions synchrones, ou un
-// echec propre vaut mieux qu'un 504.
-let bgClient = null;
-function getBackgroundClient() {
-  if (!process.env.ANTHROPIC_API_KEY) return null;
-  if (!bgClient) {
-    bgClient = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
-      timeout: 600000,
-      maxRetries: 1,
-    });
-  }
-  return bgClient;
-}
-
-/**
- * Magasin de jobs (Netlify Blobs) partage entre la fonction "background" qui
- * produit un resultat et la fonction de statut qui le sert par polling.
- * Retourne null si Blobs n'est pas disponible : l'appelant renvoie alors vers
- * le formulaire de contact.
- */
-function jobStore(event) {
-  try {
-    // Fonctions "classic" (signature Lambda) : il faut passer l'event une fois
-    // pour que Blobs recupere son contexte.
-    if (event) connectLambda(event);
-    return getStore({ name: 'inspection-jobs', consistency: 'strong' });
-  } catch (err) {
-    console.error('Netlify Blobs indisponible:', err && err.message);
-    return null;
-  }
 }
 
 let pool = null;
@@ -246,8 +211,6 @@ function compactVehicle(item, l) {
 module.exports = {
   MODEL,
   getClient,
-  getBackgroundClient,
-  jobStore,
   getPool,
   json,
   clientIp,

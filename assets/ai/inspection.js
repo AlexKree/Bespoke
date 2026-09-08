@@ -14,14 +14,11 @@
   var status = document.getElementById('inspectionStatus');
   var lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
 
-  var MAX_FILES = 6;
-  var MAX_EDGE = 1400;   // px — au-dela, l'API redimensionne de toute facon
+  // 5 photos / 1120 px : couvre l'essentiel d'une annonce tout en gardant l'appel
+  // vision sous le budget temps d'une fonction Netlify synchrone.
+  var MAX_FILES = 5;
+  var MAX_EDGE = 1120;
   var QUALITY = 0.8;
-  // ai-inspection-start est une fonction synchrone : Netlify rejette (HTTP 413)
-  // toute requete au-dela de 6 Mo. Ce qui part sur le reseau, c'est le base64
-  // (~4/3 du binaire) ; on plafonne donc la SOMME DES CARACTERES base64 bien en
-  // dessous, et on recompresse par paliers si le lot depasse (ensurePayloadUnder).
-  var PAYLOAD_LIMIT = 4.2 * 1024 * 1024;
 
   var T = lang === 'en' ? {
     sending: 'Analysing photos…', send: 'Generate the pre-report',
@@ -31,7 +28,6 @@
     overall: 'Summary', remove: 'Remove', source: 'Listing',
     sev: { info: 'Note', attention: 'To watch', alerte: 'Alert' },
     err: 'The analysis is unavailable right now. Please use the contact form.',
-    slow: 'Analysing several photos — this can take up to a minute. Keep this tab open.',
     none: 'Add at least one photo.', tooMany: 'Maximum ' + MAX_FILES + ' photos.',
     notImage: 'Only JPEG, PNG and WebP images are accepted.',
     badUrl: 'The listing link must start with http:// or https://.',
@@ -45,7 +41,6 @@
     overall: 'Synthèse', remove: 'Retirer', source: 'Annonce',
     sev: { info: 'Note', attention: 'À surveiller', alerte: 'Alerte' },
     err: 'L’analyse est momentanément indisponible. Merci d’utiliser le formulaire de contact.',
-    slow: 'Analyse de plusieurs photos en cours — cela peut prendre jusqu’à une minute. Gardez cet onglet ouvert.',
     none: 'Ajoutez au moins une photo.', tooMany: 'Maximum ' + MAX_FILES + ' photos.',
     notImage: 'Seules les images JPEG, PNG et WebP sont acceptées.',
     badUrl: 'Le lien de l’annonce doit commencer par http:// ou https://.',
@@ -78,7 +73,7 @@
   }
 
   /** Redimensionne dans le navigateur : la photo brute d'un telephone (5-10 Mo)
-      devient ~200 Ko, ce qui divise d'autant le cout d'analyse et le temps d'upload.
+      devient ~150 Ko, ce qui divise d'autant le cout d'analyse et le temps d'upload.
       L'orientation EXIF est redressee : une photo couchee degrade nettement l'analyse. */
   async function shrink(file) {
     if (typeof createImageBitmap === 'function') {
@@ -100,42 +95,6 @@
       img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('decode')); };
       img.src = url;
     });
-  }
-
-  // Taille approximative de ce qui part sur le reseau : la chaine base64 elle-meme
-  // (1 caractere ~ 1 octet), pas le binaire qu'elle represente.
-  function payloadBytes() {
-    return files.reduce(function (n, f) { return n + f.base64.length; }, 0);
-  }
-
-  function reencode(dataUrl, edge, quality) {
-    return new Promise(function (resolve, reject) {
-      var img = new Image();
-      img.onload = function () {
-        var scale = Math.min(1, edge / Math.max(img.naturalWidth, img.naturalHeight));
-        var canvas = document.createElement('canvas');
-        canvas.width = Math.round(img.naturalWidth * scale);
-        canvas.height = Math.round(img.naturalHeight * scale);
-        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL('image/jpeg', quality));
-      };
-      img.onerror = function () { reject(new Error('reencode')); };
-      img.src = dataUrl;
-    });
-  }
-
-  /** Garantit que le lot tient sous PAYLOAD_LIMIT : recompresse toutes les photos
-      par paliers de plus en plus serres jusqu'a y arriver. Sans effet si le lot
-      est deja assez leger (cas courant a 1200 px / q0.74). */
-  async function ensurePayloadUnder() {
-    var steps = [[1280, 0.74], [1100, 0.68], [1000, 0.6], [880, 0.5]];
-    for (var s = 0; s < steps.length && payloadBytes() > PAYLOAD_LIMIT; s++) {
-      for (var i = 0; i < files.length; i++) {
-        var u = await reencode(files[i].dataUrl, steps[s][0], steps[s][1]);
-        files[i].dataUrl = u;
-        files[i].base64 = u.split(',')[1];
-      }
-    }
   }
 
   function renderThumbs() {
@@ -239,20 +198,6 @@
     out.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  // L'analyse de plusieurs photos depasse le budget temps d'une fonction Netlify
-  // synchrone : elle tourne dans une fonction "background" et la page interroge
-  // ai-inspection-status jusqu'a ce que le rapport soit pret.
-  var POLL_MS = 2500;
-  var POLL_MAX_MS = 300000; // au-dela, on abandonne cote client (la fonction a 15 min)
-
-  function uuid() {
-    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      var r = (Math.random() * 16) | 0;
-      return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
-    });
-  }
-
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
     setStatus('');
@@ -265,74 +210,32 @@
     btn.textContent = T.sending;
     out.innerHTML = '<div class="aiSkeleton"><span></span><span></span><span></span><span></span></div>';
 
-    var jobId = uuid();
-    var started = Date.now();
-    var slowNoteShown = false;
-
-    function done() { btn.disabled = false; btn.textContent = T.send; }
-    function failOut(msg) { done(); out.innerHTML = ''; setStatus(msg || T.err, 'error'); }
-
-    function poll() {
-      fetch('/.netlify/functions/ai-inspection-status?id=' + encodeURIComponent(jobId), { cache: 'no-store' })
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-          if (data.status === 'done') {
-            if (window.plausible) plausible('AI Inspection');
-            setStatus('');
-            done();
-            render(data);
-            return;
-          }
-          if (data.status === 'error') {
-            var m = (lang === 'en' ? data.message_en : data.message_fr) || T.err;
-            if (data.error_code) m += ' [' + data.error_code + (data.detail ? ': ' + data.detail : '') + ']';
-            failOut(m);
-            return;
-          }
-          if (Date.now() - started > POLL_MAX_MS) { failOut(); return; }
-          if (!slowNoteShown && Date.now() - started > 20000) {
-            slowNoteShown = true;
-            setStatus(T.slow, 'info');
-          }
-          setTimeout(poll, POLL_MS);
-        })
-        .catch(function () {
-          if (Date.now() - started > POLL_MAX_MS) failOut();
-          else setTimeout(poll, POLL_MS);
-        });
-    }
-
     try {
-      await ensurePayloadUnder();
-    } catch (_) { /* on tente l'envoi tel quel */ }
-
-    try {
-      // ai-inspection-start (synchrone, plafond 6 Mo) recoit les photos, les depose
-      // dans le magasin de jobs et lance le traitement en tache de fond. Les
-      // fonctions "background" plafonnent la requete a 256 Ko : on ne peut pas leur
-      // envoyer les photos directement.
-      var res = await fetch('/.netlify/functions/ai-inspection-start', {
+      var res = await fetch('/.netlify/functions/ai-inspection', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          job_id: jobId,
           lang: lang,
           context: context.value.trim(),
           listing_url: listingUrl,
           images: files.map(function (f) { return { media_type: f.media_type, data: f.base64 }; }),
         }),
       });
-      if (!res.ok) {
-        var d = {};
-        try { d = await res.json(); } catch (_) {}
-        failOut(((lang === 'en' ? d.message_en : d.message_fr) || T.err) + ' [start HTTP ' + res.status + ']');
+      var data = {};
+      try { data = await res.json(); } catch (_) {}
+      if (!res.ok || !data.ok) {
+        out.innerHTML = '';
+        setStatus((lang === 'en' ? data.message_en : data.message_fr) || T.err, 'error');
         return;
       }
+      if (window.plausible) plausible('AI Inspection');
+      render(data);
     } catch (_) {
-      failOut();
-      return;
+      out.innerHTML = '';
+      setStatus(T.err, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = T.send;
     }
-
-    poll();
   });
 })();
