@@ -14,16 +14,23 @@
   var status = document.getElementById('inspectionStatus');
   var lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
 
-  // 4 photos / 1024 px : configuration mesuree a ~5 s avec Haiku 4.5, sous les
-  // 10 s d'une fonction Netlify synchrone. 1300 px (1,6x les pixels) faisait
-  // deborder. Mettre une vue d'ensemble + les zones qui posent question en gros
-  // plan et bien eclairees.
-  var MAX_FILES = 4;
-  var MAX_EDGE = 1024;
+  // L'analyse tourne maintenant en tache de fond (fonction Netlify "background",
+  // plafond 15 min) : le temps n'est plus la contrainte. On peut donc envoyer
+  // jusqu'a 6 photos en bonne definition. 1400 px / 0,82 : compromis entre
+  // finesse d'analyse et poids d'upload/stockage. Mettre une vue d'ensemble +
+  // les zones qui posent question en gros plan et bien eclairees.
+  var MAX_FILES = 6;
+  var MAX_EDGE = 1400;
   var QUALITY = 0.82;
 
+  // Interrogation de l'etat du job : toutes les POLL_EVERY ms, au plus
+  // POLL_MAX fois (~2,5 min) avant d'abandonner proprement.
+  var POLL_EVERY = 2500;
+  var POLL_MAX = 60;
+
   var T = lang === 'en' ? {
-    sending: 'Analysing photos…', send: 'Generate the pre-report',
+    sending: 'Sending photos…', working: 'Analysis in progress — this can take up to a minute…',
+    send: 'Generate the pre-report',
     id: 'What the photos show', quality: 'What these photos allow',
     obs: 'Observations', checks: 'To check physically',
     questions: 'Questions for the seller', docs: 'Documents to request',
@@ -36,7 +43,8 @@
     ask: 'Have Bespoke inspect this car',
     count: function (n) { return n + ' / ' + MAX_FILES + ' photos'; }
   } : {
-    sending: 'Analyse des photos…', send: 'Générer le pré-rapport',
+    sending: 'Envoi des photos…', working: 'Analyse en cours — cela peut prendre jusqu’à une minute…',
+    send: 'Générer le pré-rapport',
     id: 'Ce que montrent les photos', quality: 'Ce que ces photos permettent',
     obs: 'Observations', checks: 'À vérifier physiquement',
     questions: 'Questions à poser au vendeur', docs: 'Documents à demander',
@@ -200,6 +208,47 @@
     out.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  function showError(data, httpStatus) {
+    out.innerHTML = '';
+    var msg = (lang === 'en' ? data.message_en : data.message_fr) || T.err;
+    // Debug temporaire : le motif reel entre crochets. A retirer une fois l'outil rode.
+    if (data.detail) msg += ' [' + data.detail + ']';
+    else if (httpStatus) msg += ' [HTTP ' + httpStatus + ']';
+    setStatus(msg, 'error');
+  }
+
+  // Interroge `ai-inspection-result` jusqu'a ce que le job aboutisse.
+  async function pollResult(jobId, pollUrl) {
+    var url = pollUrl || ('/.netlify/functions/ai-inspection-result?job=' + encodeURIComponent(jobId));
+    for (var i = 0; i < POLL_MAX; i++) {
+      await sleep(POLL_EVERY);
+      var pr, pd = {};
+      try {
+        pr = await fetch(url, { headers: { Accept: 'application/json' } });
+        try { pd = await pr.json(); } catch (_) {}
+      } catch (_) {
+        continue; // coupure reseau passagere : on retente
+      }
+      if (pr && pr.status === 404) {
+        if (i < 4) continue; // replica pas encore a jour : on laisse une chance
+        out.innerHTML = ''; setStatus(T.err, 'error'); return;
+      }
+      if (pd.status === 'done' && pd.ok) {
+        if (window.plausible) plausible('AI Inspection');
+        render(pd);
+        return;
+      }
+      if (pd.status === 'error') { showError(pd, 0); return; }
+      // pending / running : on continue d'interroger
+    }
+    out.innerHTML = '';
+    setStatus(T.err + ' [' + (lang === 'en'
+      ? 'timed out while waiting for the result'
+      : 'délai dépassé en attendant le résultat') + ']', 'error');
+  }
+
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
     setStatus('');
@@ -225,17 +274,23 @@
       });
       var data = {};
       try { data = await res.json(); } catch (_) {}
-      if (!res.ok || !data.ok) {
-        out.innerHTML = '';
-        var msg = (lang === 'en' ? data.message_en : data.message_fr) || T.err;
-        // Debug temporaire : le motif reel entre crochets. A retirer une fois l'outil OK.
-        if (data.detail) msg += ' [' + data.detail + ']';
-        else if (!res.ok && res.status) msg += ' [HTTP ' + res.status + ']';
-        setStatus(msg, 'error');
+
+      if (!res.ok) { showError(data, res.status); return; }
+
+      // Reponse attendue : 202 { ok:true, job_id, poll_url }. Repli si une
+      // ancienne version renvoie directement le rapport (200 { ok:true, report }).
+      if (!data.job_id) {
+        if (data.ok && data.report) {
+          if (window.plausible) plausible('AI Inspection');
+          render(data);
+        } else {
+          showError(data, res.status);
+        }
         return;
       }
-      if (window.plausible) plausible('AI Inspection');
-      render(data);
+
+      btn.textContent = T.working;
+      await pollResult(data.job_id, data.poll_url);
     } catch (_) {
       out.innerHTML = '';
       setStatus(T.err, 'error');

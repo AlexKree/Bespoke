@@ -3,10 +3,12 @@
   # Produit les variantes WebP servies par le site (assets/_img).
   command = "node scripts/build-images.mjs"
 
-# NB : le timeout des fonctions (10 s par defaut, 26 s max) n'est PAS reglable
-# ici — c'est un parametre du dashboard Netlify (Site config -> Functions), et
-# seulement sur les plans qui l'autorisent. L'appel de ai-inspection est donc
-# calibre pour tenir dans les 10 s (thinking off, effort "low", 4 photos).
+# NB : le timeout des fonctions synchrones (10 s par defaut, 26 s max) n'est PAS
+# reglable ici — c'est un parametre du dashboard Netlify, et seulement sur les
+# plans qui l'autorisent. Le pre-rapport photo contourne cette limite : la
+# fonction `ai-inspection` cree seulement un job (table ai_inspection_jobs) et
+# `ai-inspection-run-background` (fonction *background*, plafond 15 min) fait
+# l'analyse. Necessite DATABASE_URL et la migration migrations/add-ai-inspection-jobs.sql.
 
 # ── Langue d'arrivee selon le pays de l'IP ───────────────────────────
 # Netlify resout le pays a la peripherie ; aucune fonction n'est necessaire.
