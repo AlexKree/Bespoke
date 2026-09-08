@@ -14,12 +14,14 @@
   var status = document.getElementById('inspectionStatus');
   var lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
 
-  // 3 photos / 1100 px : sonnet-5 en vision tient sous les 10 s d'une fonction
-  // Netlify synchrone (timeout non reglable) jusqu'a ce nombre. Choisir les plus
-  // parlantes : 3/4 avant, 3/4 arriere, et la zone qui pose question.
+  // 3 photos / 1500 px : sonnet-5 en vision tient sous les 10 s d'une fonction
+  // Netlify synchrone (timeout non reglable) jusqu'a ce nombre. 1500 px = proche
+  // de l'optimum du modele : un scotch noir sur capote sombre, peu contraste, a
+  // besoin de resolution. Choisir les 3 plus parlantes, dont la zone qui pose
+  // question en gros plan.
   var MAX_FILES = 3;
-  var MAX_EDGE = 1100;
-  var QUALITY = 0.8;
+  var MAX_EDGE = 1500;
+  var QUALITY = 0.82;
 
   var T = lang === 'en' ? {
     sending: 'Analysing photos…', send: 'Generate the pre-report',

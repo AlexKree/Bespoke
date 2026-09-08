@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bespoke-cache-v16';
+const CACHE_NAME = 'bespoke-cache-v17';
 const STATIC_ASSETS = [
   // Pas de '/' ici : la racine renvoie desormais une redirection 302 par pays
   // (voir netlify.toml). cache.addAll suivrait le 302 et cache.put rejette une
