@@ -14,10 +14,11 @@
   var status = document.getElementById('inspectionStatus');
   var lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
 
-  // 4 photos / 1024 px : couvre l'essentiel d'une annonce tout en gardant l'appel
-  // vision sous les 10 s d'une fonction Netlify synchrone (timeout non reglable).
-  var MAX_FILES = 4;
-  var MAX_EDGE = 1024;
+  // 3 photos / 1100 px : sonnet-5 en vision tient sous les 10 s d'une fonction
+  // Netlify synchrone (timeout non reglable) jusqu'a ce nombre. Choisir les plus
+  // parlantes : 3/4 avant, 3/4 arriere, et la zone qui pose question.
+  var MAX_FILES = 3;
+  var MAX_EDGE = 1100;
   var QUALITY = 0.8;
 
   var T = lang === 'en' ? {

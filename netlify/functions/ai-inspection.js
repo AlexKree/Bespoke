@@ -12,26 +12,28 @@
  * (plafond de requete 256 Ko, dependance a Netlify Blobs) a multiplie les modes
  * de panne. Le timeout Netlify (10 s par defaut, 26 s seulement sur demande au
  * support) est la vraie contrainte : sonnet-5 en vision sur 3-4 photos deborde
- * les 10 s (504). On tient donc dans le budget avec :
- *  - Haiku 4.5 par defaut (surchargeable ANTHROPIC_MODEL_INSPECTION = claude-sonnet-5
- *    le jour ou le site aura le timeout 26 s) ;
- *  - un appel `messages.create` avec un outil force (pas la voie structured-output
+ * les 10 s (504). Haiku 4.5 tenait le budget mais manquait des defauts flagrants.
+ * Compromis retenu : sonnet-5, mais
+ *  - 3 photos max (au-dela : 504) ;
+ *  - appel `messages.create` avec outil force (pas la voie structured-output
  *    `effort`, plus lente) ;
- *  - thinking coupe, 4 photos max, max_tokens plafonne.
+ *  - thinking coupe, max_tokens 2400.
+ * Repasser a 4-6 photos (voire Haiku pour la vitesse) se pilote par les vars
+ * d'env / constantes le jour ou le site obtient le timeout 26 s de Netlify.
  */
 
 const { z } = require('zod');
 const { zodOutputFormat } = require('@anthropic-ai/sdk/helpers/zod');
 const { getClient, json, rateLimit, parseBody, requireKey, lang, classifyError } = require('../lib/ai');
 
-const MAX_IMAGES = 4; // aligne sur le client : au-dela, l'appel deborde les 10 s
+const MAX_IMAGES = 3; // sonnet-5 en vision : au-dela, l'appel deborde les 10 s Netlify
 const MAX_IMAGE_BYTES = 1.6 * 1024 * 1024; // apres redimensionnement cote client
 const ALLOWED_MEDIA = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
-// Haiku par defaut : seul modele qui tient dans les 10 s de la fonction sur ce
-// jeu de photos. Repasser sur claude-sonnet-5 via cette var d'env Netlify le
-// jour ou le site a le timeout 26 s active.
-const INSPECTION_MODEL = process.env.ANTHROPIC_MODEL_INSPECTION || 'claude-haiku-4-5-20251001';
+// sonnet-5 : Haiku manquait des defauts flagrants (capote scotchee decrite comme
+// "reguliere"). On tient dans les 10 s en limitant a 3 photos + appel sans
+// thinking. Repasser a 4-6 photos si le site obtient le timeout 26 s de Netlify.
+const INSPECTION_MODEL = process.env.ANTHROPIC_MODEL_INSPECTION || 'claude-sonnet-5';
 
 /** N'accepte qu'une URL http(s) plausible. Retourne '' si invalide. */
 function normalizeListingUrl(v) {
@@ -73,6 +75,8 @@ Methode — pour chaque photo, examine activement :
 - Moteur si visible : fuites, corrosion, montages recents ou non conformes.
 - Trains roulants et pneumatiques : usure, craquelures, date des pneus si lisible, disques, corrosion.
 Ce qui est nettement visible et anormal DOIT apparaitre dans "observations". Ne minimise jamais un defaut evident — un scotch sur une capote, une dechirure, une trace de rouille — sous pretexte que les photos ne permettent pas de tout juger : decris ce que tu vois, puis renvoie la verification fine dans "checks".
+
+Interdit : les formules qui noient un defaut visible ("a distance", "sans trace evidente", "etat de fermeture regulier", "rien d'anormal apparent") alors qu'un element franchement anormal est dans le cadre. Si tu vois du scotch, un adhesif, une piece maintenue par du ruban, une bache ou un patch de fortune, une dechirure, une couture ouverte : c'est une observation "alerte", nommee explicitement, meme si le reste de la photo est net. Une capote de cabriolet reparee au scotch n'est jamais une "note".
 
 Regles absolues :
 - Tu ne decris QUE ce qui est visible sur les photos. Si une zone n'est pas photographiee, tu ne te prononces pas dessus : tu la mets dans "checks".
@@ -151,7 +155,7 @@ exports.handler = async function (event) {
   try {
     const response = await getClient().messages.create({
       model: INSPECTION_MODEL,
-      max_tokens: 2800,
+      max_tokens: 2400,
       system: SYSTEM,
       messages: [{ role: 'user', content }],
       tools: [{
