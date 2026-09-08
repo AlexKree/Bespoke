@@ -352,12 +352,19 @@
       contact.className = 'btn btnPrimary btnSm';
       contact.textContent = T.contact;
       contact.href = 'contact.html?vehicle=' + encodeURIComponent(item.id);
+      contact.addEventListener('click', (e) => e.stopPropagation());
       actions.appendChild(contact);
     }
 
     body.appendChild(actions);
     card.appendChild(body);
-    card.addEventListener('click', () => openModal(item));
+    // Clic sur la carte : on va sur la vraie fiche (URL propre, partageable,
+    // indexable). La modale reste accessible par le bouton « Apercu ». Sans
+    // slug (fiche pas encore normalisee), on retombe sur la modale.
+    card.addEventListener('click', () => {
+      if (item.slug) window.location.href = 'stock/' + item.slug + '.html';
+      else openModal(item);
+    });
     return card;
   }
 
@@ -501,6 +508,16 @@
     historyModalAdded = true;
   }
 
+  // Un lien du type /fr/stock#vehicle-<id> a ete partage avant l'arrivee des
+  // fiches a URL propre : on rouvre la modale correspondante a l'ouverture.
+  function openFromHash() {
+    const m = (location.hash || '').match(/^#vehicle-(.+)$/);
+    if (!m) return;
+    const id = decodeURIComponent(m[1]);
+    const item = items.find((it) => String(it.id) === id);
+    if (item) openModal(item);
+  }
+
   function wireModal() {
     if (!modal) return;
     modal.addEventListener('click', (e) => {
@@ -566,6 +583,7 @@
       populateMakes();
       applyFilters();
       wireModal();
+      openFromHash(); // lien #vehicle-<id> partage : rouvrir la modale a l'arrivee
       // Batch-fetch view counts for all cars (silent fail)
       fetchViews(items.map((it) => it.id));
     } catch (e) {
