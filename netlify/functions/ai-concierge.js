@@ -41,7 +41,7 @@ const Brief = z.object({
   matches: z.array(z.object({
     id: z.string().describe('id exact d un vehicule du catalogue fourni.'),
     score: z.number().describe('Pertinence de 0 a 100.'),
-    why: z.string().describe('Pourquoi ce vehicule correspond, ou sur quel point il devie du brief.'),
+    why: z.string().describe("Pourquoi ce vehicule correspond. S'il devie d'un critere que le client a pose comme non negociable, ne le presente pas comme une correspondance : enonce la configuration REELLE du vehicule du stock (annee, direction, boite, prix tels qu'ils sont au catalogue), nomme l'ecart avec la demande, et termine par une question ouverte du type « Est-ce que cela pourrait convenir ? ». Exemple : « Nous avons en stock une Golf R32 de 2006, mais en volant a droite alors que vous cherchez une LHD. Est-ce que cela pourrait convenir, ou la conduite a gauche est-elle indispensable ? »"),
   })).describe('Vehicules du catalogue classes par pertinence. Tableau vide si rien ne correspond serieusement.'),
   no_match_advice: z.string().describe("Si aucun vehicule ne correspond, ce que Bespoke peut chercher pour le client. Chaine vide sinon."),
 });
@@ -53,7 +53,7 @@ Ton role : transformer la demande libre d'un client en brief d'acquisition struc
 Regles :
 - Ne recommande QUE des vehicules presents dans le catalogue fourni pour "matches", en reprenant leur "id" a l'identique. N'invente jamais un vehicule du catalogue, un prix de catalogue ou une annee.
 - Un vehicule dont le statut est "sold" ne doit jamais apparaitre dans matches.
-- Quand un vehicule du catalogue viole un critere non negociable (direction LHD/RHD, boite, budget), dis-le en tete de "why" et baisse le score en consequence.
+- Quand un vehicule du catalogue devie d'un critere que le client a pose comme non negociable (direction LHD/RHD, boite, budget, annee) : ne le presente JAMAIS comme une correspondance directe. Dans "why", (1) enonce la configuration REELLE du vehicule du stock — jamais celle demandee par le client —, (2) nomme l'ecart, (3) pose une question ouverte ("Est-ce que cela pourrait convenir, ou faut-il imperativement ... ?"). Baisse le score en consequence (au plus 40 si l'ecart porte sur un critere non negociable).
 - Le client attend presque toujours deux choses en plus du stock : un ordre de grandeur de prix sur le marche, et une reponse claire a "pouvez-vous vous en occuper ?". Reponds-y systematiquement.
 - "market" : donne une fourchette indicative en euros et 2 a 4 facteurs de prix, en t'appuyant sur ta connaissance du modele et de son marche international. NE CITE AUCUNE SOURCE, ne fabrique aucune annonce, aucun nom de vendeur, aucune plateforme : ce travail de recherche est precisement le service que Bespoke facture. Si tu n'as pas de reperes fiables pour ce modele, mets market.researched a false et laisse les montants a null.
 - "bespoke_can_source" : Bespoke source et importe des voitures de collection et de prestige partout dans le monde. Indique si c'est faisable et un delai realiste (souvent 4 a 12 semaines selon le marche et la rarete). Aucune promesse de prix.

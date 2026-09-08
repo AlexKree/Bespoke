@@ -222,6 +222,24 @@
   var btn = document.getElementById('submit-btn');
   var statusEl = document.getElementById('form-status');
 
+  // Pre-fill from the AI tools: the concierge brief, or the listing link from
+  // the photo pre-report. Never overwrites text the visitor has already typed.
+  (function prefillFromTools() {
+    var msg = document.getElementById('message');
+    var subj = document.getElementById('subject');
+    if (!msg || msg.value.trim()) return;
+    var brief = '', listing = '';
+    try { brief = sessionStorage.getItem('bespoke_brief') || ''; } catch (e) {}
+    try { listing = sessionStorage.getItem('bespoke_listing_url') || ''; } catch (e) {}
+    if (brief) {
+      msg.value = brief;
+      if (subj && !subj.value.trim()) subj.value = 'Vehicle search brief';
+    } else if (listing) {
+      msg.value = 'Enquiry about a car seen in a listing.\nListing link: ' + listing + '\n\n';
+      if (subj && !subj.value.trim()) subj.value = 'Photo pre-report';
+    }
+  })();
+
   function showStatus(message, type) {
     statusEl.textContent = message;
     statusEl.className = 'authMsg ' + (type === 'error' ? 'error' : 'success');

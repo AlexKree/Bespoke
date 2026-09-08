@@ -223,6 +223,24 @@
   var btn = document.getElementById('submit-btn');
   var statusEl = document.getElementById('form-status');
 
+  // Pre-remplissage depuis les outils IA : brief du concierge, ou lien d'annonce
+  // du pre-rapport photo. On n'ecrase jamais une saisie deja commencee.
+  (function prefillFromTools() {
+    var msg = document.getElementById('message');
+    var subj = document.getElementById('subject');
+    if (!msg || msg.value.trim()) return;
+    var brief = '', listing = '';
+    try { brief = sessionStorage.getItem('bespoke_brief') || ''; } catch (e) {}
+    try { listing = sessionStorage.getItem('bespoke_listing_url') || ''; } catch (e) {}
+    if (brief) {
+      msg.value = brief;
+      if (subj && !subj.value.trim()) subj.value = 'Brief de recherche';
+    } else if (listing) {
+      msg.value = "Demande concernant un vehicule vu en annonce.\nLien de l'annonce : " + listing + "\n\n";
+      if (subj && !subj.value.trim()) subj.value = 'Pre-rapport photo';
+    }
+  })();
+
   function showStatus(message, type) {
     statusEl.textContent = message;
     statusEl.className = 'authMsg ' + (type === 'error' ? 'error' : 'success');
