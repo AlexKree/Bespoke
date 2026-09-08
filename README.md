@@ -20,6 +20,8 @@
 | `GITHUB_TOKEN` | ✅ | Personal Access Token GitHub (scope `repo`) pour les commits stock |
 | `GITHUB_OWNER` | ✅ | Owner du dépôt GitHub (ex: `AlexKree`) |
 | `GITHUB_REPO` | ✅ | Nom du dépôt GitHub (ex: `Bespoke`) |
+| `ANTHROPIC_API_KEY` | ⚡ optionnel | Clé API Claude pour les trois outils IA. **Si absente, les outils renvoient un message invitant à utiliser le formulaire de contact — le reste du site fonctionne normalement.** |
+| `ANTHROPIC_MODEL` | ⚡ optionnel | Modèle utilisé (défaut : `claude-opus-5`) |
 | `RESEND_API_KEY_V2` | ⚡ optionnel | Clé API Resend pour l'envoi des emails de vérification. Si absent, le lien est loggé en console. |
 | `RESEND_FROM_EMAIL` | ⚡ optionnel | Adresse d'envoi (défaut : `contact@thebespokecar.com`) |
 
@@ -117,6 +119,63 @@ Accessible à `/admin/` — requiert `ADMIN_PASSWORD`.
 
 Configuration Netlify : **Site settings → Environment variables** puis ajouter `ADMIN_PASSWORD`.
 En local (`netlify dev`), définir `ADMIN_PASSWORD` dans `.env`.
+
+---
+
+---
+
+## Outils IA
+
+Trois outils publics, chacun servi par une fonction Netlify. La clé API reste côté serveur.
+
+| Outil | Page | Fonction | Quota / IP / heure |
+|-------|------|----------|--------------------|
+| Concierge de sourcing | `/fr/concierge`, `/en/concierge` | `ai-concierge.js` | 12 |
+| Calculateur d'import | `/fr/import`, `/en/import` | `ai-import-cost.js` | 12 |
+| Pré-rapport photo | `/fr/inspection`, `/en/inspection` | `ai-inspection.js` | 5 |
+
+### Séparation des rôles sur le calculateur d'import
+
+Aucun montant n'est produit par le modèle. La chaîne est en trois temps :
+
+1. le modèle **extrait** les paramètres du texte libre (prix, origine, année, CO2…) ;
+2. `netlify/lib/import-cost.js` **calcule**, à partir d'une table de taux explicite ;
+3. le modèle **explique** le chiffrage déjà calculé, sans pouvoir le modifier.
+
+**La table `RATES` dans `netlify/lib/import-cost.js` doit être revue à chaque loi de finances** (barème du malus, TVA, droits de douane, tarif du cheval fiscal). Elle porte un champ `reference_year` affiché à l'utilisateur.
+
+### Limitation de débit
+
+Deux niveaux, en cascade :
+- un compteur en mémoire, immédiat mais limité à une instance de fonction ;
+- la table `ai_usage` en Postgres, partagée entre instances.
+
+Appliquer la migration pour activer le second niveau :
+
+```bash
+psql "$DATABASE_URL" -f migrations/add-ai-usage.sql
+```
+
+Sans cette table, les fonctions continuent de répondre en se rabattant sur le compteur mémoire.
+La table grossit indéfiniment : prévoir une purge (`DELETE FROM ai_usage WHERE created_at < now() - interval '7 days';`).
+
+### Coût indicatif par appel
+
+Mesuré sur des cas réels avec `claude-opus-5` :
+
+| Outil | Tokens entrée / sortie | Coût approximatif |
+|-------|------------------------|-------------------|
+| Concierge | ~3 500 / 1 350 | ~0,05 $ |
+| Calculateur d'import | ~2 × appel | ~0,10 $ |
+| Pré-rapport photo (3 photos) | ~7 400 / 4 100 | ~0,14 $ |
+
+Le catalogue envoyé au concierge est mis en cache côté API (`cache_control`), ce qui réduit le coût des appels rapprochés. Les photos sont redimensionnées dans le navigateur à 1 400 px avant envoi : sans cela, le coût du pré-rapport serait plusieurs fois supérieur.
+
+### Garde-fous
+
+- Toute réponse publique porte une mention « indicatif, non contractuel », en français et en anglais.
+- Le concierge ne peut recommander que des véhicules présents dans `stock.json` : le serveur ne renvoie au front que des fiches issues du catalogue, jamais du texte libre du modèle.
+- Le pré-rapport photo refuse par construction de conclure sur l'état mécanique, l'historique ou l'authenticité, et ne donne jamais d'estimation de prix.
 
 ---
 

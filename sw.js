@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bespoke-cache-v5';
+const CACHE_NAME = 'bespoke-cache-v21';
 const STATIC_ASSETS = [
   // Pas de '/' ici : la racine renvoie desormais une redirection 302 par pays
   // (voir netlify.toml). cache.addAll suivrait le 302 et cache.put rejette une
@@ -6,6 +6,9 @@ const STATIC_ASSETS = [
   '/index.html',
   '/fr/index.html',
   '/fr/stock.html',
+  '/fr/concierge.html',
+  '/fr/import.html',
+  '/fr/inspection.html',
   '/fr/services.html',
   '/fr/contact.html',
   '/fr/a-propos.html',
@@ -13,6 +16,9 @@ const STATIC_ASSETS = [
   '/fr/track-record.html',
   '/en/index.html',
   '/en/stock.html',
+  '/en/concierge.html',
+  '/en/import.html',
+  '/en/inspection.html',
   '/en/services.html',
   '/en/contact.html',
   '/en/a-propos.html',
@@ -23,6 +29,9 @@ const STATIC_ASSETS = [
   '/assets/styles.css',
   '/assets/site.js',
   '/assets/img.js',
+  '/assets/ai/concierge.js',
+  '/assets/ai/import.js',
+  '/assets/ai/inspection.js',
   '/manifest.webmanifest',
   '/offline.html',
 ];

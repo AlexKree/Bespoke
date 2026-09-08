@@ -3,6 +3,13 @@
   # Produit les variantes WebP servies par le site (assets/_img).
   command = "node scripts/build-images.mjs"
 
+# NB : le timeout des fonctions synchrones (10 s par defaut, 26 s max) n'est PAS
+# reglable ici — c'est un parametre du dashboard Netlify, et seulement sur les
+# plans qui l'autorisent. Le pre-rapport photo contourne cette limite : la
+# fonction `ai-inspection` cree seulement un job (table ai_inspection_jobs) et
+# `ai-inspection-run-background` (fonction *background*, plafond 15 min) fait
+# l'analyse. Necessite DATABASE_URL et la migration migrations/add-ai-inspection-jobs.sql.
+
 # ── Langue d'arrivee selon le pays de l'IP ───────────────────────────
 # Netlify resout le pays a la peripherie ; aucune fonction n'est necessaire.
 #
@@ -84,6 +91,36 @@
   to   = "/en/stock.html"
   status = 301
 
+[[redirects]]
+  from = "/fr/concierge"
+  to   = "/fr/concierge.html"
+  status = 200
+
+[[redirects]]
+  from = "/fr/import"
+  to   = "/fr/import.html"
+  status = 200
+
+[[redirects]]
+  from = "/fr/inspection"
+  to   = "/fr/inspection.html"
+  status = 200
+
+[[redirects]]
+  from = "/en/concierge"
+  to   = "/en/concierge.html"
+  status = 200
+
+[[redirects]]
+  from = "/en/import"
+  to   = "/en/import.html"
+  status = 200
+
+[[redirects]]
+  from = "/en/inspection"
+  to   = "/en/inspection.html"
+  status = 200
+
 [[headers]]
   for = "/sw.js"
   [headers.values]
@@ -109,3 +146,8 @@
   for = "/assets/_img/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/.netlify/functions/ai-*"
+  [headers.values]
+    Cache-Control = "no-store"

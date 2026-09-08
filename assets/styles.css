@@ -1364,3 +1364,247 @@ footer{
   transition: color var(--transition), border-color var(--transition);
 }
 .heroAsideLink:hover{color:var(--gold-light);border-bottom-color:var(--line-gold)}
+
+/* ═══════════════════════════════════════════════════════════════════
+   OUTILS IA — concierge, calculateur d'import, pré-rapport photo
+═══════════════════════════════════════════════════════════════════ */
+.aiIntroNote{
+  margin-top:20px; padding:14px 16px;
+  border-left:2px solid var(--line-gold); background:var(--gold-glow);
+  border-radius:0 var(--r-md) var(--r-md) 0;
+  font-size:13.5px; color:var(--muted); line-height:1.65;
+}
+
+/* ── Sélecteur des trois outils ──────────────────────────────────── */
+.aiHub{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+@media (max-width:940px){.aiHub{grid-template-columns:1fr}}
+.aiHubCard{
+  display:flex; flex-direction:column; gap:9px;
+  padding:22px 20px 24px;
+  border:1px solid var(--line); border-radius:var(--r-lg);
+  background:var(--panel2); color:inherit; text-decoration:none;
+  transition: border-color var(--transition), background var(--transition), transform var(--transition);
+}
+a.aiHubCard:hover{border-color:var(--line-gold);background:var(--panel);transform:translateY(-2px)}
+.aiHubCard.current{border-color:var(--line-gold);background:var(--gold-glow)}
+.aiHubNum{
+  font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted2); font-variant-numeric:tabular-nums;
+}
+.aiHubName{font-family:var(--serif);font-size:21px;letter-spacing:.02em;color:var(--text)}
+.aiHubDesc{font-size:13px;line-height:1.62;color:var(--muted);flex:1}
+.aiHubCta{
+  margin-top:4px; font-size:11.5px; letter-spacing:.09em;
+  text-transform:uppercase; font-weight:600; color:var(--gold-light);
+}
+.aiHubCard.current .aiHubCta{color:var(--muted2)}
+
+/* ── Bandeau « assisté par IA · FR & EN » ────────────────────────── */
+.aiPoweredNote{
+  margin-top:18px; display:flex; gap:10px 14px; flex-wrap:wrap; align-items:center;
+  font-size:12.5px; color:var(--muted); letter-spacing:.02em; line-height:1.6;
+}
+.aiPoweredNote strong{color:var(--gold-light);font-weight:600}
+.aiPoweredNote a{color:var(--muted);border-bottom:1px solid var(--line-gold);transition:color var(--transition)}
+.aiPoweredNote a:hover{color:var(--gold-light)}
+
+.aiTool{margin-top:18px}
+.aiTool form{display:flex;flex-direction:column;gap:18px}
+.aiTool .field{display:flex;flex-direction:column;gap:7px}
+.aiTool label{
+  font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  font-weight:600; color:var(--muted);
+}
+.aiTool .fieldOpt{text-transform:none;letter-spacing:.02em;font-weight:400;color:var(--muted2)}
+.aiTool textarea.input{line-height:1.65}
+.aiTool .btn{align-self:flex-start;padding:13px 28px}
+
+/* ── Exemples cliquables ─────────────────────────────────────────── */
+.aiExamples{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.aiExamplesLabel{
+  font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted2);
+}
+.aiExample{
+  border:1px dashed var(--line-gold); background:transparent; color:var(--muted);
+  border-radius:999px; padding:6px 14px; font-size:12.5px; font-family:inherit;
+  cursor:pointer;
+  transition: color var(--transition), background var(--transition), border-color var(--transition);
+}
+.aiExample:hover{color:var(--gold-light);background:var(--gold-glow);border-style:solid}
+
+/* ── Résultats ───────────────────────────────────────────────────── */
+.aiResult{display:flex;flex-direction:column;gap:14px;margin-top:18px}
+.aiResult:empty{display:none}
+.aiBlock .kicker{margin-bottom:12px}
+.aiSummary{font-size:15.5px;line-height:1.72;color:var(--text)}
+.aiMuted{margin-top:12px;font-size:13.5px;color:var(--muted);line-height:1.65}
+.aiDisclaimer{
+  font-size:12px; color:var(--muted2); line-height:1.6;
+  padding:14px 16px; border:1px dashed var(--line); border-radius:var(--r-md);
+}
+
+.aiFacts{
+  display:grid; grid-template-columns:auto 1fr; gap:8px 18px;
+  margin-top:18px; font-size:14px;
+}
+.aiFacts dt{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);align-self:center}
+.aiFacts dd{margin:0;color:var(--text)}
+
+.aiChipRow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.aiChipLabel{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2)}
+
+/* Sous-titre a l'interieur d'un bloc (ex. facteurs de prix). */
+.kickerSub{margin:16px 0 8px}
+.aiMarketWhere{margin-top:14px;font-size:14px;line-height:1.65;color:var(--muted)}
+
+/* Champ de relance : repondre aux questions de cadrage sans quitter la page. */
+.aiRefine{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+.aiRefine textarea{resize:vertical;min-height:66px}
+.aiRefine .btn{align-self:flex-start}
+
+.aiList{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:9px}
+.aiList li{font-size:14px;line-height:1.65;color:var(--muted)}
+.aiList li::marker{color:var(--gold)}
+.aiList--warn li::marker{color:var(--red)}
+
+/* ── Correspondances du concierge ────────────────────────────────── */
+.aiMatches{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
+.aiMatch{
+  border:1px solid var(--line); border-radius:var(--r-lg);
+  background:var(--panel2); padding:16px 18px;
+  transition: border-color var(--transition), background var(--transition);
+}
+.aiMatch:hover{border-color:var(--line-gold);background:var(--panel)}
+.aiMatchHead{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
+.aiMatchTitle{font-family:var(--serif);font-size:19px;letter-spacing:.02em;color:var(--text)}
+.aiMatchYear{color:var(--muted2);font-size:15px}
+.aiScore{
+  flex-shrink:0; font-size:12px; font-weight:600; letter-spacing:.04em;
+  color:var(--gold-light); border:1px solid var(--line-gold);
+  background:var(--gold-dim); border-radius:999px; padding:3px 11px;
+}
+.aiMatchMeta{margin-top:5px;font-size:12.5px;letter-spacing:.04em;color:var(--muted2)}
+.aiMatchWhy{margin-top:10px;font-size:14px;line-height:1.65;color:var(--muted)}
+
+/* ── Tableau de chiffrage ────────────────────────────────────────── */
+.aiTable{width:100%;border-collapse:collapse;font-size:14px}
+.aiTable th, .aiTable td{
+  padding:11px 0; text-align:left; font-weight:400;
+  border-bottom:1px solid var(--line); color:var(--muted);
+}
+.aiTable td{text-align:right;color:var(--text);font-variant-numeric:tabular-nums;white-space:nowrap}
+.aiTableTotal th, .aiTableTotal td{
+  border-bottom:none; border-top:1px solid var(--line-gold);
+  padding-top:14px; font-weight:600; color:var(--gold-light); font-size:16px;
+}
+.aiExtra{margin-top:14px;font-size:13.5px;color:var(--muted)}
+.aiExtraPct{color:var(--muted2)}
+
+.aiNote{
+  margin-top:12px; padding:11px 14px; border-radius:var(--r-md);
+  font-size:13px; line-height:1.6; border:1px solid var(--line); color:var(--muted);
+}
+.aiNote--info{border-color:var(--line-gold);background:var(--gold-glow)}
+.aiNote--warning{border-color:rgba(217,95,95,.35);background:rgba(217,95,95,.08);color:#e2a0a0}
+
+.aiSteps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:14px}
+.aiSteps li{font-size:14px;line-height:1.65}
+.aiSteps li::marker{color:var(--gold);font-variant-numeric:tabular-nums}
+.aiSteps strong{display:block;color:var(--text);font-weight:600;margin-bottom:3px}
+.aiSteps span{color:var(--muted)}
+.aiTimeline{
+  margin-top:18px; padding-top:14px; border-top:1px solid var(--line);
+  font-size:13.5px; color:var(--muted);
+}
+.aiTimeline strong{color:var(--gold-light)}
+
+/* ── Dépôt de photos ─────────────────────────────────────────────── */
+.aiDrop{
+  border:1px dashed var(--line-gold); border-radius:var(--r-lg);
+  background:var(--panel2);
+  transition: background var(--transition), border-color var(--transition);
+}
+.aiDrop.over{background:var(--gold-glow);border-color:var(--gold)}
+.aiDropInner{
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  padding:38px 20px; cursor:pointer; text-align:center;
+}
+.aiDropTitle{
+  font-family:var(--serif); font-size:19px; letter-spacing:.03em;
+  color:var(--text); text-transform:none;
+}
+.aiDropSub{font-size:12.5px;color:var(--muted2);letter-spacing:.02em;text-transform:none;font-weight:400}
+
+.aiThumbs{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.aiThumbs:empty{display:none}
+.aiThumb{position:relative;width:92px;height:70px;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--line)}
+.aiThumb img{width:100%;height:100%;object-fit:cover;display:block}
+.aiThumbX{
+  position:absolute; top:3px; right:3px; width:22px; height:22px;
+  border:none; border-radius:50%; background:rgba(0,0,0,.72); color:#fff;
+  font-size:15px; line-height:1; cursor:pointer;
+}
+.aiThumbX:hover{background:var(--red)}
+.aiThumbCount{font-size:12px;color:var(--muted2);letter-spacing:.06em}
+
+/* ── Observations du pré-rapport ─────────────────────────────────── */
+.aiObs{display:flex;flex-direction:column;gap:12px}
+.aiObsRow{
+  display:flex; gap:14px; align-items:flex-start;
+  padding:13px 15px; border-radius:var(--r-md);
+  border:1px solid var(--line); background:var(--panel2);
+}
+.aiObsRow--attention{border-color:rgba(255,165,0,.32);background:rgba(255,165,0,.06)}
+.aiObsRow--alerte{border-color:rgba(217,95,95,.38);background:rgba(217,95,95,.08)}
+.aiSev{
+  flex-shrink:0; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+  font-weight:600; color:var(--muted2); padding-top:3px; min-width:78px;
+}
+.aiObsRow--attention .aiSev{color:#ffb648}
+.aiObsRow--alerte .aiSev{color:#e87070}
+.aiObsZone{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:4px}
+.aiObsRow p{font-size:14px;line-height:1.65;color:var(--muted)}
+
+/* ── Attente ─────────────────────────────────────────────────────── */
+.aiSkeleton{display:flex;flex-direction:column;gap:12px}
+.aiSkeleton span{
+  display:block; height:58px; border-radius:var(--r-lg);
+  background:linear-gradient(90deg, var(--panel2) 0%, var(--panel) 50%, var(--panel2) 100%);
+  background-size:220% 100%;
+  animation: aiShimmer 1.4s ease-in-out infinite;
+}
+.aiSkeleton span:nth-child(2){height:120px;animation-delay:.1s}
+.aiSkeleton span:nth-child(3){height:90px;animation-delay:.2s}
+.aiSkeleton span:nth-child(4){height:70px;animation-delay:.3s}
+/* Variante courte : l'analyse redigee arrive apres le chiffrage deja affiche. */
+.aiSkeleton--text span{height:44px}
+.aiSkeleton--text span:nth-child(2){height:44px;width:70%}
+.aiPending{margin:10px 2px 0;font-size:13px;color:var(--muted)}
+@keyframes aiShimmer{0%{background-position:120% 0}100%{background-position:-120% 0}}
+@media (prefers-reduced-motion: reduce){
+  .aiSkeleton span{animation:none}
+}
+
+/* ── Cartes outils sur l'accueil ─────────────────────────────────── */
+.aiToolCard{display:flex;flex-direction:column;gap:8px}
+.aiToolCard h3{margin-top:2px}
+.aiToolCard p{flex:1}
+.aiToolCta{
+  margin-top:6px; font-size:12.5px; letter-spacing:.05em; color:var(--gold-light);
+  transition: color var(--transition);
+}
+.aiToolCard:hover .aiToolCta{color:#e6cc88}
+
+/* ── Liens croisés entre outils ──────────────────────────────────── */
+.aiCrossLinks{
+  display:flex; gap:14px; flex-wrap:wrap; align-items:center;
+  margin:8px 0 20px; padding-top:18px; border-top:1px solid var(--line);
+}
+.aiCrossLabel{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2)}
+.aiCrossLinks a{
+  font-size:13.5px; color:var(--muted);
+  border-bottom:1px solid transparent;
+  transition: color var(--transition), border-color var(--transition);
+}
+.aiCrossLinks a:hover{color:var(--gold-light);border-bottom-color:var(--line-gold)}
+
