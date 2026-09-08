@@ -15,8 +15,12 @@
   var lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
 
   var MAX_FILES = 6;
-  var MAX_EDGE = 1400;   // px — suffisant pour l'analyse, garde l'appel sous le budget temps
-  var QUALITY = 0.82;
+  var MAX_EDGE = 1200;   // px — suffisant pour l'analyse visuelle
+  var QUALITY = 0.74;
+  // Netlify rejette a la peripherie (HTTP 413) toute requete de fonction au-dela
+  // de 6 Mo, base64 compris. On vise large en dessous : si le lot depasse, on
+  // recompresse par paliers avant l'envoi (ensurePayloadUnder).
+  var PAYLOAD_LIMIT = 3.8 * 1024 * 1024;
 
   var T = lang === 'en' ? {
     sending: 'Analysing photos…', send: 'Generate the pre-report',
@@ -95,6 +99,40 @@
       img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('decode')); };
       img.src = url;
     });
+  }
+
+  function payloadBytes() {
+    return files.reduce(function (n, f) { return n + f.base64.length * 0.75; }, 0);
+  }
+
+  function reencode(dataUrl, edge, quality) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.onload = function () {
+        var scale = Math.min(1, edge / Math.max(img.naturalWidth, img.naturalHeight));
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.naturalWidth * scale);
+        canvas.height = Math.round(img.naturalHeight * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = function () { reject(new Error('reencode')); };
+      img.src = dataUrl;
+    });
+  }
+
+  /** Garantit que le lot tient sous PAYLOAD_LIMIT : recompresse toutes les photos
+      par paliers de plus en plus serres jusqu'a y arriver. Sans effet si le lot
+      est deja assez leger (cas courant a 1200 px / q0.74). */
+  async function ensurePayloadUnder() {
+    var steps = [[1100, 0.7], [1000, 0.64], [900, 0.58], [800, 0.5]];
+    for (var s = 0; s < steps.length && payloadBytes() > PAYLOAD_LIMIT; s++) {
+      for (var i = 0; i < files.length; i++) {
+        var u = await reencode(files[i].dataUrl, steps[s][0], steps[s][1]);
+        files[i].dataUrl = u;
+        files[i].base64 = u.split(',')[1];
+      }
+    }
   }
 
   function renderThumbs() {
@@ -260,6 +298,10 @@
           else setTimeout(poll, POLL_MS);
         });
     }
+
+    try {
+      await ensurePayloadUnder();
+    } catch (_) { /* on tente l'envoi tel quel */ }
 
     try {
       var res = await fetch('/.netlify/functions/ai-inspection-background', {
