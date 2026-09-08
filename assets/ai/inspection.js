@@ -14,11 +14,12 @@
   var status = document.getElementById('inspectionStatus');
   var lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
 
-  // 4 photos / 1300 px : Haiku 4.5 (le modele de la fonction) analyse ce lot en
-  // ~5-7 s, sous les 10 s d'une fonction Netlify synchrone. Mettre une vue
-  // d'ensemble + les zones qui posent question en gros plan.
+  // 4 photos / 1024 px : configuration mesuree a ~5 s avec Haiku 4.5, sous les
+  // 10 s d'une fonction Netlify synchrone. 1300 px (1,6x les pixels) faisait
+  // deborder. Mettre une vue d'ensemble + les zones qui posent question en gros
+  // plan et bien eclairees.
   var MAX_FILES = 4;
-  var MAX_EDGE = 1300;
+  var MAX_EDGE = 1024;
   var QUALITY = 0.82;
 
   var T = lang === 'en' ? {

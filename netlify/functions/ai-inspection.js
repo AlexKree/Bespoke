@@ -13,9 +13,10 @@
  * de panne. Le timeout Netlify (10 s par defaut, 26 s seulement sur ticket au
  * support, plan Pro) est la vraie contrainte. Constat apres essais successifs :
  * sonnet-5 en vision ne tient PAS dans 10 s, meme a 2 photos (timeout ~9,5 s).
- * => modele HAIKU 4.5 (rapide : ~5-7 s a 4 photos), avec un prompt durci pour
- *    compenser (methode zone par zone, "cherche le scotch noir peu contraste",
- *    formules qui minimisent un defaut interdites).
+ * => modele HAIKU 4.5, 4 photos a 1024 px (config mesuree ~5 s ; 1300 px
+ *    debordait), avec un prompt durci pour compenser sa vision plus juste
+ *    (methode zone par zone, "cherche le scotch noir peu contraste", formules
+ *    qui minimisent un defaut interdites).
  *  - appel `messages.create` avec outil force (pas la voie `output_config.effort`,
  *    plus lente) ;
  *  - client SDK dedie a timeout 9,5 s -> echec en JSON propre plutot qu'un 504.
@@ -170,7 +171,7 @@ exports.handler = async function (event) {
   try {
     const response = await getVisionClient().messages.create({
       model: INSPECTION_MODEL,
-      max_tokens: 2400,
+      max_tokens: 2000,
       system: SYSTEM,
       messages: [{ role: 'user', content }],
       tools: [{
