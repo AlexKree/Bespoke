@@ -71,6 +71,21 @@
   to   = "/en/stock.html"
   status = 200
 
+# Fiche vehicule retiree du stock : renvoyer vers le catalogue plutot qu'un 404
+# (un lien a pu etre envoye par mail). Sans force = true, la regle ne s'applique
+# QUE si aucune page statique /fr|/en/stock/<slug>.html ne correspond : les
+# fiches existantes sont servies normalement. 302 car un slug peut revenir si le
+# vehicule est remis en vente.
+[[redirects]]
+  from = "/fr/stock/*"
+  to   = "/fr/stock.html"
+  status = 302
+
+[[redirects]]
+  from = "/en/stock/*"
+  to   = "/en/stock.html"
+  status = 302
+
 [[redirects]]
   from = "/setup-staff"
   to   = "/setup-staff.html"

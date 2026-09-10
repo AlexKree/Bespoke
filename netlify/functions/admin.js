@@ -40,6 +40,40 @@ function slugify(s) {
   return (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, MAX_SLUG_LENGTH) || 'img';
 }
 
+/** Slug d'URL pour une fiche vehicule : pas de troncature, accents retires. */
+function vehicleSlugify(s) {
+  return String(s || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+/**
+ * Garantit un `slug` unique et stable sur chaque vehicule de la liste.
+ * Ne touche jamais un slug deja present : une URL publiee ne doit pas bouger.
+ * Mute la liste en place.
+ */
+function ensureSlugs(list) {
+  const seen = new Set();
+  for (const it of list) {
+    if (it && typeof it.slug === 'string' && it.slug.trim()) seen.add(it.slug.trim());
+  }
+  for (const it of list) {
+    if (!it || (typeof it.slug === 'string' && it.slug.trim())) continue;
+    const name = (it.title && (it.title.fr || it.title.en))
+      || [it.make, it.model].filter(Boolean).join(' ');
+    let base = vehicleSlugify(name);
+    if (it.year && !base.split('-').includes(String(it.year))) {
+      base = base ? `${base}-${it.year}` : String(it.year);
+    }
+    base = base || vehicleSlugify(String(it.id || '')) || 'vehicule';
+    let slug = base;
+    let n = 2;
+    while (seen.has(slug)) slug = `${base}-${n++}`;
+    it.slug = slug;
+    seen.add(slug);
+  }
+}
+
 function getExtFromMime(mime, filename) {
   const ext = MIME_TO_EXT[(mime || '').toLowerCase()];
   if (ext) return ext;
@@ -420,6 +454,11 @@ exports.handler = async function (event) {
     if (!Array.isArray(stock.items)) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'stock.items must be an array' }) };
     }
+
+    // Slug stable par vehicule. L'URL publique /fr|/en/stock/<slug>.html ne doit
+    // jamais changer : on genere un slug pour toute fiche qui n'en a pas (ajout
+    // via l'admin, donnee historique), on le fige, et on garantit l'unicite.
+    ensureSlugs(stock.items);
 
     const content = Buffer.from(JSON.stringify(stock, null, 2) + '\n').toString('base64');
     const res = await githubRequest('PUT', filePath, GITHUB_TOKEN, {
