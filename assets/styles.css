@@ -505,6 +505,14 @@ footer{
 .stockStaticMeta{color:rgba(255,255,255,.55); font-size:13px}
 @media (max-width:620px){.stockStaticList ul{columns:1}}
 
+/* Navigation par marque / catégorie (pages de collection + page stock) */
+.stockFacets{margin:18px 0 4px; font-size:14px; line-height:2}
+.stockFacets > div{margin:2px 0}
+.stockFacetsLabel{color:rgba(255,255,255,.55); margin-right:6px}
+.stockFacets a{color:var(--gold); text-decoration:none}
+.stockFacets a:hover{text-decoration:underline}
+.stockFacets a[aria-current="page"]{color:var(--gold-light); font-weight:600; text-decoration:underline}
+
 /* ── Stock card ──────────────────────────────────────────────────── */
 .stockCard{
   display:flex; flex-direction:column;
