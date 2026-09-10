@@ -21,7 +21,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SITE = 'https://thebespokecar.com';
+const SITE = 'https://www.thebespokecar.com';
 const LANGS = ['fr', 'en'];
 
 const BUILD_DATE = new Date();
