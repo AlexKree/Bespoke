@@ -93,6 +93,39 @@ const cdn = (path, w, q = 72) =>
 const cdnRaw = (path, w, q = 72) =>
   `${SITE}/.netlify/images?url=${encodeURIComponent(path)}&w=${w}&fm=webp&q=${q}`;
 
+/* Variantes WebP pre-generees par build-images.mjs (assets/_img). On sert
+   l'URL statique quand la variante figure au manifeste ; sinon on retombe sur
+   l'Image CDN Netlify (photo ajoutee depuis le dernier build). Largeurs a
+   garder alignees sur WIDTHS.stockModal / stockCard / thumb de build-images. */
+let imgManifest = {};
+try {
+  imgManifest = JSON.parse(readFileSync(join(ROOT, 'assets/_img/manifest.json'), 'utf8'));
+} catch (_) { /* pas encore construit : tout passe par le CDN */ }
+
+const normPath = (p) => '/' + String(p == null ? '' : p).replace(/^\/+/, '');
+
+const variantUrl = (src, w) =>
+  `/assets/_img/${normPath(src).replace(/^\/assets\//, '').replace(/\.[^.\/]+$/, '')}-${w}.webp`;
+
+/** URL d'une image a la largeur w : variante statique si dispo, sinon CDN. */
+function img(src, w) {
+  const have = imgManifest[normPath(src)];
+  return have && have.includes(w) ? variantUrl(src, w) : cdn(src, w);
+}
+
+/** srcset restreint aux largeurs reellement pre-generees (sinon CDN complet). */
+function imgSrcset(src, widths) {
+  const have = imgManifest[normPath(src)] || [];
+  const avail = widths.filter((w) => have.includes(w));
+  const use = avail.length ? avail : widths;
+  const fn = avail.length ? variantUrl : cdn;
+  return use.map((w) => `${fn(src, w)} ${w}w`).join(', ');
+}
+
+/** Repli inline : si la variante statique manque, bascule sur le CDN. */
+const imgOnErr = (src, w) =>
+  `this.onerror=null;this.removeAttribute('srcset');this.src='${cdn(src, w)}'`;
+
 function eur(n, l) {
   if (n == null) return null;
   return new Intl.NumberFormat(l === 'en' ? 'en-GB' : 'fr-FR',
@@ -225,12 +258,13 @@ function renderGallery(item, alt) {
   return `
       <div class="vpMedia">
         <img id="vpMain" class="vpMainImage"
-             src="${cdn(main, 1200)}"
-             srcset="${[600, 900, 1200].map((w) => `${cdn(main, w)} ${w}w`).join(', ')}"
+             src="${img(main, 1000)}"
+             srcset="${imgSrcset(main, [500, 760, 1000])}"
              sizes="(max-width: 900px) 100vw, 660px"
-             alt="${esc(alt)}" width="1200" height="800" fetchpriority="high" decoding="async"/>
+             onerror="${imgOnErr(main, 1000)}"
+             alt="${esc(alt)}" width="1000" height="667" fetchpriority="high" decoding="async"/>
 ${thumbs.length > 1 ? `        <div class="vpThumbs">
-${thumbs.map((p, i) => `          <button type="button" class="vpThumb${i === 0 ? ' active' : ''}" data-full="${cdn(p, 1200)}" aria-label="${esc(alt)} — ${i + 1}"><img src="${cdn(p, 200)}" alt="" width="120" height="80" loading="lazy" decoding="async"/></button>`).join('\n')}
+${thumbs.map((p, i) => `          <button type="button" class="vpThumb${i === 0 ? ' active' : ''}" data-full="${img(p, 1000)}" aria-label="${esc(alt)} — ${i + 1}"><img src="${img(p, 160)}" onerror="${imgOnErr(p, 160)}" alt="" width="120" height="80" loading="lazy" decoding="async"/></button>`).join('\n')}
         </div>` : ''}
       </div>`;
 }
@@ -265,9 +299,9 @@ function renderRelated(item, all, l, t) {
       <div class="vpRelated">
 ${picks.map((v) => {
     const title = (v.title && (v.title[l] || v.title.fr)) || v.model || v.id;
-    const img = v.images[0];
+    const img0 = v.images[0];
     return `        <a class="vpRelatedCard" href="${esc(v.slug)}.html">
-          ${img ? `<img src="${cdn(img, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"/>` : '<div class="vpRelatedNoImg"></div>'}
+          ${img0 ? `<img src="${img(img0, 560)}" onerror="${imgOnErr(img0, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"/>` : '<div class="vpRelatedNoImg"></div>'}
           <div class="vpRelatedBody">
             <span class="vpRelatedTitle">${esc(title)}</span>
             <span class="vpRelatedMeta">${esc([v.year, v.price_eur != null ? eur(v.price_eur, l) : t.onRequest].filter(Boolean).join(' · '))}</span>
@@ -358,11 +392,11 @@ function computeFacets(pool) {
 
 function facetCard(v, l, t) {
   const title = (v.title && (v.title[l] || v.title.fr)) || v.model || v.id;
-  const img = v.images[0];
+  const img0 = v.images[0];
   const meta = [v.year, v.price_eur != null ? eur(v.price_eur, l) : t.onRequest, v.country || null]
     .filter(Boolean).join(' · ');
   return `        <a class="vpRelatedCard" href="${esc(v.slug)}.html">
-          ${img ? `<img src="${cdn(img, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"/>` : '<div class="vpRelatedNoImg"></div>'}
+          ${img0 ? `<img src="${img(img0, 560)}" onerror="${imgOnErr(img0, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"/>` : '<div class="vpRelatedNoImg"></div>'}
           <div class="vpRelatedBody">
             <span class="vpRelatedTitle">${esc(title)}</span>
             <span class="vpRelatedMeta">${esc(meta)}</span>
@@ -779,6 +813,57 @@ const csvFeed = '﻿' + [
 ].join('\r\n') + '\r\n';
 writeFileSync(join(ROOT, 'stock-feed.csv'), csvFeed);
 
+/* 3. Flux Google Merchant Center — RSS 2.0 + namespace `g:` (base Google).
+   Meme format que le catalogue Meta : un seul flux pour les deux.
+   Merchant Center exige un prix : les vehicules « prix sur demande » en sont
+   exclus (les publier avec un prix nul est refuse). */
+const gmcItems = available.filter((v) => v.price_eur != null);
+const gmcSkipped = available.length - gmcItems.length;
+
+function gmcItem(v) {
+  const abs = (p) => `${SITE}${p.startsWith('/') ? '' : '/'}${p}`;
+  const title = [v.make, v.model, v.year].filter(Boolean).join(' ')
+    || (v.title && (v.title.fr || v.title.en)) || v.id;
+  const desc = ((v.description && (v.description.fr || v.description.en)) || title)
+    .replace(/\s+/g, ' ').trim().slice(0, 4900);
+  const extra = v.images.slice(1, 11)
+    .map((p) => `      <g:additional_image_link>${xmlEsc(abs(p))}</g:additional_image_link>`).join('\n');
+  return [
+    '    <item>',
+    `      <g:id>${xmlEsc(v.id)}</g:id>`,
+    `      <title>${xmlEsc(title)}</title>`,
+    `      <description>${xmlEsc(desc)}</description>`,
+    `      <link>${xmlEsc(`${SITE}/fr/stock/${v.slug}.html`)}</link>`,
+    v.images[0] ? `      <g:image_link>${xmlEsc(abs(v.images[0]))}</g:image_link>` : '',
+    extra,
+    `      <g:availability>in_stock</g:availability>`,
+    `      <g:condition>used</g:condition>`,
+    `      <g:price>${Number(v.price_eur).toFixed(2)} EUR</g:price>`,
+    v.make ? `      <g:brand>${xmlEsc(v.make)}</g:brand>` : '',
+    `      <g:identifier_exists>no</g:identifier_exists>`,
+    `      <g:google_product_category>916</g:google_product_category>`,
+    `      <g:product_type>${xmlEsc(['Véhicules', v.vehicle_type === 'motorcycle' ? 'Motos' : 'Voitures de collection', v.make].filter(Boolean).join(' > '))}</g:product_type>`,
+    v.year ? `      <g:custom_label_0>${v.year}</g:custom_label_0>` : '',
+    v.country ? `      <g:custom_label_1>${xmlEsc(v.country)}</g:custom_label_1>` : '',
+    v.mileage_km != null ? `      <g:custom_label_2>${v.mileage_km} km</g:custom_label_2>` : '',
+    '    </item>',
+  ].filter(Boolean).join('\n');
+}
+
+const gmcFeed = [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">',
+  '  <channel>',
+  '    <title>The Bespoke Car — Stock</title>',
+  `    <link>${SITE}/fr/stock.html</link>`,
+  '    <description>Voitures de collection et de prestige disponibles.</description>',
+  ...gmcItems.map(gmcItem),
+  '  </channel>',
+  '</rss>',
+  '',
+].join('\n');
+writeFileSync(join(ROOT, 'stock-feed-google.xml'), gmcFeed);
+
 /* ── Liste crawlable injectee dans stock.html (FR + EN) ───────────────── */
 // La grille de stock.html est rendue en JavaScript : le HTML brut ne contient
 // aucun lien vers les fiches. On insere ici une liste statique de liens entre
@@ -843,6 +928,8 @@ console.log(`${written} pages vehicule generees (${items.length} vehicules x ${L
 console.log(`${facetPages} pages de collection generees (${facets.length} facettes x ${LANGS.length} langues) : ${facets.map((f) => f.slug).join(', ')}`);
 console.log(`sitemap.xml : ${urls.length} URL`);
 console.log(`stock-feed.xml / stock-feed.csv : ${feedRows.length} vehicules disponibles`);
+console.log(`stock-feed-google.xml (Merchant Center / Meta) : ${gmcItems.length} avec prix` +
+  (gmcSkipped ? `, ${gmcSkipped} exclu(s) faute de prix` : ''));
 console.log(`liste crawlable : ${listOk}/${LANGS.length} pages stock.html (${listUpdated} mise(s) a jour ce build)`);
 console.log('robots.txt ecrit');
 if (warnings.length) {
