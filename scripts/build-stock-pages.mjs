@@ -24,6 +24,36 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://thebespokecar.com';
 const LANGS = ['fr', 'en'];
 
+const BUILD_DATE = new Date();
+const TODAY = BUILD_DATE.toISOString().slice(0, 10);
+// Les offres portent une date de validite : un an glissant a partir du build.
+const PRICE_VALID_UNTIL = new Date(BUILD_DATE.getTime() + 365 * 864e5).toISOString().slice(0, 10);
+
+// Vendeur, aligne sur le noeud Organization de la page d'accueil (meme @id).
+const DEALER = {
+  '@type': ['AutoDealer', 'Organization'],
+  '@id': `${SITE}/#organization`,
+  name: 'The Bespoke Car',
+  url: SITE,
+  logo: `${SITE}/assets/icons/icon-512.svg`,
+  image: `${SITE}/assets/photos/og-inventory.jpg`,
+  email: 'contact@thebespokecar.com',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '1530 Chemin de Peyniblou',
+    addressLocality: 'Sophia-Antipolis',
+    postalCode: '06560',
+    addressCountry: 'FR',
+  },
+  areaServed: ['FR', 'BE', 'CH', 'LU', 'DE', 'IT', 'ES', 'GB'],
+  sameAs: [
+    'https://x.com/TheBespokeCar',
+    'https://www.linkedin.com/company/112966970',
+    'https://www.facebook.com/share/1GVeANHskq/?mibextid=wwXIfr',
+    'https://www.instagram.com/thebespokecar',
+  ],
+};
+
 const stock = JSON.parse(readFileSync(join(ROOT, 'assets/stock/stock.json'), 'utf8'));
 const items = stock.items || [];
 
@@ -106,13 +136,28 @@ function saleLabel(cat, t) {
 
 /* ── Donnees structurees ──────────────────────────────────────────────── */
 
+// Moteur : ne produit un noeud EngineSpecification que si une donnee existe.
+function engineSpec(item) {
+  const power = item.power_hp != null ? Number(item.power_hp) : null;
+  const cc = item.engine_cc != null ? Number(item.engine_cc) : null;
+  if (power == null && cc == null && !item.engine) return null;
+  return {
+    '@type': 'EngineSpecification',
+    ...(item.engine ? { name: item.engine } : {}),
+    ...(power != null ? { enginePower: { '@type': 'QuantitativeValue', value: power, unitCode: 'BHP' } } : {}),
+    ...(cc != null ? { engineDisplacement: { '@type': 'QuantitativeValue', value: cc, unitCode: 'CMQ' } } : {}),
+  };
+}
+
 function jsonLd(item, l, t, url) {
   const title = (item.title && (item.title[l] || item.title.fr)) || item.model || item.id;
   const desc = (item.description && (item.description[l] || item.description.fr)) || title;
   const images = item.images.slice(0, 6).map((p) => cdnRaw(p, 1200));
+  const engine = engineSpec(item);
 
   const vehicle = {
     '@type': item.vehicle_type === 'motorcycle' ? 'Motorcycle' : 'Car',
+    '@id': `${url}#vehicle`,
     name: title,
     ...(item.make ? { brand: { '@type': 'Brand', name: item.make } } : {}),
     ...(item.model ? { model: item.model } : {}),
@@ -120,19 +165,37 @@ function jsonLd(item, l, t, url) {
     ...(item.mileage_km ? {
       mileageFromOdometer: { '@type': 'QuantitativeValue', value: item.mileage_km, unitCode: 'KMT' },
     } : {}),
+    // Champs optionnels : emis uniquement si stock.json les renseigne. Le
+    // chantier de completude des donnees enrichit donc le balisage sans
+    // toucher a ce script.
+    ...(item.transmission ? { vehicleTransmission: item.transmission } : {}),
+    ...(item.fuel_type ? { fuelType: item.fuel_type } : {}),
+    ...(engine ? { vehicleEngine: engine } : {}),
+    ...(item.body_type ? { bodyType: item.body_type } : {}),
+    ...(item.doors != null ? { numberOfDoors: Number(item.doors) } : {}),
+    ...(item.drive ? { driveWheelConfiguration: item.drive } : {}),
+    ...(item.steering ? { steeringPosition: item.steering } : {}),
+    ...(item.exterior_color ? { color: item.exterior_color } : {}),
+    ...(item.interior_color ? { vehicleInteriorColor: item.interior_color } : {}),
+    ...(item.vin ? { vehicleIdentificationNumber: item.vin } : {}),
+    ...(item.country ? { availableAtOrFrom: { '@type': 'Place', address: item.country } } : {}),
     ...(images.length ? { image: images } : {}),
-    description: desc.slice(0, 900),
+    description: desc.slice(0, 2400),
     offers: {
       '@type': 'Offer',
       url,
       priceCurrency: 'EUR',
-      ...(item.price_eur != null ? { price: item.price_eur } : {}),
+      ...(item.price_eur != null
+        ? { price: item.price_eur, priceValidUntil: PRICE_VALID_UNTIL }
+        : {}),
       availability: item.status === 'sold'
         ? 'https://schema.org/SoldOut'
         : item.status === 'reserved'
           ? 'https://schema.org/LimitedAvailability'
           : 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/UsedCondition',
+      businessFunction: 'http://purl.org/goodrelations/v1#Sell',
+      ...(item.country ? { areaServed: item.country } : {}),
       seller: { '@id': `${SITE}/#organization` },
     },
   };
@@ -146,7 +209,7 @@ function jsonLd(item, l, t, url) {
     ],
   };
 
-  return JSON.stringify({ '@context': 'https://schema.org', '@graph': [vehicle, breadcrumb] });
+  return JSON.stringify({ '@context': 'https://schema.org', '@graph': [vehicle, breadcrumb, DEALER] });
 }
 
 /* ── Rendu ────────────────────────────────────────────────────────────── */
@@ -362,7 +425,8 @@ const STATIC = [
 ];
 const MARKET = { fr: 'marche.html', en: 'market.html' };
 const GALLERY = { fr: 'galerie.html', en: 'gallery.html' };
-const today = new Date().toISOString().slice(0, 10);
+
+const available = items.filter((i) => i.slug && i.status !== 'sold');
 
 const urls = [`  <url><loc>${SITE}/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>`];
 for (const l of LANGS) {
@@ -371,25 +435,170 @@ for (const l of LANGS) {
   }
   urls.push(`  <url><loc>${SITE}/${l}/${MARKET[l]}</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>`);
   urls.push(`  <url><loc>${SITE}/${l}/${GALLERY[l]}</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>`);
-  for (const item of items) {
-    if (!item.slug || item.status === 'sold') continue; // les vendus sont en noindex
-    urls.push(`  <url><loc>${SITE}/${l}/stock/${item.slug}.html</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`);
+}
+// Fiches vehicule : une entree par langue, liees entre elles par hreflang, avec
+// les images en extension image-sitemap (utile pour Google Images sur des autos).
+for (const l of LANGS) {
+  for (const item of available) {
+    const alternates = LANGS.map((al) =>
+      `    <xhtml:link rel="alternate" hreflang="${al}" href="${SITE}/${al}/stock/${item.slug}.html"/>`
+    ).concat(`    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE}/en/stock/${item.slug}.html"/>`);
+    const imgs = item.images.slice(0, 6).map((p) =>
+      `    <image:image><image:loc>${SITE}${p.startsWith('/') ? '' : '/'}${p}</image:loc></image:image>`
+    );
+    urls.push(
+      `  <url><loc>${SITE}/${l}/stock/${item.slug}.html</loc>` +
+      `<lastmod>${TODAY}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority>\n` +
+      [...alternates, ...imgs].join('\n') + '\n  </url>'
+    );
   }
 }
 
 writeFileSync(join(ROOT, 'sitemap.xml'), [
   '<?xml version="1.0" encoding="UTF-8"?>',
-  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+  '        xmlns:xhtml="http://www.w3.org/1999/xhtml"',
+  '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">',
   urls.join('\n'),
   '</urlset>',
   '',
 ].join('\n'));
 
 writeFileSync(join(ROOT, 'robots.txt'),
-  `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /setup-staff.html\n\nSitemap: ${SITE}/sitemap.xml\n`);
+  `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /setup-staff.html\n\n` +
+  `Sitemap: ${SITE}/sitemap.xml\n`);
+
+/* ── Flux de distribution (portails, Merchant Center, catalogue Meta) ──── */
+// Meme source que les fiches : un enregistrement admin -> rebuild -> flux a jour.
+// Seuls les vehicules disponibles y figurent ; un vehicule vendu en sort aussitot.
+
+function feedFields(item) {
+  const titleFr = (item.title && (item.title.fr || item.title.en)) || item.model || item.id;
+  const titleEn = (item.title && (item.title.en || item.title.fr)) || item.model || item.id;
+  const descFr = (item.description && (item.description.fr || item.description.en)) || '';
+  const descEn = (item.description && (item.description.en || item.description.fr)) || '';
+  return {
+    id: item.id,
+    ref: item.ref || item.id,
+    vin: item.vin || '',
+    url_fr: `${SITE}/fr/stock/${item.slug}.html`,
+    url_en: `${SITE}/en/stock/${item.slug}.html`,
+    title_fr: titleFr,
+    title_en: titleEn,
+    make: item.make || '',
+    model: item.model || '',
+    year: item.year || '',
+    price_eur: item.price_eur != null ? item.price_eur : '',
+    price_on_request: item.price_eur == null ? 'true' : 'false',
+    mileage_km: item.mileage_km != null ? item.mileage_km : '',
+    vehicle_type: item.vehicle_type || 'car',
+    body_type: item.body_type || '',
+    fuel_type: item.fuel_type || '',
+    transmission: item.transmission || '',
+    power_hp: item.power_hp != null ? item.power_hp : '',
+    engine_cc: item.engine_cc != null ? item.engine_cc : '',
+    exterior_color: item.exterior_color || '',
+    interior_color: item.interior_color || '',
+    steering: item.steering || '',
+    country: item.country || '',
+    condition: 'used',
+    availability: 'in stock',
+    sale_category: item.sale_category || 'both',
+    description_fr: descFr.replace(/\s+/g, ' ').trim(),
+    description_en: descEn.replace(/\s+/g, ' ').trim(),
+    image_links: item.images.map((p) => `${SITE}${p.startsWith('/') ? '' : '/'}${p}`),
+    date_modified: TODAY,
+  };
+}
+
+const feedRows = available.map(feedFields);
+
+// 1. Flux XML — schema generique, lisible, adaptable par portail.
+const xmlEsc = (s) => String(s == null ? '' : s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const xmlFeed = [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  `<vehicles generated="${BUILD_DATE.toISOString()}" source="${SITE}" count="${feedRows.length}">`,
+];
+for (const r of feedRows) {
+  xmlFeed.push('  <vehicle>');
+  for (const [k, v] of Object.entries(r)) {
+    if (k === 'image_links') {
+      xmlFeed.push('    <images>');
+      for (const u of v) xmlFeed.push(`      <image>${xmlEsc(u)}</image>`);
+      xmlFeed.push('    </images>');
+    } else {
+      xmlFeed.push(`    <${k}>${xmlEsc(v)}</${k}>`);
+    }
+  }
+  xmlFeed.push('  </vehicle>');
+}
+xmlFeed.push('</vehicles>', '');
+writeFileSync(join(ROOT, 'stock-feed.xml'), xmlFeed.join('\n'));
+
+// 2. Flux CSV — accepte par la plupart des portails et par le catalogue Meta.
+const csvCols = Object.keys(feedRows[0] || feedFields(items[0]));
+const csvEsc = (v) => {
+  const s = Array.isArray(v) ? v.join('|') : String(v == null ? '' : v);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+};
+const csvFeed = '﻿' + [
+  csvCols.join(','),
+  ...feedRows.map((r) => csvCols.map((c) => csvEsc(r[c])).join(',')),
+].join('\r\n') + '\r\n';
+writeFileSync(join(ROOT, 'stock-feed.csv'), csvFeed);
+
+/* ── Liste crawlable injectee dans stock.html (FR + EN) ───────────────── */
+// La grille de stock.html est rendue en JavaScript : le HTML brut ne contient
+// aucun lien vers les fiches. On insere ici une liste statique de liens entre
+// deux marqueurs. stock.js la masque une fois la grille interactive prete ;
+// sans JavaScript, elle sert de repli.
+
+const LIST_START = '<!-- STOCK:LIST:START -->';
+const LIST_END = '<!-- STOCK:LIST:END -->';
+const listIntro = {
+  fr: 'Véhicules disponibles',
+  en: 'Available vehicles',
+};
+
+let listOk = 0;
+let listUpdated = 0;
+for (const l of LANGS) {
+  const file = join(ROOT, l, 'stock.html');
+  if (!existsSync(file)) { warnings.push(`${l}/stock.html introuvable : liste non injectee`); continue; }
+  let html = readFileSync(file, 'utf8');
+  if (!html.includes(LIST_START) || !html.includes(LIST_END)) {
+    warnings.push(`${l}/stock.html : marqueurs ${LIST_START} absents, liste non injectee`);
+    continue;
+  }
+  listOk++;
+  const lis = available.map((item) => {
+    const title = (item.title && (item.title[l] || item.title.fr)) || item.model || item.id;
+    const bits = [
+      item.year,
+      item.price_eur != null ? eur(item.price_eur, l) : T[l].onRequest,
+      item.country || null,
+    ].filter(Boolean).join(' · ');
+    return `          <li><a href="stock/${esc(item.slug)}.html">${esc(title)}</a>` +
+           `<span class="stockStaticMeta"> — ${esc(bits)}</span></li>`;
+  }).join('\n');
+  const block =
+    `${LIST_START}\n` +
+    `      <nav class="stockStaticList" id="stockStaticList" aria-label="${esc(listIntro[l])}">\n` +
+    `        <h2 class="visually-hidden">${esc(listIntro[l])}</h2>\n` +
+    `        <ul>\n${lis}\n        </ul>\n` +
+    `      </nav>\n      ${LIST_END}`;
+  const next = html.replace(
+    new RegExp(LIST_START.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[\\s\\S]*?' + LIST_END.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+    () => block
+  );
+  if (next !== html) { writeFileSync(file, next); listUpdated++; }
+}
 
 console.log(`${written} pages vehicule generees (${items.length} vehicules x ${LANGS.length} langues)`);
 console.log(`sitemap.xml : ${urls.length} URL`);
+console.log(`stock-feed.xml / stock-feed.csv : ${feedRows.length} vehicules disponibles`);
+console.log(`liste crawlable : ${listOk}/${LANGS.length} pages stock.html (${listUpdated} mise(s) a jour ce build)`);
 console.log('robots.txt ecrit');
 if (warnings.length) {
   console.log('\nAvertissements :');

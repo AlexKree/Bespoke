@@ -580,6 +580,9 @@
       const res = await fetch(dataUrl + '?v=' + Date.now(), { cache: 'no-cache' });
       const data = await res.json();
       items = (data && data.items) ? data.items : [];
+      // La liste statique (SEO / repli sans JS) laisse place a la grille interactive.
+      var staticList = document.getElementById('stockStaticList');
+      if (staticList) staticList.hidden = true;
       populateMakes();
       applyFilters();
       wireModal();

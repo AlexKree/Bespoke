@@ -11,3 +11,11 @@ fr/stock/
 en/stock/
 sitemap.xml
 robots.txt
+stock-feed.xml
+stock-feed.csv
+
+# NB : build-stock-pages.mjs reecrit aussi la liste crawlable entre les
+# marqueurs <!-- STOCK:LIST:START/END --> de fr/stock.html et en/stock.html
+# (fichiers versionnes). Le resultat est idempotent tant que le stock ne
+# change pas ; apres un build local sur un stock modifie, verifier le diff
+# avant de committer.
