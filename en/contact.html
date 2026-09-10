@@ -228,6 +228,21 @@
     var msg = document.getElementById('message');
     var subj = document.getElementById('subject');
     if (!msg || msg.value.trim()) return;
+
+    // Priority: full-details request coming from a vehicle page (?ref=&url=).
+    var params = new URLSearchParams(location.search);
+    var ref = (params.get('ref') || '').trim();
+    var vurl = (params.get('url') || '').trim();
+    if (ref) {
+      msg.value = 'Hello,\n\n'
+        + 'I would like to receive the full details on the following vehicle:\n'
+        + ref + (vurl ? '\n' + vurl : '') + '\n\n'
+        + 'Please share the history, any available invoices, the detailed condition, '
+        + 'and the reservation and delivery terms.\n';
+      if (subj && !subj.value.trim()) subj.value = 'Full details — ' + ref;
+      return;
+    }
+
     var brief = '', inspection = '', listing = '';
     try { brief = sessionStorage.getItem('bespoke_brief') || ''; } catch (e) {}
     try { inspection = sessionStorage.getItem('bespoke_inspection') || ''; } catch (e) {}

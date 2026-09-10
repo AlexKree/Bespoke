@@ -128,6 +128,19 @@
     return item.id || 'Vehicle';
   }
 
+  // Lien "Contacter" : transporte le vehicule (repris par contact.html pour
+  // pre-remplir le sujet et le message). Meme schema que le CTA des fiches.
+  function contactHref(item) {
+    const t = itemTitle(item);
+    const label = t + (item.year && String(t).indexOf(String(item.year)) === -1 ? ' (' + item.year + ')' : '');
+    let q = 'ref=' + encodeURIComponent(label);
+    if (item.slug) {
+      const vurl = location.origin + location.pathname.replace(/[^/]*$/, 'stock/' + item.slug + '.html');
+      q += '&url=' + encodeURIComponent(vurl);
+    }
+    return 'contact.html?' + q;
+  }
+
   // stock.json melange les formes "assets/..." et "/assets/..." : on normalise
   // vers un chemin absolu depuis la racine du site.
   function resolveAsset(assetPath) {
@@ -351,7 +364,7 @@
       const contact = document.createElement('a');
       contact.className = 'btn btnPrimary btnSm';
       contact.textContent = T.contact;
-      contact.href = 'contact.html?vehicle=' + encodeURIComponent(item.id);
+      contact.href = contactHref(item);
       contact.addEventListener('click', (e) => e.stopPropagation());
       actions.appendChild(contact);
     }
@@ -454,7 +467,7 @@
     }
 
     modalDescription.textContent = (item.description && (item.description[lang] || item.description.en || item.description.fr)) || '';
-    modalContact.href = 'contact.html?vehicle=' + encodeURIComponent(item.id);
+    modalContact.href = contactHref(item);
 
     // ── Reserve button (shown only when user is logged in and vehicle is available) ──
     const existingReserveBtn = modal.querySelector('.modalReserveBtn');

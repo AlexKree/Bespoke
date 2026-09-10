@@ -229,6 +229,21 @@
     var msg = document.getElementById('message');
     var subj = document.getElementById('subject');
     if (!msg || msg.value.trim()) return;
+
+    // Priorite : demande de dossier depuis une fiche vehicule (?ref=&url=).
+    var params = new URLSearchParams(location.search);
+    var ref = (params.get('ref') || '').trim();
+    var vurl = (params.get('url') || '').trim();
+    if (ref) {
+      msg.value = 'Bonjour,\n\n'
+        + 'Je souhaite recevoir le dossier complet du véhicule suivant :\n'
+        + ref + (vurl ? '\n' + vurl : '') + '\n\n'
+        + 'Merci de me préciser l’historique, les factures disponibles, l’état détaillé, '
+        + 'ainsi que les conditions de réservation et de livraison.\n';
+      if (subj && !subj.value.trim()) subj.value = 'Dossier complet — ' + ref;
+      return;
+    }
+
     var brief = '', inspection = '', listing = '';
     try { brief = sessionStorage.getItem('bespoke_brief') || ''; } catch (e) {}
     try { inspection = sessionStorage.getItem('bespoke_inspection') || ''; } catch (e) {}
