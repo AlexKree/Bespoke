@@ -83,6 +83,10 @@ const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 
+const slug = (s) => String(s || '')
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
 const cdn = (path, w, q = 72) =>
   `/.netlify/images?url=${encodeURIComponent(path)}&amp;w=${w}&amp;fm=webp&amp;q=${q}`;
 
@@ -274,6 +278,211 @@ ${picks.map((v) => {
     </div>`;
 }
 
+/* ── Pages de collection : par marque et par categorie ────────────────── */
+
+const NOW_YEAR = BUILD_DATE.getFullYear();
+
+// Traductions propres aux pages de collection.
+const FT = {
+  fr: {
+    browse: 'Parcourir le stock', byMake: 'Par marque', byCategory: 'Par catégorie',
+    allStock: 'Tout le stock', inStock: (n) => `${n} véhicule${n > 1 ? 's' : ''} en stock`,
+    seeAll: 'Voir tout le stock', ask: 'Une recherche précise ? Parlez-nous de votre projet',
+    motos: 'Motos', motosIntro: 'Motos de collection et de prestige disponibles chez The Bespoke Car — sourcées, contrôlées et importées sur mandat.',
+    young: 'Youngtimers', youngIntro: 'Youngtimers (20 à 40 ans) disponibles : la génération devenue collector, sourcée et importée par The Bespoke Car.',
+    makeIntro: (m) => `Nos ${m} de collection et de prestige actuellement disponibles chez The Bespoke Car : véhicules sourcés, contrôlés et importés sur mandat, livrés partout en Europe.`,
+  },
+  en: {
+    browse: 'Browse the stock', byMake: 'By make', byCategory: 'By category',
+    allStock: 'All stock', inStock: (n) => `${n} vehicle${n > 1 ? 's' : ''} in stock`,
+    seeAll: 'See the full stock', ask: 'Looking for something specific? Tell us about your project',
+    motos: 'Motorcycles', motosIntro: 'Collector and prestige motorcycles available at The Bespoke Car — sourced, inspected and imported on mandate.',
+    young: 'Youngtimers', youngIntro: 'Youngtimers (20 to 40 years old) available: the generation that turned collectible, sourced and imported by The Bespoke Car.',
+    makeIntro: (m) => `Our ${m} collector and prestige cars currently available at The Bespoke Car: vehicles sourced, inspected and imported on mandate, delivered across Europe.`,
+  },
+};
+
+// Construit la liste des facettes (marques + categories) a partir du stock dispo.
+// Seuils : marque >= 1 vehicule, categorie >= 3 (pas de page maigre).
+function computeFacets(pool) {
+  const facets = [];
+
+  const byMake = new Map();
+  for (const v of pool) {
+    if (!v.make) continue;
+    const key = v.make;
+    if (!byMake.has(key)) byMake.set(key, []);
+    byMake.get(key).push(v);
+  }
+  for (const [make, list] of [...byMake].sort((a, b) => a[0].localeCompare(b[0]))) {
+    // Une page de marque n'a de sens que si elle regroupe plusieurs vehicules ;
+    // sinon c'est un doublon maigre de la fiche (penalisant en SEO).
+    if (list.length < 2) continue;
+    facets.push({
+      kind: 'make',
+      slug: slug(make),
+      file: { fr: `marque-${slug(make)}.html`, en: `make-${slug(make)}.html` },
+      name: { fr: make, en: make },
+      title: { fr: `${make} de collection à vendre`, en: `${make} collector cars for sale` },
+      intro: { fr: FT.fr.makeIntro(make), en: FT.en.makeIntro(make) },
+      items: list,
+    });
+  }
+
+  const motos = pool.filter((v) => v.vehicle_type === 'motorcycle');
+  if (motos.length >= 3) {
+    facets.push({
+      kind: 'category', slug: 'motos',
+      file: { fr: 'motos.html', en: 'motorcycles.html' },
+      name: { fr: FT.fr.motos, en: FT.en.motos },
+      title: { fr: 'Motos de collection à vendre', en: 'Collector motorcycles for sale' },
+      intro: { fr: FT.fr.motosIntro, en: FT.en.motosIntro },
+      items: motos,
+    });
+  }
+
+  const young = pool.filter((v) => v.year && NOW_YEAR - v.year >= 20 && NOW_YEAR - v.year <= 40);
+  if (young.length >= 3) {
+    facets.push({
+      kind: 'category', slug: 'youngtimers',
+      file: { fr: 'youngtimers.html', en: 'youngtimers.html' },
+      name: { fr: FT.fr.young, en: FT.en.young },
+      title: { fr: 'Youngtimers à vendre', en: 'Youngtimers for sale' },
+      intro: { fr: FT.fr.youngIntro, en: FT.en.youngIntro },
+      items: young,
+    });
+  }
+
+  return facets;
+}
+
+function facetCard(v, l, t) {
+  const title = (v.title && (v.title[l] || v.title.fr)) || v.model || v.id;
+  const img = v.images[0];
+  const meta = [v.year, v.price_eur != null ? eur(v.price_eur, l) : t.onRequest, v.country || null]
+    .filter(Boolean).join(' · ');
+  return `        <a class="vpRelatedCard" href="${esc(v.slug)}.html">
+          ${img ? `<img src="${cdn(img, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"/>` : '<div class="vpRelatedNoImg"></div>'}
+          <div class="vpRelatedBody">
+            <span class="vpRelatedTitle">${esc(title)}</span>
+            <span class="vpRelatedMeta">${esc(meta)}</span>
+          </div>
+        </a>`;
+}
+
+function renderFacetPage(facet, l, allFacets) {
+  const t = T[l];
+  const ft = FT[l];
+  const name = facet.name[l];
+  const url = `${SITE}/${l}/stock/${facet.file[l]}`;
+  const list = [...facet.items].sort((a, b) => (b.year || 0) - (a.year || 0));
+  const metaDesc = `${facet.intro[l]} ${ft.inStock(list.length)}.`.replace(/\s+/g, ' ').trim().slice(0, 300);
+  const ogImage = (list[0] && list[0].images[0]) ? cdnRaw(list[0].images[0], 1200) : `${SITE}/assets/photos/og-inventory.jpg`;
+
+  const itemList = {
+    '@type': 'ItemList',
+    name: facet.title[l],
+    numberOfItems: list.length,
+    itemListElement: list.map((v, i) => ({
+      '@type': 'ListItem', position: i + 1,
+      url: `${SITE}/${l}/stock/${v.slug}.html`,
+      name: (v.title && (v.title[l] || v.title.fr)) || v.model || v.id,
+    })),
+  };
+  const collectionPage = {
+    '@type': 'CollectionPage',
+    '@id': url, url, name: facet.title[l], description: metaDesc, inLanguage: l === 'fr' ? 'fr-FR' : 'en-GB',
+    isPartOf: { '@id': `${SITE}/#website` }, about: { '@id': `${SITE}/#organization` },
+  };
+  const breadcrumb = {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: t.home, item: `${SITE}/${l}/` },
+      { '@type': 'ListItem', position: 2, name: t.stock, item: `${SITE}/${l}/stock.html` },
+      { '@type': 'ListItem', position: 3, name, item: url },
+    ],
+  };
+  const ld = JSON.stringify({ '@context': 'https://schema.org', '@graph': [collectionPage, itemList, breadcrumb, DEALER] });
+
+  // Nav vers les autres facettes (maillage interne).
+  const makeLinks = allFacets.filter((f) => f.kind === 'make')
+    .map((f) => `<a href="${esc(f.file[l])}"${f.slug === facet.slug ? ' aria-current="page"' : ''}>${esc(f.name[l])}</a>`).join(' · ');
+  const catLinks = allFacets.filter((f) => f.kind === 'category')
+    .map((f) => `<a href="${esc(f.file[l])}"${f.slug === facet.slug ? ' aria-current="page"' : ''}>${esc(f.name[l])}</a>`).join(' · ');
+
+  return `<!doctype html>
+<html lang="${l}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>${esc(facet.title[l])} — Bespoke</title>
+  <meta name="description" content="${esc(metaDesc)}" />
+  <meta name="robots" content="index,follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/styles.css?v=6" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#05101e" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="${url}" />
+  <meta property="og:title" content="${esc(facet.title[l])}" />
+  <meta property="og:description" content="${esc(metaDesc)}" />
+  <meta property="og:image" content="${esc(ogImage)}" />
+  <meta property="og:locale" content="${l}_${l === 'fr' ? 'FR' : 'GB'}" />
+  <meta property="og:site_name" content="The Bespoke Car" />
+  <link rel="canonical" href="${url}" />
+  <link rel="alternate" hreflang="fr" href="${SITE}/fr/stock/${facet.file.fr}" />
+  <link rel="alternate" hreflang="en" href="${SITE}/en/stock/${facet.file.en}" />
+  <link rel="alternate" hreflang="x-default" href="${SITE}/en/stock/${facet.file.en}" />
+  <script defer data-domain="thebespokecar.com" src="https://plausible.io/js/script.js"></script>
+  <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments); };</script>
+  <script type="application/ld+json">${ld}</script>
+</head>
+<body>
+${shell[l].header}
+<main>
+  <div class="container">
+    <nav class="breadcrumb" aria-label="${esc(t.stock)}">
+      <ol>
+        <li><a href="../index.html">${esc(t.home)}</a></li>
+        <li>/</li>
+        <li><a href="../stock.html">${esc(t.stock)}</a></li>
+        <li>/</li>
+        <li aria-current="page">${esc(name)}</li>
+      </ol>
+    </nav>
+
+    <div class="card pad-lg">
+      <div class="kicker">${esc(ft.browse)}</div>
+      <h1>${esc(facet.title[l])}</h1>
+      <p class="lead">${esc(facet.intro[l])}</p>
+      <p class="mini">${esc(ft.inStock(list.length))}</p>
+      <nav class="stockFacets" aria-label="${esc(ft.browse)}">
+        ${makeLinks ? `<div><span class="stockFacetsLabel">${esc(ft.byMake)} :</span> ${makeLinks}</div>` : ''}
+        ${catLinks ? `<div><span class="stockFacetsLabel">${esc(ft.byCategory)} :</span> ${catLinks}</div>` : ''}
+        <div><a href="../stock.html">${esc(ft.allStock)}</a></div>
+      </nav>
+    </div>
+
+    <div class="vpRelated" style="margin-top:22px">
+${list.map((v) => facetCard(v, l, t)).join('\n')}
+    </div>
+
+    <div class="ctaRow" style="margin-top:24px">
+      <a class="btn primary" href="../contact.html" onclick="plausible('Lead')">${esc(ft.ask)}</a>
+      <a class="btn" href="../stock.html">${esc(ft.seeAll)}</a>
+    </div>
+    <div class="vpDisclaimer">${esc(t.disclaimer)}</div>
+  </div>
+</main>
+${shell[l].footer}
+<script src="../../assets/site.js"></script>
+</body>
+</html>
+`;
+}
+
 function renderPage(item, l, all) {
   const t = T[l];
   const title = (item.title && (item.title[l] || item.title.fr)) || item.model || item.id;
@@ -389,7 +598,10 @@ ${shell[l].footer}
 /* ── Ecriture ─────────────────────────────────────────────────────────── */
 
 let written = 0;
+let facetPages = 0;
 const warnings = [];
+
+const facets = computeFacets(items.filter((i) => i.slug && i.status !== 'sold'));
 
 for (const l of LANGS) {
   const dir = join(ROOT, l, 'stock');
@@ -413,6 +625,12 @@ for (const l of LANGS) {
     }
     writeFileSync(join(dir, `${item.slug}.html`), renderPage(item, l, items));
     written++;
+  }
+
+  // Pages de collection (par marque, par categorie).
+  for (const facet of facets) {
+    writeFileSync(join(dir, facet.file[l]), renderFacetPage(facet, l, facets));
+    facetPages++;
   }
 }
 
@@ -450,6 +668,19 @@ for (const l of LANGS) {
       `  <url><loc>${SITE}/${l}/stock/${item.slug}.html</loc>` +
       `<lastmod>${TODAY}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority>\n` +
       [...alternates, ...imgs].join('\n') + '\n  </url>'
+    );
+  }
+}
+// Pages de collection (marque / categorie), liees par hreflang FR<->EN.
+for (const l of LANGS) {
+  for (const facet of facets) {
+    const alts = LANGS.map((al) =>
+      `    <xhtml:link rel="alternate" hreflang="${al}" href="${SITE}/${al}/stock/${facet.file[al]}"/>`
+    ).concat(`    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE}/en/stock/${facet.file.en}"/>`);
+    urls.push(
+      `  <url><loc>${SITE}/${l}/stock/${facet.file[l]}</loc>` +
+      `<lastmod>${TODAY}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority>\n` +
+      alts.join('\n') + '\n  </url>'
     );
   }
 }
@@ -582,8 +813,21 @@ for (const l of LANGS) {
     return `          <li><a href="stock/${esc(item.slug)}.html">${esc(title)}</a>` +
            `<span class="stockStaticMeta"> — ${esc(bits)}</span></li>`;
   }).join('\n');
+  const facetNav = facets.length
+    ? `      <nav class="stockFacets" aria-label="${esc(FT[l].browse)}">\n` +
+      `        <span class="stockFacetsLabel">${esc(FT[l].byMake)} :</span> ` +
+      facets.filter((f) => f.kind === 'make')
+        .map((f) => `<a href="stock/${esc(f.file[l])}">${esc(f.name[l])}</a>`).join(' · ') +
+      (facets.some((f) => f.kind === 'category')
+        ? `\n        <span class="stockFacetsLabel">${esc(FT[l].byCategory)} :</span> ` +
+          facets.filter((f) => f.kind === 'category')
+            .map((f) => `<a href="stock/${esc(f.file[l])}">${esc(f.name[l])}</a>`).join(' · ')
+        : '') +
+      `\n      </nav>\n`
+    : '';
   const block =
     `${LIST_START}\n` +
+    facetNav +
     `      <nav class="stockStaticList" id="stockStaticList" aria-label="${esc(listIntro[l])}">\n` +
     `        <h2 class="visually-hidden">${esc(listIntro[l])}</h2>\n` +
     `        <ul>\n${lis}\n        </ul>\n` +
@@ -596,6 +840,7 @@ for (const l of LANGS) {
 }
 
 console.log(`${written} pages vehicule generees (${items.length} vehicules x ${LANGS.length} langues)`);
+console.log(`${facetPages} pages de collection generees (${facets.length} facettes x ${LANGS.length} langues) : ${facets.map((f) => f.slug).join(', ')}`);
 console.log(`sitemap.xml : ${urls.length} URL`);
 console.log(`stock-feed.xml / stock-feed.csv : ${feedRows.length} vehicules disponibles`);
 console.log(`liste crawlable : ${listOk}/${LANGS.length} pages stock.html (${listUpdated} mise(s) a jour ce build)`);
