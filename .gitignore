@@ -13,6 +13,7 @@ sitemap.xml
 robots.txt
 stock-feed.xml
 stock-feed.csv
+stock-feed-google.xml
 
 # NB : build-stock-pages.mjs reecrit aussi la liste crawlable entre les
 # marqueurs <!-- STOCK:LIST:START/END --> de fr/stock.html et en/stock.html
