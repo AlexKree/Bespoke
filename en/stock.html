@@ -36,6 +36,8 @@
   <link rel="alternate" hreflang="en" href="https://thebespokecar.com/en/stock.html" />
   <link rel="alternate" hreflang="fr" href="https://thebespokecar.com/fr/stock.html" />
   <link rel="alternate" hreflang="x-default" href="https://thebespokecar.com/en/stock.html" />
+  <!-- Distribution feed (marketplaces, Merchant Center, Meta catalog) -->
+  <link rel="alternate" type="application/xml" title="Bespoke stock — vehicle feed" href="/stock-feed.xml" />
   <!-- Analytics -->
   <script defer data-domain="thebespokecar.com" src="https://plausible.io/js/script.js"></script>
   <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments); };</script>
@@ -228,9 +230,35 @@
         <button type="button" class="catBtn catBtn--particulier" data-cat="particulier">Private Sale</button>
         <button type="button" class="catBtn catBtn--professionnel" data-cat="professionnel">Trade Sale</button>
       </div>
-      <noscript>
-        <div class="card pad">Enable JavaScript to display the stock.</div>
-      </noscript>
+      <!-- STOCK:LIST:START -->
+      <nav class="stockStaticList" id="stockStaticList" aria-label="Available vehicles">
+        <h2 class="visually-hidden">Available vehicles</h2>
+        <ul>
+          <li><a href="stock/chevrolet-corvette-stingray-1976.html">Chevrolet Corvette Stingray</a><span class="stockStaticMeta"> — 1976 · Price on request</span></li>
+          <li><a href="stock/jaguar-xjv12-vanden-plas-1988.html">Jaguar XJV12 VANDEN PLAS</a><span class="stockStaticMeta"> — 1988 · €19,900</span></li>
+          <li><a href="stock/yamaha-vmax-1200-145cv-1991.html">YAMAHA VMAX 1200 145cv</a><span class="stockStaticMeta"> — 1991 · €5,190</span></li>
+          <li><a href="stock/bmw-r-1200-cl-2003.html">BMW R 1200 CL</a><span class="stockStaticMeta"> — 2003 · €5,400 · France / Europe</span></li>
+          <li><a href="stock/mercedes-500-sel-1986.html">Mercedes 500 SEL</a><span class="stockStaticMeta"> — 1986 · €15,490</span></li>
+          <li><a href="stock/ford-mustang-gt-v8-4-6l-2005.html">Ford Mustang GT V8 4.6L</a><span class="stockStaticMeta"> — 2005 · €16,900 · Canada</span></li>
+          <li><a href="stock/volkswagen-golf-r32-2006.html">Volkswagen Golf R32</a><span class="stockStaticMeta"> — 2006 · Price on request · UK</span></li>
+          <li><a href="stock/mitsubishi-eclipse-spyder-v6-3-0-2005.html">Mitsubishi Eclipse Spyder V6 3.0</a><span class="stockStaticMeta"> — 2005 · €10,000</span></li>
+          <li><a href="stock/mercedes-s500-w140-1993.html">Mercedes S500 w140</a><span class="stockStaticMeta"> — 1993 · €12,500 · Canada</span></li>
+          <li><a href="stock/rolls-royce-silver-wraith-ii-1977.html">Rolls Royce Silver Wraith II</a><span class="stockStaticMeta"> — 1977 · Price on request</span></li>
+          <li><a href="stock/porsche-cayenne-turbo-s-v8-550-ch-2008.html">Porsche Cayenne Turbo S V8 550 ch</a><span class="stockStaticMeta"> — 2008 · €23,900</span></li>
+          <li><a href="stock/porsche-cayenne-turbo-v8-4-8l-2012.html">Porsche Cayenne Turbo V8 4.8L</a><span class="stockStaticMeta"> — 2012 · €21,900</span></li>
+          <li><a href="stock/alfa-romeo-159-3-2-v6-q4-260ch-manuelle-2008.html">Alfa Romeo 159 3.2 V6 Q4 260ch - Manual</a><span class="stockStaticMeta"> — 2008 · €9,990</span></li>
+          <li><a href="stock/bentley-turbo-r-6-75l-v8-1991.html">Bentley Turbo R 6.75L V8</a><span class="stockStaticMeta"> — 1991 · €14,900 · UK</span></li>
+          <li><a href="stock/jaguar-xjr-4-0-supercharged-1999.html">Jaguar XJR 4.0 Supercharged</a><span class="stockStaticMeta"> — 1999 · €18,900</span></li>
+          <li><a href="stock/bmw-645i-m-sport-cabriolet-v8-4-4l-333ch-2005.html">BMW 645i M Sport Cabriolet V8 4.4L 333ch</a><span class="stockStaticMeta"> — 2005 · €10,847 · UK</span></li>
+          <li><a href="stock/mini-cooper-s-countryman-all4-184-ch-2011.html">MINI Cooper S Countryman ALL4 184 ch</a><span class="stockStaticMeta"> — 2011 · €9,990</span></li>
+          <li><a href="stock/nissan-350z-313-ch-2007.html">Nissan 350Z 313 ch</a><span class="stockStaticMeta"> — 2007 · €14,490</span></li>
+          <li><a href="stock/honda-vfr800-fi-v4-800cc-1999.html">Honda VFR800 FI – V4 800cc</a><span class="stockStaticMeta"> — 1999 · €2,000</span></li>
+          <li><a href="stock/aprilia-mana-850-gt-2016.html">Aprilia Mana 850 GT</a><span class="stockStaticMeta"> — 2016 · €5,490</span></li>
+          <li><a href="stock/honda-integra-750-dct-2014-33-500-km-2014.html">Honda Integra 750 DCT – 2014 – 33 500 km</a><span class="stockStaticMeta"> — 2014 · €4,000</span></li>
+          <li><a href="stock/audi-s8-v10-quattro-5-2-fsi-450-ch-2007.html">Audi S8 V10 Quattro 5.2 FSI – 450 ch</a><span class="stockStaticMeta"> — 2007 · €18,900</span></li>
+        </ul>
+      </nav>
+      <!-- STOCK:LIST:END -->
       <div id="stockGrid" class="stockGrid"></div>
     </div>
 
