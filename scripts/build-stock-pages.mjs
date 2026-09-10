@@ -352,7 +352,7 @@ ${item.status === 'sold' ? `        <div class="vpSoldNotice">${esc(t.soldNotice
         ${renderSpecs(item, l, t)}
 
         <div class="ctaRow">
-          <a class="btn primary" href="../contact.html" onclick="plausible('Lead')">${esc(t.contact)}</a>
+          <a class="btn primary" href="../contact.html?ref=${encodeURIComponent(title + (item.year && !String(title).includes(String(item.year)) ? ` (${item.year})` : ''))}&amp;url=${encodeURIComponent(url)}" onclick="plausible('Lead')">${esc(t.contact)}</a>
           <a class="btn" href="../stock.html">${esc(t.backToStock)}</a>
         </div>
         <div class="vpToolLinks">

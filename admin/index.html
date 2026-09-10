@@ -1172,7 +1172,10 @@
 
     const nextItems = Array.isArray(stockData.items) ? [...stockData.items] : [];
     if (editingIndex !== null && editingIndex >= 0 && editingIndex < nextItems.length) {
-      nextItems[editingIndex] = car;
+      // Fusion : le formulaire ne couvre pas tous les champs. On conserve ceux
+      // qu'il ignore (slug, make, model, vehicle_type, headline, mileage_km...)
+      // pour ne pas casser l'URL publique de la fiche ni son balisage.
+      nextItems[editingIndex] = { ...nextItems[editingIndex], ...car };
     } else {
       nextItems.push(car);
     }
