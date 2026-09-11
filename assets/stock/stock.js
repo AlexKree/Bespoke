@@ -12,6 +12,7 @@
       year: 'Année',
       location: 'Localisation',
       mileage: 'Kilométrage',
+      vin: 'VIN',
       priceOnRequest: 'Prix sur demande',
       hideSold: 'Masquer vendues',
       details: 'Détails',
@@ -41,6 +42,7 @@
       year: 'Year',
       location: 'Location',
       mileage: 'Mileage',
+      vin: 'VIN',
       priceOnRequest: 'Price on request',
       hideSold: 'Hide sold',
       details: 'Details',
@@ -415,6 +417,15 @@
     const loc = item.country || '';
     meta.textContent = [year, mileage, loc ? `${T.location}: ${loc}` : ''].filter(Boolean).join(' • ');
     body.appendChild(meta);
+
+    // VIN : stock.json ne porte jamais que les 6 premiers caracteres (le reste
+    // est masque par des '*' cote admin) ; jamais le numero complet.
+    if (item.vin) {
+      const vinLine = document.createElement('div');
+      vinLine.className = 'stockCardVin';
+      vinLine.textContent = `${T.vin}: ${item.vin}`;
+      body.appendChild(vinLine);
+    }
 
     const price = document.createElement('div');
     price.className = 'stockCardPrice';

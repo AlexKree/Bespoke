@@ -1,5 +1,54 @@
 const crypto = require('crypto');
 const https = require('https');
+const { Pool } = require('pg');
+
+let pool = null;
+
+/**
+ * Base privee (jamais commitee dans le repo public) servant a stocker le VIN
+ * complet des vehicules. stock.json reste public : il ne contient jamais que
+ * les 6 premiers caracteres du VIN.
+ */
+function getPool() {
+  const dbUrl = process.env.DATABASE_URL || process.env.NEON_DATABASE_URL;
+  if (!dbUrl) return null;
+  if (!pool) {
+    pool = new Pool({ connectionString: dbUrl, ssl: { rejectUnauthorized: false } });
+  }
+  return pool;
+}
+
+/**
+ * Upsert des VIN complets fournis pour les vehicules presents dans `items`,
+ * et purge des VIN de vehicules qui ne sont plus dans le stock. N'ecrit rien
+ * dans stock.json : cette table est le seul endroit ou le VIN integral vit.
+ */
+async function saveVins(items, vins) {
+  const pool = getPool();
+  if (!pool) return; // DB non configuree : la sauvegarde du stock continue sans bloquer.
+
+  const ids = Array.from(new Set((items || []).map((it) => it && it.id).filter(Boolean)));
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    for (const id of ids) {
+      const full = ((vins && vins[id]) || '').trim();
+      if (!full) continue;
+      await client.query(
+        `INSERT INTO vehicle_vins (car_id, vin_full, updated_at) VALUES ($1, $2, now())
+         ON CONFLICT (car_id) DO UPDATE SET vin_full = EXCLUDED.vin_full, updated_at = now()`,
+        [id, full]
+      );
+    }
+    await client.query('DELETE FROM vehicle_vins WHERE car_id <> ALL($1::text[])', [ids]);
+    await client.query('COMMIT');
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Image upload constants
@@ -420,6 +469,22 @@ exports.handler = async function (event) {
     return { statusCode: 401, headers, body: JSON.stringify({ error: 'Unauthorized' }) };
   }
 
+  // ── VIN complets (base privee, jamais dans stock.json) ───────────────────
+  if (action === 'getVins') {
+    const dbPool = getPool();
+    if (!dbPool) {
+      return { statusCode: 200, headers, body: JSON.stringify({ vins: {} }) };
+    }
+    try {
+      const { rows } = await dbPool.query('SELECT car_id, vin_full FROM vehicle_vins');
+      const vins = {};
+      for (const row of rows) vins[row.car_id] = row.vin_full;
+      return { statusCode: 200, headers, body: JSON.stringify({ vins }) };
+    } catch (err) {
+      return { statusCode: 502, headers, body: JSON.stringify({ error: 'DB error', detail: String(err) }) };
+    }
+  }
+
   if (!GITHUB_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'GitHub not configured' }) };
   }
@@ -446,7 +511,7 @@ exports.handler = async function (event) {
 
   // ── Save updated stock ───────────────────────────────────────────────────
   if (action === 'saveStock') {
-    const { stock, sha } = body;
+    const { stock, sha, vins } = body;
     if (!stock || typeof sha !== 'string') {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing stock or sha' }) };
     }
@@ -459,6 +524,17 @@ exports.handler = async function (event) {
     // jamais changer : on genere un slug pour toute fiche qui n'en a pas (ajout
     // via l'admin, donnee historique), on le fige, et on garantit l'unicite.
     ensureSlugs(stock.items);
+
+    // VIN complets : persistes en base privee, jamais dans stock.json (public,
+    // commite dans le repo). Non bloquant : une erreur DB ne doit pas empecher
+    // la publication du stock.
+    if (vins && typeof vins === 'object') {
+      try {
+        await saveVins(stock.items, vins);
+      } catch (err) {
+        console.error('saveVins failed', err);
+      }
+    }
 
     const content = Buffer.from(JSON.stringify(stock, null, 2) + '\n').toString('base64');
     const res = await githubRequest('PUT', filePath, GITHUB_TOKEN, {

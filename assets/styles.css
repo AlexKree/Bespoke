@@ -586,6 +586,9 @@ footer{
 .stockCardMeta{
   font-size:11.5px; color:var(--muted); letter-spacing:.05em;
 }
+.stockCardVin{
+  font-size:10.5px; color:var(--muted); letter-spacing:.05em; opacity:.75;
+}
 .stockCardPrice{
   font-size:15.5px; font-weight:600; color:var(--gold);
   margin-top:4px; letter-spacing:.025em;
