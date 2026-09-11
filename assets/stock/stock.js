@@ -29,6 +29,8 @@
       seeSheet: 'Voir la fiche',
       quickView: 'Aperçu',
       share: 'Partager',
+      copyLink: 'Copier le lien',
+      shareVia: 'Partager via…',
       linkCopied: 'Lien copié !',
       copyPrompt: 'Copiez ce lien pour le partager :'
     },
@@ -56,6 +58,8 @@
       seeSheet: 'View details',
       quickView: 'Quick view',
       share: 'Share',
+      copyLink: 'Copy link',
+      shareVia: 'Share via…',
       linkCopied: 'Link copied!',
       copyPrompt: 'Copy this link to share it:'
     }
@@ -155,15 +159,9 @@
     shareToastTimer = setTimeout(() => el.classList.remove('visible'), 2200);
   }
 
-  // Partage natif (mobile) si disponible, sinon copie dans le presse-papier,
-  // sinon repli sur un prompt (navigateurs sans clipboard API en HTTP).
-  function shareVehicle(item) {
-    const url = sheetUrl(item);
-    const title = itemTitle(item);
-    if (navigator.share) {
-      navigator.share({ title, url }).catch(() => {});
-      return;
-    }
+  // Copie le lien dans le presse-papier, avec repli sur un prompt
+  // (navigateurs sans clipboard API, ex. HTTP non securise).
+  function copyLink(url) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url)
         .then(() => showShareToast(T.linkCopied))
@@ -171,6 +169,71 @@
       return;
     }
     window.prompt(T.copyPrompt, url);
+  }
+
+  let openShareMenu = null;
+  function closeShareMenu() {
+    if (openShareMenu) {
+      openShareMenu.remove();
+      openShareMenu = null;
+      document.removeEventListener('click', closeShareMenu);
+      document.removeEventListener('keydown', onShareMenuKeydown);
+    }
+  }
+  function onShareMenuKeydown(e) {
+    if (e.key === 'Escape') closeShareMenu();
+  }
+
+  // Si le partage natif est disponible (mobile), on propose un petit menu
+  // avec "Copier le lien" en plus du partage natif, plutot que d'ouvrir la
+  // feuille de partage directement : celle-ci n'expose pas toujours une
+  // copie simple du lien. Sans partage natif (desktop), on copie direct.
+  function shareVehicle(item, anchorEl) {
+    const url = sheetUrl(item);
+    const title = itemTitle(item);
+
+    if (!navigator.share) {
+      copyLink(url);
+      return;
+    }
+
+    closeShareMenu();
+
+    const menu = document.createElement('div');
+    menu.className = 'stockShareMenu';
+
+    const copyItem = document.createElement('button');
+    copyItem.type = 'button';
+    copyItem.className = 'stockShareMenuItem';
+    copyItem.textContent = T.copyLink;
+    copyItem.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeShareMenu();
+      copyLink(url);
+    });
+    menu.appendChild(copyItem);
+
+    const shareItem = document.createElement('button');
+    shareItem.type = 'button';
+    shareItem.className = 'stockShareMenuItem';
+    shareItem.textContent = T.shareVia;
+    shareItem.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeShareMenu();
+      navigator.share({ title, url }).catch(() => {});
+    });
+    menu.appendChild(shareItem);
+
+    document.body.appendChild(menu);
+    const rect = anchorEl.getBoundingClientRect();
+    menu.style.top = (rect.bottom + window.scrollY + 6) + 'px';
+    menu.style.left = Math.max(8, rect.right + window.scrollX - menu.offsetWidth) + 'px';
+
+    openShareMenu = menu;
+    setTimeout(() => {
+      document.addEventListener('click', closeShareMenu);
+      document.addEventListener('keydown', onShareMenuKeydown);
+    }, 0);
   }
 
   // Lien "Contacter" : transporte le vehicule (repris par contact.html pour
@@ -404,7 +467,7 @@
       shareBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="display:block;"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>';
       shareBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        shareVehicle(item);
+        shareVehicle(item, shareBtn);
       });
       actions.appendChild(shareBtn);
     }
