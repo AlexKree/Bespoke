@@ -102,6 +102,8 @@
   const modalPrice = document.getElementById('modalPrice');
   const modalDescription = document.getElementById('modalDescription');
   const modalContact = document.getElementById('modalContact');
+  const modalCopyLink = document.getElementById('modalCopyLink');
+  let modalItem = null; // vehicule actuellement affiche dans l'apercu, pour "Copier le lien"
 
   let items = [];
   let filtered = [];
@@ -164,6 +166,19 @@
       navigator.share({ title, url }).catch(() => {});
       return;
     }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url)
+        .then(() => showShareToast(T.linkCopied))
+        .catch(() => window.prompt(T.copyPrompt, url));
+      return;
+    }
+    window.prompt(T.copyPrompt, url);
+  }
+
+  // Copie directe (bouton "Copier le lien" de l'apercu) : jamais de partage
+  // natif ici, l'action est explicitement "copier", pas "partager".
+  function copyLink(item) {
+    const url = sheetUrl(item);
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url)
         .then(() => showShareToast(T.linkCopied))
@@ -475,6 +490,9 @@
   function openModal(item) {
     if (!modal) return;
 
+    modalItem = item; // pour le bouton "Copier le lien"
+    if (modalCopyLink) modalCopyLink.hidden = !item.slug;
+
     // Increment view counter (fire-and-forget, silent on error)
     incrementView(item.id);
 
@@ -596,6 +614,11 @@
       const close = e.target && e.target.getAttribute && e.target.getAttribute('data-close');
       if (close) closeModal();
     });
+    if (modalCopyLink) {
+      modalCopyLink.addEventListener('click', () => {
+        if (modalItem) copyLink(modalItem);
+      });
+    }
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeModal();
     });
@@ -652,9 +675,6 @@
       const res = await fetch(dataUrl + '?v=' + Date.now(), { cache: 'no-cache' });
       const data = await res.json();
       items = (data && data.items) ? data.items : [];
-      // La liste statique (SEO / repli sans JS) laisse place a la grille interactive.
-      var staticList = document.getElementById('stockStaticList');
-      if (staticList) staticList.hidden = true;
       populateMakes();
       applyFilters();
       wireModal();
