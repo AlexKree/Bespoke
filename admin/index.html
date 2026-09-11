@@ -732,6 +732,10 @@
   let token = sessionStorage.getItem(SESSION_KEY);
   let stockData = { items: [] };
   let stockSha = '';
+  // VIN complets par id vehicule (base privee). stock.json ne garde que la
+  // version tronquee (6 premiers caracteres) ; c'est cette map qui porte la
+  // valeur integrale affichee et editee dans l'admin.
+  let vinsByCarId = {};
   let currentImages = [];
   let editingIndex = null;
   let pendingDeleteIndex = null;
@@ -1020,12 +1024,21 @@
       stockData = data.stock;
       stockSha = data.sha || '';
       renderList();
+      loadVins();
       return;
     }
     if (ok && Array.isArray(data.items)) {
       stockData = data;
       stockSha = data.sha || '';
       renderList();
+      loadVins();
+    }
+  }
+
+  async function loadVins() {
+    const { ok, data } = await apiFetch(API, 'getVins');
+    if (ok && data && typeof data.vins === 'object') {
+      vinsByCarId = data.vins || {};
     }
   }
 
@@ -1133,7 +1146,7 @@
     document.getElementById('fieldTitleEn').value = car.title?.en || '';
     document.getElementById('fieldMileage').value = car.mileage || '';
     document.getElementById('fieldCountry').value = car.country || '';
-    document.getElementById('fieldVin').value = car.vin || '';
+    document.getElementById('fieldVin').value = vinsByCarId[car.id] || '';
     document.getElementById('fieldPrice').value = car.price_eur || car.price || '';
     document.getElementById('fieldStatus').value = car.status || 'available';
     document.getElementById('fieldSaleCategory').value = car.sale_category || 'both';
@@ -1156,8 +1169,9 @@
 
   // Le VIN complet ne doit jamais atteindre stock.json : ce fichier est servi
   // tel quel au public (fetch client dans stock.js) et commité dans le repo.
-  // On ne persiste donc que les 6 premiers caractères + des '*' pour le reste ;
-  // le VIN intégral tapé dans le champ n'est jamais envoyé au serveur.
+  // stock.json ne reçoit donc que les 6 premiers caractères + des '*' pour le
+  // reste ; le VIN intégral tapé dans le champ part séparément (vinsByCarId)
+  // vers la base privée, cf. saveVins() côté admin.js.
   function maskVin(raw) {
     const v = (raw || '').trim().toUpperCase().replace(/\s+/g, '');
     if (!v) return '';
@@ -1171,6 +1185,9 @@
       return;
     }
 
+    const vinRaw = document.getElementById('fieldVin').value.trim();
+    vinsByCarId[id] = vinRaw;
+
     const car = {
       id,
       year: parseInt(document.getElementById('fieldYear').value) || null,
@@ -1180,7 +1197,7 @@
       },
       mileage: document.getElementById('fieldMileage').value,
       country: document.getElementById('fieldCountry').value,
-      vin: maskVin(document.getElementById('fieldVin').value),
+      vin: maskVin(vinRaw),
       price_eur: parseInt(document.getElementById('fieldPrice').value) || null,
       status: document.getElementById('fieldStatus').value,
       sale_category: document.getElementById('fieldSaleCategory').value,
@@ -1202,7 +1219,7 @@
     }
 
     document.getElementById('saveBtn').disabled = true;
-    const { ok } = await apiFetch(API, 'saveStock', { stock: { items: nextItems }, sha: stockSha });
+    const { ok } = await apiFetch(API, 'saveStock', { stock: { items: nextItems }, sha: stockSha, vins: vinsByCarId });
     document.getElementById('saveBtn').disabled = false;
 
     if (ok) {
@@ -1237,7 +1254,7 @@
     nextItems.splice(pendingDeleteIndex, 1);
 
     document.getElementById('confirmDeleteBtn').disabled = true;
-    const { ok } = await apiFetch(API, 'saveStock', { stock: { items: nextItems }, sha: stockSha });
+    const { ok } = await apiFetch(API, 'saveStock', { stock: { items: nextItems }, sha: stockSha, vins: vinsByCarId });
     document.getElementById('confirmDeleteBtn').disabled = false;
 
     if (ok) {
