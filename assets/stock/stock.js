@@ -27,7 +27,10 @@
       anyPrice: 'Tous les prix',
       anyYear: 'Toutes les années',
       seeSheet: 'Voir la fiche',
-      quickView: 'Aperçu'
+      quickView: 'Aperçu',
+      share: 'Partager',
+      linkCopied: 'Lien copié !',
+      copyPrompt: 'Copiez ce lien pour le partager :'
     },
     en: {
       available: 'Available',
@@ -51,7 +54,10 @@
       anyPrice: 'Any price',
       anyYear: 'Any year',
       seeSheet: 'View details',
-      quickView: 'Quick view'
+      quickView: 'Quick view',
+      share: 'Share',
+      linkCopied: 'Link copied!',
+      copyPrompt: 'Copy this link to share it:'
     }
   }[lang];
 
@@ -126,6 +132,45 @@
       return [item.make, item.model].filter(Boolean).join(' ').trim();
     }
     return item.id || 'Vehicle';
+  }
+
+  // URL absolue de la fiche, resolue depuis la page courante (fr/ ou en/,
+  // prod ou deploy preview) — jamais de domaine en dur.
+  function sheetUrl(item) {
+    return new URL('stock/' + item.slug + '.html', location.href).href;
+  }
+
+  let shareToastTimer = null;
+  function showShareToast(msg) {
+    let el = document.getElementById('stockShareToast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'stockShareToast';
+      el.className = 'stockShareToast';
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.classList.add('visible');
+    clearTimeout(shareToastTimer);
+    shareToastTimer = setTimeout(() => el.classList.remove('visible'), 2200);
+  }
+
+  // Partage natif (mobile) si disponible, sinon copie dans le presse-papier,
+  // sinon repli sur un prompt (navigateurs sans clipboard API en HTTP).
+  function shareVehicle(item) {
+    const url = sheetUrl(item);
+    const title = itemTitle(item);
+    if (navigator.share) {
+      navigator.share({ title, url }).catch(() => {});
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url)
+        .then(() => showShareToast(T.linkCopied))
+        .catch(() => window.prompt(T.copyPrompt, url));
+      return;
+    }
+    window.prompt(T.copyPrompt, url);
   }
 
   // Lien "Contacter" : transporte le vehicule (repris par contact.html pour
@@ -348,6 +393,20 @@
       link.textContent = T.seeSheet;
       link.addEventListener('click', (e) => e.stopPropagation());
       actions.appendChild(link);
+
+      // Icone partage, a cote du lien vers la fiche (ne le remplace pas) :
+      // partage natif sur mobile, sinon copie du lien avec confirmation.
+      const shareBtn = document.createElement('button');
+      shareBtn.type = 'button';
+      shareBtn.className = 'btn btnSm btnIcon stockShareBtn';
+      shareBtn.setAttribute('aria-label', T.share);
+      shareBtn.title = T.share;
+      shareBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="display:block;"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>';
+      shareBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        shareVehicle(item);
+      });
+      actions.appendChild(shareBtn);
     }
 
     const btn = document.createElement('button');

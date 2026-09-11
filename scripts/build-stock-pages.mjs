@@ -137,7 +137,7 @@ const T = {
     home: 'Accueil', stock: 'Stock', onRequest: 'Prix sur demande',
     available: 'Disponible', sold: 'Vendu', reserved: 'Réservé',
     year: 'Année', mileage: 'Kilométrage', location: 'Localisation',
-    make: 'Marque', model: 'Modèle', ref: 'Référence', type: 'Type',
+    make: 'Marque', model: 'Modèle', ref: 'Référence', type: 'Type', vin: 'VIN',
     car: 'Automobile', motorcycle: 'Moto',
     forPrivate: 'Vente au particulier', forPro: 'Vente au professionnel', forBoth: 'Particulier et professionnel',
     contact: 'Demander le dossier complet', backToStock: 'Retour au stock',
@@ -151,7 +151,7 @@ const T = {
     home: 'Home', stock: 'Stock', onRequest: 'Price on request',
     available: 'Available', sold: 'Sold', reserved: 'Reserved',
     year: 'Year', mileage: 'Mileage', location: 'Location',
-    make: 'Make', model: 'Model', ref: 'Reference', type: 'Type',
+    make: 'Make', model: 'Model', ref: 'Reference', type: 'Type', vin: 'VIN',
     car: 'Car', motorcycle: 'Motorcycle',
     forPrivate: 'Private sale', forPro: 'Trade sale', forBoth: 'Private and trade',
     contact: 'Request the full file', backToStock: 'Back to stock',
@@ -214,6 +214,8 @@ function jsonLd(item, l, t, url) {
     ...(item.steering ? { steeringPosition: item.steering } : {}),
     ...(item.exterior_color ? { color: item.exterior_color } : {}),
     ...(item.interior_color ? { vehicleInteriorColor: item.interior_color } : {}),
+    // item.vin est deja masque a la source (voir admin/index.html) : jamais
+    // le VIN complet, ici comme partout ou stock.json alimente une sortie publique.
     ...(item.vin ? { vehicleIdentificationNumber: item.vin } : {}),
     ...(item.country ? { availableAtOrFrom: { '@type': 'Place', address: item.country } } : {}),
     ...(images.length ? { image: images } : {}),
@@ -278,6 +280,10 @@ function renderSpecs(item, l, t) {
     [t.location, item.country],
     [t.type, item.vehicle_type === 'motorcycle' ? t.motorcycle : t.car],
     [t.ref, saleLabel(item.sale_category, t)],
+    // item.vin est deja masque a la source (admin/index.html ne persiste que
+    // les 6 premiers caracteres + des '*' dans stock.json) : jamais le VIN
+    // complet ici, stock.json etant servi tel quel au public.
+    [t.vin, item.vin || null],
   ].filter(([, v]) => v != null && v !== '');
   return `<dl class="vpSpecs">
 ${rows.map(([k, v]) => `            <dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('\n')}

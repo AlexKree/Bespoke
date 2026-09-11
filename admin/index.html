@@ -638,6 +638,14 @@
             </div>
           </div>
 
+          <div class="field">
+            <label>VIN (n° de série)</label>
+            <input type="text" id="fieldVin" placeholder="ex: WBAAA1305U..." maxlength="20" autocomplete="off"/>
+            <small style="display:block; color: var(--muted, #9a9a9a); margin-top: 4px;">
+              Seuls les 6 premiers caractères sont publiés sur le site (le reste est masqué par des *). Le VIN complet n'est jamais affiché publiquement.
+            </small>
+          </div>
+
           <div class="row2">
             <div class="field">
               <label>Prix (EUR, centimes)</label>
@@ -1105,6 +1113,7 @@
     document.getElementById('fieldTitleEn').value = '';
     document.getElementById('fieldMileage').value = '';
     document.getElementById('fieldCountry').value = '';
+    document.getElementById('fieldVin').value = '';
     document.getElementById('fieldPrice').value = '';
     document.getElementById('fieldStatus').value = 'available';
     document.getElementById('fieldSaleCategory').value = 'both';
@@ -1124,6 +1133,7 @@
     document.getElementById('fieldTitleEn').value = car.title?.en || '';
     document.getElementById('fieldMileage').value = car.mileage || '';
     document.getElementById('fieldCountry').value = car.country || '';
+    document.getElementById('fieldVin').value = car.vin || '';
     document.getElementById('fieldPrice').value = car.price_eur || car.price || '';
     document.getElementById('fieldStatus').value = car.status || 'available';
     document.getElementById('fieldSaleCategory').value = car.sale_category || 'both';
@@ -1144,6 +1154,16 @@
     currentImages = [];
   });
 
+  // Le VIN complet ne doit jamais atteindre stock.json : ce fichier est servi
+  // tel quel au public (fetch client dans stock.js) et commité dans le repo.
+  // On ne persiste donc que les 6 premiers caractères + des '*' pour le reste ;
+  // le VIN intégral tapé dans le champ n'est jamais envoyé au serveur.
+  function maskVin(raw) {
+    const v = (raw || '').trim().toUpperCase().replace(/\s+/g, '');
+    if (!v) return '';
+    return v.length <= 6 ? v : v.slice(0, 6) + '*'.repeat(v.length - 6);
+  }
+
   document.getElementById('saveBtn').addEventListener('click', async () => {
     const id = document.getElementById('fieldId').value.trim();
     if (!id) {
@@ -1160,6 +1180,7 @@
       },
       mileage: document.getElementById('fieldMileage').value,
       country: document.getElementById('fieldCountry').value,
+      vin: maskVin(document.getElementById('fieldVin').value),
       price_eur: parseInt(document.getElementById('fieldPrice').value) || null,
       status: document.getElementById('fieldStatus').value,
       sale_category: document.getElementById('fieldSaleCategory').value,
