@@ -137,7 +137,7 @@ const T = {
     home: 'Accueil', stock: 'Stock', onRequest: 'Prix sur demande',
     available: 'Disponible', sold: 'Vendu', reserved: 'Réservé',
     year: 'Année', mileage: 'Kilométrage', location: 'Localisation',
-    make: 'Marque', model: 'Modèle', ref: 'Référence', type: 'Type',
+    make: 'Marque', model: 'Modèle', ref: 'Référence', type: 'Type', vin: 'VIN',
     car: 'Automobile', motorcycle: 'Moto',
     forPrivate: 'Vente au particulier', forPro: 'Vente au professionnel', forBoth: 'Particulier et professionnel',
     contact: 'Demander le dossier complet', backToStock: 'Retour au stock',
@@ -151,7 +151,7 @@ const T = {
     home: 'Home', stock: 'Stock', onRequest: 'Price on request',
     available: 'Available', sold: 'Sold', reserved: 'Reserved',
     year: 'Year', mileage: 'Mileage', location: 'Location',
-    make: 'Make', model: 'Model', ref: 'Reference', type: 'Type',
+    make: 'Make', model: 'Model', ref: 'Reference', type: 'Type', vin: 'VIN',
     car: 'Car', motorcycle: 'Motorcycle',
     forPrivate: 'Private sale', forPro: 'Trade sale', forBoth: 'Private and trade',
     contact: 'Request the full file', backToStock: 'Back to stock',
@@ -214,6 +214,8 @@ function jsonLd(item, l, t, url) {
     ...(item.steering ? { steeringPosition: item.steering } : {}),
     ...(item.exterior_color ? { color: item.exterior_color } : {}),
     ...(item.interior_color ? { vehicleInteriorColor: item.interior_color } : {}),
+    // item.vin est deja masque a la source (voir admin/index.html) : jamais
+    // le VIN complet, ici comme partout ou stock.json alimente une sortie publique.
     ...(item.vin ? { vehicleIdentificationNumber: item.vin } : {}),
     ...(item.country ? { availableAtOrFrom: { '@type': 'Place', address: item.country } } : {}),
     ...(images.length ? { image: images } : {}),
@@ -278,6 +280,10 @@ function renderSpecs(item, l, t) {
     [t.location, item.country],
     [t.type, item.vehicle_type === 'motorcycle' ? t.motorcycle : t.car],
     [t.ref, saleLabel(item.sale_category, t)],
+    // item.vin est deja masque a la source (admin/index.html ne persiste que
+    // les 6 premiers caracteres + des '*' dans stock.json) : jamais le VIN
+    // complet ici, stock.json etant servi tel quel au public.
+    [t.vin, item.vin || null],
   ].filter(([, v]) => v != null && v !== '');
   return `<dl class="vpSpecs">
 ${rows.map(([k, v]) => `            <dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('\n')}
@@ -864,65 +870,13 @@ const gmcFeed = [
 ].join('\n');
 writeFileSync(join(ROOT, 'stock-feed-google.xml'), gmcFeed);
 
-/* ── Liste crawlable injectee dans stock.html (FR + EN) ───────────────── */
-// La grille de stock.html est rendue en JavaScript : le HTML brut ne contient
-// aucun lien vers les fiches. On insere ici une liste statique de liens entre
-// deux marqueurs. stock.js la masque une fois la grille interactive prete ;
-// sans JavaScript, elle sert de repli.
-
-const LIST_START = '<!-- STOCK:LIST:START -->';
-const LIST_END = '<!-- STOCK:LIST:END -->';
-const listIntro = {
-  fr: 'Véhicules disponibles',
-  en: 'Available vehicles',
-};
-
-let listOk = 0;
-let listUpdated = 0;
-for (const l of LANGS) {
-  const file = join(ROOT, l, 'stock.html');
-  if (!existsSync(file)) { warnings.push(`${l}/stock.html introuvable : liste non injectee`); continue; }
-  let html = readFileSync(file, 'utf8');
-  if (!html.includes(LIST_START) || !html.includes(LIST_END)) {
-    warnings.push(`${l}/stock.html : marqueurs ${LIST_START} absents, liste non injectee`);
-    continue;
-  }
-  listOk++;
-  const lis = available.map((item) => {
-    const title = (item.title && (item.title[l] || item.title.fr)) || item.model || item.id;
-    const bits = [
-      item.year,
-      item.price_eur != null ? eur(item.price_eur, l) : T[l].onRequest,
-      item.country || null,
-    ].filter(Boolean).join(' · ');
-    return `          <li><a href="stock/${esc(item.slug)}.html">${esc(title)}</a>` +
-           `<span class="stockStaticMeta"> — ${esc(bits)}</span></li>`;
-  }).join('\n');
-  const facetNav = facets.length
-    ? `      <nav class="stockFacets" aria-label="${esc(FT[l].browse)}">\n` +
-      `        <span class="stockFacetsLabel">${esc(FT[l].byMake)} :</span> ` +
-      facets.filter((f) => f.kind === 'make')
-        .map((f) => `<a href="stock/${esc(f.file[l])}">${esc(f.name[l])}</a>`).join(' · ') +
-      (facets.some((f) => f.kind === 'category')
-        ? `\n        <span class="stockFacetsLabel">${esc(FT[l].byCategory)} :</span> ` +
-          facets.filter((f) => f.kind === 'category')
-            .map((f) => `<a href="stock/${esc(f.file[l])}">${esc(f.name[l])}</a>`).join(' · ')
-        : '') +
-      `\n      </nav>\n`
-    : '';
-  const block =
-    `${LIST_START}\n` +
-    facetNav +
-    `      <nav class="stockStaticList" id="stockStaticList" aria-label="${esc(listIntro[l])}">\n` +
-    `        <h2 class="visually-hidden">${esc(listIntro[l])}</h2>\n` +
-    `        <ul>\n${lis}\n        </ul>\n` +
-    `      </nav>\n      ${LIST_END}`;
-  const next = html.replace(
-    new RegExp(LIST_START.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[\\s\\S]*?' + LIST_END.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
-    () => block
-  );
-  if (next !== html) { writeFileSync(file, next); listUpdated++; }
-}
+// Ex-liste crawlable injectee entre marqueurs STOCK:LIST dans stock.html
+// (nav "Par marque/categorie" + liste statique des vehicules) : supprimee a
+// la demande d'Alex (visible et jugee redondante avec la grille + filtres).
+// Les marqueurs et le bloc ont ete retires directement de fr/en/stock.html ;
+// les pages de collection (marque-*.html, motos.html, youngtimers.html)
+// restent generees et indexables via sitemap.xml, seul ce point d'entree
+// depuis stock.html a disparu.
 
 console.log(`${written} pages vehicule generees (${items.length} vehicules x ${LANGS.length} langues)`);
 console.log(`${facetPages} pages de collection generees (${facets.length} facettes x ${LANGS.length} langues) : ${facets.map((f) => f.slug).join(', ')}`);
@@ -930,7 +884,6 @@ console.log(`sitemap.xml : ${urls.length} URL`);
 console.log(`stock-feed.xml / stock-feed.csv : ${feedRows.length} vehicules disponibles`);
 console.log(`stock-feed-google.xml (Merchant Center / Meta) : ${gmcItems.length} avec prix` +
   (gmcSkipped ? `, ${gmcSkipped} exclu(s) faute de prix` : ''));
-console.log(`liste crawlable : ${listOk}/${LANGS.length} pages stock.html (${listUpdated} mise(s) a jour ce build)`);
 console.log('robots.txt ecrit');
 if (warnings.length) {
   console.log('\nAvertissements :');
