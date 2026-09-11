@@ -907,14 +907,15 @@
       "mileage": "33500",
       "mileage_km": 33500,
       "country": "",
-      "status": "available",
+      "status": "reserved",
       "sale_category": "both",
       "images": [
         "/assets/stock/images/honda-integra-1787146531877-64770d.jpg",
         "/assets/stock/images/honda-integra-1787146633277-cac018.jpg",
         "/assets/stock/images/honda-integra-1787146644953-aa32ba.jpg",
         "/assets/stock/images/honda-integra-1787146664851-78a45f.jpg"
-      ]
+      ],
+      "vin": ""
     },
     {
       "id": "audi",
