@@ -882,7 +882,7 @@
       "mileage": "18500",
       "mileage_km": 18500,
       "country": "",
-      "status": "available",
+      "status": "reserved",
       "sale_category": "both",
       "images": [
         "/assets/stock/images/img-1787145052488-2486db.jpg",
@@ -890,7 +890,8 @@
         "/assets/stock/images/img-1787145263583-c42d50.jpg",
         "/assets/stock/images/img-1787145024980-c095c0.jpg",
         "/assets/stock/images/img-1787145032587-d2ceb2.jpg"
-      ]
+      ],
+      "vin": ""
     },
     {
       "id": "honda integra",
