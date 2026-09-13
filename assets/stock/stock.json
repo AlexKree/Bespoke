@@ -981,6 +981,38 @@
         "/assets/stock/images/img-1789287017398-e6105c.jpg"
       ],
       "slug": "mercedes-benz-e320-coupe-w124-1994-rhd"
+    },
+    {
+      "id": "xjs 4.0 cab",
+      "year": 2026,
+      "title": {
+        "fr": "Jaguar XJS Cabriolet 4.0 ",
+        "en": "Jaguar XJS Cabriolet 4.0 "
+      },
+      "mileage": "89000",
+      "country": "",
+      "vin": "",
+      "price_eur": 22990,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Très belle Jaguar XJS Cabriolet 4.0 de 1994 affichant seulement 89 000 km. Cette élégante GT britannique est une deuxième main et se présente dans un très bon état général. Elle est équipée du réputé moteur 6 cylindres en ligne 4.0L, offrant un excellent équilibre entre confort, souplesse et caractère. La voiture dispose déjà de son dossier FFVE, permettant son immatriculation en carte grise collection. Une nouvelle capote sera prochainement installée afin de parfaire la présentation de cette belle XJS. Une superbe opportunité pour amateur de Jaguar classiques à la recherche d’une XJS Cabriolet avec un faible kilométrage, un historique de propriétaires limité et une configuration particulièrement élégante.",
+        "en": "Beautiful 1994 Jaguar XJS 4.0 Convertible with only 89,000 km. This elegant British grand tourer is a second-owner car and is presented in very good overall condition. It is powered by the renowned 4.0L inline-six engine, offering an excellent combination of smoothness, comfort and classic British character. The vehicle already has its FFVE certification, allowing registration in France with classic vehicle status. A new convertible top will also be fitted shortly, further enhancing the overall presentation of this beautiful XJS. A great opportunity for enthusiasts looking for a low-mileage, elegant and increasingly desirable classic Jaguar XJS Convertible."
+      },
+      "images": [
+        "/assets/stock/images/xjs-4-0-cab-1789288322947-d1dfc3.jpg",
+        "/assets/stock/images/xjs-4-0-cab-1789288323987-7c22b2.jpg",
+        "/assets/stock/images/xjs-4-0-cab-1789288475247-ccf7bd.jpg",
+        "/assets/stock/images/xjs-4-0-cab-1789288471205-d4da1f.jpg",
+        "/assets/stock/images/xjs-4-0-cab-1789288326155-de4cdb.jpg",
+        "/assets/stock/images/xjs-4-0-cab-1789288325001-ea445f.jpg",
+        "/assets/stock/images/xjs-4-0-cab-1789288327177-c232ba.jpg",
+        "/assets/stock/images/xjs-4-0-cab-1789288328185-e47985.jpg",
+        "/assets/stock/images/xjs-4-0-cab-1789288322047-3b3f26.jpg",
+        "/assets/stock/images/xjs-4-0-cab-1789288321050-c12ce8.jpg",
+        "/assets/stock/images/xjs-4-0-cab-1789288470271-337f8b.jpg"
+      ],
+      "slug": "jaguar-xjs-cabriolet-4-0-2026"
     }
   ]
 }
