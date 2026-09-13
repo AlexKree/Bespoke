@@ -1013,6 +1013,32 @@
         "/assets/stock/images/xjs-4-0-cab-1789288470271-337f8b.jpg"
       ],
       "slug": "jaguar-xjs-cabriolet-4-0-2026"
+    },
+    {
+      "id": "745i",
+      "year": 2005,
+      "title": {
+        "fr": "BMW 745i E65 V8 – 2005 – RHD",
+        "en": "BMW 745i E65 V8 – 2005 – RHD"
+      },
+      "mileage": "57 000",
+      "country": "",
+      "vin": "",
+      "price_eur": 8490,
+      "status": "available",
+      "sale_category": "professionnel",
+      "description": {
+        "fr": "Superbe BMW 745i de 2005, génération E65, affichant seulement 57 000 km. Elle est équipée du puissant V8 4.4L essence développant 333 ch, associé à une boîte automatique, offrant le confort, les performances et le raffinement caractéristiques de la Série 7. Véhicule en conduite à droite (RHD), déjà dédouané, mais sans carte grise française à ce jour. Son kilométrage exceptionnellement faible en fait un exemplaire particulièrement intéressant pour amateur de BMW haut de gamme à la recherche d’une E65 rare.",
+        "en": "Beautiful 2005 BMW 745i from the E65 generation, showing only 57,000 km. It is powered by the powerful 4.4L V8 petrol engine producing 333 hp, paired with an automatic transmission, offering the comfort, performance and refinement expected from a BMW 7 Series. The car is right-hand drive (RHD) and has already been customs cleared, but does not currently have French registration. With such exceptionally low mileage, this is a particularly interesting example for BMW enthusiasts looking for a rare and well-preserved E65."
+      },
+      "images": [
+        "/assets/stock/images/745i-1789289394376-f1a63a.jpg",
+        "/assets/stock/images/745i-1789289393324-4d7529.jpg",
+        "/assets/stock/images/745i-1789289392162-6b2a78.jpg",
+        "/assets/stock/images/745i-1789289402252-067869.jpg",
+        "/assets/stock/images/745i-1789289395304-a6a551.jpg"
+      ],
+      "slug": "bmw-745i-e65-v8-2005-rhd"
     }
   ]
 }
