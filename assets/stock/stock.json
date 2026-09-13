@@ -947,6 +947,36 @@
         "/assets/stock/images/img-1787154371280-aa96cb.jpg",
         "/assets/stock/images/img-1787154405419-1d3ade.jpg"
       ]
+    },
+    {
+      "id": "e320",
+      "year": 1994,
+      "title": {
+        "fr": "Mercedes-Benz E320 Coupé W124 – 1994 – RHD",
+        "en": "Mercedes-Benz E320 Coupé W124 – 1994 – RHD"
+      },
+      "mileage": "217000",
+      "country": "UK",
+      "vin": "",
+      "price_eur": 10000,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Belle Mercedes-Benz E320 Coupé de 1994, issue de la mythique génération W124. Elle affiche 135 000 miles, soit environ 217 000 km, et est équipée du réputé 6 cylindres en ligne 3.2L M104 développant environ 220 ch. Un moteur reconnu pour sa souplesse, sa robustesse et sa grande longévité, associé à la légendaire qualité de fabrication de la W124. Cette élégante version Coupé offre un excellent équilibre entre confort, raffinement et plaisir de conduite, avec tout le charme des Mercedes des années 90. Véhicule en conduite à droite (RHD). La voiture dispose déjà de son dossier FFVE, permettant son immatriculation en carte grise collection en France. Une belle opportunité pour les amateurs de Mercedes classiques à la recherche d’un authentique Coupé W124 6 cylindres.",
+        "en": "Beautiful 1994 Mercedes-Benz E320 Coupé from the legendary W124 generation. The car shows 135,000 miles, approximately 217,000 km, and is powered by the renowned 3.2L M104 inline-six engine producing around 220 hp. This engine is well known for its smoothness, robustness and excellent longevity, combined with the legendary build quality of the W124. This elegant Coupé offers an excellent balance of comfort, refinement and driving pleasure, with all the timeless character of a classic 1990s Mercedes-Benz. Right-hand drive (RHD). The vehicle already has its FFVE certification, allowing registration in France with classic vehicle status (“carte grise collection”). A great opportunity for enthusiasts looking for an authentic six-cylinder W124 Coupé."
+      },
+      "images": [
+        "/assets/stock/images/img-1789285741323-30c9ed.jpg",
+        "/assets/stock/images/img-1789287017398-e6105c.jpg",
+        "/assets/stock/images/img-1789285743379-aba52c.jpg",
+        "/assets/stock/images/img-1789285744602-363827.jpg",
+        "/assets/stock/images/img-1789285745547-73dceb.jpg",
+        "/assets/stock/images/img-1789285742443-a9ba81.jpg",
+        "/assets/stock/images/img-1789287018458-d34902.jpg",
+        "/assets/stock/images/img-1789287019458-819f3b.jpg",
+        "/assets/stock/images/img-1789287021738-896099.jpg"
+      ],
+      "slug": "mercedes-benz-e320-coupe-w124-1994-rhd"
     }
   ]
 }
