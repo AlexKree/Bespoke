@@ -1805,3 +1805,52 @@ a.toolsRow:hover .aiToolCta{color:#e6cc88}
 .vpRelatedBody{display:flex;flex-direction:column;gap:5px;padding:14px 16px}
 .vpRelatedTitle{font-family:var(--serif);font-size:17px;letter-spacing:.02em;color:var(--text)}
 .vpRelatedMeta{font-size:12.5px;letter-spacing:.04em;color:var(--muted2)}
+
+/* ═══════════════════════════════════════════════════════════════════
+   THEME — Relook "Monochrome course" (accueil, en validation PR)
+   Scopé à body.theme-racing : n'affecte aucune autre page. La quasi-
+   totalité des composants suit automatiquement via les variables
+   --gold/--bg0/--serif/etc. redéfinies ici ; le reste (couleurs
+   codées en dur ailleurs dans la feuille de style) est réécrit
+   explicitement en dessous.
+═══════════════════════════════════════════════════════════════════ */
+body.theme-racing{
+  --bg0:#0a0a0a; --bg1:#000000;
+  --panel: rgba(255,255,255,.05);
+  --panel2: rgba(255,255,255,.03);
+  --panel-hover: rgba(255,255,255,.08);
+  --line: rgba(255,255,255,.14);
+  --line-gold: rgba(232,56,42,.40);
+  --text:#f2f2f0;
+  --muted: rgba(242,242,240,.6);
+  --muted2: rgba(242,242,240,.4);
+  --gold:#e8382a;
+  --gold-light:#ff5b46;
+  --gold-dim: rgba(232,56,42,.16);
+  --gold-glow: rgba(232,56,42,.10);
+  --r-xl:0; --r-lg:0; --r-md:0;
+  --serif:'Space Grotesk', system-ui, sans-serif;
+  --sans:'Space Grotesk', system-ui, sans-serif;
+  background:#0a0a0a;
+}
+body.theme-racing header{background: rgba(10,10,10,.92)}
+body.theme-racing footer{background: rgba(0,0,0,.4)}
+body.theme-racing .brand .name{letter-spacing:.12em}
+body.theme-racing .brand:hover .mark{box-shadow:0 4px 18px rgba(232,56,42,.30)}
+body.theme-racing .heroV2-title,
+body.theme-racing .sectionTitle h2{text-transform:uppercase}
+body.theme-racing .heroV2{border:none; box-shadow:none; background:transparent}
+body.theme-racing .heroV2-media{border-left:3px solid var(--gold)}
+body.theme-racing .heroV2-media img{filter:grayscale(1) contrast(1.15) brightness(.9)}
+body.theme-racing .btn.primary,
+body.theme-racing .btnPrimary{
+  border-color:var(--gold); background:var(--gold); color:#0a0a0a;
+  font-weight:700; text-transform:uppercase; letter-spacing:.03em;
+}
+body.theme-racing .btn.primary:hover,
+body.theme-racing .btnPrimary:hover{
+  background:var(--gold-light); border-color:var(--gold-light); color:#0a0a0a; box-shadow:none;
+}
+body.theme-racing blockquote{background: rgba(232,56,42,.06)}
+body.theme-racing .aiToolCard:hover .aiToolCta,
+body.theme-racing a.toolsRow:hover .aiToolCta{color:var(--gold-light)}
