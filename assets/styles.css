@@ -594,7 +594,7 @@ footer{
   margin-top:4px; letter-spacing:.025em;
 }
 .stockCardActions{
-  display:flex; gap:8px; margin-top:auto; padding-top:16px;
+  display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; padding-top:16px;
   border-top:1px solid var(--line);
 }
 .btnIcon{
