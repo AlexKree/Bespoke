@@ -1696,6 +1696,11 @@ a.aiHubCard:hover{border-color:var(--line-gold);background:var(--panel);transfor
 .toolsRow:hover .aiToolCta{color:#e6cc88}
 @media (max-width:520px){ .toolsRow{grid-template-columns:36px 1fr; gap:16px} }
 
+/* ── Variante 4 colonnes (section "Pour aller plus loin") ──────────── */
+.cards4{grid-template-columns:repeat(4,1fr)}
+@media (max-width:1080px){ .cards4{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:640px){ .cards4{grid-template-columns:1fr} }
+
 /* ── Liens croisés entre outils ──────────────────────────────────── */
 .aiCrossLinks{
   display:flex; gap:14px; flex-wrap:wrap; align-items:center;
