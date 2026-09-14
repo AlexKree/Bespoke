@@ -1689,11 +1689,11 @@ a.aiHubCard:hover{border-color:var(--line-gold);background:var(--panel);transfor
   transition:background var(--transition);
 }
 .toolsRow:last-child{border-bottom:none}
-.toolsRow:hover{background:var(--panel2)}
+a.toolsRow:hover{background:var(--panel2)}
 .toolsRow .num{font-family:var(--serif); font-size:36px; font-weight:500; color:var(--gold-light); line-height:1}
 .toolsRow h3{margin:2px 0 6px; font-size:17px; font-weight:600; color:var(--text)}
 .toolsRow p{margin:0; font-size:14px; line-height:1.6; color:var(--muted); max-width:62ch}
-.toolsRow:hover .aiToolCta{color:#e6cc88}
+a.toolsRow:hover .aiToolCta{color:#e6cc88}
 @media (max-width:520px){ .toolsRow{grid-template-columns:36px 1fr; gap:16px} }
 
 /* ── Liens croisés entre outils ──────────────────────────────────── */
