@@ -138,6 +138,8 @@ const T = {
     available: 'Disponible', sold: 'Vendu', reserved: 'Réservé',
     year: 'Année', mileage: 'Kilométrage', location: 'Localisation',
     make: 'Marque', model: 'Modèle', ref: 'Référence', type: 'Type', vin: 'VIN',
+    transmission: 'Transmission', fuelType: 'Carburant', bodyType: 'Carrosserie',
+    power: 'Puissance', exteriorColor: 'Couleur extérieure', interiorColor: 'Couleur intérieure',
     car: 'Automobile', motorcycle: 'Moto',
     forPrivate: 'Vente au particulier', forPro: 'Vente au professionnel', forBoth: 'Particulier et professionnel',
     contact: 'Demander le dossier complet', backToStock: 'Retour au stock',
@@ -152,6 +154,8 @@ const T = {
     available: 'Available', sold: 'Sold', reserved: 'Reserved',
     year: 'Year', mileage: 'Mileage', location: 'Location',
     make: 'Make', model: 'Model', ref: 'Reference', type: 'Type', vin: 'VIN',
+    transmission: 'Transmission', fuelType: 'Fuel', bodyType: 'Body type',
+    power: 'Power', exteriorColor: 'Exterior colour', interiorColor: 'Interior colour',
     car: 'Car', motorcycle: 'Motorcycle',
     forPrivate: 'Private sale', forPro: 'Trade sale', forBoth: 'Private and trade',
     contact: 'Request the full file', backToStock: 'Back to stock',
@@ -170,6 +174,18 @@ function saleLabel(cat, t) {
   if (cat === 'professionnel') return t.forPro;
   return t.forBoth;
 }
+
+// item.transmission / item.fuel_type sont des valeurs fixes (menu admin) en
+// anglais canonique ; on les localise pour l'affichage FR sans toucher a la
+// donnee stockee (JSON-LD, flux portails).
+const TRANSMISSION_LABELS = {
+  fr: { Manual: 'Manuelle', Automatic: 'Automatique' },
+  en: { Manual: 'Manual', Automatic: 'Automatic' },
+};
+const FUEL_LABELS = {
+  fr: { Petrol: 'Essence', Diesel: 'Diesel', Electric: 'Électrique', Hybrid: 'Hybride' },
+  en: { Petrol: 'Petrol', Diesel: 'Diesel', Electric: 'Electric', Hybrid: 'Hybrid' },
+};
 
 /* ── Donnees structurees ──────────────────────────────────────────────── */
 
@@ -277,6 +293,12 @@ function renderSpecs(item, l, t) {
     [t.model, item.model],
     [t.year, item.year],
     [t.mileage, item.mileage || (item.mileage_km ? item.mileage_km.toLocaleString(l === 'en' ? 'en-GB' : 'fr-FR') + ' km' : null)],
+    [t.transmission, TRANSMISSION_LABELS[l]?.[item.transmission] || null],
+    [t.fuelType, FUEL_LABELS[l]?.[item.fuel_type] || null],
+    [t.bodyType, item.body_type],
+    [t.power, item.power_hp != null ? `${item.power_hp} ${l === 'en' ? 'hp' : 'ch'}` : null],
+    [t.exteriorColor, item.exterior_color],
+    [t.interiorColor, item.interior_color],
     [t.location, item.country],
     [t.type, item.vehicle_type === 'motorcycle' ? t.motorcycle : t.car],
     [t.ref, saleLabel(item.sale_category, t)],

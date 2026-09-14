@@ -638,6 +638,48 @@
             </div>
           </div>
 
+          <div class="section-label">Caractéristiques techniques</div>
+          <div class="row2">
+            <div class="field">
+              <label>Transmission</label>
+              <select id="fieldTransmission">
+                <option value="">—</option>
+                <option value="Manual">Manuelle</option>
+                <option value="Automatic">Automatique</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Carburant</label>
+              <select id="fieldFuelType">
+                <option value="">—</option>
+                <option value="Petrol">Essence</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Electric">Électrique</option>
+                <option value="Hybrid">Hybride</option>
+              </select>
+            </div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label>Carrosserie</label>
+              <input type="text" id="fieldBodyType" placeholder="ex: Cabriolet, Coupé, Berline..."/>
+            </div>
+            <div class="field">
+              <label>Puissance (ch)</label>
+              <input type="number" id="fieldPowerHp" min="0"/>
+            </div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label>Couleur extérieure</label>
+              <input type="text" id="fieldExteriorColor" placeholder="ex: Noir"/>
+            </div>
+            <div class="field">
+              <label>Couleur intérieure</label>
+              <input type="text" id="fieldInteriorColor" placeholder="ex: Cuir beige"/>
+            </div>
+          </div>
+
           <div class="field">
             <label>VIN (n° de série)</label>
             <input type="text" id="fieldVin" placeholder="ex: WBAAA1305U..." maxlength="20" autocomplete="off"/>
@@ -1126,6 +1168,12 @@
     document.getElementById('fieldTitleEn').value = '';
     document.getElementById('fieldMileage').value = '';
     document.getElementById('fieldCountry').value = '';
+    document.getElementById('fieldTransmission').value = '';
+    document.getElementById('fieldFuelType').value = '';
+    document.getElementById('fieldBodyType').value = '';
+    document.getElementById('fieldPowerHp').value = '';
+    document.getElementById('fieldExteriorColor').value = '';
+    document.getElementById('fieldInteriorColor').value = '';
     document.getElementById('fieldVin').value = '';
     document.getElementById('fieldPrice').value = '';
     document.getElementById('fieldStatus').value = 'available';
@@ -1146,6 +1194,12 @@
     document.getElementById('fieldTitleEn').value = car.title?.en || '';
     document.getElementById('fieldMileage').value = car.mileage || '';
     document.getElementById('fieldCountry').value = car.country || '';
+    document.getElementById('fieldTransmission').value = car.transmission || '';
+    document.getElementById('fieldFuelType').value = car.fuel_type || '';
+    document.getElementById('fieldBodyType').value = car.body_type || '';
+    document.getElementById('fieldPowerHp').value = car.power_hp != null ? car.power_hp : '';
+    document.getElementById('fieldExteriorColor').value = car.exterior_color || '';
+    document.getElementById('fieldInteriorColor').value = car.interior_color || '';
     document.getElementById('fieldVin').value = vinsByCarId[car.id] || '';
     document.getElementById('fieldPrice').value = car.price_eur || car.price || '';
     document.getElementById('fieldStatus').value = car.status || 'available';
@@ -1197,6 +1251,12 @@
       },
       mileage: document.getElementById('fieldMileage').value,
       country: document.getElementById('fieldCountry').value,
+      transmission: document.getElementById('fieldTransmission').value,
+      fuel_type: document.getElementById('fieldFuelType').value,
+      body_type: document.getElementById('fieldBodyType').value.trim(),
+      power_hp: parseInt(document.getElementById('fieldPowerHp').value) || null,
+      exterior_color: document.getElementById('fieldExteriorColor').value.trim(),
+      interior_color: document.getElementById('fieldInteriorColor').value.trim(),
       vin: maskVin(vinRaw),
       price_eur: parseInt(document.getElementById('fieldPrice').value) || null,
       status: document.getElementById('fieldStatus').value,
