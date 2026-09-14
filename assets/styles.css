@@ -1839,6 +1839,8 @@ body.theme-racing .brand .name{letter-spacing:.12em}
 body.theme-racing .brand:hover .mark{box-shadow:0 4px 18px rgba(232,56,42,.30)}
 body.theme-racing .heroV2-title,
 body.theme-racing .sectionTitle h2{text-transform:uppercase}
+body.theme-racing h1{font-size:clamp(28px,3.4vw,42px) !important}
+body.theme-racing h2{font-size:clamp(20px,2.5vw,28px)}
 body.theme-racing .heroV2{border:none; box-shadow:none; background:transparent}
 body.theme-racing .heroV2-media{border-left:3px solid var(--gold)}
 body.theme-racing .heroV2-media img{filter:grayscale(1) contrast(1.15) brightness(.9)}
