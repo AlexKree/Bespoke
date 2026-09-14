@@ -1854,3 +1854,22 @@ body.theme-racing .btnPrimary:hover{
 body.theme-racing blockquote{background: rgba(232,56,42,.06)}
 body.theme-racing .aiToolCard:hover .aiToolCta,
 body.theme-racing a.toolsRow:hover .aiToolCta{color:var(--gold-light)}
+body.theme-racing .card:not(.media):hover{border-color: rgba(232,56,42,.25)}
+body.theme-racing .stockControlsLeft input:focus,
+body.theme-racing .stockSort select:focus,
+body.theme-racing .input:focus, body.theme-racing .select:focus,
+body.theme-racing .msgCompose textarea:focus{
+  border-color: rgba(232,56,42,.60);
+  box-shadow: 0 0 0 3px rgba(232,56,42,.12);
+}
+body.theme-racing .stockCard:hover{box-shadow: var(--shadow-card-hover), 0 0 0 1px rgba(232,56,42,.18)}
+body.theme-racing .thumbBtn.active{box-shadow:0 0 0 1px rgba(232,56,42,.35)}
+body.theme-racing .thumbBtn:hover{border-color: rgba(232,56,42,.60)}
+body.theme-racing .walletBalance{background: linear-gradient(135deg, rgba(232,56,42,.14) 0%, rgba(232,56,42,.06) 100%)}
+body.theme-racing .msgBubble.mine{background: linear-gradient(135deg, rgba(232,56,42,.20) 0%, rgba(232,56,42,.10) 100%)}
+body.theme-racing .market-hero{background: linear-gradient(135deg, rgba(232,56,42,.10) 0%, rgba(0,0,0,0) 60%)}
+body.theme-racing .car-photo-card .car-bg{background: linear-gradient(135deg, rgba(232,56,42,.08) 0%, rgba(0,0,0,.8) 100%)}
+body.theme-racing .timeline-milestone{background: linear-gradient(135deg, rgba(232,56,42,.12) 0%, rgba(232,56,42,.04) 100%)}
+@media (max-width:1023px){
+  body.theme-racing .navbar-menu{background: rgba(10,10,10,.98)}
+}

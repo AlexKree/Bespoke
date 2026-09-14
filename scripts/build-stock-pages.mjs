@@ -482,10 +482,10 @@ function renderFacetPage(facet, l, allFacets) {
   <meta name="robots" content="index,follow" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../assets/styles.css?v=6" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/styles.css?v=7" />
   <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#05101e" />
+  <meta name="theme-color" content="#0a0a0a" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="${url}" />
   <meta property="og:title" content="${esc(facet.title[l])}" />
@@ -501,7 +501,7 @@ function renderFacetPage(facet, l, allFacets) {
   <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments); };</script>
   <script type="application/ld+json">${ld}</script>
 </head>
-<body>
+<body class="theme-racing">
 ${shell[l].header}
 <main>
   <div class="container">
@@ -568,10 +568,10 @@ function renderPage(item, l, all) {
   <meta name="robots" content="${item.status === 'sold' ? 'noindex,follow' : 'index,follow'}" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../assets/styles.css?v=5" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/styles.css?v=7" />
   <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#05101e" />
+  <meta name="theme-color" content="#0a0a0a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Bespoke" />
@@ -596,7 +596,7 @@ function renderPage(item, l, all) {
   <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments); };</script>
   <script type="application/ld+json">${jsonLd(item, l, t, url)}</script>
 </head>
-<body>
+<body class="theme-racing">
 ${shell[l].header}
 <main>
   <div class="container">
