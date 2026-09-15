@@ -707,7 +707,8 @@ footer{
 @media (max-width:700px){.modalMedia{border-right:none;border-bottom:1px solid var(--line)}}
 .modalMainImage{
   width:100%; aspect-ratio:4/3;
-  object-fit:cover; object-position:center; display:block;
+  object-fit:contain; object-position:center; display:block;
+  background:#000;
   border-radius:var(--r-xl) 0 0 0;
 }
 @media (max-width:700px){.modalMainImage{border-radius:var(--r-xl) var(--r-xl) 0 0}}
@@ -1734,8 +1735,8 @@ a.toolsRow:hover .aiToolCta{color:#e6cc88}
   background:var(--panel2); box-shadow:var(--shadow-card);
 }
 .vpMainImage{
-  width:100%; aspect-ratio:3/2; object-fit:cover; object-position:center;
-  display:block; background:rgba(255,255,255,.03);
+  width:100%; aspect-ratio:3/2; object-fit:contain; object-position:center;
+  display:block; background:#000;
 }
 .vpThumbs{
   display:flex; gap:7px; padding:12px; flex-wrap:wrap;
