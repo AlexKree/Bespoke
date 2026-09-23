@@ -89,7 +89,17 @@
         "/assets/stock/images/chevrolet-corvette-stingray-1786280032928-abd8b0.jpg",
         "/assets/stock/images/img_20191225_132401.jpg",
         "/assets/stock/images/chevrolet-corvette-stingray-1786280070369-f7fce0.jpg"
-      ]
+      ],
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "vin": "",
+      "image_focus": {
+        "/assets/stock/images/chevrolet-corvette-stingray-1786280032928-abd8b0.jpg": "41.0% 38.1%"
+      }
     },
     {
       "id": "jaguar-xjv12-vanden-plas",
