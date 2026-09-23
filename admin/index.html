@@ -919,13 +919,21 @@
       wrap.draggable = true;
       wrap.dataset.index = i;
 
-      // Image
+      // Image — cliquer dessus ouvre directement le recentrage (le bouton 🎯
+      // reste disponible pour la decouverte, mais cliquer une photo deja
+      // uploadee pour la repositionner est le geste le plus naturel).
       const img = document.createElement('img');
       img.src = '../' + path.replace(/^\//, '');
       img.alt = '';
+      img.title = 'Cliquer pour recentrer la photo';
       img.loading = 'lazy';
       img.style.objectPosition = currentImageFocus[path] || '';
+      img.style.cursor = 'pointer';
       img.onerror = () => { img.style.display = 'none'; };
+      img.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openFocusEditor(path);
+      });
       wrap.appendChild(img);
 
       // Index badge
