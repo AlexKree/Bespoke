@@ -383,6 +383,8 @@
       IMG.apply(img, item.images[0], 760, [400, 560, 760],
                 '(max-width: 620px) 100vw, (max-width: 1040px) 50vw, 361px');
       img.width = 761; img.height = 476; // ratio 16/10, evite le saut de mise en page
+      const focus = item.image_focus && item.image_focus[item.images[0]];
+      if (focus) img.style.objectPosition = focus;
     }
     if (isSold) img.style.filter = 'grayscale(40%) opacity(0.75)';
     imgWrap.appendChild(img);
@@ -636,6 +638,8 @@
         im.alt = '';
         im.loading = 'lazy';
         im.decoding = 'async';
+        const thumbFocus = item.image_focus && item.image_focus[src];
+        if (thumbFocus) im.style.objectPosition = thumbFocus;
         b.appendChild(im);
         b.addEventListener('click', () => {
           IMG.apply(modalMainImage, src, 1000, [500, 760, 1000], '(max-width: 700px) 100vw, 493px');

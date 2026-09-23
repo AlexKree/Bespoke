@@ -122,6 +122,17 @@ function imgSrcset(src, widths) {
   return use.map((w) => `${fn(src, w)} ${w}w`).join(', ');
 }
 
+/**
+ * Attribut style="object-position:…" pour une photo recadree en cover, si
+ * l'admin a deplace son point focal (assets/stock/stock.json, champ
+ * image_focus, defini via l'outil de recentrage dans admin/index.html).
+ * Chaine vide par defaut : le CSS garde alors object-position:center.
+ */
+function focusStyle(item, path) {
+  const val = item.image_focus && item.image_focus[path];
+  return val ? ` style="object-position:${esc(val)}"` : '';
+}
+
 /** Repli inline : si la variante statique manque, bascule sur le CDN. */
 const imgOnErr = (src, w) =>
   `this.onerror=null;this.removeAttribute('srcset');this.src='${cdn(src, w)}'`;
@@ -282,7 +293,7 @@ function renderGallery(item, alt) {
              onerror="${imgOnErr(main, 1000)}"
              alt="${esc(alt)}" width="1000" height="667" fetchpriority="high" decoding="async"/>
 ${thumbs.length > 1 ? `        <div class="vpThumbs">
-${thumbs.map((p, i) => `          <button type="button" class="vpThumb${i === 0 ? ' active' : ''}" data-full="${img(p, 1000)}" aria-label="${esc(alt)} — ${i + 1}"><img src="${img(p, 160)}" onerror="${imgOnErr(p, 160)}" alt="" width="120" height="80" loading="lazy" decoding="async"/></button>`).join('\n')}
+${thumbs.map((p, i) => `          <button type="button" class="vpThumb${i === 0 ? ' active' : ''}" data-full="${img(p, 1000)}" aria-label="${esc(alt)} — ${i + 1}"><img src="${img(p, 160)}" onerror="${imgOnErr(p, 160)}" alt="" width="120" height="80" loading="lazy" decoding="async"${focusStyle(item, p)}/></button>`).join('\n')}
         </div>` : ''}
       </div>`;
 }
@@ -329,7 +340,7 @@ ${picks.map((v) => {
     const title = (v.title && (v.title[l] || v.title.fr)) || v.model || v.id;
     const img0 = v.images[0];
     return `        <a class="vpRelatedCard" href="${esc(v.slug)}.html">
-          ${img0 ? `<img src="${img(img0, 560)}" onerror="${imgOnErr(img0, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"/>` : '<div class="vpRelatedNoImg"></div>'}
+          ${img0 ? `<img src="${img(img0, 560)}" onerror="${imgOnErr(img0, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"${focusStyle(v, img0)}/>` : '<div class="vpRelatedNoImg"></div>'}
           <div class="vpRelatedBody">
             <span class="vpRelatedTitle">${esc(title)}</span>
             <span class="vpRelatedMeta">${esc([v.year, v.price_eur != null ? eur(v.price_eur, l) : t.onRequest].filter(Boolean).join(' · '))}</span>
@@ -424,7 +435,7 @@ function facetCard(v, l, t) {
   const meta = [v.year, v.price_eur != null ? eur(v.price_eur, l) : t.onRequest, v.country || null]
     .filter(Boolean).join(' · ');
   return `        <a class="vpRelatedCard" href="${esc(v.slug)}.html">
-          ${img0 ? `<img src="${img(img0, 560)}" onerror="${imgOnErr(img0, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"/>` : '<div class="vpRelatedNoImg"></div>'}
+          ${img0 ? `<img src="${img(img0, 560)}" onerror="${imgOnErr(img0, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"${focusStyle(v, img0)}/>` : '<div class="vpRelatedNoImg"></div>'}
           <div class="vpRelatedBody">
             <span class="vpRelatedTitle">${esc(title)}</span>
             <span class="vpRelatedMeta">${esc(meta)}</span>
