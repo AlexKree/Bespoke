@@ -363,7 +363,46 @@
     }
     .img-thumb-btn:hover { background: rgba(198,176,122,.85); }
     .img-thumb-btn.remove:hover { background: rgba(224,92,92,.85); }
-    
+    .img-thumb-btn.focus.active { background: rgba(198,176,122,.85); color: #0b1e34; }
+
+    /* ── Recadrage photo (point focal) ─────────────────────────────────── */
+    #focusModal {
+      display: none; position: fixed; inset: 0; z-index: 250;
+      background: rgba(0,0,0,.8); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    #focusModal.open { display: flex; }
+    .focusBox { max-width: 460px; }
+    .focusHint { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
+    .focusFrame {
+      position: relative; width: 100%; aspect-ratio: 16 / 10;
+      overflow: hidden; border-radius: var(--r-md);
+      border: 1px solid var(--line); background: #000;
+      cursor: crosshair; touch-action: none; user-select: none;
+    }
+    .focusFrame img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block; pointer-events: none;
+    }
+    .focusMarker {
+      position: absolute; width: 22px; height: 22px;
+      border: 2px solid #fff; border-radius: 50%;
+      box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 0 6px rgba(0,0,0,.5);
+      transform: translate(-50%, -50%); pointer-events: none;
+    }
+    .focusMarker::before, .focusMarker::after {
+      content: ''; position: absolute; background: #fff;
+      box-shadow: 0 0 4px rgba(0,0,0,.6);
+    }
+    .focusMarker::before { left: 50%; top: -6px; bottom: -6px; width: 1px; transform: translateX(-50%); }
+    .focusMarker::after { top: 50%; left: -6px; right: -6px; height: 1px; transform: translateY(-50%); }
+    .focusZoom {
+      display: flex; align-items: center; gap: 10px; margin-top: 14px;
+      font-size: 13px; color: var(--muted);
+    }
+    .focusZoom input { flex: 1; accent-color: var(--gold); }
+    .focusZoom output { min-width: 42px; text-align: right; color: var(--text); }
+
     .upload-bar {
       display: flex; gap: 8px; align-items: center;
       margin-top: 8px; flex-wrap: wrap;
@@ -756,6 +795,27 @@
       </div>
     </div>
 
+    <!-- Modal: Recadrage / point focal d'une photo -->
+    <div id="focusModal">
+      <div class="confirmBox focusBox">
+        <h3>Recentrer la photo</h3>
+        <p class="focusHint">Cliquez ou glissez dans le cadre pour repositionner l'image. Si la photo remplit déjà toute la largeur, zoomez pour pouvoir aussi la décaler horizontalement. Aperçu au format carte stock (16:10) : le reste du site recadrera l'image en conséquence.</p>
+        <div class="focusFrame" id="focusFrame">
+          <img id="focusImg" src="" alt=""/>
+          <div class="focusMarker" id="focusMarker"></div>
+        </div>
+        <label class="focusZoom">Zoom
+          <input type="range" id="focusZoomInput" min="1" max="3" step="0.05" value="1"/>
+          <output id="focusZoomOut">1.00×</output>
+        </label>
+        <div class="confirmActions" style="margin-top:16px">
+          <button type="button" id="focusResetBtn" class="btn">Réinitialiser</button>
+          <button type="button" id="focusCancelBtn" class="btn">Annuler</button>
+          <button type="button" id="focusApplyBtn" class="btn primary">Appliquer</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </main>
 
@@ -779,6 +839,12 @@
   // valeur integrale affichee et editee dans l'admin.
   let vinsByCarId = {};
   let currentImages = [];
+  // Point focal par photo (chemin -> "X% Y%"), utilise en object-position la
+  // ou la photo est recadree en cover (carte stock, vignettes...). Absent
+  // d'une photo => centre par defaut, donc jamais ecrit tant que l'admin ne
+  // deplace pas le point (voir focusApplyBtn plus bas).
+  let currentImageFocus = {};
+  let focusEditPath = null;
   let editingIndex = null;
   let pendingDeleteIndex = null;
 
@@ -863,12 +929,21 @@
       wrap.draggable = true;
       wrap.dataset.index = i;
 
-      // Image
+      // Image — cliquer dessus ouvre directement le recentrage (le bouton 🎯
+      // reste disponible pour la decouverte, mais cliquer une photo deja
+      // uploadee pour la repositionner est le geste le plus naturel).
       const img = document.createElement('img');
       img.src = '../' + path.replace(/^\//, '');
       img.alt = '';
+      img.title = 'Cliquer pour recentrer la photo';
       img.loading = 'lazy';
+      applyFocusStyle(img, currentImageFocus[path]);
+      img.style.cursor = 'pointer';
       img.onerror = () => { img.style.display = 'none'; };
+      img.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openFocusEditor(path);
+      });
       wrap.appendChild(img);
 
       // Index badge
@@ -911,6 +986,18 @@
         controls.appendChild(downBtn);
       }
 
+      // Focus (recentrage) button
+      const focusBtn = document.createElement('button');
+      focusBtn.type = 'button';
+      focusBtn.className = 'img-thumb-btn focus' + (currentImageFocus[path] ? ' active' : '');
+      focusBtn.title = 'Recentrer la photo';
+      focusBtn.textContent = '🎯';
+      focusBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openFocusEditor(path);
+      });
+      controls.appendChild(focusBtn);
+
       // Remove button
       const removeBtn = document.createElement('button');
       removeBtn.type = 'button';
@@ -920,6 +1007,7 @@
       removeBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         currentImages = currentImages.filter((_, idx) => idx !== i);
+        delete currentImageFocus[path];
         renderImageGrid();
       });
       controls.appendChild(removeBtn);
@@ -961,6 +1049,123 @@
       grid.appendChild(wrap);
     });
   }
+
+  // ── Recadrage / point focal d'une photo ────────────────────────────────
+  // Le point (x%, y%) choisi devient l'object-position CSS appliquee partout
+  // ou cette photo est affichee en object-fit:cover (carte stock, vignettes,
+  // fiches liees...) : l'admin peut donc recentrer le sujet dans le cadre
+  // sans avoir a recadrer le fichier lui-meme.
+  const focusModal  = document.getElementById('focusModal');
+  const focusFrame  = document.getElementById('focusFrame');
+  const focusImgEl  = document.getElementById('focusImg');
+  const focusMarker = document.getElementById('focusMarker');
+  const focusZoomInput = document.getElementById('focusZoomInput');
+  const focusZoomOut   = document.getElementById('focusZoomOut');
+  let focusPos = { x: 50, y: 50, z: 1 };
+  let focusDragging = false;
+
+  // Valeur stockee : "X% Y%" ou "X% Y% Z" (Z = zoom > 1). Sans zoom, une
+  // photo plus haute que le cadre 16:10 (3:2, 4:3...) le remplit deja en
+  // largeur : seul Y a alors un effet. Le zoom cree du debordement
+  // horizontal et rend X utile.
+  function parseFocusValue(val) {
+    const m = /^([\d.]+)%\s+([\d.]+)%(?:\s+([\d.]+))?$/.exec(val || '');
+    return m
+      ? { x: parseFloat(m[1]), y: parseFloat(m[2]), z: m[3] ? parseFloat(m[3]) : 1 }
+      : { x: 50, y: 50, z: 1 };
+  }
+
+  // Applique le cadrage a une <img> en object-fit:cover dont le parent
+  // coupe le debordement (overflow:hidden). Le zoom se fait autour du point
+  // focal : ce point reste a la meme place dans le cadre.
+  function applyFocusStyle(img, val) {
+    const p = parseFocusValue(val);
+    const pos = p.x + '% ' + p.y + '%';
+    img.style.objectPosition = val ? pos : '';
+    img.style.transformOrigin = p.z > 1 ? pos : '';
+    img.style.transform = p.z > 1 ? 'scale(' + p.z + ')' : '';
+  }
+
+  function setFocusPos(x, y, z = focusPos.z) {
+    focusPos = {
+      x: Math.max(0, Math.min(100, x)),
+      y: Math.max(0, Math.min(100, y)),
+      z: Math.max(1, Math.min(3, z)),
+    };
+    const pos = focusPos.x + '% ' + focusPos.y + '%';
+    focusImgEl.style.objectPosition = pos;
+    focusImgEl.style.transformOrigin = pos;
+    focusImgEl.style.transform = 'scale(' + focusPos.z + ')';
+    focusMarker.style.left = focusPos.x + '%';
+    focusMarker.style.top = focusPos.y + '%';
+    focusZoomInput.value = focusPos.z;
+    focusZoomOut.textContent = focusPos.z.toFixed(2) + '×';
+  }
+
+  focusZoomInput.addEventListener('input', () => {
+    setFocusPos(focusPos.x, focusPos.y, parseFloat(focusZoomInput.value));
+  });
+
+  function openFocusEditor(path) {
+    focusEditPath = path;
+    focusImgEl.src = '../' + path.replace(/^\//, '');
+    const p = parseFocusValue(currentImageFocus[path]);
+    setFocusPos(p.x, p.y, p.z);
+    focusModal.classList.add('open');
+  }
+
+  function focusPointFromEvent(e) {
+    const rect = focusFrame.getBoundingClientRect();
+    const t = e.touches && e.touches[0];
+    const clientX = t ? t.clientX : e.clientX;
+    const clientY = t ? t.clientY : e.clientY;
+    return { x: ((clientX - rect.left) / rect.width) * 100, y: ((clientY - rect.top) / rect.height) * 100 };
+  }
+
+  focusFrame.addEventListener('mousedown', (e) => {
+    focusDragging = true;
+    const p = focusPointFromEvent(e);
+    setFocusPos(p.x, p.y);
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!focusDragging) return;
+    const p = focusPointFromEvent(e);
+    setFocusPos(p.x, p.y);
+  });
+  window.addEventListener('mouseup', () => { focusDragging = false; });
+
+  focusFrame.addEventListener('touchstart', (e) => {
+    focusDragging = true;
+    const p = focusPointFromEvent(e);
+    setFocusPos(p.x, p.y);
+  }, { passive: true });
+  focusFrame.addEventListener('touchmove', (e) => {
+    if (!focusDragging) return;
+    const p = focusPointFromEvent(e);
+    setFocusPos(p.x, p.y);
+  }, { passive: true });
+  window.addEventListener('touchend', () => { focusDragging = false; });
+
+  document.getElementById('focusResetBtn').addEventListener('click', () => setFocusPos(50, 50, 1));
+
+  document.getElementById('focusCancelBtn').addEventListener('click', () => {
+    focusModal.classList.remove('open');
+    focusEditPath = null;
+  });
+
+  document.getElementById('focusApplyBtn').addEventListener('click', () => {
+    if (!focusEditPath) return;
+    const zoomed = focusPos.z > 1.001;
+    if (Math.abs(focusPos.x - 50) < 0.5 && Math.abs(focusPos.y - 50) < 0.5 && !zoomed) {
+      delete currentImageFocus[focusEditPath];
+    } else {
+      currentImageFocus[focusEditPath] = focusPos.x.toFixed(1) + '% ' + focusPos.y.toFixed(1) + '%'
+        + (zoomed ? ' ' + focusPos.z.toFixed(2) : '');
+    }
+    focusModal.classList.remove('open');
+    focusEditPath = null;
+    renderImageGrid();
+  });
 
   /**
    * Redimensionne une photo dans le navigateur avant envoi.
@@ -1102,6 +1307,10 @@
         thumb = document.createElement('img');
         thumb.className = 'carThumb';
         thumb.src = '../' + car.images[0].replace(/^\//, '');
+        // Position seule : cette vignette n'a pas de parent qui coupe le
+        // debordement, un zoom deborderait sur la ligne.
+        const f = car.image_focus && car.image_focus[car.images[0]];
+        if (f) { const p = parseFocusValue(f); thumb.style.objectPosition = p.x + '% ' + p.y + '%'; }
         thumb.alt = car.title?.fr || '';
         thumb.onerror = () => { thumb.style.display = 'none'; };
       } else {
@@ -1161,6 +1370,7 @@
   document.getElementById('addCarBtn').addEventListener('click', () => {
     editingIndex = null;
     currentImages = [];
+    currentImageFocus = {};
     document.getElementById('modalTitle').textContent = 'Ajouter un véhicule';
     document.getElementById('fieldId').value = '';
     document.getElementById('fieldYear').value = new Date().getFullYear();
@@ -1207,6 +1417,7 @@
     document.getElementById('fieldDescFr').value = car.description?.fr || '';
     document.getElementById('fieldDescEn').value = car.description?.en || '';
     currentImages = [...(car.images || [])];
+    currentImageFocus = { ...(car.image_focus || {}) };
     renderImageGrid();
     editModal.classList.add('open');
   }
@@ -1214,11 +1425,13 @@
   document.getElementById('closeModalBtn').addEventListener('click', () => {
     editModal.classList.remove('open');
     currentImages = [];
+    currentImageFocus = {};
   });
 
   document.getElementById('cancelBtn').addEventListener('click', () => {
     editModal.classList.remove('open');
     currentImages = [];
+    currentImageFocus = {};
   });
 
   // Le VIN complet ne doit jamais atteindre stock.json : ce fichier est servi
@@ -1266,6 +1479,11 @@
         en: document.getElementById('fieldDescEn').value,
       },
       images: currentImages,
+      // Ne garder que les points focaux des photos encore presentes, sinon
+      // une photo retiree puis re-uploadee heriterait d'un vieux reglage.
+      image_focus: Object.fromEntries(
+        Object.entries(currentImageFocus).filter(([path]) => currentImages.includes(path))
+      ),
     };
 
     const nextItems = Array.isArray(stockData.items) ? [...stockData.items] : [];
@@ -1286,6 +1504,7 @@
       showToast(editingIndex !== null ? 'Véhicule mis à jour.' : 'Véhicule ajouté.', 'success');
       editModal.classList.remove('open');
       currentImages = [];
+      currentImageFocus = {};
       loadStock();
     } else {
       showToast('Erreur lors de l\'enregistrement.', 'error');

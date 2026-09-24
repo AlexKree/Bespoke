@@ -20,3 +20,9 @@ stock-feed-google.xml
 # (fichiers versionnes). Le resultat est idempotent tant que le stock ne
 # change pas ; apres un build local sur un stock modifie, verifier le diff
 # avant de committer.
+
+# Fichiers de travail locaux (repo public, publie tel quel par Netlify) :
+# docs internes, captures d'ecran, liens de repli.
+docs/
+uploads/
+migrations/*.pdf

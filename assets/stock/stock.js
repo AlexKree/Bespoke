@@ -263,6 +263,21 @@
   // sur la conversion a la demande pour une photo pas encore construite.
   const IMG = window.BespokeImg;
 
+  // Cadrage choisi dans l'admin (image_focus) : "X% Y%" ou "X% Y% Z", Z etant
+  // un zoom applique via la variable CSS --fz autour du point focal (voir
+  // styles.css). Le parent de l'image doit couper le debordement.
+  function applyFocus(img, val) {
+    const m = /^([\d.]+)%\s+([\d.]+)%(?:\s+([\d.]+))?$/.exec(val || '');
+    if (!m) return;
+    const pos = m[1] + '% ' + m[2] + '%';
+    img.style.objectPosition = pos;
+    const z = m[3] ? parseFloat(m[3]) : 1;
+    if (z > 1) {
+      img.style.transformOrigin = pos;
+      img.style.setProperty('--fz', String(z));
+    }
+  }
+
   function statusLabel(item) {
     if (item.status === 'sold') return T.sold;
     if (item.status === 'reserved') return T.reserved;
@@ -383,6 +398,7 @@
       IMG.apply(img, item.images[0], 760, [400, 560, 760],
                 '(max-width: 620px) 100vw, (max-width: 1040px) 50vw, 361px');
       img.width = 761; img.height = 476; // ratio 16/10, evite le saut de mise en page
+      applyFocus(img, item.image_focus && item.image_focus[item.images[0]]);
     }
     if (isSold) img.style.filter = 'grayscale(40%) opacity(0.75)';
     imgWrap.appendChild(img);
@@ -636,6 +652,7 @@
         im.alt = '';
         im.loading = 'lazy';
         im.decoding = 'async';
+        applyFocus(im, item.image_focus && item.image_focus[src]);
         b.appendChild(im);
         b.addEventListener('click', () => {
           IMG.apply(modalMainImage, src, 1000, [500, 760, 1000], '(max-width: 700px) 100vw, 493px');

@@ -532,11 +532,14 @@ footer{
   background: linear-gradient(to bottom, transparent 55%, rgba(3,9,15,.55) 100%);
   pointer-events:none;
 }
+/* --fz : zoom de recadrage choisi dans l'admin (image_focus), avec
+   transform-origin au point focal, pose en style inline par stock.js. */
 .stockCardImage img{
   width:100%; height:100%; object-fit:cover; object-position:center;
   display:block; transition:transform .5s cubic-bezier(.4,0,.2,1);
+  transform:scale(var(--fz,1));
 }
-.stockCard:hover .stockCardImage img{transform:scale(1.07)}
+.stockCard:hover .stockCardImage img{transform:scale(calc(var(--fz,1) * 1.07))}
 .stockCardImagePlaceholder{
   width:100%; height:100%;
   display:flex; align-items:center; justify-content:center;
@@ -722,7 +725,7 @@ footer{
   transition:border-color var(--transition), box-shadow var(--transition);
   flex-shrink:0;
 }
-.thumbBtn img{width:60px;height:46px;object-fit:cover;display:block}
+.thumbBtn img{width:60px;height:46px;object-fit:cover;display:block;transform:scale(var(--fz,1))}
 .thumbBtn.active{border-color:var(--gold);box-shadow:0 0 0 1px rgba(201,161,74,.3)}
 .thumbBtn:hover{border-color:rgba(201,161,74,.60)}
 .modalInfo{
@@ -1748,7 +1751,7 @@ a.toolsRow:hover .aiToolCta{color:#e6cc88}
   transition: border-color var(--transition), opacity var(--transition);
   opacity:.65;
 }
-.vpThumb img{width:100%;height:100%;object-fit:cover;display:block}
+.vpThumb img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(var(--fz,1))}
 .vpThumb:hover{opacity:1;border-color:var(--line-gold)}
 .vpThumb.active{opacity:1;border-color:var(--gold)}
 
@@ -1803,6 +1806,8 @@ a.toolsRow:hover .aiToolCta{color:#e6cc88}
   width:100%; aspect-ratio:16/10; object-fit:cover; display:block;
   background:rgba(255,255,255,.03);
 }
+.vpRelatedImg{display:block;overflow:hidden}
+.vpRelatedImg img{transform:scale(var(--fz,1))}
 .vpRelatedBody{display:flex;flex-direction:column;gap:5px;padding:14px 16px}
 .vpRelatedTitle{font-family:var(--serif);font-size:17px;letter-spacing:.02em;color:var(--text)}
 .vpRelatedMeta{font-size:12.5px;letter-spacing:.04em;color:var(--muted2)}
