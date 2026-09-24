@@ -396,6 +396,12 @@
     }
     .focusMarker::before { left: 50%; top: -6px; bottom: -6px; width: 1px; transform: translateX(-50%); }
     .focusMarker::after { top: 50%; left: -6px; right: -6px; height: 1px; transform: translateY(-50%); }
+    .focusZoom {
+      display: flex; align-items: center; gap: 10px; margin-top: 14px;
+      font-size: 13px; color: var(--muted);
+    }
+    .focusZoom input { flex: 1; accent-color: var(--gold); }
+    .focusZoom output { min-width: 42px; text-align: right; color: var(--text); }
 
     .upload-bar {
       display: flex; gap: 8px; align-items: center;
@@ -793,11 +799,15 @@
     <div id="focusModal">
       <div class="confirmBox focusBox">
         <h3>Recentrer la photo</h3>
-        <p class="focusHint">Cliquez ou glissez dans le cadre pour repositionner l'image. Aperçu au format carte stock (16:10) : le reste du site recadrera l'image en conséquence.</p>
+        <p class="focusHint">Cliquez ou glissez dans le cadre pour repositionner l'image. Si la photo remplit déjà toute la largeur, zoomez pour pouvoir aussi la décaler horizontalement. Aperçu au format carte stock (16:10) : le reste du site recadrera l'image en conséquence.</p>
         <div class="focusFrame" id="focusFrame">
           <img id="focusImg" src="" alt=""/>
           <div class="focusMarker" id="focusMarker"></div>
         </div>
+        <label class="focusZoom">Zoom
+          <input type="range" id="focusZoomInput" min="1" max="3" step="0.05" value="1"/>
+          <output id="focusZoomOut">1.00×</output>
+        </label>
         <div class="confirmActions" style="margin-top:16px">
           <button type="button" id="focusResetBtn" class="btn">Réinitialiser</button>
           <button type="button" id="focusCancelBtn" class="btn">Annuler</button>
@@ -927,7 +937,7 @@
       img.alt = '';
       img.title = 'Cliquer pour recentrer la photo';
       img.loading = 'lazy';
-      img.style.objectPosition = currentImageFocus[path] || '';
+      applyFocusStyle(img, currentImageFocus[path]);
       img.style.cursor = 'pointer';
       img.onerror = () => { img.style.display = 'none'; };
       img.addEventListener('click', (e) => {
@@ -1049,26 +1059,58 @@
   const focusFrame  = document.getElementById('focusFrame');
   const focusImgEl  = document.getElementById('focusImg');
   const focusMarker = document.getElementById('focusMarker');
-  let focusPos = { x: 50, y: 50 };
+  const focusZoomInput = document.getElementById('focusZoomInput');
+  const focusZoomOut   = document.getElementById('focusZoomOut');
+  let focusPos = { x: 50, y: 50, z: 1 };
   let focusDragging = false;
 
+  // Valeur stockee : "X% Y%" ou "X% Y% Z" (Z = zoom > 1). Sans zoom, une
+  // photo plus haute que le cadre 16:10 (3:2, 4:3...) le remplit deja en
+  // largeur : seul Y a alors un effet. Le zoom cree du debordement
+  // horizontal et rend X utile.
   function parseFocusValue(val) {
-    const m = /^([\d.]+)%\s+([\d.]+)%$/.exec(val || '');
-    return m ? { x: parseFloat(m[1]), y: parseFloat(m[2]) } : { x: 50, y: 50 };
+    const m = /^([\d.]+)%\s+([\d.]+)%(?:\s+([\d.]+))?$/.exec(val || '');
+    return m
+      ? { x: parseFloat(m[1]), y: parseFloat(m[2]), z: m[3] ? parseFloat(m[3]) : 1 }
+      : { x: 50, y: 50, z: 1 };
   }
 
-  function setFocusPos(x, y) {
-    focusPos = { x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) };
-    focusImgEl.style.objectPosition = focusPos.x + '% ' + focusPos.y + '%';
+  // Applique le cadrage a une <img> en object-fit:cover dont le parent
+  // coupe le debordement (overflow:hidden). Le zoom se fait autour du point
+  // focal : ce point reste a la meme place dans le cadre.
+  function applyFocusStyle(img, val) {
+    const p = parseFocusValue(val);
+    const pos = p.x + '% ' + p.y + '%';
+    img.style.objectPosition = val ? pos : '';
+    img.style.transformOrigin = p.z > 1 ? pos : '';
+    img.style.transform = p.z > 1 ? 'scale(' + p.z + ')' : '';
+  }
+
+  function setFocusPos(x, y, z = focusPos.z) {
+    focusPos = {
+      x: Math.max(0, Math.min(100, x)),
+      y: Math.max(0, Math.min(100, y)),
+      z: Math.max(1, Math.min(3, z)),
+    };
+    const pos = focusPos.x + '% ' + focusPos.y + '%';
+    focusImgEl.style.objectPosition = pos;
+    focusImgEl.style.transformOrigin = pos;
+    focusImgEl.style.transform = 'scale(' + focusPos.z + ')';
     focusMarker.style.left = focusPos.x + '%';
     focusMarker.style.top = focusPos.y + '%';
+    focusZoomInput.value = focusPos.z;
+    focusZoomOut.textContent = focusPos.z.toFixed(2) + '×';
   }
+
+  focusZoomInput.addEventListener('input', () => {
+    setFocusPos(focusPos.x, focusPos.y, parseFloat(focusZoomInput.value));
+  });
 
   function openFocusEditor(path) {
     focusEditPath = path;
     focusImgEl.src = '../' + path.replace(/^\//, '');
     const p = parseFocusValue(currentImageFocus[path]);
-    setFocusPos(p.x, p.y);
+    setFocusPos(p.x, p.y, p.z);
     focusModal.classList.add('open');
   }
 
@@ -1104,7 +1146,7 @@
   }, { passive: true });
   window.addEventListener('touchend', () => { focusDragging = false; });
 
-  document.getElementById('focusResetBtn').addEventListener('click', () => setFocusPos(50, 50));
+  document.getElementById('focusResetBtn').addEventListener('click', () => setFocusPos(50, 50, 1));
 
   document.getElementById('focusCancelBtn').addEventListener('click', () => {
     focusModal.classList.remove('open');
@@ -1113,10 +1155,12 @@
 
   document.getElementById('focusApplyBtn').addEventListener('click', () => {
     if (!focusEditPath) return;
-    if (Math.abs(focusPos.x - 50) < 0.5 && Math.abs(focusPos.y - 50) < 0.5) {
+    const zoomed = focusPos.z > 1.001;
+    if (Math.abs(focusPos.x - 50) < 0.5 && Math.abs(focusPos.y - 50) < 0.5 && !zoomed) {
       delete currentImageFocus[focusEditPath];
     } else {
-      currentImageFocus[focusEditPath] = focusPos.x.toFixed(1) + '% ' + focusPos.y.toFixed(1) + '%';
+      currentImageFocus[focusEditPath] = focusPos.x.toFixed(1) + '% ' + focusPos.y.toFixed(1) + '%'
+        + (zoomed ? ' ' + focusPos.z.toFixed(2) : '');
     }
     focusModal.classList.remove('open');
     focusEditPath = null;
@@ -1263,7 +1307,10 @@
         thumb = document.createElement('img');
         thumb.className = 'carThumb';
         thumb.src = '../' + car.images[0].replace(/^\//, '');
-        thumb.style.objectPosition = (car.image_focus && car.image_focus[car.images[0]]) || '';
+        // Position seule : cette vignette n'a pas de parent qui coupe le
+        // debordement, un zoom deborderait sur la ligne.
+        const f = car.image_focus && car.image_focus[car.images[0]];
+        if (f) { const p = parseFocusValue(f); thumb.style.objectPosition = p.x + '% ' + p.y + '%'; }
         thumb.alt = car.title?.fr || '';
         thumb.onerror = () => { thumb.style.display = 'none'; };
       } else {

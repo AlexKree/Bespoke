@@ -123,14 +123,19 @@ function imgSrcset(src, widths) {
 }
 
 /**
- * Attribut style="object-position:…" pour une photo recadree en cover, si
- * l'admin a deplace son point focal (assets/stock/stock.json, champ
- * image_focus, defini via l'outil de recentrage dans admin/index.html).
+ * Attribut style pour une photo recadree en cover, si l'admin a deplace son
+ * point focal (assets/stock/stock.json, champ image_focus, defini via l'outil
+ * de recentrage dans admin/index.html). Valeur "X% Y%" ou "X% Y% Z" : Z est
+ * un zoom (variable CSS --fz, voir styles.css) autour du point focal.
  * Chaine vide par defaut : le CSS garde alors object-position:center.
  */
 function focusStyle(item, path) {
   const val = item.image_focus && item.image_focus[path];
-  return val ? ` style="object-position:${esc(val)}"` : '';
+  const m = /^([\d.]+)%\s+([\d.]+)%(?:\s+([\d.]+))?$/.exec(val || '');
+  if (!m) return '';
+  const pos = `${m[1]}% ${m[2]}%`;
+  const z = m[3] ? parseFloat(m[3]) : 1;
+  return ` style="object-position:${pos}${z > 1 ? `;transform-origin:${pos};--fz:${z}` : ''}"`;
 }
 
 /** Repli inline : si la variante statique manque, bascule sur le CDN. */
@@ -340,7 +345,7 @@ ${picks.map((v) => {
     const title = (v.title && (v.title[l] || v.title.fr)) || v.model || v.id;
     const img0 = v.images[0];
     return `        <a class="vpRelatedCard" href="${esc(v.slug)}.html">
-          ${img0 ? `<img src="${img(img0, 560)}" onerror="${imgOnErr(img0, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"${focusStyle(v, img0)}/>` : '<div class="vpRelatedNoImg"></div>'}
+          ${img0 ? `<span class="vpRelatedImg"><img src="${img(img0, 560)}" onerror="${imgOnErr(img0, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"${focusStyle(v, img0)}/></span>` : '<div class="vpRelatedNoImg"></div>'}
           <div class="vpRelatedBody">
             <span class="vpRelatedTitle">${esc(title)}</span>
             <span class="vpRelatedMeta">${esc([v.year, v.price_eur != null ? eur(v.price_eur, l) : t.onRequest].filter(Boolean).join(' · '))}</span>
@@ -435,7 +440,7 @@ function facetCard(v, l, t) {
   const meta = [v.year, v.price_eur != null ? eur(v.price_eur, l) : t.onRequest, v.country || null]
     .filter(Boolean).join(' · ');
   return `        <a class="vpRelatedCard" href="${esc(v.slug)}.html">
-          ${img0 ? `<img src="${img(img0, 560)}" onerror="${imgOnErr(img0, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"${focusStyle(v, img0)}/>` : '<div class="vpRelatedNoImg"></div>'}
+          ${img0 ? `<span class="vpRelatedImg"><img src="${img(img0, 560)}" onerror="${imgOnErr(img0, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"${focusStyle(v, img0)}/></span>` : '<div class="vpRelatedNoImg"></div>'}
           <div class="vpRelatedBody">
             <span class="vpRelatedTitle">${esc(title)}</span>
             <span class="vpRelatedMeta">${esc(meta)}</span>
