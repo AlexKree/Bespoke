@@ -1265,7 +1265,19 @@
         "/assets/stock/images/xjs-4-0-cab-1789288321050-c12ce8.jpg",
         "/assets/stock/images/xjs-4-0-cab-1789288470271-337f8b.jpg"
       ],
-      "slug": "jaguar-xjs-cabriolet-4-0-2026"
+      "slug": "jaguar-xjs-cabriolet-4-0-2026",
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "image_focus": {
+        "/assets/stock/images/xjs-4-0-cab-1789288322947-d1dfc3.jpg": "47.9% 68.8%",
+        "/assets/stock/images/xjs-4-0-cab-1789288471205-d4da1f.jpg": "60.1% 39.0%",
+        "/assets/stock/images/xjs-4-0-cab-1789288321050-c12ce8.jpg": "57.1% 83.9%",
+        "/assets/stock/images/xjs-4-0-cab-1789288322047-3b3f26.jpg": "44.9% 54.9%"
+      }
     },
     {
       "id": "745i",
