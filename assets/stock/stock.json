@@ -471,7 +471,16 @@
         "/assets/stock/images/mustang-gt-2005-1785805309933-76ac4f.jpg",
         "/assets/stock/images/mustang-gt-2005-1785805533618-cc9f95.jpg"
       ],
-      "vin": ""
+      "vin": "",
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "image_focus": {
+        "/assets/stock/images/mustang-gt-2005-1785805196528-ea9f3e.jpg": "45.9% 64.4%"
+      }
     },
     {
       "id": "evo 7",
