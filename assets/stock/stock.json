@@ -1435,7 +1435,7 @@
       "exterior_color": "Bleu",
       "interior_color": "Beige",
       "vin": "WDB140***********",
-      "price_eur": null,
+      "price_eur": 12000,
       "status": "available",
       "sale_category": "both",
       "description": {
@@ -1456,7 +1456,11 @@
         "/assets/stock/images/s500-bleu-1790416844458-7bec49.jpg",
         "/assets/stock/images/s500-bleu-1790416845496-612058.jpg"
       ],
-      "image_focus": {},
+      "image_focus": {
+        "/assets/stock/images/s500-bleu-1790416796893-8444e6.jpg": "46.4% 56.1%",
+        "/assets/stock/images/s500-bleu-1790416798111-9f481d.jpg": "42.7% 58.9%",
+        "/assets/stock/images/s500-bleu-1790416799212-788a36.jpg": "53.4% 60.0%"
+      },
       "slug": "mercedes-benz-s-500-w140-5-0-v8-m119-rhd-1995"
     }
   ]
