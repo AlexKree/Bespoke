@@ -426,13 +426,13 @@
         "/assets/stock/images/sel-1778160337488-91cffc.jpg",
         "/assets/stock/images/sel-1778160336400-e2cdeb.jpg"
       ],
-      "transmission": "",
-      "fuel_type": "",
-      "body_type": "",
-      "power_hp": null,
-      "exterior_color": "",
-      "interior_color": "",
-      "vin": "",
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "Berline",
+      "power_hp": 245,
+      "exterior_color": "Argent",
+      "interior_color": "Caramel",
+      "vin": "WDB126***********",
       "image_focus": {}
     },
     {
