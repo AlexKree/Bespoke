@@ -1364,6 +1364,45 @@
       ],
       "image_focus": {},
       "slug": "maserati-quattroporte-v-4-2-v8-ferrari-2004"
+    },
+    {
+      "id": "s55 amg",
+      "year": 1999,
+      "title": {
+        "fr": "Mercedes-Benz S 500 L W220 5.0 V8 M113",
+        "en": "Mercedes-Benz S 500 L W220 5.0 V8 M113"
+      },
+      "mileage": "111 000",
+      "country": "Japon",
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "Berline",
+      "power_hp": 306,
+      "exterior_color": "Blanc",
+      "interior_color": "Noir",
+      "vin": "WDB220***********",
+      "price_eur": 9000,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Mercedes-Benz S 500 L W220 de 1999, d’origine japonaise, équipée du réputé V8 atmosphérique Mercedes-Benz M113 5.0 litres développant 306 chevaux. Cette exemplaire se distingue par sa présentation esthétique inspirée de la S55 AMG, avec une allure particulièrement sportive qui lui donne visuellement le caractère de la version AMG tout en conservant la mécanique fiable et raffinée de la S 500. Sa configuration à empattement long offre un excellent niveau de confort et d’espace à bord, tandis que le V8 atmosphérique apporte une sonorité et un agrément de conduite typiquement Mercedes. Une élégante S-Class de première génération W220, avec une présentation particulièrement réussie et un style AMG emblématique de la fin des années 1990.",
+        "en": "1999 Mercedes-Benz S 500 L W220, originally delivered to the Japanese market and powered by the renowned Mercedes-Benz M113 5.0-litre naturally aspirated V8 producing 306 horsepower. This particular example features an S55 AMG-inspired exterior presentation, giving the car the unmistakable sporting appearance of the AMG version while retaining the naturally aspirated V8 of the S 500. Its long-wheelbase configuration provides excellent comfort and rear passenger space, while the M113 V8 delivers the smoothness, character and refinement associated with Mercedes-Benz's classic V8 engines. An elegant first-generation W220 S-Class with a distinctive AMG-inspired appearance and the timeless presence of a full-size Mercedes luxury sedan."
+      },
+      "images": [
+        "/assets/stock/images/s55-amg-1790414543746-1cb90c.jpg",
+        "/assets/stock/images/s55-amg-1790414545036-5a9e5a.jpg",
+        "/assets/stock/images/s55-amg-1790414546220-d30ed1.jpg",
+        "/assets/stock/images/s55-amg-1790414547189-cebea8.jpg",
+        "/assets/stock/images/s55-amg-1790414548170-da66da.jpg",
+        "/assets/stock/images/s55-amg-1790414570119-63e029.jpg",
+        "/assets/stock/images/s55-amg-1790414571074-b4a7e2.jpg",
+        "/assets/stock/images/s55-amg-1790414572209-f43938.jpg",
+        "/assets/stock/images/s55-amg-1790414573231-f64bdb.jpg",
+        "/assets/stock/images/s55-amg-1790414574022-39d7da.jpg",
+        "/assets/stock/images/s55-amg-1790414575191-b363aa.jpg"
+      ],
+      "image_focus": {},
+      "slug": "mercedes-benz-s-500-l-w220-5-0-v8-m113-1999"
     }
   ]
 }
