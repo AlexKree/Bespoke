@@ -1134,7 +1134,19 @@
         "/assets/stock/images/img-1787145024980-c095c0.jpg",
         "/assets/stock/images/img-1787145032587-d2ceb2.jpg"
       ],
-      "vin": ""
+      "vin": "",
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "image_focus": {
+        "/assets/stock/images/img-1787145052488-2486db.jpg": "63.8% 67.2%",
+        "/assets/stock/images/img-1787145066768-2878a1.jpg": "51.9% 76.0%",
+        "/assets/stock/images/img-1787145263583-c42d50.jpg": "41.5% 39.0%",
+        "/assets/stock/images/img-1787145032587-d2ceb2.jpg": "49.9% 68.8%"
+      }
     },
     {
       "id": "honda integra",
