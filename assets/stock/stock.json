@@ -1546,7 +1546,11 @@
         "/assets/stock/images/e500-1790418248196-c181cd.jpg",
         "/assets/stock/images/e500-1790418249211-0f22a1.jpg"
       ],
-      "image_focus": {},
+      "image_focus": {
+        "/assets/stock/images/e500-1790418126814-b852a0.jpg": "65.8% 52.1%",
+        "/assets/stock/images/e500-1790418128066-c5fe8b.jpg": "42.4% 70.4%",
+        "/assets/stock/images/e500-1790418129219-799ece.jpg": "52.4% 70.0%"
+      },
       "slug": "e-500-w211-5-0-v8-m113-look-e55-amg-2004"
     }
   ]
