@@ -1557,6 +1557,46 @@
         "/assets/stock/images/e500-1790418242954-1d4d89.jpg": "37.0% 63.2%"
       },
       "slug": "e-500-w211-5-0-v8-m113-look-e55-amg-2004"
+    },
+    {
+      "id": "e55 amg",
+      "year": 2026,
+      "title": {
+        "fr": "Mercedes-Benz E 55 AMG W210 – V8 5.4",
+        "en": "Mercedes-Benz E 55 AMG W210 – V8 5.4"
+      },
+      "mileage": "155 000 km",
+      "country": "",
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "Berline",
+      "power_hp": 354,
+      "exterior_color": "Noir",
+      "interior_color": "Noir",
+      "vin": "",
+      "price_eur": null,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Mercedes-Benz E 55 AMG W210 de 1999, équipée du mythique V8 atmosphérique AMG M113 E55 de 5,4 litres, développant 354 ch et 530 Nm de couple, associé à une boîte automatique 5 rapports et à la propulsion. Avec seulement 155 000 km, cette E 55 AMG se présente dans un excellent état général, offrant une combinaison devenue particulièrement recherchée entre performances, discrétion et confort. Véritable berline sportive de la fin des années 1990, la W210 E 55 AMG représente l'une des générations emblématiques des Mercedes-AMG à moteur atmosphérique, avant l'arrivée des V8 Kompressor. Son V8 5.4 offre une sonorité caractéristique, beaucoup de couple et une expérience de conduite typique des AMG de cette époque. Une youngtimer AMG authentique, encore utilisable au quotidien mais également intéressante pour une collection, avec son kilométrage contenu et sa configuration d'origine.",
+        "en": "1999 Mercedes-Benz E 55 AMG W210, powered by the legendary naturally aspirated 5.4-litre AMG M113 E55 V8, producing 354 hp and 530 Nm of torque, paired with a 5-speed automatic transmission and rear-wheel drive. With only 155,000 km, this E 55 AMG is presented in excellent overall condition, combining genuine AMG performance with the understated elegance and comfort of the W210 platform. The E 55 AMG represents one of the iconic naturally aspirated AMG models of the late 1990s, before Mercedes-AMG moved towards supercharged V8 power. Its 5.4-litre V8 delivers strong low-end torque, a distinctive exhaust note and the characteristic driving experience of classic AMG models. An authentic AMG youngtimer that remains perfectly usable on the road while also offering strong collector appeal thanks to its relatively low mileage and original character."
+      },
+      "images": [
+        "/assets/stock/images/e55-amg-1790419385095-09440b.jpg",
+        "/assets/stock/images/e55-amg-1790419386120-3c3b18.jpg",
+        "/assets/stock/images/e55-amg-1790419383825-8c4136.jpg",
+        "/assets/stock/images/e55-amg-1790419025525-f443c1.jpg",
+        "/assets/stock/images/e55-amg-1790419388343-08c965.jpg",
+        "/assets/stock/images/e55-amg-1790419028692-68ac01.jpg",
+        "/assets/stock/images/e55-amg-1790419024507-e49f9f.jpg",
+        "/assets/stock/images/e55-amg-1790419027628-6dd05f.jpg",
+        "/assets/stock/images/e55-amg-1790419022340-db0fc2.jpg",
+        "/assets/stock/images/e55-amg-1790419023491-2acbf5.jpg",
+        "/assets/stock/images/e55-amg-1790419387279-2a5a92.jpg",
+        "/assets/stock/images/e55-amg-1790419026538-14cbc1.jpg"
+      ],
+      "image_focus": {},
+      "slug": "mercedes-benz-e-55-amg-w210-v8-5-4-2026"
     }
   ]
 }
