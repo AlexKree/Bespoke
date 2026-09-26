@@ -433,7 +433,10 @@
       "exterior_color": "Argent",
       "interior_color": "Caramel",
       "vin": "WDB126***********",
-      "image_focus": {}
+      "image_focus": {
+        "/assets/stock/images/sel-1778160365819-a71f53.jpg": "60.6% 24.3% 1.65",
+        "/assets/stock/images/sel-1778160362016-48d843.jpg": "67.8% 25.9% 1.80"
+      }
     },
     {
       "id": "mustang gt 2005",
