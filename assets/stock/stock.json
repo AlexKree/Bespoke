@@ -613,9 +613,9 @@
       "status": "available",
       "sale_category": "both",
       "images": [
-        "/assets/stock/images/s500-or-1790410588405-d2a441.jpg",
-        "/assets/stock/images/s500-or-1790410589501-deb892.jpg",
         "/assets/stock/images/s500-or-1790410590449-bb92a2.jpg",
+        "/assets/stock/images/s500-or-1790410627583-af901c.jpg",
+        "/assets/stock/images/s500-or-1790410628914-ae74ef.jpg",
         "/assets/stock/images/s500-or-1790410591519-f81008.jpg",
         "/assets/stock/images/s500-or-1790410592847-0f28c9.jpg",
         "/assets/stock/images/s500-or-1790410593999-5fd091.jpg",
@@ -623,8 +623,8 @@
         "/assets/stock/images/s500-or-1790410595964-49dc1e.jpg",
         "/assets/stock/images/s500-or-1790410625501-649949.jpg",
         "/assets/stock/images/s500-or-1790410626515-9d9338.jpg",
-        "/assets/stock/images/s500-or-1790410627583-af901c.jpg",
-        "/assets/stock/images/s500-or-1790410628914-ae74ef.jpg",
+        "/assets/stock/images/s500-or-1790410589501-deb892.jpg",
+        "/assets/stock/images/s500-or-1790410588405-d2a441.jpg",
         "/assets/stock/images/s500-or-1790410629987-e387fc.jpg"
       ],
       "transmission": "Automatic",
@@ -634,7 +634,10 @@
       "exterior_color": "Or",
       "interior_color": "Beige",
       "vin": "WDBGA5***********",
-      "image_focus": {}
+      "image_focus": {
+        "/assets/stock/images/s500-or-1790410589501-deb892.jpg": "54.9% 66.4%",
+        "/assets/stock/images/s500-or-1790410590449-bb92a2.jpg": "67.8% 68.4% 1.10"
+      }
     },
     {
       "id": "rr sw",
