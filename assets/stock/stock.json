@@ -613,16 +613,28 @@
       "status": "available",
       "sale_category": "both",
       "images": [
-        "/assets/stock/images/s500-or-1786281080791-b040b9.jpg",
-        "/assets/stock/images/s500-or-1786281806221-7749ca.jpg",
-        "/assets/stock/images/s500-or-1786281824612-d380db.jpg",
-        "/assets/stock/images/s500-or-1786281814260-d91e9a.jpg",
-        "/assets/stock/images/s500-or-1786281133090-7d9d6a.jpg",
-        "/assets/stock/images/s500-or-1786281086771-ba5e2e.jpg",
-        "/assets/stock/images/s500-or-1786281330917-bded61.jpg",
-        "/assets/stock/images/s500-or-1786281104419-4c2be3.jpg",
-        "/assets/stock/images/s500-or-1786281295477-08a4fd.jpg"
-      ]
+        "/assets/stock/images/s500-or-1790410588405-d2a441.jpg",
+        "/assets/stock/images/s500-or-1790410589501-deb892.jpg",
+        "/assets/stock/images/s500-or-1790410590449-bb92a2.jpg",
+        "/assets/stock/images/s500-or-1790410591519-f81008.jpg",
+        "/assets/stock/images/s500-or-1790410592847-0f28c9.jpg",
+        "/assets/stock/images/s500-or-1790410593999-5fd091.jpg",
+        "/assets/stock/images/s500-or-1790410594953-acee88.jpg",
+        "/assets/stock/images/s500-or-1790410595964-49dc1e.jpg",
+        "/assets/stock/images/s500-or-1790410625501-649949.jpg",
+        "/assets/stock/images/s500-or-1790410626515-9d9338.jpg",
+        "/assets/stock/images/s500-or-1790410627583-af901c.jpg",
+        "/assets/stock/images/s500-or-1790410628914-ae74ef.jpg",
+        "/assets/stock/images/s500-or-1790410629987-e387fc.jpg"
+      ],
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "Berline",
+      "power_hp": 320,
+      "exterior_color": "Or",
+      "interior_color": "Beige",
+      "vin": "WDBGA5***********",
+      "image_focus": {}
     },
     {
       "id": "rr sw",
