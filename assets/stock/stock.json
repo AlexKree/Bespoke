@@ -341,7 +341,18 @@
         "/assets/stock/images/cl1200-1777651672490-bf9209.jpg",
         "/assets/stock/images/cl1200-1777651673624-ae4bb7.jpg",
         "/assets/stock/images/cl1200-1777651674716-b25999.jpg"
-      ]
+      ],
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "vin": "",
+      "image_focus": {
+        "/assets/stock/images/cl1200-1777651645154-8591df.jpg": "60.8% 12.3%",
+        "/assets/stock/images/cl1200-1777651647135-3b65ed.jpg": "27.8% 28.6%"
+      }
     },
     {
       "id": "GTO",
