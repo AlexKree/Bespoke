@@ -525,13 +525,27 @@
       "sale_category": "both",
       "images": [
         "/assets/stock/images/r32-1786278842185-7a12e1.jpg",
-        "/assets/stock/images/r32-1786278851288-ebd845.jpg",
-        "/assets/stock/images/r32-1786278904124-8b3f10.jpg",
-        "/assets/stock/images/r32-1786278830231-18d1b7.jpg",
-        "/assets/stock/images/r32-1786278808605-f784e8.jpg",
         "/assets/stock/images/r32-1786278815771-e60e41.jpg",
-        "/assets/stock/images/r32-1786278823122-e8fc80.jpg"
-      ]
+        "/assets/stock/images/r32-1786278808605-f784e8.jpg",
+        "/assets/stock/images/r32-1786278823122-e8fc80.jpg",
+        "/assets/stock/images/r32-1786278830231-18d1b7.jpg",
+        "/assets/stock/images/r32-1786278851288-ebd845.jpg",
+        "/assets/stock/images/r32-1786278904124-8b3f10.jpg"
+      ],
+      "transmission": "Manual",
+      "fuel_type": "Petrol",
+      "body_type": "Hatchback",
+      "power_hp": 250,
+      "exterior_color": "Gris",
+      "interior_color": "Noir",
+      "vin": "WVWZZZ***********",
+      "image_focus": {
+        "/assets/stock/images/r32-1786278842185-7a12e1.jpg": "58.8% 72.4%",
+        "/assets/stock/images/r32-1786278904124-8b3f10.jpg": "36.0% 51.3%",
+        "/assets/stock/images/r32-1786278830231-18d1b7.jpg": "44.7% 59.7%",
+        "/assets/stock/images/r32-1786278808605-f784e8.jpg": "58.8% 100.0%",
+        "/assets/stock/images/r32-1786278815771-e60e41.jpg": "61.1% 73.6%"
+      }
     },
     {
       "id": "eclipse",
