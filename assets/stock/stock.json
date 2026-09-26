@@ -1396,19 +1396,27 @@
         "en": "1999 Mercedes-Benz S 500 L W220, originally delivered to the Japanese market and powered by the renowned Mercedes-Benz M113 5.0-litre naturally aspirated V8 producing 306 horsepower. This particular example features an S55 AMG-inspired exterior presentation, giving the car the unmistakable sporting appearance of the AMG version while retaining the naturally aspirated V8 of the S 500. Its long-wheelbase configuration provides excellent comfort and rear passenger space, while the M113 V8 delivers the smoothness, character and refinement associated with Mercedes-Benz's classic V8 engines. An elegant first-generation W220 S-Class with a distinctive AMG-inspired appearance and the timeless presence of a full-size Mercedes luxury sedan."
       },
       "images": [
-        "/assets/stock/images/s55-amg-1790414543746-1cb90c.jpg",
-        "/assets/stock/images/s55-amg-1790414545036-5a9e5a.jpg",
-        "/assets/stock/images/s55-amg-1790414546220-d30ed1.jpg",
-        "/assets/stock/images/s55-amg-1790414547189-cebea8.jpg",
-        "/assets/stock/images/s55-amg-1790414548170-da66da.jpg",
-        "/assets/stock/images/s55-amg-1790414570119-63e029.jpg",
         "/assets/stock/images/s55-amg-1790414571074-b4a7e2.jpg",
-        "/assets/stock/images/s55-amg-1790414572209-f43938.jpg",
+        "/assets/stock/images/s55-amg-1790414575191-b363aa.jpg",
+        "/assets/stock/images/s55-amg-1790414548170-da66da.jpg",
+        "/assets/stock/images/s55-amg-1790414545036-5a9e5a.jpg",
+        "/assets/stock/images/s55-amg-1790414547189-cebea8.jpg",
+        "/assets/stock/images/s55-amg-1790414546220-d30ed1.jpg",
         "/assets/stock/images/s55-amg-1790414573231-f64bdb.jpg",
         "/assets/stock/images/s55-amg-1790414574022-39d7da.jpg",
-        "/assets/stock/images/s55-amg-1790414575191-b363aa.jpg"
+        "/assets/stock/images/s55-amg-1790414570119-63e029.jpg",
+        "/assets/stock/images/s55-amg-1790414572209-f43938.jpg",
+        "/assets/stock/images/s55-amg-1790414543746-1cb90c.jpg"
       ],
-      "image_focus": {},
+      "image_focus": {
+        "/assets/stock/images/s55-amg-1790414570119-63e029.jpg": "42.9% 68.4%",
+        "/assets/stock/images/s55-amg-1790414571074-b4a7e2.jpg": "41.2% 62.4%",
+        "/assets/stock/images/s55-amg-1790414575191-b363aa.jpg": "43.9% 50.5%",
+        "/assets/stock/images/s55-amg-1790414573231-f64bdb.jpg": "44.7% 57.7%",
+        "/assets/stock/images/s55-amg-1790414547189-cebea8.jpg": "51.9% 41.8%",
+        "/assets/stock/images/s55-amg-1790414548170-da66da.jpg": "60.3% 33.8%",
+        "/assets/stock/images/s55-amg-1790414574022-39d7da.jpg": "49.7% 61.6% 1.10"
+      },
       "slug": "mercedes-benz-s-500-l-w220-5-0-v8-m113-1999"
     }
   ]
