@@ -1084,7 +1084,17 @@
         "/assets/stock/images/img-1787132909816-90c2f3.jpg",
         "/assets/stock/images/img-1787132975020-cc0804.jpg",
         "/assets/stock/images/honda-rouge-1787133066661-ce1717.jpg"
-      ]
+      ],
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "vin": "",
+      "image_focus": {
+        "/assets/stock/images/img-1787132886600-dd84dd.jpg": "45.7% 42.6%"
+      }
     },
     {
       "id": "aprilia mana gt",
