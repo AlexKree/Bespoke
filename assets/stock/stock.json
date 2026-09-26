@@ -1294,12 +1294,12 @@
         "/assets/stock/images/xjs-4-0-cab-1789288470271-337f8b.jpg"
       ],
       "slug": "jaguar-xjs-cabriolet-4-0-2026",
-      "transmission": "",
-      "fuel_type": "",
-      "body_type": "",
-      "power_hp": null,
-      "exterior_color": "",
-      "interior_color": "",
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "Cabriolet",
+      "power_hp": 225,
+      "exterior_color": "Rouge",
+      "interior_color": "Beige",
       "image_focus": {
         "/assets/stock/images/xjs-4-0-cab-1789288322947-d1dfc3.jpg": "47.9% 68.8%",
         "/assets/stock/images/xjs-4-0-cab-1789288471205-d4da1f.jpg": "60.1% 39.0%",
