@@ -1222,7 +1222,9 @@
       "exterior_color": "Blanc",
       "interior_color": "Noir",
       "vin": "",
-      "image_focus": {}
+      "image_focus": {
+        "/assets/stock/images/img-1787153543936-104222.jpg": "44.7% 66.8%"
+      }
     },
     {
       "id": "e320",
