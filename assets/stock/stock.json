@@ -1475,6 +1475,37 @@
         "/assets/stock/images/s500-bleu-1790416843524-718633.jpg": "44.7% 56.9%"
       },
       "slug": "mercedes-benz-s-500-w140-5-0-v8-m119-rhd-1995"
+    },
+    {
+      "id": "Daimler XJ40",
+      "year": 1990,
+      "title": {
+        "fr": "Daimler XJ40 AJ6 - RHD",
+        "en": "Daimler XJ40 AJ6 - RHD"
+      },
+      "mileage": "",
+      "country": "Japon",
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "Berline",
+      "power_hp": null,
+      "exterior_color": "Noir",
+      "interior_color": "Beige",
+      "vin": "",
+      "price_eur": null,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "A venir",
+        "en": ""
+      },
+      "images": [
+        "/assets/stock/images/daimler-xj40-1790417430580-21d993.jpg",
+        "/assets/stock/images/daimler-xj40-1790417431836-126a78.jpg",
+        "/assets/stock/images/daimler-xj40-1790417433026-10d04f.jpg"
+      ],
+      "image_focus": {},
+      "slug": "daimler-xj40-aj6-rhd-1990"
     }
   ]
 }
