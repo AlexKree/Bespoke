@@ -1506,6 +1506,48 @@
       ],
       "image_focus": {},
       "slug": "daimler-xj40-aj6-rhd-1990"
+    },
+    {
+      "id": "e500",
+      "year": 2004,
+      "title": {
+        "fr": "E 500 W211 5.0 V8 M113 – Look E55 AMG",
+        "en": "E 500 W211 5.0 V8 M113 – Look E55 AMG"
+      },
+      "mileage": "145 000km",
+      "country": "Japon",
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "Berline",
+      "power_hp": 306,
+      "exterior_color": "Noir",
+      "interior_color": "Noir",
+      "vin": "WDB211***********",
+      "price_eur": 12000,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Mercedes-Benz E 500 W211 équipée du célèbre V8 atmosphérique M113 de 5.0 litres développant 306 chevaux et 460 Nm de couple. Associé à une boîte automatique et à une transmission aux roues arrière, ce V8 offre un excellent équilibre entre performances, confort et agrément de conduite. L'E 500 représente l'une des versions les plus prestigieuses de la gamme W211 hors AMG, avec une motorisation V8 souple et puissante, une présentation élégante et tout le confort caractéristique de la Classe E. Une véritable berline de grand tourisme, combinant discrétion, performances et le caractère mécanique d'un V8 Mercedes-Benz atmosphérique.",
+        "en": "Mercedes-Benz E 500 W211 powered by the renowned naturally aspirated 5.0-litre M113 V8 producing 306 horsepower and 460 Nm of torque. Paired with an automatic transmission and rear-wheel drive, this V8 provides an excellent combination of performance, refinement and effortless cruising ability. The E 500 was one of the most prestigious non-AMG versions of the W211 range, offering a powerful and smooth V8, elegant styling and the high level of comfort expected from a Mercedes-Benz E-Class. A true grand touring sedan combining understated luxury, strong performance and the distinctive character of a naturally aspirated Mercedes V8."
+      },
+      "images": [
+        "/assets/stock/images/e500-1790418126814-b852a0.jpg",
+        "/assets/stock/images/e500-1790418128066-c5fe8b.jpg",
+        "/assets/stock/images/e500-1790418129219-799ece.jpg",
+        "/assets/stock/images/e500-1790418130689-5375ed.jpg",
+        "/assets/stock/images/e500-1790418131759-9fecb6.jpg",
+        "/assets/stock/images/e500-1790418133022-7cf1fe.jpg",
+        "/assets/stock/images/e500-1790418241764-adab1f.jpg",
+        "/assets/stock/images/e500-1790418242954-1d4d89.jpg",
+        "/assets/stock/images/e500-1790418244133-f8e6d3.jpg",
+        "/assets/stock/images/e500-1790418245061-728b3b.jpg",
+        "/assets/stock/images/e500-1790418246172-a406fb.jpg",
+        "/assets/stock/images/e500-1790418247185-bcf7e2.jpg",
+        "/assets/stock/images/e500-1790418248196-c181cd.jpg",
+        "/assets/stock/images/e500-1790418249211-0f22a1.jpg"
+      ],
+      "image_focus": {},
+      "slug": "e-500-w211-5-0-v8-m113-look-e55-amg-2004"
     }
   ]
 }
