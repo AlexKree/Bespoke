@@ -958,7 +958,20 @@
         "/assets/stock/images/645i-cab-1786791167416-69419d.jpg",
         "/assets/stock/images/645i-cab-1786791138607-6b4ae6.jpg",
         "/assets/stock/images/645i-cab-1786791155931-4df192.jpg"
-      ]
+      ],
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "vin": "",
+      "image_focus": {
+        "/assets/stock/images/645i-cab-1786791180518-886821.jpg": "48.2% 50.5%",
+        "/assets/stock/images/645i-cab-1786791173333-ecf1fb.jpg": "57.9% 65.2%",
+        "/assets/stock/images/645i-cab-1786791167416-69419d.jpg": "64.8% 96.6%",
+        "/assets/stock/images/645i-cab-1786791138607-6b4ae6.jpg": "64.3% 35.4%"
+      }
     },
     {
       "id": "mini",
