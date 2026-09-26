@@ -1181,17 +1181,17 @@
       "vehicle_type": "car",
       "make": "Audi",
       "model": "S8 V10 Quattro 5.2 FSI – 450 ch",
-      "year": 2007,
+      "year": 2009,
       "title": {
-        "fr": "Audi S8 V10 Quattro 5.2 FSI – 450 ch",
-        "en": "Audi S8 V10 Quattro 5.2 FSI – 450 ch"
+        "fr": "Audi S8 V10 Quattro 5.2 FSI ",
+        "en": "Audi S8 V10 Quattro 5.2 FSI "
       },
       "headline": null,
       "description": {
         "fr": "Magnifique Audi S8 V10 Quattro 5.2 FSI de 2007, affichant seulement 122 000 km, en conduite à gauche et importée du Japon. Le véhicule se présente dans un état exceptionnel, aussi bien esthétique que mécanique, et est équipé du mythique V10 atmosphérique 5.2 FSI développant 450 ch, associé à la transmission intégrale Quattro et à une boîte automatique. Son V10, issu de la même famille que celui équipant la Lamborghini Gallardo, offre une sonorité et des performances uniques. Le véhicule n’est pas encore immatriculé en France, mais tous les documents d’importation sont disponibles. Vente possible à un particulier ou à un professionnel, avec possibilité d’accompagnement dans les démarches d’immatriculation.",
         "en": "Magnificent 2007 Audi S8 V10 Quattro 5.2 FSI, showing only 122,000 km, left-hand drive and imported from Japan. The vehicle is presented in exceptional mechanical and cosmetic condition and is equipped with the legendary 5.2 FSI naturally aspirated V10 producing 450 hp, paired with Quattro all-wheel drive and an automatic transmission. The V10 belongs to the same engine family as the unit used in the Lamborghini Gallardo, giving the S8 an exceptional sound and character. The vehicle is not yet registered in France, but all import documentation is available. Available to both private buyers and professionals, with assistance with the French registration process if required."
       },
-      "price_eur": 18900,
+      "price_eur": 17000,
       "mileage": "122 000km",
       "mileage_km": 122000,
       "country": "",
@@ -1201,9 +1201,16 @@
         "/assets/stock/images/img-1787153543936-104222.jpg",
         "/assets/stock/images/img-1787154354344-41ba42.jpg",
         "/assets/stock/images/img-1787154363515-f99aff.jpg",
-        "/assets/stock/images/img-1787154371280-aa96cb.jpg",
-        "/assets/stock/images/img-1787154405419-1d3ade.jpg"
-      ]
+        "/assets/stock/images/img-1787154371280-aa96cb.jpg"
+      ],
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "Berline",
+      "power_hp": 450,
+      "exterior_color": "Blanc",
+      "interior_color": "Noir",
+      "vin": "",
+      "image_focus": {}
     },
     {
       "id": "e320",
