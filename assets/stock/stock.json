@@ -1418,6 +1418,46 @@
         "/assets/stock/images/s55-amg-1790414574022-39d7da.jpg": "49.7% 61.6% 1.10"
       },
       "slug": "mercedes-benz-s-500-l-w220-5-0-v8-m113-1999"
+    },
+    {
+      "id": "s500 bleu",
+      "year": 1995,
+      "title": {
+        "fr": "Mercedes-Benz S 500 W140 5.0 V8 M119 – RHD",
+        "en": "Mercedes-Benz S 500 W140 5.0 V8 M119 – RHD"
+      },
+      "mileage": "153 000km",
+      "country": "UK",
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "Berline",
+      "power_hp": 320,
+      "exterior_color": "Bleu",
+      "interior_color": "Beige",
+      "vin": "WDB140***********",
+      "price_eur": null,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Mercedes-Benz S 500 W140 de 1995, en configuration RHD (volant à droite), affichant seulement 95 000 miles, soit environ 153 000 km. Cette grande berline est équipée du célèbre V8 atmosphérique Mercedes-Benz M119 de 5.0 litres développant 320 chevaux, associé à une boîte automatique et à une transmission aux roues arrière. La génération W140 est réputée pour sa construction particulièrement robuste, son niveau de confort exceptionnel et sa présence imposante, représentant parfaitement l'approche Mercedes-Benz du luxe automobile dans les années 1990. Avec son puissant V8, son faible kilométrage pour son âge et sa configuration RHD, cet exemplaire offre une combinaison intéressante de confort, de caractère et d'authenticité.",
+        "en": "1995 Mercedes-Benz S 500 W140 in RHD (right-hand-drive) configuration, showing just 95,000 miles, equivalent to approximately 153,000 km. It is powered by the renowned Mercedes-Benz M119 5.0-litre naturally aspirated V8 producing 320 horsepower, paired with an automatic transmission and rear-wheel drive. The W140 is widely recognized for its exceptional build quality, outstanding comfort and imposing road presence, representing Mercedes-Benz's approach to luxury motoring during the 1990s. With its powerful naturally aspirated V8, relatively low mileage for its age and distinctive RHD configuration, this S 500 offers an appealing combination of comfort, character and classic Mercedes-Benz engineering."
+      },
+      "images": [
+        "/assets/stock/images/s500-bleu-1790416796893-8444e6.jpg",
+        "/assets/stock/images/s500-bleu-1790416798111-9f481d.jpg",
+        "/assets/stock/images/s500-bleu-1790416799212-788a36.jpg",
+        "/assets/stock/images/s500-bleu-1790416800452-9f67c1.jpg",
+        "/assets/stock/images/s500-bleu-1790416801462-4933b4.jpg",
+        "/assets/stock/images/s500-bleu-1790416802436-4ba716.jpg",
+        "/assets/stock/images/s500-bleu-1790416803441-05d2be.jpg",
+        "/assets/stock/images/s500-bleu-1790416841437-77c2ee.jpg",
+        "/assets/stock/images/s500-bleu-1790416842554-deb0e1.jpg",
+        "/assets/stock/images/s500-bleu-1790416843524-718633.jpg",
+        "/assets/stock/images/s500-bleu-1790416844458-7bec49.jpg",
+        "/assets/stock/images/s500-bleu-1790416845496-612058.jpg"
+      ],
+      "image_focus": {},
+      "slug": "mercedes-benz-s-500-w140-5-0-v8-m119-rhd-1995"
     }
   ]
 }
