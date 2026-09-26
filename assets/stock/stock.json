@@ -706,11 +706,26 @@
         "/assets/stock/images/cayenne-2008-1786792188822-bdbcf7.jpg",
         "/assets/stock/images/cayenne-2008-1786786123235-51a857.jpg",
         "/assets/stock/images/cayenne-2008-1786786135675-795be4.jpg",
-        "/assets/stock/images/cayenne-2008-1786786141233-2155c4.jpg",
         "/assets/stock/images/cayenne-2008-1786786147555-37eac1.jpg",
+        "/assets/stock/images/cayenne-2008-1786786175800-4da66d.jpg",
         "/assets/stock/images/cayenne-2008-1786786167455-c70e62.jpg",
-        "/assets/stock/images/cayenne-2008-1786786175800-4da66d.jpg"
-      ]
+        "/assets/stock/images/cayenne-2008-1786786141233-2155c4.jpg"
+      ],
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "vin": "",
+      "image_focus": {
+        "/assets/stock/images/cayenne-2008-1786786123235-51a857.jpg": "38.0% 68.0%",
+        "/assets/stock/images/cayenne-2008-1786792188822-bdbcf7.jpg": "43.4% 71.2%",
+        "/assets/stock/images/cayenne-2008-1786786141233-2155c4.jpg": "62.1% 74.8%",
+        "/assets/stock/images/cayenne-2008-1786786135675-795be4.jpg": "47.9% 70.4%",
+        "/assets/stock/images/cayenne-2008-1786786147555-37eac1.jpg": "54.9% 64.0%",
+        "/assets/stock/images/cayenne-2008-1786786167455-c70e62.jpg": "65.8% 51.7%"
+      }
     },
     {
       "id": "cayenne 2012",
