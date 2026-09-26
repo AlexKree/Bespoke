@@ -1330,6 +1330,40 @@
         "/assets/stock/images/745i-1789289394376-f1a63a.jpg": "45.2% 81.5%",
         "/assets/stock/images/745i-1789289402252-067869.jpg": "62.8% 100.0%"
       }
+    },
+    {
+      "id": "maserati",
+      "year": 2004,
+      "title": {
+        "fr": "Maserati Quattroporte V 4.2 V8 Ferrari",
+        "en": "Maserati Quattroporte V 4.2 V8 Ferrari"
+      },
+      "mileage": "60 500 km",
+      "country": "",
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "Berline",
+      "power_hp": 400,
+      "exterior_color": "Argent",
+      "interior_color": "Noir",
+      "vin": "ZAMCD3***********",
+      "price_eur": 12000,
+      "status": "available",
+      "sale_category": "both",
+      "description": {
+        "fr": "Maserati Quattroporte 4.2 V8 de 2004, une berline italienne emblématique alliant élégance, performances et caractère sportif. Elle est équipée du célèbre V8 4.2 litres atmosphérique développant 400 chevaux, associé à une boîte de vitesses robotisée Cambiocorsa à 6 rapports et à une transmission aux roues arrière. Avec sa sonorité typique du V8 Maserati, ses performances solides et son design signé Pininfarina, cette Quattroporte offre une expérience particulièrement distinctive. Une automobile de grand tourisme capable de combiner confort, luxe et véritable tempérament sportif, représentative de l'âge d'or des Maserati à moteur V8 atmosphérique.",
+        "en": "2004 Maserati Quattroporte 4.2 V8, an iconic Italian luxury sedan combining elegance, performance and unmistakable character. It is powered by the renowned 4.2-litre naturally aspirated V8 producing 400 horsepower, paired with a 6-speed Cambiocorsa automated manual transmission and rear-wheel drive. With its distinctive Maserati V8 soundtrack, strong performance and Pininfarina-designed bodywork, this Quattroporte delivers a unique blend of luxury, comfort and genuine sporting character. A true grand touring sedan and a representative example of the era when Maserati's naturally aspirated V8 engines defined the brand's identity."
+      },
+      "images": [
+        "/assets/stock/images/maserati-1790413936550-948ba6.jpg",
+        "/assets/stock/images/maserati-1790413937667-4046f6.jpg",
+        "/assets/stock/images/maserati-1790413938769-007a6c.jpg",
+        "/assets/stock/images/maserati-1790413940206-e3ea79.jpg",
+        "/assets/stock/images/maserati-1790413941286-bc594c.jpg",
+        "/assets/stock/images/maserati-1790413942469-dbb54c.jpg"
+      ],
+      "image_focus": {},
+      "slug": "maserati-quattroporte-v-4-2-v8-ferrari-2004"
     }
   ]
 }
