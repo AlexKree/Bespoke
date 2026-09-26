@@ -761,7 +761,21 @@
         "/assets/stock/images/img-1786786667111-520034.jpg",
         "/assets/stock/images/img-1786786673873-0d1a66.jpg",
         "/assets/stock/images/img-1786786678457-dc59d6.jpg"
-      ]
+      ],
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "vin": "",
+      "image_focus": {
+        "/assets/stock/images/img-1786786667111-520034.jpg": "51.6% 71.6%",
+        "/assets/stock/images/img-1786786673873-0d1a66.jpg": "61.8% 61.6%",
+        "/assets/stock/images/img-1786786660971-36e203.jpg": "47.4% 71.2%",
+        "/assets/stock/images/img-1786786630432-917c25.jpg": "57.1% 63.6%",
+        "/assets/stock/images/img-1786786678457-dc59d6.jpg": "53.1% 82.3%"
+      }
     },
     {
       "id": "159",
