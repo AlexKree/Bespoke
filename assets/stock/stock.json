@@ -566,7 +566,7 @@
       "price_eur": 10000,
       "mileage": "105 000km",
       "mileage_km": 105000,
-      "country": "",
+      "country": "Japon",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -574,9 +574,21 @@
         "/assets/stock/images/eclipse-1786279624189-21e8b6.jpg",
         "/assets/stock/images/eclipse-1786279636749-2280a1.jpg",
         "/assets/stock/images/eclipse-1786279645967-1c4edd.jpg",
-        "/assets/stock/images/eclipse-1786279657416-ffb74b.jpg",
-        "/assets/stock/images/eclipse-1786279668554-12ae96.jpg"
-      ]
+        "/assets/stock/images/eclipse-1786279668554-12ae96.jpg",
+        "/assets/stock/images/eclipse-1786279657416-ffb74b.jpg"
+      ],
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "Cabriolet Spyder",
+      "power_hp": 210,
+      "exterior_color": "Gris",
+      "interior_color": "Noir",
+      "vin": "D35A-5******",
+      "image_focus": {
+        "/assets/stock/images/eclipse-1786279624189-21e8b6.jpg": "64.8% 100.0%",
+        "/assets/stock/images/eclipse-1786279636749-2280a1.jpg": "48.9% 70.4%",
+        "/assets/stock/images/eclipse-1786279645967-1c4edd.jpg": "65.8% 81.5%"
+      }
     },
     {
       "id": "s500 or",
