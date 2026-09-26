@@ -289,7 +289,19 @@
         "/assets/stock/images/vmax-1777650851903-2fcb34.jpg",
         "/assets/stock/images/vmax-1777650852798-2489ce.jpg",
         "/assets/stock/images/vmax-1777650853816-14735c.jpg"
-      ]
+      ],
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "vin": "",
+      "image_focus": {
+        "/assets/stock/images/vmax-1777650772838-501610.jpg": "0.0% 38.2%",
+        "/assets/stock/images/vmax-1777650812016-2d8c87.jpg": "9.4% 0.0%",
+        "/assets/stock/images/vmax-1777650779039-1d2264.jpg": "78.2% 39.8%"
+      }
     },
     {
       "id": "CL1200",
