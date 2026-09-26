@@ -1224,7 +1224,16 @@
         "/assets/stock/images/img-1789287018458-d34902.jpg",
         "/assets/stock/images/img-1789287017398-e6105c.jpg"
       ],
-      "slug": "mercedes-benz-e320-coupe-w124-1994-rhd"
+      "slug": "mercedes-benz-e320-coupe-w124-1994-rhd",
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "image_focus": {
+        "/assets/stock/images/img-1789285741323-30c9ed.jpg": "76.7% 66.0%"
+      }
     },
     {
       "id": "xjs 4.0 cab",
