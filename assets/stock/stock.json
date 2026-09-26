@@ -887,8 +887,8 @@
       "model": "XJR 4.0 Supercharged",
       "year": 1999,
       "title": {
-        "fr": "Jaguar XJR 4.0 Supercharged",
-        "en": "Jaguar XJR 4.0 Supercharged"
+        "fr": "Jaguar XJR X308 4.0 Supercharged",
+        "en": "Jaguar XJR X308 4.0 Supercharged"
       },
       "headline": null,
       "description": {
@@ -912,7 +912,21 @@
         "/assets/stock/images/jaguar-xjr-1786790604435-bc5036.jpg",
         "/assets/stock/images/jaguar-xjr-1786790612381-b88367.jpg",
         "/assets/stock/images/jaguar-xjr-1786790472162-d2da77.jpg"
-      ]
+      ],
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "Berline",
+      "power_hp": 370,
+      "exterior_color": "Argent",
+      "interior_color": "Gris",
+      "vin": "",
+      "image_focus": {
+        "/assets/stock/images/jaguar-xjr-1786790418578-38c425.jpg": "46.2% 63.2%",
+        "/assets/stock/images/jaguar-xjr-1786790589295-4bb07d.jpg": "39.0% 47.3%",
+        "/assets/stock/images/jaguar-xjr-1786790604435-bc5036.jpg": "52.4% 100.0%",
+        "/assets/stock/images/jaguar-xjr-1786790612381-b88367.jpg": "46.9% 45.3%",
+        "/assets/stock/images/jaguar-xjr-1786790472162-d2da77.jpg": "55.4% 63.6%"
+      }
     },
     {
       "id": "645i cab",
