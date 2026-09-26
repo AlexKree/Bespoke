@@ -806,16 +806,30 @@
       "sale_category": "professionnel",
       "images": [
         "/assets/stock/images/img-1786788111783-4cad59.jpg",
-        "/assets/stock/images/img-1786788106274-61242c.jpg",
-        "/assets/stock/images/img-1786788095535-cf08d5.jpg",
-        "/assets/stock/images/img-1786788100304-02be71.jpg",
-        "/assets/stock/images/img-1786788118577-747671.jpg",
-        "/assets/stock/images/img-1786788125063-bebe4d.jpg",
         "/assets/stock/images/159-1789287572500-aae26c.jpg",
         "/assets/stock/images/159-1789287573576-14db4f.jpg",
+        "/assets/stock/images/img-1786788118577-747671.jpg",
+        "/assets/stock/images/img-1786788125063-bebe4d.jpg",
+        "/assets/stock/images/img-1786788106274-61242c.jpg",
+        "/assets/stock/images/img-1786788100304-02be71.jpg",
+        "/assets/stock/images/img-1786788095535-cf08d5.jpg",
         "/assets/stock/images/159-1789287574729-fddbba.jpg"
       ],
-      "vin": ""
+      "vin": "",
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "image_focus": {
+        "/assets/stock/images/img-1786788111783-4cad59.jpg": "49.9% 73.6%",
+        "/assets/stock/images/img-1786788106274-61242c.jpg": "0.0% 68.0% 1.10",
+        "/assets/stock/images/img-1786788095535-cf08d5.jpg": "53.9% 32.2%",
+        "/assets/stock/images/img-1786788100304-02be71.jpg": "57.9% 67.2%",
+        "/assets/stock/images/img-1786788118577-747671.jpg": "63.8% 58.5%",
+        "/assets/stock/images/159-1789287572500-aae26c.jpg": "67.5% 56.1%"
+      }
     },
     {
       "id": "turbo r bleue",
