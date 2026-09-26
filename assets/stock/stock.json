@@ -1355,14 +1355,21 @@
         "en": "2004 Maserati Quattroporte 4.2 V8, an iconic Italian luxury sedan combining elegance, performance and unmistakable character. It is powered by the renowned 4.2-litre naturally aspirated V8 producing 400 horsepower, paired with a 6-speed Cambiocorsa automated manual transmission and rear-wheel drive. With its distinctive Maserati V8 soundtrack, strong performance and Pininfarina-designed bodywork, this Quattroporte delivers a unique blend of luxury, comfort and genuine sporting character. A true grand touring sedan and a representative example of the era when Maserati's naturally aspirated V8 engines defined the brand's identity."
       },
       "images": [
-        "/assets/stock/images/maserati-1790413936550-948ba6.jpg",
-        "/assets/stock/images/maserati-1790413937667-4046f6.jpg",
-        "/assets/stock/images/maserati-1790413938769-007a6c.jpg",
         "/assets/stock/images/maserati-1790413940206-e3ea79.jpg",
+        "/assets/stock/images/maserati-1790413938769-007a6c.jpg",
+        "/assets/stock/images/maserati-1790413942469-dbb54c.jpg",
         "/assets/stock/images/maserati-1790413941286-bc594c.jpg",
-        "/assets/stock/images/maserati-1790413942469-dbb54c.jpg"
+        "/assets/stock/images/maserati-1790413937667-4046f6.jpg",
+        "/assets/stock/images/maserati-1790413936550-948ba6.jpg"
       ],
-      "image_focus": {},
+      "image_focus": {
+        "/assets/stock/images/maserati-1790413940206-e3ea79.jpg": "59.8% 38.2%",
+        "/assets/stock/images/maserati-1790413938769-007a6c.jpg": "54.1% 30.2%",
+        "/assets/stock/images/maserati-1790413942469-dbb54c.jpg": "58.3% 48.9%",
+        "/assets/stock/images/maserati-1790413941286-bc594c.jpg": "51.9% 20.7%",
+        "/assets/stock/images/maserati-1790413937667-4046f6.jpg": "61.1% 39.8%",
+        "/assets/stock/images/maserati-1790413936550-948ba6.jpg": "60.8% 34.6%"
+      },
       "slug": "maserati-quattroporte-v-4-2-v8-ferrari-2004"
     },
     {
