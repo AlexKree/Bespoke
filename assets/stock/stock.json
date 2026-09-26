@@ -691,36 +691,36 @@
       "model": "Cayenne Turbo S V8 550 ch",
       "year": 2008,
       "title": {
-        "fr": "Porsche Cayenne Turbo S V8 550 ch",
-        "en": "Porsche Cayenne Turbo S V8 550 ch"
+        "fr": "Porsche Cayenne Turbo 4.8l V8",
+        "en": "Porsche Cayenne Turbo 4.8l V8 "
       },
       "headline": null,
       "description": {
-        "fr": "Porsche Cayenne Turbo S de 2008, affichant 110 000 km et présenté en excellent état. Équipé du puissant V8 4.5L biturbo développant 550 ch, associé à la transmission intégrale. Véhicule actuellement UK plated, importé au Royaume-Uni avant le Brexit. Une version haut de gamme offrant des performances impressionnantes, un grand confort et le caractère sportif propre à Porsche.",
-        "en": "2008 Porsche Cayenne Turbo S with 110,000 km, presented in excellent condition. Powered by the powerful 4.5L twin-turbo V8 producing 550 hp, combined with all-wheel drive. Currently UK plated and imported into the UK before Brexit. A high-performance luxury SUV offering impressive performance, excellent comfort and Porsche's distinctive sporting character."
+        "fr": "Porsche Cayenne Turbo S de 2008, affichant 110 000 km et présenté en excellent état. Équipé du puissant V8 4.8L biturbo développant 500 ch, associé à la transmission intégrale. Véhicule actuellement UK plated, importé au Royaume-Uni avant le Brexit. Une version haut de gamme offrant des performances impressionnantes, un grand confort et le caractère sportif propre à Porsche.",
+        "en": "2008 Porsche Cayenne Turbo  with 110,000 km, presented in excellent condition. Powered by the powerful 4.8L twin-turbo V8 producing 500 hp, combined with all-wheel drive. Currently UK plated and imported into the UK before Brexit. A high-performance luxury SUV offering impressive performance, excellent comfort and Porsche's distinctive sporting character."
       },
-      "price_eur": 23900,
-      "mileage": "110 000",
+      "price_eur": 17000,
+      "mileage": "115 000",
       "mileage_km": 110000,
       "country": "",
       "status": "available",
       "sale_category": "both",
       "images": [
         "/assets/stock/images/cayenne-2008-1786792188822-bdbcf7.jpg",
-        "/assets/stock/images/cayenne-2008-1786786123235-51a857.jpg",
         "/assets/stock/images/cayenne-2008-1786786135675-795be4.jpg",
-        "/assets/stock/images/cayenne-2008-1786786147555-37eac1.jpg",
         "/assets/stock/images/cayenne-2008-1786786175800-4da66d.jpg",
+        "/assets/stock/images/cayenne-2008-1786786147555-37eac1.jpg",
         "/assets/stock/images/cayenne-2008-1786786167455-c70e62.jpg",
+        "/assets/stock/images/cayenne-2008-1786786123235-51a857.jpg",
         "/assets/stock/images/cayenne-2008-1786786141233-2155c4.jpg"
       ],
-      "transmission": "",
-      "fuel_type": "",
-      "body_type": "",
-      "power_hp": null,
-      "exterior_color": "",
-      "interior_color": "",
-      "vin": "",
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "SUV",
+      "power_hp": 500,
+      "exterior_color": "Noir",
+      "interior_color": "Caramel",
+      "vin": "WP1ZZZ***********",
       "image_focus": {
         "/assets/stock/images/cayenne-2008-1786786123235-51a857.jpg": "38.0% 68.0%",
         "/assets/stock/images/cayenne-2008-1786792188822-bdbcf7.jpg": "43.4% 71.2%",
