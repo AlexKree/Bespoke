@@ -858,11 +858,26 @@
         "/assets/stock/images/turbo-r-bleue-1786789367630-7d305d.jpg",
         "/assets/stock/images/turbo-r-bleue-1786789385326-9dda3a.jpg",
         "/assets/stock/images/turbo-r-bleue-1786789416626-23eb96.jpg",
-        "/assets/stock/images/turbo-r-bleue-1786789377991-9555de.jpg",
         "/assets/stock/images/turbo-r-bleue-1786789459533-de2990.jpg",
         "/assets/stock/images/turbo-r-bleue-1786789469430-70ae4e.jpg",
-        "/assets/stock/images/turbo-r-bleue-1786789477591-0db6eb.jpg"
-      ]
+        "/assets/stock/images/turbo-r-bleue-1786789477591-0db6eb.jpg",
+        "/assets/stock/images/turbo-r-bleue-1786789377991-9555de.jpg"
+      ],
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "vin": "",
+      "image_focus": {
+        "/assets/stock/images/turbo-r-bleue-1786789367630-7d305d.jpg": "50.6% 80.7%",
+        "/assets/stock/images/turbo-r-bleue-1786789439812-9b9eb3.jpg": "50.9% 56.1%",
+        "/assets/stock/images/turbo-r-bleue-1786789416626-23eb96.jpg": "53.6% 63.6%",
+        "/assets/stock/images/turbo-r-bleue-1786789385326-9dda3a.jpg": "58.3% 83.9%",
+        "/assets/stock/images/turbo-r-bleue-1786789377991-9555de.jpg": "61.8% 58.9%",
+        "/assets/stock/images/turbo-r-bleue-1786789459533-de2990.jpg": "65.1% 69.6%"
+      }
     },
     {
       "id": "jaguar xjr",
