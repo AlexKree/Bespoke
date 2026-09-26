@@ -1573,7 +1573,7 @@
       "power_hp": 354,
       "exterior_color": "Noir",
       "interior_color": "Noir",
-      "vin": "",
+      "vin": "WDB210***********",
       "price_eur": null,
       "status": "available",
       "sale_category": "both",
@@ -1582,20 +1582,25 @@
         "en": "1999 Mercedes-Benz E 55 AMG W210, powered by the legendary naturally aspirated 5.4-litre AMG M113 E55 V8, producing 354 hp and 530 Nm of torque, paired with a 5-speed automatic transmission and rear-wheel drive. With only 155,000 km, this E 55 AMG is presented in excellent overall condition, combining genuine AMG performance with the understated elegance and comfort of the W210 platform. The E 55 AMG represents one of the iconic naturally aspirated AMG models of the late 1990s, before Mercedes-AMG moved towards supercharged V8 power. Its 5.4-litre V8 delivers strong low-end torque, a distinctive exhaust note and the characteristic driving experience of classic AMG models. An authentic AMG youngtimer that remains perfectly usable on the road while also offering strong collector appeal thanks to its relatively low mileage and original character."
       },
       "images": [
-        "/assets/stock/images/e55-amg-1790419385095-09440b.jpg",
         "/assets/stock/images/e55-amg-1790419386120-3c3b18.jpg",
-        "/assets/stock/images/e55-amg-1790419383825-8c4136.jpg",
+        "/assets/stock/images/e55-amg-1790419387279-2a5a92.jpg",
         "/assets/stock/images/e55-amg-1790419025525-f443c1.jpg",
         "/assets/stock/images/e55-amg-1790419388343-08c965.jpg",
+        "/assets/stock/images/e55-amg-1790419383825-8c4136.jpg",
         "/assets/stock/images/e55-amg-1790419028692-68ac01.jpg",
         "/assets/stock/images/e55-amg-1790419024507-e49f9f.jpg",
         "/assets/stock/images/e55-amg-1790419027628-6dd05f.jpg",
         "/assets/stock/images/e55-amg-1790419022340-db0fc2.jpg",
         "/assets/stock/images/e55-amg-1790419023491-2acbf5.jpg",
-        "/assets/stock/images/e55-amg-1790419387279-2a5a92.jpg",
+        "/assets/stock/images/e55-amg-1790419385095-09440b.jpg",
         "/assets/stock/images/e55-amg-1790419026538-14cbc1.jpg"
       ],
-      "image_focus": {},
+      "image_focus": {
+        "/assets/stock/images/e55-amg-1790419385095-09440b.jpg": "53.6% 56.9%",
+        "/assets/stock/images/e55-amg-1790419386120-3c3b18.jpg": "41.0% 73.6%",
+        "/assets/stock/images/e55-amg-1790419383825-8c4136.jpg": "49.4% 70.8%",
+        "/assets/stock/images/e55-amg-1790419025525-f443c1.jpg": "53.4% 100.0%"
+      },
       "slug": "mercedes-benz-e-55-amg-w210-v8-5-4-2026"
     }
   ]
