@@ -643,18 +643,30 @@
       "price_eur": null,
       "mileage": "125 000km",
       "mileage_km": 125000,
-      "country": "",
+      "country": "France",
       "status": "available",
       "sale_category": "both",
       "images": [
         "/assets/stock/images/rr-sw-1787151024974-63bc93.jpg",
         "/assets/stock/images/rr-sw-1787151012987-c6a21d.jpg",
         "/assets/stock/images/rr-sw-1787151002450-da0dfc.jpg",
-        "/assets/stock/images/rr-sw-1787151039242-701e8d.jpg",
         "/assets/stock/images/rr-sw-1787151047239-fdd2d0.jpg",
         "/assets/stock/images/rr-sw-1787151060260-c23ca9.jpg",
-        "/assets/stock/images/rr-sw-1787151069085-9efda0.jpg"
-      ]
+        "/assets/stock/images/rr-sw-1787151069085-9efda0.jpg",
+        "/assets/stock/images/rr-sw-1787151039242-701e8d.jpg"
+      ],
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "vin": "",
+      "image_focus": {
+        "/assets/stock/images/rr-sw-1787151024974-63bc93.jpg": "56.9% 100.0%",
+        "/assets/stock/images/rr-sw-1787151012987-c6a21d.jpg": "57.4% 78.3%",
+        "/assets/stock/images/rr-sw-1787151002450-da0dfc.jpg": "52.9% 66.4%"
+      }
     },
     {
       "id": "cayenne 2008",
