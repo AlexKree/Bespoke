@@ -1288,7 +1288,7 @@
       },
       "mileage": "57 000",
       "country": "",
-      "vin": "",
+      "vin": "WBAGL6***********",
       "price_eur": 8490,
       "status": "available",
       "sale_category": "professionnel",
@@ -1298,12 +1298,22 @@
       },
       "images": [
         "/assets/stock/images/745i-1789289394376-f1a63a.jpg",
-        "/assets/stock/images/745i-1789289393324-4d7529.jpg",
-        "/assets/stock/images/745i-1789289392162-6b2a78.jpg",
         "/assets/stock/images/745i-1789289402252-067869.jpg",
-        "/assets/stock/images/745i-1789289395304-a6a551.jpg"
+        "/assets/stock/images/745i-1789289395304-a6a551.jpg",
+        "/assets/stock/images/745i-1789289392162-6b2a78.jpg",
+        "/assets/stock/images/745i-1789289393324-4d7529.jpg"
       ],
-      "slug": "bmw-745i-e65-v8-2005-rhd"
+      "slug": "bmw-745i-e65-v8-2005-rhd",
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": "Berline",
+      "power_hp": 333,
+      "exterior_color": "Noir",
+      "interior_color": "Noir",
+      "image_focus": {
+        "/assets/stock/images/745i-1789289394376-f1a63a.jpg": "45.2% 81.5%",
+        "/assets/stock/images/745i-1789289402252-067869.jpg": "62.8% 100.0%"
+      }
     }
   ]
 }
