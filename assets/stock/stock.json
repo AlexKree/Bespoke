@@ -1042,7 +1042,16 @@
       "images": [
         "/assets/stock/images/350z-1789158550098-17e8df.jpg"
       ],
-      "vin": ""
+      "vin": "",
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "image_focus": {
+        "/assets/stock/images/350z-1789158550098-17e8df.jpg": "49.9% 77.9%"
+      }
     },
     {
       "id": "honda rouge",
