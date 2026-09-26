@@ -425,7 +425,15 @@
         "/assets/stock/images/sel-1778160363208-1ddbc6.jpg",
         "/assets/stock/images/sel-1778160337488-91cffc.jpg",
         "/assets/stock/images/sel-1778160336400-e2cdeb.jpg"
-      ]
+      ],
+      "transmission": "",
+      "fuel_type": "",
+      "body_type": "",
+      "power_hp": null,
+      "exterior_color": "",
+      "interior_color": "",
+      "vin": "",
+      "image_focus": {}
     },
     {
       "id": "mustang gt 2005",
