@@ -790,8 +790,8 @@
       "model": "159 3.2 V6 Q4 260ch - Manuelle",
       "year": 2008,
       "title": {
-        "fr": "Alfa Romeo 159 3.2 V6 Q4 260ch - Manuelle",
-        "en": "Alfa Romeo 159 3.2 V6 Q4 260ch - Manual"
+        "fr": "Alfa Romeo 159 3.2 V6 Q4 ",
+        "en": "Alfa Romeo 159 3.2 V6 Q4 "
       },
       "headline": null,
       "description": {
@@ -815,13 +815,13 @@
         "/assets/stock/images/img-1786788095535-cf08d5.jpg",
         "/assets/stock/images/159-1789287574729-fddbba.jpg"
       ],
-      "vin": "",
-      "transmission": "",
-      "fuel_type": "",
-      "body_type": "",
-      "power_hp": null,
-      "exterior_color": "",
-      "interior_color": "",
+      "vin": "ZAR939***********",
+      "transmission": "Manual",
+      "fuel_type": "Petrol",
+      "body_type": "Berline",
+      "power_hp": 260,
+      "exterior_color": "Rouge",
+      "interior_color": "Velours Beige",
       "image_focus": {
         "/assets/stock/images/img-1786788111783-4cad59.jpg": "49.9% 73.6%",
         "/assets/stock/images/img-1786788106274-61242c.jpg": "0.0% 68.0% 1.10",
