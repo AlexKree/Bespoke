@@ -647,6 +647,14 @@ footer{
   color:var(--gold);
 }
 
+/* Badge « Bonne affaire » : prix >= 10 % sous le prix marche valide. */
+.dealBadge{
+  display:inline-flex; align-items:center; width:max-content;
+  font-size:10px; font-weight:700; letter-spacing:.10em; text-transform:uppercase;
+  padding:4px 10px; border-radius:999px; margin-top:8px;
+  background:rgba(82,168,122,.14); border:1px solid rgba(82,168,122,.40); color:#6dcf9a;
+}
+
 /* ── Category filter buttons ─────────────────────────────────────── */
 .stockCatFilter{
   display:flex; gap:6px; flex-wrap:wrap; align-items:center;

@@ -205,6 +205,16 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .carMeta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .marketProposal { font-size: 13px; line-height: 1.5; margin-bottom: 12px; }
+    .marketProposal:empty { display: none; }
+    .marketProposal .mpBox { border: 1px solid rgba(198,176,122,.3); border-radius: 8px; padding: 12px 14px; }
+    .marketProposal .mpHead { font-weight: 600; margin-bottom: 6px; }
+    .marketProposal .mpMuted { color: var(--muted, #9a9a9a); }
+    .marketProposal ul { margin: 8px 0; padding-left: 18px; }
+    .marketProposal li { margin: 3px 0; }
+    .marketProposal a { color: inherit; }
+    .marketProposal .btn { margin-top: 8px; }
+    .carMarket { font-size: 12px; color: var(--muted, #9a9a9a); margin-top: 2px; }
     .carStatus {
       display: inline-flex; align-items: center; gap: 5px;
       font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
@@ -602,7 +612,10 @@
         <div style="padding: 24px 0;">
           <div class="adminHeader">
             <h2>Gestion du stock</h2>
-            <button type="button" id="addCarBtn" class="btn primary">➕ Ajouter un véhicule</button>
+            <div style="display:flex; gap:8px; flex-wrap:wrap">
+              <button type="button" id="marketAllBtn" class="btn" title="Recherche IA pour les véhicules en vente sans prix marché validé">💶 Proposer les prix marché</button>
+              <button type="button" id="addCarBtn" class="btn primary">➕ Ajouter un véhicule</button>
+            </div>
           </div>
           <div id="carList" class="carList"></div>
           <div id="emptyState" class="empty" style="display:none">Aucun véhicule</div>
@@ -790,6 +803,22 @@
             </div>
           </div>
 
+          <div class="section-label">Prix marché</div>
+          <div class="row2">
+            <div class="field">
+              <label>Prix marché validé (EUR)</label>
+              <input type="number" id="fieldMarketPrice" min="0" placeholder="vide = non affiché"/>
+              <small id="marketValidatedInfo" style="display:block; color: var(--muted, #9a9a9a); margin-top: 4px;"></small>
+            </div>
+            <div class="field" style="justify-content:flex-end">
+              <button type="button" id="marketRequestBtn" class="btn">Proposer un prix marché (IA)</button>
+            </div>
+          </div>
+          <small style="display:block; color: var(--muted, #9a9a9a); margin: -4px 0 8px;">
+            Seul le prix validé ci-dessus est publié sur la fiche, avec sa date. Badge « Bonne affaire » si le prix de vente est au moins 10 % sous ce prix.
+          </small>
+          <div id="marketProposal" class="marketProposal"></div>
+
           <div class="field">
             <label>Catégorie de vente</label>
             <select id="fieldSaleCategory">
@@ -886,6 +915,10 @@
   // version tronquee (6 premiers caracteres) ; c'est cette map qui porte la
   // valeur integrale affichee et editee dans l'admin.
   let vinsByCarId = {};
+  let marketByCarId = {};      // propositions IA (base privee), par car_id
+  let marketPollTimer = null;
+  let marketCarId = null;       // vehicule ouvert dans la modale (null = ajout)
+  let marketOriginal = { eur: null, date: null };
   let currentImages = [];
   // Point focal par photo (chemin -> "X% Y%"), utilise en object-position la
   // ou la photo est recadree en cover (carte stock, vignettes...). Absent
@@ -1320,6 +1353,7 @@
       stockSha = data.sha || '';
       renderList();
       loadVins();
+      loadMarketPrices();
       return;
     }
     if (ok && Array.isArray(data.items)) {
@@ -1327,6 +1361,7 @@
       stockSha = data.sha || '';
       renderList();
       loadVins();
+      loadMarketPrices();
     }
   }
 
@@ -1336,6 +1371,150 @@
       vinsByCarId = data.vins || {};
     }
   }
+
+  // ── Prix marche : propositions IA, validees a la main ────────────────
+  const GOOD_DEAL_RATIO = 0.9;
+  const fmtEur = (n) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+  const isGoodDeal = (car) => car.status !== 'sold' && car.price_eur > 0 && car.market_price_eur > 0
+    && car.price_eur <= car.market_price_eur * GOOD_DEAL_RATIO;
+
+  async function loadMarketPrices() {
+    const { ok, data } = await apiFetch(API, 'getMarketPrices');
+    if (ok && data && typeof data.items === 'object') marketByCarId = data.items || {};
+    renderList();
+    renderMarketPanel();
+    // Recherche en cours : on revient voir toutes les 10 s.
+    clearTimeout(marketPollTimer);
+    const busy = Object.values(marketByCarId).some((m) => m.status === 'pending' || m.status === 'running');
+    if (busy) marketPollTimer = setTimeout(loadMarketPrices, 10000);
+  }
+
+  async function requestMarketPrices(cars) {
+    const { ok, data } = await apiFetch(API, 'requestMarketPrices', { cars });
+    if (ok) {
+      showToast(`Recherche lancée pour ${data.queued} véhicule(s). Comptez 2 à 5 min par véhicule.`, 'success');
+    } else {
+      showToast('Impossible de lancer la recherche' + (data && data.error ? ' : ' + data.error : '.'), 'error');
+    }
+    loadMarketPrices();
+  }
+
+  function marketListText(car) {
+    if (car.market_price_eur) {
+      return `Marché validé : ${fmtEur(car.market_price_eur)}` + (isGoodDeal(car) ? ' • 🏷️ Bonne affaire' : '');
+    }
+    const m = marketByCarId[car.id];
+    if (!m) return '';
+    if (m.status === 'pending' || m.status === 'running') return '⏳ Recherche du prix marché…';
+    if (m.status === 'proposed') return '💡 Prix marché proposé, à valider';
+    if (m.status === 'error') return '⚠️ Prix marché : échec de la recherche';
+    return '';
+  }
+
+  function el(tag, cls, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  function renderMarketPanel() {
+    const panel = document.getElementById('marketProposal');
+    const info = document.getElementById('marketValidatedInfo');
+    const btn = document.getElementById('marketRequestBtn');
+    if (!panel || !editModal.classList.contains('open')) return;
+    panel.innerHTML = '';
+    info.textContent = marketOriginal.eur
+      ? `Validé le ${new Date(marketOriginal.date || Date.now()).toLocaleDateString('fr-FR')}.`
+      : '';
+
+    btn.disabled = !marketCarId;
+    btn.title = marketCarId ? '' : "Enregistrez d'abord le véhicule";
+    const m = marketCarId ? marketByCarId[marketCarId] : null;
+    btn.textContent = m && (m.status === 'proposed' || m.status === 'error') ? 'Relancer la recherche (IA)' : 'Proposer un prix marché (IA)';
+    if (m && (m.status === 'pending' || m.status === 'running')) btn.disabled = true;
+    if (!m) return;
+
+    const box = el('div', 'mpBox');
+    panel.appendChild(box);
+    if (m.status === 'pending' || m.status === 'running') {
+      box.appendChild(el('div', 'mpHead', '⏳ Recherche en cours…'));
+      box.appendChild(el('div', 'mpMuted', "L'IA consulte annonces et résultats d'enchères (2 à 5 min). Vous pouvez fermer cette fenêtre."));
+      return;
+    }
+    if (m.status === 'error') {
+      box.appendChild(el('div', 'mpHead', '⚠️ La recherche a échoué'));
+      box.appendChild(el('div', 'mpMuted', [m.error_code, m.error_detail].filter(Boolean).join(' — ')));
+      return;
+    }
+
+    const p = m.proposal || {};
+    const conf = { low: 'faible', medium: 'moyenne', high: 'bonne' }[p.confidence] || p.confidence;
+    if (!p.market_price_eur) {
+      box.appendChild(el('div', 'mpHead', 'Données insuffisantes pour proposer un prix'));
+    } else {
+      const range = p.low_eur && p.high_eur ? ` (fourchette ${fmtEur(p.low_eur)} – ${fmtEur(p.high_eur)})` : '';
+      box.appendChild(el('div', 'mpHead', `Proposition IA : ${fmtEur(p.market_price_eur)}${range}`));
+      const ownPrice = parseInt(document.getElementById('fieldPrice').value) || null;
+      let cmp = `Confiance : ${conf}`;
+      if (ownPrice) {
+        const diff = Math.round((ownPrice / p.market_price_eur - 1) * 100);
+        cmp += ` • Votre prix : ${fmtEur(ownPrice)} (${diff > 0 ? '+' : ''}${diff} % vs marché)`
+          + (ownPrice <= p.market_price_eur * GOOD_DEAL_RATIO ? ' → 🏷️ Bonne affaire' : '');
+      }
+      box.appendChild(el('div', 'mpMuted', cmp));
+    }
+    if (p.rationale) box.appendChild(el('p', null, p.rationale));
+
+    const comps = Array.isArray(p.comparables) ? p.comparables : [];
+    if (comps.length) {
+      box.appendChild(el('div', 'mpMuted', `Comparables (${comps.length}) — à vérifier avant de valider :`));
+      const ul = el('ul');
+      const kinds = { listing: 'annonce', auction_result: 'enchère', price_guide: 'cote' };
+      for (const c of comps) {
+        const li = el('li');
+        const label = `${c.title} — ${fmtEur(c.price_eur)} (${kinds[c.kind] || c.kind}, ${c.source}${c.date ? ', ' + c.date : ''})`;
+        if (/^https?:\/\//i.test(c.url || '')) {
+          const a = el('a', null, label);
+          a.href = c.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+          li.appendChild(a);
+        } else {
+          li.textContent = label;
+        }
+        if (c.note) li.appendChild(el('span', 'mpMuted', ' — ' + c.note));
+        ul.appendChild(li);
+      }
+      box.appendChild(ul);
+    }
+    if (p.market_price_eur) {
+      const use = el('button', 'btn btn-sm', 'Reprendre ce prix dans « Prix marché validé »');
+      use.type = 'button';
+      use.addEventListener('click', () => {
+        document.getElementById('fieldMarketPrice').value = p.market_price_eur;
+        showToast('Prix repris. Cliquez sur Enregistrer pour le publier sur la fiche.', 'success');
+      });
+      box.appendChild(use);
+    }
+  }
+
+  document.getElementById('marketRequestBtn').addEventListener('click', () => {
+    const car = (stockData.items || []).find((c) => c.id === marketCarId);
+    if (car) requestMarketPrices([car]);
+  });
+
+  document.getElementById('marketAllBtn').addEventListener('click', () => {
+    const cars = (stockData.items || []).filter((car) => {
+      const m = marketByCarId[car.id];
+      return car.status !== 'sold' && !car.market_price_eur
+        && !(m && ['pending', 'running', 'proposed'].includes(m.status));
+    });
+    if (!cars.length) {
+      showToast('Tous les véhicules en vente ont déjà un prix validé ou une proposition.', 'success');
+      return;
+    }
+    if (!confirm(`Lancer la recherche de prix marché pour ${cars.length} véhicule(s) ?\n\nTraitement un par un, 2 à 5 min chacun. Coût API estimé : environ 0,50 € par véhicule.`)) return;
+    requestMarketPrices(cars);
+  });
 
   function renderList() {
     carList.innerHTML = '';
@@ -1382,6 +1561,9 @@
       const catText = catLabels[car.sale_category] || 'Particulier & Pro';
       meta.textContent = `${car.vehicle_type === 'motorcycle' ? 'Moto' : 'Voiture'} • ${car.year || '–'} • ${car.location || car.country || '–'} • ID: ${car.id} • ${catText}`;
       info.appendChild(meta);
+
+      const marketText = marketListText(car);
+      if (marketText) info.appendChild(el('div', 'carMarket', marketText));
 
       const status = document.createElement('div');
       status.className = `carStatus ${car.status || 'available'}`;
@@ -1439,6 +1621,9 @@
     document.getElementById('fieldFrenchRegistration').value = '';
     document.getElementById('fieldCoc').value = '';
     document.getElementById('fieldOriginalRegistration').value = '';
+    document.getElementById('fieldMarketPrice').value = '';
+    marketCarId = null;
+    marketOriginal = { eur: null, date: null };
     document.getElementById('fieldPrice').value = '';
     document.getElementById('fieldStatus').value = 'available';
     document.getElementById('fieldSaleCategory').value = 'both';
@@ -1446,6 +1631,7 @@
     document.getElementById('fieldDescEn').value = '';
     renderImageGrid();
     editModal.classList.add('open');
+    renderMarketPanel();
   });
 
   // Champs Oui/Non : true / false dans stock.json, null tant que non renseigne
@@ -1476,6 +1662,9 @@
     document.getElementById('fieldFrenchRegistration').value = ynToField(car.french_registration);
     document.getElementById('fieldCoc').value = ynToField(car.coc);
     document.getElementById('fieldOriginalRegistration').value = car.original_registration || '';
+    document.getElementById('fieldMarketPrice').value = car.market_price_eur || '';
+    marketCarId = car.id;
+    marketOriginal = { eur: car.market_price_eur || null, date: car.market_price_date || null };
     document.getElementById('fieldPrice').value = car.price_eur || car.price || '';
     document.getElementById('fieldStatus').value = car.status || 'available';
     document.getElementById('fieldSaleCategory').value = car.sale_category || 'both';
@@ -1485,6 +1674,7 @@
     currentImageFocus = { ...(car.image_focus || {}) };
     renderImageGrid();
     editModal.classList.add('open');
+    renderMarketPanel();
   }
 
   document.getElementById('closeModalBtn').addEventListener('click', () => {
@@ -1518,6 +1708,7 @@
     }
 
     const vinRaw = document.getElementById('fieldVin').value.trim();
+    const marketEur = parseInt(document.getElementById('fieldMarketPrice').value) || null;
     vinsByCarId[id] = vinRaw;
 
     const car = {
@@ -1542,6 +1733,9 @@
       french_registration: fieldToYn(document.getElementById('fieldFrenchRegistration').value),
       coc: fieldToYn(document.getElementById('fieldCoc').value),
       original_registration: document.getElementById('fieldOriginalRegistration').value.trim(),
+      // Prix marche : la date n'avance que si le montant valide change.
+      market_price_eur: marketEur,
+      market_price_date: marketEur ? (marketEur === marketOriginal.eur && marketOriginal.date ? marketOriginal.date : new Date().toISOString().slice(0, 10)) : null,
       price_eur: parseInt(document.getElementById('fieldPrice').value) || null,
       status: document.getElementById('fieldStatus').value,
       sale_category: document.getElementById('fieldSaleCategory').value,

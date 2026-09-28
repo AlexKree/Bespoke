@@ -170,13 +170,14 @@ function workerBaseUrl(event) {
 }
 
 /** Declenche (ou relance) le worker background pour un job. Best-effort :
- *  abandonne au bout de 5 s sans faire echouer l'appelant. */
-async function triggerWorker(base, jobId) {
+ *  abandonne au bout de 5 s sans faire echouer l'appelant. `path` permet de
+ *  viser un autre worker (prix marche). */
+async function triggerWorker(base, jobId, path = WORKER_PATH) {
   if (!base) return false;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 5000);
   try {
-    await fetch(base + WORKER_PATH, {
+    await fetch(base + path, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ jobId }),

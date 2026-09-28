@@ -12,6 +12,8 @@
       year: 'Année',
       location: 'Localisation',
       country: "Pays d'origine",
+      goodDeal: 'Bonne affaire',
+      goodDealTitle: 'Prix au moins 10 % sous le prix marché constaté',
       mileage: 'Kilométrage',
       vin: 'VIN',
       priceOnRequest: 'Prix sur demande',
@@ -45,6 +47,8 @@
       year: 'Year',
       location: 'Location',
       country: 'Country of origin',
+      goodDeal: 'Good deal',
+      goodDealTitle: 'Priced at least 10% below the observed market price',
       mileage: 'Mileage',
       vin: 'VIN',
       priceOnRequest: 'Price on request',
@@ -490,6 +494,15 @@
     price.textContent = formatPrice(item);
     if (isSold) price.style.color = '#e05c5c';
     body.appendChild(price);
+
+    // Prix marche valide dans l'admin : badge si le prix est >= 10 % en dessous.
+    if (!isSold && item.price_eur > 0 && item.market_price_eur > 0 && item.price_eur <= item.market_price_eur * 0.9) {
+      const deal = document.createElement('div');
+      deal.className = 'dealBadge';
+      deal.title = T.goodDealTitle;
+      deal.textContent = T.goodDeal;
+      body.appendChild(deal);
+    }
 
     const cat = item.sale_category || 'both';
     if (cat !== 'both') {
