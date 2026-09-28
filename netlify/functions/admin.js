@@ -2,7 +2,9 @@ const crypto = require('crypto');
 const https = require('https');
 const { Pool } = require('pg');
 const { workerBaseUrl, triggerWorker } = require('../lib/inspection');
-const { buildRequest: buildMarketRequest, WORKER_PATH: MARKET_WORKER_PATH } = require('../lib/market-price');
+const {
+  buildRequest: buildMarketRequest, WORKER_PATH: MARKET_WORKER_PATH, ensureTable: ensureMarketTable,
+} = require('../lib/market-price');
 
 let pool = null;
 
@@ -492,6 +494,7 @@ exports.handler = async function (event) {
     const dbPool = getPool();
     if (!dbPool) return { statusCode: 200, headers, body: JSON.stringify({ items: {}, db: false }) };
     try {
+      await ensureMarketTable(dbPool);
       const { rows } = await dbPool.query(
         'SELECT car_id, status, proposal, error_code, error_detail, requested_at, updated_at FROM vehicle_market_prices'
       );
@@ -509,6 +512,7 @@ exports.handler = async function (event) {
     const cars = Array.isArray(body.cars) ? body.cars.filter((c) => c && c.id).slice(0, 100) : [];
     if (!cars.length) return { statusCode: 400, headers, body: JSON.stringify({ error: 'No cars' }) };
     try {
+      await ensureMarketTable(dbPool);
       for (const car of cars) {
         // Un vehicule deja en cours de recherche n'est pas remis a zero.
         await dbPool.query(

@@ -18,7 +18,7 @@ const Anthropic = require('@anthropic-ai/sdk');
 const { getPool, classifyError } = require('../lib/ai');
 const { workerBaseUrl, triggerWorker } = require('../lib/inspection');
 const {
-  MARKET_MODEL, WORKER_PATH, SYSTEM, ESTIMATE_SCHEMA, Estimate, userPrompt,
+  MARKET_MODEL, WORKER_PATH, ensureTable, SYSTEM, ESTIMATE_SCHEMA, Estimate, userPrompt,
 } = require('../lib/market-price');
 
 // On arrete de prendre de nouveaux jobs apres 11 min : une recherche peut
@@ -134,6 +134,7 @@ exports.handler = async function (event) {
   while (Date.now() - started < TIME_BUDGET_MS) {
     let job;
     try {
+      await ensureTable(pool);
       job = await claimNext(pool);
     } catch (err) {
       console.error('market-price-run : claim', err && err.message);

@@ -1,4 +1,7 @@
 /*
+  NB : inutile de jouer ce fichier a la main — netlify/lib/market-price.js
+  cree la table au premier usage (ensureTable). Garde comme reference.
+
   Prix marche proposes par l'IA pour les vehicules du stock — PRIVE.
 
   Circuit :

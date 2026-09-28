@@ -79,6 +79,33 @@ const Estimate = z.object({
   rationale: z.string(),
 });
 
+// La table est creee par le code au premier usage : pas de migration a jouer
+// a la main dans Neon (meme SQL que migrations/add-vehicle-market-prices.sql).
+const CREATE_TABLE_SQL = `
+CREATE TABLE IF NOT EXISTS vehicle_market_prices (
+  car_id       TEXT PRIMARY KEY,
+  status       TEXT NOT NULL DEFAULT 'pending',
+  request      JSONB,
+  proposal     JSONB,
+  error_code   TEXT,
+  error_detail TEXT,
+  requested_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_vehicle_market_prices_status ON vehicle_market_prices (status, requested_at);`;
+
+let tableReady = null;
+/** Cree la table si besoin, une fois par instance ; reessaie apres un echec. */
+function ensureTable(pool) {
+  if (!tableReady) {
+    tableReady = pool.query(CREATE_TABLE_SQL).catch((err) => {
+      tableReady = null;
+      throw err;
+    });
+  }
+  return tableReady;
+}
+
 const str = (v) => (v == null ? '' : String(v).trim());
 
 /**
@@ -116,6 +143,7 @@ function userPrompt(request) {
 module.exports = {
   MARKET_MODEL,
   WORKER_PATH,
+  ensureTable,
   SYSTEM,
   ESTIMATE_SCHEMA,
   Estimate,
