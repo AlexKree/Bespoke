@@ -121,7 +121,7 @@
       "price_eur": 16490,
       "mileage": "83000",
       "mileage_km": null,
-      "country": "",
+      "country": "Canada",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -149,7 +149,7 @@
       "exterior_color": "Beige",
       "interior_color": "",
       "image_focus": {},
-      "location": "Canada",
+      "location": "France",
       "technical_inspection": null,
       "french_registration": null,
       "coc": null,
