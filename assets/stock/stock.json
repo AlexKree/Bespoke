@@ -1276,7 +1276,8 @@
       "image_focus": {
         "/assets/stock/images/img-1789285741323-30c9ed.jpg": "76.7% 66.0%"
       },
-      "location": "France/06"
+      "location": "France/06",
+      "vehicle_type": "car"
     },
     {
       "id": "xjs 4.0 cab",
@@ -1320,7 +1321,8 @@
         "/assets/stock/images/xjs-4-0-cab-1789288471205-d4da1f.jpg": "60.1% 39.0%",
         "/assets/stock/images/xjs-4-0-cab-1789288321050-c12ce8.jpg": "57.1% 83.9%",
         "/assets/stock/images/xjs-4-0-cab-1789288322047-3b3f26.jpg": "44.9% 54.9%"
-      }
+      },
+      "vehicle_type": "car"
     },
     {
       "id": "745i",
@@ -1356,7 +1358,8 @@
       "image_focus": {
         "/assets/stock/images/745i-1789289394376-f1a63a.jpg": "45.2% 81.5%",
         "/assets/stock/images/745i-1789289402252-067869.jpg": "62.8% 100.0%"
-      }
+      },
+      "vehicle_type": "car"
     },
     {
       "id": "maserati",
@@ -1397,7 +1400,8 @@
         "/assets/stock/images/maserati-1790413937667-4046f6.jpg": "61.1% 39.8%",
         "/assets/stock/images/maserati-1790413936550-948ba6.jpg": "60.8% 34.6%"
       },
-      "slug": "maserati-quattroporte-v-4-2-v8-ferrari-2004"
+      "slug": "maserati-quattroporte-v-4-2-v8-ferrari-2004",
+      "vehicle_type": "car"
     },
     {
       "id": "s55 amg",
@@ -1445,7 +1449,8 @@
         "/assets/stock/images/s55-amg-1790414574022-39d7da.jpg": "49.7% 61.6% 1.10"
       },
       "slug": "mercedes-benz-s-500-l-w220-5-0-v8-m113-1999",
-      "location": "Japon"
+      "location": "Japon",
+      "vehicle_type": "car"
     },
     {
       "id": "s500 bleu",
@@ -1491,7 +1496,8 @@
         "/assets/stock/images/s500-bleu-1790416843524-718633.jpg": "44.7% 56.9%"
       },
       "slug": "mercedes-benz-s-500-w140-5-0-v8-m119-rhd-1995",
-      "location": "UK"
+      "location": "UK",
+      "vehicle_type": "car"
     },
     {
       "id": "Daimler XJ40",
@@ -1523,7 +1529,8 @@
       ],
       "image_focus": {},
       "slug": "daimler-xj40-aj6-rhd-1990",
-      "location": "Japon"
+      "location": "Japon",
+      "vehicle_type": "car"
     },
     {
       "id": "e500",
@@ -1575,7 +1582,8 @@
         "/assets/stock/images/e500-1790418242954-1d4d89.jpg": "37.0% 63.2%"
       },
       "slug": "e-500-w211-5-0-v8-m113-look-e55-amg-2004",
-      "location": "Japon"
+      "location": "Japon",
+      "vehicle_type": "car"
     },
     {
       "id": "e55 amg",
@@ -1620,7 +1628,8 @@
         "/assets/stock/images/e55-amg-1790419383825-8c4136.jpg": "49.4% 70.8%",
         "/assets/stock/images/e55-amg-1790419025525-f443c1.jpg": "53.4% 100.0%"
       },
-      "slug": "mercedes-benz-e-55-amg-w210-v8-5-4-2026"
+      "slug": "mercedes-benz-e-55-amg-w210-v8-5-4-2026",
+      "vehicle_type": "car"
     }
   ]
 }
