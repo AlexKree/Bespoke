@@ -1199,7 +1199,7 @@
       "price_eur": 4000,
       "mileage": "33500",
       "mileage_km": 33500,
-      "country": "",
+      "country": "Italie",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -1209,15 +1209,22 @@
         "/assets/stock/images/honda-integra-1787146664851-78a45f.jpg"
       ],
       "vin": "",
-      "transmission": "",
-      "fuel_type": "",
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
       "body_type": "",
       "power_hp": null,
       "exterior_color": "",
       "interior_color": "",
       "image_focus": {
         "/assets/stock/images/honda-integra-1787146531877-64770d.jpg": "77.5% 52.1%"
-      }
+      },
+      "location": "France",
+      "technical_inspection": true,
+      "french_registration": true,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "audi",
