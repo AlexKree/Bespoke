@@ -174,7 +174,7 @@ const T = {
     make: 'Make', model: 'Model', ref: 'Reference', type: 'Type', vin: 'VIN',
     transmission: 'Transmission', fuelType: 'Fuel', bodyType: 'Body type',
     power: 'Power', exteriorColor: 'Exterior colour', interiorColor: 'Interior colour',
-    techInspection: 'Roadworthiness test (CT)', frenchRegistration: 'French registration',
+    techInspection: 'MOT', frenchRegistration: 'French registration',
     coc: 'COC', originalRegistration: 'Original registration', yes: 'Yes', no: 'No',
     car: 'Car', motorcycle: 'Motorcycle',
     forPrivate: 'Private sale', forPro: 'Trade sale', forBoth: 'Private and trade',
