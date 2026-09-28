@@ -1,6 +1,10 @@
 const crypto = require('crypto');
 const https = require('https');
 const { Pool } = require('pg');
+const { workerBaseUrl, triggerWorker } = require('../lib/inspection');
+const {
+  buildRequest: buildMarketRequest, WORKER_PATH: MARKET_WORKER_PATH, ensureTable: ensureMarketTable,
+} = require('../lib/market-price');
 
 let pool = null;
 
@@ -483,6 +487,49 @@ exports.handler = async function (event) {
     } catch (err) {
       return { statusCode: 502, headers, body: JSON.stringify({ error: 'DB error', detail: String(err) }) };
     }
+  }
+
+  // ── Prix marche (base privee) : propositions IA a valider par l'admin ────
+  if (action === 'getMarketPrices') {
+    const dbPool = getPool();
+    if (!dbPool) return { statusCode: 200, headers, body: JSON.stringify({ items: {}, db: false }) };
+    try {
+      await ensureMarketTable(dbPool);
+      const { rows } = await dbPool.query(
+        'SELECT car_id, status, proposal, error_code, error_detail, requested_at, updated_at FROM vehicle_market_prices'
+      );
+      const items = {};
+      for (const row of rows) items[row.car_id] = row;
+      return { statusCode: 200, headers, body: JSON.stringify({ items, db: true }) };
+    } catch (err) {
+      return { statusCode: 502, headers, body: JSON.stringify({ error: 'DB error', detail: String(err) }) };
+    }
+  }
+
+  if (action === 'requestMarketPrices') {
+    const dbPool = getPool();
+    if (!dbPool) return { statusCode: 503, headers, body: JSON.stringify({ error: 'DATABASE_URL absent' }) };
+    const cars = Array.isArray(body.cars) ? body.cars.filter((c) => c && c.id).slice(0, 100) : [];
+    if (!cars.length) return { statusCode: 400, headers, body: JSON.stringify({ error: 'No cars' }) };
+    try {
+      await ensureMarketTable(dbPool);
+      for (const car of cars) {
+        // Un vehicule deja en cours de recherche n'est pas remis a zero.
+        await dbPool.query(
+          `INSERT INTO vehicle_market_prices (car_id, status, request, requested_at, updated_at)
+           VALUES ($1, 'pending', $2::jsonb, now(), now())
+           ON CONFLICT (car_id) DO UPDATE
+             SET status = 'pending', request = EXCLUDED.request, proposal = NULL,
+                 error_code = NULL, error_detail = NULL, requested_at = now(), updated_at = now()
+           WHERE vehicle_market_prices.status <> 'running'`,
+          [String(car.id), JSON.stringify(buildMarketRequest(car))]
+        );
+      }
+    } catch (err) {
+      return { statusCode: 502, headers, body: JSON.stringify({ error: 'DB error', detail: String(err) }) };
+    }
+    const triggered = await triggerWorker(workerBaseUrl(event), null, MARKET_WORKER_PATH);
+    return { statusCode: 202, headers, body: JSON.stringify({ ok: true, queued: cars.length, triggered }) };
   }
 
   if (!GITHUB_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) {

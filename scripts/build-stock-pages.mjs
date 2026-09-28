@@ -158,6 +158,8 @@ const T = {
     power: 'Puissance', exteriorColor: 'Couleur extérieure', interiorColor: 'Couleur intérieure',
     techInspection: 'Contrôle technique', frenchRegistration: 'Immatriculation française',
     coc: 'COC', originalRegistration: "Immatriculation d'origine", yes: 'Oui', no: 'Non',
+    marketPrice: 'Prix marché constaté', surveyed: 'relevé', goodDeal: 'Bonne affaire',
+    goodDealTitle: 'Prix au moins 10 % sous le prix marché constaté',
     car: 'Automobile', motorcycle: 'Moto',
     forPrivate: 'Vente au particulier', forPro: 'Vente au professionnel', forBoth: 'Particulier et professionnel',
     contact: 'Demander le dossier complet', findSame: 'Je cherche la même', backToStock: 'Retour au stock',
@@ -176,6 +178,8 @@ const T = {
     power: 'Power', exteriorColor: 'Exterior colour', interiorColor: 'Interior colour',
     techInspection: 'MOT', frenchRegistration: 'French registration',
     coc: 'COC', originalRegistration: 'Original registration', yes: 'Yes', no: 'No',
+    marketPrice: 'Observed market price', surveyed: 'surveyed', goodDeal: 'Good deal',
+    goodDealTitle: 'Priced at least 10% below the observed market price',
     car: 'Car', motorcycle: 'Motorcycle',
     forPrivate: 'Private sale', forPro: 'Trade sale', forBoth: 'Private and trade',
     contact: 'Request the full file', findSame: "I'm looking for the same", backToStock: 'Back to stock',
@@ -310,11 +314,25 @@ ${thumbs.map((p, i) => `          <button type="button" class="vpThumb${i === 0 
 // Champs Oui/Non de l'admin : null / absent = non renseigne, ligne masquee.
 const yesNo = (v, t) => (v === true ? t.yes : v === false ? t.no : null);
 
+// Prix marche : uniquement la valeur validee dans l'admin (les propositions IA
+// restent en base privee). Badge si le prix de vente est >= 10 % en dessous.
+const GOOD_DEAL_RATIO = 0.9;
+const isGoodDeal = (item) => item.status !== 'sold' && item.price_eur > 0 && item.market_price_eur > 0
+  && item.price_eur <= item.market_price_eur * GOOD_DEAL_RATIO;
+
+function marketPriceLabel(item, l, t) {
+  if (item.status === 'sold' || !item.market_price_eur) return null;
+  const d = item.market_price_date ? new Date(item.market_price_date) : null;
+  const when = d && !isNaN(d) ? ` (${t.surveyed} ${d.toLocaleDateString(l === 'en' ? 'en-GB' : 'fr-FR', { month: '2-digit', year: 'numeric' })})` : '';
+  return `≈ ${eur(item.market_price_eur, l)}${when}`;
+}
+
 function renderSpecs(item, l, t) {
   const rows = [
     [t.make, item.make],
     [t.model, item.model],
     [t.year, item.year],
+    [t.marketPrice, marketPriceLabel(item, l, t)],
     [t.mileage, item.mileage || (item.mileage_km ? item.mileage_km.toLocaleString(l === 'en' ? 'en-GB' : 'fr-FR') + ' km' : null)],
     [t.transmission, TRANSMISSION_LABELS[l]?.[item.transmission] || null],
     [t.fuelType, FUEL_LABELS[l]?.[item.fuel_type] || null],
@@ -646,7 +664,7 @@ ${renderGallery(item, title)}
         <div class="kicker ${st}">${esc(t[st])}</div>
         <h1 class="vpTitle">${esc(title)}</h1>
 ${headline ? `        <p class="lead">${esc(headline)}</p>\n` : ''}        <div class="vpPrice">${esc(price)}</div>
-${item.status === 'sold' ? `        <div class="vpSoldNotice">${esc(t.soldNotice)}</div>\n` : ''}
+${isGoodDeal(item) ? `        <div class="dealBadge" title="${esc(t.goodDealTitle)}">${esc(t.goodDeal)}</div>\n` : ''}${item.status === 'sold' ? `        <div class="vpSoldNotice">${esc(t.soldNotice)}</div>\n` : ''}
         <div class="sep"></div>
         <div class="kicker">${esc(t.specsTitle)}</div>
         ${renderSpecs(item, l, t)}
