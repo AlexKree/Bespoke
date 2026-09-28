@@ -673,8 +673,16 @@
             </div>
             <div class="field">
               <label>Pays d'origine</label>
-              <input type="text" id="fieldCountry" placeholder="ex: Italy"/>
+              <input type="text" id="fieldCountry" placeholder="ex: Japon"/>
             </div>
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <label>Localisation</label>
+              <input type="text" id="fieldLocation" placeholder="ex: France / 06 (où se trouve le véhicule)"/>
+            </div>
+            <div class="field"></div>
           </div>
 
           <div class="section-label">Caractéristiques techniques</div>
@@ -1378,6 +1386,7 @@
     document.getElementById('fieldTitleEn').value = '';
     document.getElementById('fieldMileage').value = '';
     document.getElementById('fieldCountry').value = '';
+    document.getElementById('fieldLocation').value = '';
     document.getElementById('fieldTransmission').value = '';
     document.getElementById('fieldFuelType').value = '';
     document.getElementById('fieldBodyType').value = '';
@@ -1404,6 +1413,7 @@
     document.getElementById('fieldTitleEn').value = car.title?.en || '';
     document.getElementById('fieldMileage').value = car.mileage || '';
     document.getElementById('fieldCountry').value = car.country || '';
+    document.getElementById('fieldLocation').value = car.location || '';
     document.getElementById('fieldTransmission').value = car.transmission || '';
     document.getElementById('fieldFuelType').value = car.fuel_type || '';
     document.getElementById('fieldBodyType').value = car.body_type || '';
@@ -1464,6 +1474,7 @@
       },
       mileage: document.getElementById('fieldMileage').value,
       country: document.getElementById('fieldCountry').value,
+      location: document.getElementById('fieldLocation').value.trim(),
       transmission: document.getElementById('fieldTransmission').value,
       fuel_type: document.getElementById('fieldFuelType').value,
       body_type: document.getElementById('fieldBodyType').value.trim(),

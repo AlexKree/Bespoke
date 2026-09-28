@@ -50,14 +50,15 @@
       "price_eur": null,
       "mileage": "",
       "mileage_km": null,
-      "country": "France / Europe",
+      "country": "",
       "status": "sold",
       "sale_category": "both",
       "images": [
         "/assets/stock/images/p6180110.jpg",
         "/assets/stock/images/p6180120.jpg",
         "/assets/stock/images/p6180123.jpg"
-      ]
+      ],
+      "location": "France / Europe"
     },
     {
       "id": "chevrolet-corvette-stingray",
@@ -120,7 +121,7 @@
       "price_eur": 16490,
       "mileage": "83000",
       "mileage_km": null,
-      "country": "Canada",
+      "country": "",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -147,7 +148,8 @@
       "power_hp": 295,
       "exterior_color": "Beige",
       "interior_color": "",
-      "image_focus": {}
+      "image_focus": {},
+      "location": "Canada"
     },
     {
       "id": "volvo-p1800-es",
@@ -325,7 +327,7 @@
       "price_eur": 3500,
       "mileage": "70000",
       "mileage_km": 70000,
-      "country": "France / Europe",
+      "country": "",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -352,7 +354,8 @@
       "image_focus": {
         "/assets/stock/images/cl1200-1777651645154-8591df.jpg": "60.8% 12.3%",
         "/assets/stock/images/cl1200-1777651647135-3b65ed.jpg": "27.8% 28.6%"
-      }
+      },
+      "location": "France / Europe"
     },
     {
       "id": "GTO",
@@ -457,7 +460,7 @@
       "price_eur": 11500,
       "mileage": "133 000 km",
       "mileage_km": 133000,
-      "country": "Canada",
+      "country": "",
       "status": "sold",
       "sale_category": "both",
       "images": [
@@ -480,7 +483,8 @@
       "interior_color": "",
       "image_focus": {
         "/assets/stock/images/mustang-gt-2005-1785805196528-ea9f3e.jpg": "45.9% 64.4%"
-      }
+      },
+      "location": "Canada"
     },
     {
       "id": "evo 7",
@@ -501,7 +505,7 @@
       "price_eur": 16500,
       "mileage": "133 500 km",
       "mileage_km": 133500,
-      "country": "Japon",
+      "country": "",
       "status": "sold",
       "sale_category": "both",
       "images": [
@@ -511,7 +515,8 @@
         "/assets/stock/images/evo-7-1786277903507-27162b.jpg",
         "/assets/stock/images/evo-7-1786277898527-f703b3.jpg",
         "/assets/stock/images/evo-7-1786277876319-a49b38.jpg"
-      ]
+      ],
+      "location": "Japon"
     },
     {
       "id": "r32",
@@ -532,7 +537,7 @@
       "price_eur": null,
       "mileage": "90 000 miles",
       "mileage_km": 90000,
-      "country": "UK",
+      "country": "",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -557,7 +562,8 @@
         "/assets/stock/images/r32-1786278830231-18d1b7.jpg": "44.7% 59.7%",
         "/assets/stock/images/r32-1786278808605-f784e8.jpg": "58.8% 100.0%",
         "/assets/stock/images/r32-1786278815771-e60e41.jpg": "61.1% 73.6%"
-      }
+      },
+      "location": "UK"
     },
     {
       "id": "eclipse",
@@ -578,7 +584,7 @@
       "price_eur": 10000,
       "mileage": "105 000km",
       "mileage_km": 105000,
-      "country": "Japon",
+      "country": "",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -600,7 +606,8 @@
         "/assets/stock/images/eclipse-1786279624189-21e8b6.jpg": "64.8% 100.0%",
         "/assets/stock/images/eclipse-1786279636749-2280a1.jpg": "48.9% 70.4%",
         "/assets/stock/images/eclipse-1786279645967-1c4edd.jpg": "65.8% 81.5%"
-      }
+      },
+      "location": "Japon"
     },
     {
       "id": "s500 or",
@@ -621,7 +628,7 @@
       "price_eur": 12500,
       "mileage": "195 000km",
       "mileage_km": 195000,
-      "country": "Canada",
+      "country": "",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -654,7 +661,8 @@
         "/assets/stock/images/s500-or-1790410593999-5fd091.jpg": "68.5% 82.3%",
         "/assets/stock/images/s500-or-1790410594953-acee88.jpg": "72.5% 62.8%",
         "/assets/stock/images/s500-or-1790410626515-9d9338.jpg": "48.2% 68.8%"
-      }
+      },
+      "location": "Canada"
     },
     {
       "id": "rr sw",
@@ -675,7 +683,7 @@
       "price_eur": null,
       "mileage": "125 000km",
       "mileage_km": 125000,
-      "country": "France",
+      "country": "",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -698,7 +706,8 @@
         "/assets/stock/images/rr-sw-1787151024974-63bc93.jpg": "56.9% 100.0%",
         "/assets/stock/images/rr-sw-1787151012987-c6a21d.jpg": "57.4% 78.3%",
         "/assets/stock/images/rr-sw-1787151002450-da0dfc.jpg": "52.9% 66.4%"
-      }
+      },
+      "location": "France"
     },
     {
       "id": "cayenne 2008",
@@ -862,7 +871,7 @@
       "price_eur": 7000,
       "mileage": "106 000 miles",
       "mileage_km": 106000,
-      "country": "UK",
+      "country": "",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -889,7 +898,8 @@
         "/assets/stock/images/turbo-r-bleue-1786789385326-9dda3a.jpg": "58.3% 83.9%",
         "/assets/stock/images/turbo-r-bleue-1786789377991-9555de.jpg": "61.8% 58.9%",
         "/assets/stock/images/turbo-r-bleue-1786789459533-de2990.jpg": "65.1% 69.6%"
-      }
+      },
+      "location": "UK"
     },
     {
       "id": "jaguar xjr",
@@ -959,7 +969,7 @@
       "price_eur": 10990,
       "mileage": "75 000km",
       "mileage_km": 75000,
-      "country": "UK",
+      "country": "",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -983,7 +993,8 @@
         "/assets/stock/images/645i-cab-1786791173333-ecf1fb.jpg": "57.9% 65.2%",
         "/assets/stock/images/645i-cab-1786791167416-69419d.jpg": "64.8% 96.6%",
         "/assets/stock/images/645i-cab-1786791138607-6b4ae6.jpg": "64.3% 35.4%"
-      }
+      },
+      "location": "UK"
     },
     {
       "id": "mini",
@@ -1235,7 +1246,7 @@
         "en": "Mercedes-Benz E320 Coupé W124 – 1994 – RHD"
       },
       "mileage": "217000",
-      "country": "France/06",
+      "country": "",
       "vin": "",
       "price_eur": 10000,
       "status": "available",
@@ -1264,7 +1275,8 @@
       "interior_color": "",
       "image_focus": {
         "/assets/stock/images/img-1789285741323-30c9ed.jpg": "76.7% 66.0%"
-      }
+      },
+      "location": "France/06"
     },
     {
       "id": "xjs 4.0 cab",
@@ -1395,7 +1407,7 @@
         "en": "Mercedes-Benz S 500 L W220 5.0 V8 M113"
       },
       "mileage": "111 000",
-      "country": "Japon",
+      "country": "",
       "transmission": "Automatic",
       "fuel_type": "Petrol",
       "body_type": "Berline",
@@ -1432,7 +1444,8 @@
         "/assets/stock/images/s55-amg-1790414548170-da66da.jpg": "60.3% 33.8%",
         "/assets/stock/images/s55-amg-1790414574022-39d7da.jpg": "49.7% 61.6% 1.10"
       },
-      "slug": "mercedes-benz-s-500-l-w220-5-0-v8-m113-1999"
+      "slug": "mercedes-benz-s-500-l-w220-5-0-v8-m113-1999",
+      "location": "Japon"
     },
     {
       "id": "s500 bleu",
@@ -1442,7 +1455,7 @@
         "en": "Mercedes-Benz S 500 W140 5.0 V8 M119 – RHD"
       },
       "mileage": "153 000km",
-      "country": "UK",
+      "country": "",
       "transmission": "Automatic",
       "fuel_type": "Petrol",
       "body_type": "Berline",
@@ -1477,7 +1490,8 @@
         "/assets/stock/images/s500-bleu-1790416841437-77c2ee.jpg": "51.9% 56.1%",
         "/assets/stock/images/s500-bleu-1790416843524-718633.jpg": "44.7% 56.9%"
       },
-      "slug": "mercedes-benz-s-500-w140-5-0-v8-m119-rhd-1995"
+      "slug": "mercedes-benz-s-500-w140-5-0-v8-m119-rhd-1995",
+      "location": "UK"
     },
     {
       "id": "Daimler XJ40",
@@ -1487,7 +1501,7 @@
         "en": "Daimler XJ40 AJ6 - RHD"
       },
       "mileage": "",
-      "country": "Japon",
+      "country": "",
       "transmission": "Automatic",
       "fuel_type": "Petrol",
       "body_type": "Berline",
@@ -1508,7 +1522,8 @@
         "/assets/stock/images/daimler-xj40-1790417431836-126a78.jpg"
       ],
       "image_focus": {},
-      "slug": "daimler-xj40-aj6-rhd-1990"
+      "slug": "daimler-xj40-aj6-rhd-1990",
+      "location": "Japon"
     },
     {
       "id": "e500",
@@ -1518,7 +1533,7 @@
         "en": "E 500 W211 5.0 V8 M113 – Look E55 AMG"
       },
       "mileage": "145 000km",
-      "country": "Japon",
+      "country": "",
       "transmission": "Automatic",
       "fuel_type": "Petrol",
       "body_type": "Berline",
@@ -1559,7 +1574,8 @@
         "/assets/stock/images/e500-1790418241764-adab1f.jpg": "73.3% 66.4%",
         "/assets/stock/images/e500-1790418242954-1d4d89.jpg": "37.0% 63.2%"
       },
-      "slug": "e-500-w211-5-0-v8-m113-look-e55-amg-2004"
+      "slug": "e-500-w211-5-0-v8-m113-look-e55-amg-2004",
+      "location": "Japon"
     },
     {
       "id": "e55 amg",
