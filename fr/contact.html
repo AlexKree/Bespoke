@@ -234,6 +234,17 @@
     var params = new URLSearchParams(location.search);
     var ref = (params.get('ref') || '').trim();
     var vurl = (params.get('url') || '').trim();
+    if (ref && params.get('intent') === 'same') {
+      msg.value = 'Bonjour,\n\n'
+        + 'Ce véhicule est vendu, mais je recherche le même modèle :\n'
+        + ref + (vurl ? '\n' + vurl : '') + '\n\n'
+        + 'Budget : \n'
+        + 'Critères (couleur, kilométrage, options, année) : \n'
+        + 'Pays de livraison : \n';
+      if (subj && !subj.value.trim()) subj.value = 'Je cherche la même — ' + ref;
+      askForContactDetails('Demande pré-remplie à partir du véhicule vendu. Il ne reste qu’à indiquer votre nom et votre e-mail (et, si vous le souhaitez, préciser budget et critères) puis envoyer.');
+      return;
+    }
     if (ref) {
       msg.value = 'Bonjour,\n\n'
         + 'Je souhaite recevoir le dossier complet du véhicule suivant :\n'
@@ -259,6 +270,17 @@
       if (subj && !subj.value.trim()) subj.value = 'Pre-rapport photo';
     }
   })();
+
+  // Guide le visiteur vers les champs qu'il lui reste a remplir.
+  function askForContactDetails(text) {
+    var note = document.createElement('div');
+    note.className = 'authMsg success';
+    note.style.margin = '0 0 16px';
+    note.textContent = text;
+    form.insertBefore(note, form.firstChild);
+    var name = document.getElementById('name');
+    if (name) name.focus();
+  }
 
   function showStatus(message, type) {
     statusEl.textContent = message;

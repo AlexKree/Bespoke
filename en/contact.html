@@ -233,6 +233,17 @@
     var params = new URLSearchParams(location.search);
     var ref = (params.get('ref') || '').trim();
     var vurl = (params.get('url') || '').trim();
+    if (ref && params.get('intent') === 'same') {
+      msg.value = 'Hello,\n\n'
+        + 'This vehicle has been sold, but I am looking for the same model:\n'
+        + ref + (vurl ? '\n' + vurl : '') + '\n\n'
+        + 'Budget: \n'
+        + 'Criteria (colour, mileage, options, year): \n'
+        + 'Delivery country: \n';
+      if (subj && !subj.value.trim()) subj.value = "I'm looking for the same — " + ref;
+      askForContactDetails('Request pre-filled from the sold vehicle. Just add your name and e-mail (and, if you wish, your budget and criteria), then send.');
+      return;
+    }
     if (ref) {
       msg.value = 'Hello,\n\n'
         + 'I would like to receive the full details on the following vehicle:\n'
@@ -258,6 +269,17 @@
       if (subj && !subj.value.trim()) subj.value = 'Photo pre-report';
     }
   })();
+
+  // Points the visitor to the fields left to fill in.
+  function askForContactDetails(text) {
+    var note = document.createElement('div');
+    note.className = 'authMsg success';
+    note.style.margin = '0 0 16px';
+    note.textContent = text;
+    form.insertBefore(note, form.firstChild);
+    var name = document.getElementById('name');
+    if (name) name.focus();
+  }
 
   function showStatus(message, type) {
     statusEl.textContent = message;
