@@ -516,6 +516,17 @@
     const actions = document.createElement('div');
     actions.className = 'stockCardActions';
 
+    // Apercu d'abord (coup d'oeil rapide), puis la fiche complete.
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn btnSm';
+    btn.textContent = T.quickView;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openModal(item);
+    });
+    actions.appendChild(btn);
+
     // Lien reel plutot que bouton : la fiche a une URL propre, indexable et
     // partageable. La modale reste disponible en apercu rapide.
     if (item.slug) {
@@ -540,16 +551,6 @@
       });
       actions.appendChild(shareBtn);
     }
-
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'btn btnSm';
-    btn.textContent = T.quickView;
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openModal(item);
-    });
-    actions.appendChild(btn);
 
     if (!isSold) {
       const contact = document.createElement('a');
