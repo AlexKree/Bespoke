@@ -160,7 +160,7 @@ const T = {
     coc: 'COC', originalRegistration: "Immatriculation d'origine", yes: 'Oui', no: 'Non',
     car: 'Automobile', motorcycle: 'Moto',
     forPrivate: 'Vente au particulier', forPro: 'Vente au professionnel', forBoth: 'Particulier et professionnel',
-    contact: 'Demander le dossier complet', backToStock: 'Retour au stock',
+    contact: 'Demander le dossier complet', findSame: 'Je cherche la même', backToStock: 'Retour au stock',
     related: 'Autres véhicules disponibles', gallery: 'Galerie',
     soldNotice: "Ce véhicule est vendu. Il reste en ligne à titre de référence — nous pouvons rechercher un équivalent.",
     descTitle: 'Description', specsTitle: 'Caractéristiques',
@@ -178,7 +178,7 @@ const T = {
     coc: 'COC', originalRegistration: 'Original registration', yes: 'Yes', no: 'No',
     car: 'Car', motorcycle: 'Motorcycle',
     forPrivate: 'Private sale', forPro: 'Trade sale', forBoth: 'Private and trade',
-    contact: 'Request the full file', backToStock: 'Back to stock',
+    contact: 'Request the full file', findSame: "I'm looking for the same", backToStock: 'Back to stock',
     related: 'Other available vehicles', gallery: 'Gallery',
     soldNotice: 'This vehicle has been sold. It remains online for reference — we can source an equivalent.',
     descTitle: 'Description', specsTitle: 'Specifications',
@@ -581,6 +581,7 @@ function renderPage(item, l, all) {
   const st = statusKey(item.status);
   const url = `${SITE}/${l}/stock/${item.slug}.html`;
   const price = item.price_eur != null ? eur(item.price_eur, l) : t.onRequest;
+  const contactRef = title + (item.year && !String(title).includes(String(item.year)) ? ` (${item.year})` : '');
 
   const metaDesc = (headline || desc || title)
     .replace(/\s+/g, ' ').trim().slice(0, 155);
@@ -651,7 +652,10 @@ ${item.status === 'sold' ? `        <div class="vpSoldNotice">${esc(t.soldNotice
         ${renderSpecs(item, l, t)}
 
         <div class="ctaRow">
-          <a class="btn primary" href="../contact.html?ref=${encodeURIComponent(title + (item.year && !String(title).includes(String(item.year)) ? ` (${item.year})` : ''))}&amp;url=${encodeURIComponent(url)}" onclick="plausible('Lead')">${esc(t.contact)}</a>
+          ${item.status === 'sold'
+            // Vendu : le dossier n'a plus d'objet, on propose de rechercher un equivalent.
+            ? `<a class="btn primary" href="../contact.html?ref=${encodeURIComponent(contactRef)}&amp;url=${encodeURIComponent(url)}&amp;intent=same" onclick="plausible('Lead')">${esc(t.findSame)}</a>`
+            : `<a class="btn primary" href="../contact.html?ref=${encodeURIComponent(contactRef)}&amp;url=${encodeURIComponent(url)}" onclick="plausible('Lead')">${esc(t.contact)}</a>`}
           <a class="btn" href="../stock.html">${esc(t.backToStock)}</a>
         </div>
         <div class="vpToolLinks">
