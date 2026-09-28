@@ -741,6 +741,40 @@
             </small>
           </div>
 
+          <div class="section-label">Administratif</div>
+          <div class="row2">
+            <div class="field">
+              <label>Contrôle technique</label>
+              <select id="fieldTechInspection">
+                <option value="">—</option>
+                <option value="yes">Oui</option>
+                <option value="no">Non</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Immatriculation française</label>
+              <select id="fieldFrenchRegistration">
+                <option value="">—</option>
+                <option value="yes">Oui</option>
+                <option value="no">Non</option>
+              </select>
+            </div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label>COC</label>
+              <select id="fieldCoc">
+                <option value="">—</option>
+                <option value="yes">Oui</option>
+                <option value="no">Non</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Immatriculation d'origine</label>
+              <input type="text" id="fieldOriginalRegistration" placeholder="ex: 品川 300 あ 12-34"/>
+            </div>
+          </div>
+
           <div class="row2">
             <div class="field">
               <label>Prix (EUR, centimes)</label>
@@ -1401,6 +1435,10 @@
     document.getElementById('fieldExteriorColor').value = '';
     document.getElementById('fieldInteriorColor').value = '';
     document.getElementById('fieldVin').value = '';
+    document.getElementById('fieldTechInspection').value = '';
+    document.getElementById('fieldFrenchRegistration').value = '';
+    document.getElementById('fieldCoc').value = '';
+    document.getElementById('fieldOriginalRegistration').value = '';
     document.getElementById('fieldPrice').value = '';
     document.getElementById('fieldStatus').value = 'available';
     document.getElementById('fieldSaleCategory').value = 'both';
@@ -1409,6 +1447,11 @@
     renderImageGrid();
     editModal.classList.add('open');
   });
+
+  // Champs Oui/Non : true / false dans stock.json, null tant que non renseigne
+  // (la ligne est alors masquee sur la fiche publique).
+  function ynToField(v) { return v === true ? 'yes' : v === false ? 'no' : ''; }
+  function fieldToYn(v) { return v === 'yes' ? true : v === 'no' ? false : null; }
 
   function openEditModal(idx) {
     editingIndex = idx;
@@ -1429,6 +1472,10 @@
     document.getElementById('fieldExteriorColor').value = car.exterior_color || '';
     document.getElementById('fieldInteriorColor').value = car.interior_color || '';
     document.getElementById('fieldVin').value = vinsByCarId[car.id] || '';
+    document.getElementById('fieldTechInspection').value = ynToField(car.technical_inspection);
+    document.getElementById('fieldFrenchRegistration').value = ynToField(car.french_registration);
+    document.getElementById('fieldCoc').value = ynToField(car.coc);
+    document.getElementById('fieldOriginalRegistration').value = car.original_registration || '';
     document.getElementById('fieldPrice').value = car.price_eur || car.price || '';
     document.getElementById('fieldStatus').value = car.status || 'available';
     document.getElementById('fieldSaleCategory').value = car.sale_category || 'both';
@@ -1491,6 +1538,10 @@
       exterior_color: document.getElementById('fieldExteriorColor').value.trim(),
       interior_color: document.getElementById('fieldInteriorColor').value.trim(),
       vin: maskVin(vinRaw),
+      technical_inspection: fieldToYn(document.getElementById('fieldTechInspection').value),
+      french_registration: fieldToYn(document.getElementById('fieldFrenchRegistration').value),
+      coc: fieldToYn(document.getElementById('fieldCoc').value),
+      original_registration: document.getElementById('fieldOriginalRegistration').value.trim(),
       price_eur: parseInt(document.getElementById('fieldPrice').value) || null,
       status: document.getElementById('fieldStatus').value,
       sale_category: document.getElementById('fieldSaleCategory').value,

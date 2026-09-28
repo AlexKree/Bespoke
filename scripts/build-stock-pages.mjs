@@ -156,6 +156,8 @@ const T = {
     make: 'Marque', model: 'Modèle', ref: 'Référence', type: 'Type', vin: 'VIN',
     transmission: 'Transmission', fuelType: 'Carburant', bodyType: 'Carrosserie',
     power: 'Puissance', exteriorColor: 'Couleur extérieure', interiorColor: 'Couleur intérieure',
+    techInspection: 'Contrôle technique', frenchRegistration: 'Immatriculation française',
+    coc: 'COC', originalRegistration: "Immatriculation d'origine", yes: 'Oui', no: 'Non',
     car: 'Automobile', motorcycle: 'Moto',
     forPrivate: 'Vente au particulier', forPro: 'Vente au professionnel', forBoth: 'Particulier et professionnel',
     contact: 'Demander le dossier complet', backToStock: 'Retour au stock',
@@ -172,6 +174,8 @@ const T = {
     make: 'Make', model: 'Model', ref: 'Reference', type: 'Type', vin: 'VIN',
     transmission: 'Transmission', fuelType: 'Fuel', bodyType: 'Body type',
     power: 'Power', exteriorColor: 'Exterior colour', interiorColor: 'Interior colour',
+    techInspection: 'Roadworthiness test (CT)', frenchRegistration: 'French registration',
+    coc: 'COC', originalRegistration: 'Original registration', yes: 'Yes', no: 'No',
     car: 'Car', motorcycle: 'Motorcycle',
     forPrivate: 'Private sale', forPro: 'Trade sale', forBoth: 'Private and trade',
     contact: 'Request the full file', backToStock: 'Back to stock',
@@ -303,6 +307,9 @@ ${thumbs.map((p, i) => `          <button type="button" class="vpThumb${i === 0 
       </div>`;
 }
 
+// Champs Oui/Non de l'admin : null / absent = non renseigne, ligne masquee.
+const yesNo = (v, t) => (v === true ? t.yes : v === false ? t.no : null);
+
 function renderSpecs(item, l, t) {
   const rows = [
     [t.make, item.make],
@@ -318,6 +325,10 @@ function renderSpecs(item, l, t) {
     [t.country, item.country],
     [t.location, item.location],
     [t.type, item.vehicle_type === 'motorcycle' ? t.motorcycle : t.car],
+    [t.techInspection, yesNo(item.technical_inspection, t)],
+    [t.frenchRegistration, yesNo(item.french_registration, t)],
+    [t.coc, yesNo(item.coc, t)],
+    [t.originalRegistration, item.original_registration],
     [t.ref, saleLabel(item.sale_category, t)],
     // item.vin est deja masque a la source (admin/index.html ne persiste que
     // les 6 premiers caracteres + des '*' dans stock.json) : jamais le VIN
