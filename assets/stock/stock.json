@@ -278,7 +278,7 @@
       "price_eur": 5190,
       "mileage": "45 000",
       "mileage_km": 45000,
-      "country": "",
+      "country": "UK",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -298,8 +298,8 @@
         "/assets/stock/images/vmax-1777650852798-2489ce.jpg",
         "/assets/stock/images/vmax-1777650853816-14735c.jpg"
       ],
-      "transmission": "",
-      "fuel_type": "",
+      "transmission": "Manual",
+      "fuel_type": "Petrol",
       "body_type": "",
       "power_hp": null,
       "exterior_color": "",
@@ -309,7 +309,14 @@
         "/assets/stock/images/vmax-1777650772838-501610.jpg": "0.0% 38.2%",
         "/assets/stock/images/vmax-1777650812016-2d8c87.jpg": "9.4% 0.0%",
         "/assets/stock/images/vmax-1777650779039-1d2264.jpg": "78.2% 39.8%"
-      }
+      },
+      "location": "FRance",
+      "technical_inspection": false,
+      "french_registration": false,
+      "coc": false,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "CL1200",
