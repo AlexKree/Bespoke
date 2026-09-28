@@ -16,6 +16,8 @@
       vin: 'VIN',
       priceOnRequest: 'Prix sur demande',
       hideSold: 'Masquer vendues',
+      cars: 'Voitures',
+      motorcycles: 'Motos',
       details: 'Détails',
       contact: 'Contacter',
       searchEmpty: 'Aucun résultat.',
@@ -47,6 +49,8 @@
       vin: 'VIN',
       priceOnRequest: 'Price on request',
       hideSold: 'Hide sold',
+      cars: 'Cars',
+      motorcycles: 'Motorcycles',
       details: 'Details',
       contact: 'Contact',
       searchEmpty: 'No results.',
@@ -78,6 +82,7 @@
   const includeSoldEl = document.getElementById('includeSold');
   const sortEl = document.getElementById('stockSort');
   const catFilterEl = document.getElementById('stockCatFilter');
+  const typeFilterEl = document.getElementById('stockTypeFilter');
 
   // Active category filter: 'all' | 'particulier' | 'professionnel'
   let activeCat = 'all';
@@ -88,6 +93,20 @@
         activeCat = btn.getAttribute('data-cat');
         catFilterEl.querySelectorAll('[data-cat]').forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
+        applyFilters();
+      });
+    });
+  }
+
+  // Types coches (voitures / motos). On garde toujours au moins une case
+  // cochee : decocher la derniere bascule sur l'autre type.
+  if (typeFilterEl) {
+    const boxes = [...typeFilterEl.querySelectorAll('input[data-type]')];
+    boxes.forEach((box) => {
+      box.addEventListener('change', () => {
+        if (!boxes.some((b) => b.checked)) {
+          boxes.forEach((b) => { b.checked = b !== box; });
+        }
         applyFilters();
       });
     });
@@ -314,10 +333,28 @@
     return copy;
   }
 
-  function sortItems(list) {
+  function vehicleType(item) {
+    return item.vehicle_type === 'motorcycle' ? 'motorcycle' : 'car';
+  }
+
+  function sortByStatus(list) {
     const available = list.filter(it => it.status !== 'sold');
     const sold = list.filter(it => it.status === 'sold');
     return [...sortGroup(available), ...sortGroup(sold)];
+  }
+
+  // Voitures d'abord, motos ensuite ; dans chaque groupe, disponibles puis vendus.
+  function sortItems(list) {
+    return [
+      ...sortByStatus(list.filter(it => vehicleType(it) === 'car')),
+      ...sortByStatus(list.filter(it => vehicleType(it) === 'motorcycle')),
+    ];
+  }
+
+  function matchesType(item) {
+    if (!typeFilterEl) return true;
+    const box = typeFilterEl.querySelector(`input[data-type="${vehicleType(item)}"]`);
+    return !box || box.checked;
   }
 
   function matchesCategory(item) {
@@ -358,6 +395,7 @@
     const hideSold = !!(includeSoldEl && includeSoldEl.checked);
     filtered = items.filter((it) => {
       if (hideSold && it.status === 'sold') return false;
+      if (!matchesType(it)) return false;
       if (!matchesCategory(it)) return false;
       if (!matchesMake(it)) return false;
       if (!matchesPrice(it)) return false;
@@ -544,7 +582,20 @@
       return;
     }
     const frag = document.createDocumentFragment();
-    filtered.forEach((it) => frag.appendChild(renderCard(it)));
+    // Intertitres seulement quand les deux types sont affiches ensemble.
+    const mixed = new Set(filtered.map(vehicleType)).size > 1;
+    let current = null;
+    filtered.forEach((it) => {
+      const type = vehicleType(it);
+      if (mixed && type !== current) {
+        const h = document.createElement('h2');
+        h.className = 'stockGroupTitle';
+        h.textContent = type === 'motorcycle' ? T.motorcycles : T.cars;
+        frag.appendChild(h);
+        current = type;
+      }
+      frag.appendChild(renderCard(it));
+    });
     grid.appendChild(frag);
   }
 

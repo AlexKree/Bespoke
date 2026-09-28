@@ -667,6 +667,13 @@ footer{
 .stockCatFilter .catBtn.active.catBtn--particulier{
   border-color:rgba(198,176,122,.4); background:rgba(198,176,122,.12); color:var(--muted);
 }
+.stockTypeFilter{display:flex;gap:16px;align-items:center;margin-left:auto}
+.stockGroupTitle{
+  grid-column:1/-1; margin:18px 0 0; padding-bottom:8px;
+  border-bottom:1px solid var(--line);
+  font-size:12px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+}
+.stockGroupTitle:first-child{margin-top:0}
 .stockCatFilter .catBtn.active.catBtn--professionnel{
   border-color:rgba(198,176,122,.4); background:rgba(198,176,122,.12); color:var(--gold);
 }

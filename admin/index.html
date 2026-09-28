@@ -682,7 +682,13 @@
               <label>Localisation</label>
               <input type="text" id="fieldLocation" placeholder="ex: France / 06 (où se trouve le véhicule)"/>
             </div>
-            <div class="field"></div>
+            <div class="field">
+              <label>Type</label>
+              <select id="fieldVehicleType">
+                <option value="car">Voiture</option>
+                <option value="motorcycle">Moto</option>
+              </select>
+            </div>
           </div>
 
           <div class="section-label">Caractéristiques techniques</div>
@@ -1340,7 +1346,7 @@
       meta.className = 'carMeta';
       const catLabels = { both: 'Particulier & Pro', particulier: 'Particulier', professionnel: 'Professionnel' };
       const catText = catLabels[car.sale_category] || 'Particulier & Pro';
-      meta.textContent = `${car.year || '–'} • ${car.country || 'unknown'} • ID: ${car.id} • ${catText}`;
+      meta.textContent = `${car.vehicle_type === 'motorcycle' ? 'Moto' : 'Voiture'} • ${car.year || '–'} • ${car.location || car.country || '–'} • ID: ${car.id} • ${catText}`;
       info.appendChild(meta);
 
       const status = document.createElement('div');
@@ -1387,6 +1393,7 @@
     document.getElementById('fieldMileage').value = '';
     document.getElementById('fieldCountry').value = '';
     document.getElementById('fieldLocation').value = '';
+    document.getElementById('fieldVehicleType').value = 'car';
     document.getElementById('fieldTransmission').value = '';
     document.getElementById('fieldFuelType').value = '';
     document.getElementById('fieldBodyType').value = '';
@@ -1414,6 +1421,7 @@
     document.getElementById('fieldMileage').value = car.mileage || '';
     document.getElementById('fieldCountry').value = car.country || '';
     document.getElementById('fieldLocation').value = car.location || '';
+    document.getElementById('fieldVehicleType').value = car.vehicle_type === 'motorcycle' ? 'motorcycle' : 'car';
     document.getElementById('fieldTransmission').value = car.transmission || '';
     document.getElementById('fieldFuelType').value = car.fuel_type || '';
     document.getElementById('fieldBodyType').value = car.body_type || '';
@@ -1475,6 +1483,7 @@
       mileage: document.getElementById('fieldMileage').value,
       country: document.getElementById('fieldCountry').value,
       location: document.getElementById('fieldLocation').value.trim(),
+      vehicle_type: document.getElementById('fieldVehicleType').value,
       transmission: document.getElementById('fieldTransmission').value,
       fuel_type: document.getElementById('fieldFuelType').value,
       body_type: document.getElementById('fieldBodyType').value.trim(),
