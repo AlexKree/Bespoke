@@ -152,7 +152,7 @@ const T = {
   fr: {
     home: 'Accueil', stock: 'Stock', onRequest: 'Prix sur demande',
     available: 'Disponible', sold: 'Vendu', reserved: 'Réservé',
-    year: 'Année', mileage: 'Kilométrage', location: 'Localisation',
+    year: 'Année', mileage: 'Kilométrage', location: 'Localisation', country: "Pays d'origine",
     make: 'Marque', model: 'Modèle', ref: 'Référence', type: 'Type', vin: 'VIN',
     transmission: 'Transmission', fuelType: 'Carburant', bodyType: 'Carrosserie',
     power: 'Puissance', exteriorColor: 'Couleur extérieure', interiorColor: 'Couleur intérieure',
@@ -168,7 +168,7 @@ const T = {
   en: {
     home: 'Home', stock: 'Stock', onRequest: 'Price on request',
     available: 'Available', sold: 'Sold', reserved: 'Reserved',
-    year: 'Year', mileage: 'Mileage', location: 'Location',
+    year: 'Year', mileage: 'Mileage', location: 'Location', country: 'Country of origin',
     make: 'Make', model: 'Model', ref: 'Reference', type: 'Type', vin: 'VIN',
     transmission: 'Transmission', fuelType: 'Fuel', bodyType: 'Body type',
     power: 'Power', exteriorColor: 'Exterior colour', interiorColor: 'Interior colour',
@@ -249,7 +249,7 @@ function jsonLd(item, l, t, url) {
     // item.vin est deja masque a la source (voir admin/index.html) : jamais
     // le VIN complet, ici comme partout ou stock.json alimente une sortie publique.
     ...(item.vin ? { vehicleIdentificationNumber: item.vin } : {}),
-    ...(item.country ? { availableAtOrFrom: { '@type': 'Place', address: item.country } } : {}),
+    ...(item.location ? { availableAtOrFrom: { '@type': 'Place', address: item.location } } : {}),
     ...(images.length ? { image: images } : {}),
     description: desc.slice(0, 2400),
     offers: {
@@ -315,7 +315,8 @@ function renderSpecs(item, l, t) {
     [t.power, item.power_hp != null ? `${item.power_hp} ${l === 'en' ? 'hp' : 'ch'}` : null],
     [t.exteriorColor, item.exterior_color],
     [t.interiorColor, item.interior_color],
-    [t.location, item.country],
+    [t.country, item.country],
+    [t.location, item.location],
     [t.type, item.vehicle_type === 'motorcycle' ? t.motorcycle : t.car],
     [t.ref, saleLabel(item.sale_category, t)],
     // item.vin est deja masque a la source (admin/index.html ne persiste que
@@ -437,7 +438,7 @@ function computeFacets(pool) {
 function facetCard(v, l, t) {
   const title = (v.title && (v.title[l] || v.title.fr)) || v.model || v.id;
   const img0 = v.images[0];
-  const meta = [v.year, v.price_eur != null ? eur(v.price_eur, l) : t.onRequest, v.country || null]
+  const meta = [v.year, v.price_eur != null ? eur(v.price_eur, l) : t.onRequest, v.location || v.country || null]
     .filter(Boolean).join(' · ');
   return `        <a class="vpRelatedCard" href="${esc(v.slug)}.html">
           ${img0 ? `<span class="vpRelatedImg"><img src="${img(img0, 560)}" onerror="${imgOnErr(img0, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"${focusStyle(v, img0)}/></span>` : '<div class="vpRelatedNoImg"></div>'}
@@ -810,6 +811,7 @@ function feedFields(item) {
     interior_color: item.interior_color || '',
     steering: item.steering || '',
     country: item.country || '',
+    location: item.location || '',
     condition: 'used',
     availability: 'in stock',
     sale_category: item.sale_category || 'both',

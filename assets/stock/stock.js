@@ -11,6 +11,7 @@
       reserved: 'Réservée',
       year: 'Année',
       location: 'Localisation',
+      country: "Pays d'origine",
       mileage: 'Kilométrage',
       vin: 'VIN',
       priceOnRequest: 'Prix sur demande',
@@ -41,6 +42,7 @@
       reserved: 'Reserved',
       year: 'Year',
       location: 'Location',
+      country: 'Country of origin',
       mileage: 'Mileage',
       vin: 'VIN',
       priceOnRequest: 'Price on request',
@@ -292,6 +294,7 @@
       item.make,
       item.model,
       item.country,
+      item.location,
       item.year ? String(item.year) : '',
       item.mileage ? String(item.mileage) : ''
     ].filter(Boolean).join(' ').toLowerCase();
@@ -430,8 +433,9 @@
     meta.className = 'stockCardMeta';
     const year = item.year ? `${T.year}: ${item.year}` : '';
     const mileage = item.mileage ? `${T.mileage}: ${item.mileage}` : '';
-    const loc = item.country || '';
-    meta.textContent = [year, mileage, loc ? `${T.location}: ${loc}` : ''].filter(Boolean).join(' • ');
+    // Carte compacte : la localisation prime, le pays d'origine sert de repli.
+    const place = item.location ? `${T.location}: ${item.location}` : item.country ? `${T.country}: ${item.country}` : '';
+    meta.textContent = [year, mileage, place].filter(Boolean).join(' • ');
     body.appendChild(meta);
 
     // VIN : stock.json ne porte jamais que les 6 premiers caracteres (le reste
@@ -572,11 +576,11 @@
     modalStatus.textContent = statusLabel(item);
     modalStatus.className = 'kicker ' + (item.status === 'sold' ? 'sold' : item.status === 'reserved' ? 'reserved' : 'available');
 
-    const loc = item.country || '';
     const metaBits = [];
     if (item.year) metaBits.push(`${T.year}: ${item.year}`);
     if (item.mileage) metaBits.push(`${T.mileage}: ${item.mileage}`);
-    if (loc) metaBits.push(`${T.location}: ${loc}`);
+    if (item.country) metaBits.push(`${T.country}: ${item.country}`);
+    if (item.location) metaBits.push(`${T.location}: ${item.location}`);
     modalMeta.textContent = metaBits.join(' • ');
 
     modalPrice.textContent = formatPrice(item);
