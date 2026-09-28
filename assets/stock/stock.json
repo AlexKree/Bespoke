@@ -149,7 +149,13 @@
       "exterior_color": "Beige",
       "interior_color": "",
       "image_focus": {},
-      "location": "Canada"
+      "location": "Canada",
+      "technical_inspection": null,
+      "french_registration": null,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "volvo-p1800-es",
