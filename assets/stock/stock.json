@@ -734,7 +734,7 @@
       "price_eur": 17000,
       "mileage": "115 000",
       "mileage_km": 110000,
-      "country": "",
+      "country": "Japon",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -760,7 +760,14 @@
         "/assets/stock/images/cayenne-2008-1786786135675-795be4.jpg": "47.9% 70.4%",
         "/assets/stock/images/cayenne-2008-1786786147555-37eac1.jpg": "54.9% 64.0%",
         "/assets/stock/images/cayenne-2008-1786786167455-c70e62.jpg": "65.8% 51.7%"
-      }
+      },
+      "location": "France",
+      "technical_inspection": false,
+      "french_registration": false,
+      "coc": false,
+      "original_registration": "Anglaise",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "cayenne 2012",
