@@ -1418,7 +1418,7 @@
       "interior_color": "Noir",
       "vin": "ZAMCD3***********",
       "price_eur": 12000,
-      "status": "available",
+      "status": "reserved",
       "sale_category": "professionnel",
       "description": {
         "fr": "Maserati Quattroporte 4.2 V8 de 2004, une berline italienne emblématique alliant élégance, performances et caractère sportif. Elle est équipée du célèbre V8 4.2 litres atmosphérique développant 400 chevaux, associé à une boîte de vitesses robotisée Cambiocorsa à 6 rapports et à une transmission aux roues arrière. Avec sa sonorité typique du V8 Maserati, ses performances solides et son design signé Pininfarina, cette Quattroporte offre une expérience particulièrement distinctive. Une automobile de grand tourisme capable de combiner confort, luxe et véritable tempérament sportif, représentative de l'âge d'or des Maserati à moteur V8 atmosphérique.",
@@ -1441,7 +1441,14 @@
         "/assets/stock/images/maserati-1790413936550-948ba6.jpg": "60.8% 34.6%"
       },
       "slug": "maserati-quattroporte-v-4-2-v8-ferrari-2004",
-      "vehicle_type": "car"
+      "vehicle_type": "car",
+      "location": "",
+      "technical_inspection": null,
+      "french_registration": null,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "s55 amg",
