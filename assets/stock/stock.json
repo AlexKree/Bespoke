@@ -1269,8 +1269,8 @@
       "id": "e320",
       "year": 1994,
       "title": {
-        "fr": "Mercedes-Benz E320 Coupé W124 – 1994 – RHD",
-        "en": "Mercedes-Benz E320 Coupé W124 – 1994 – RHD"
+        "fr": "Mercedes-Benz E320 Coupé W124 – RHD",
+        "en": "Mercedes-Benz E320 Coupé W124 – RHD"
       },
       "mileage": "217000",
       "country": "",
@@ -1304,7 +1304,13 @@
         "/assets/stock/images/img-1789285741323-30c9ed.jpg": "76.7% 66.0%"
       },
       "location": "France/06",
-      "vehicle_type": "car"
+      "vehicle_type": "car",
+      "technical_inspection": null,
+      "french_registration": null,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "xjs 4.0 cab",
