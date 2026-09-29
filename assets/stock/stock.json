@@ -419,8 +419,8 @@
       "model": "500 SEL",
       "year": 1986,
       "title": {
-        "fr": "Mercedes 500 SEL",
-        "en": "Mercedes 500 SEL"
+        "fr": "Mercedes 500 SEL W140",
+        "en": "Mercedes 500 SEL W140"
       },
       "headline": null,
       "description": {
@@ -452,7 +452,14 @@
       "image_focus": {
         "/assets/stock/images/sel-1778160365819-a71f53.jpg": "60.6% 24.3% 1.65",
         "/assets/stock/images/sel-1778160362016-48d843.jpg": "67.8% 25.9% 1.80"
-      }
+      },
+      "location": "",
+      "technical_inspection": true,
+      "french_registration": true,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "mustang gt 2005",
