@@ -1705,7 +1705,7 @@
         "en": "Mercedes-Benz E 55 AMG W210 – V8 5.4"
       },
       "mileage": "155 000 km",
-      "country": "",
+      "country": "Japon",
       "transmission": "Automatic",
       "fuel_type": "Petrol",
       "body_type": "Berline",
@@ -1741,7 +1741,14 @@
         "/assets/stock/images/e55-amg-1790419025525-f443c1.jpg": "53.4% 100.0%"
       },
       "slug": "mercedes-benz-e-55-amg-w210-v8-5-4-2026",
-      "vehicle_type": "car"
+      "vehicle_type": "car",
+      "location": "Valbonne, France",
+      "technical_inspection": null,
+      "french_registration": null,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     }
   ]
 }
