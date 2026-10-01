@@ -610,7 +610,7 @@
       "price_eur": 10000,
       "mileage": "105 000km",
       "mileage_km": 105000,
-      "country": "",
+      "country": "Japon",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -633,7 +633,13 @@
         "/assets/stock/images/eclipse-1786279636749-2280a1.jpg": "48.9% 70.4%",
         "/assets/stock/images/eclipse-1786279645967-1c4edd.jpg": "65.8% 81.5%"
       },
-      "location": "Japon"
+      "location": "Valbonne, France",
+      "technical_inspection": null,
+      "french_registration": false,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "s500 or",
