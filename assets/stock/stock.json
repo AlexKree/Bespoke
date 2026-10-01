@@ -1099,7 +1099,14 @@
         "/assets/stock/images/mini-1790422691123-3578af.jpg": "72.8% 76.7%",
         "/assets/stock/images/mini-1790422689814-184806.jpg": "68.8% 100.0%",
         "/assets/stock/images/mini-1790422708327-b8f85f.jpg": "85.7% 83.1%"
-      }
+      },
+      "location": "Saint Raphael, France",
+      "technical_inspection": true,
+      "french_registration": true,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "350z",
