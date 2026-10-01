@@ -1646,7 +1646,7 @@
         "en": "E 500 W211 5.0 V8 M113 – Look E55 AMG"
       },
       "mileage": "145 000km",
-      "country": "",
+      "country": "Japon",
       "transmission": "Automatic",
       "fuel_type": "Petrol",
       "body_type": "Berline",
@@ -1688,8 +1688,14 @@
         "/assets/stock/images/e500-1790418242954-1d4d89.jpg": "37.0% 63.2%"
       },
       "slug": "e-500-w211-5-0-v8-m113-look-e55-amg-2004",
-      "location": "Japon",
-      "vehicle_type": "car"
+      "location": "Valbonne, France",
+      "vehicle_type": "car",
+      "technical_inspection": null,
+      "french_registration": null,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "e55 amg",
