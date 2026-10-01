@@ -973,7 +973,7 @@
       "price_eur": 15000,
       "mileage": "75 000km",
       "mileage_km": 75000,
-      "country": "",
+      "country": "UK",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -1001,7 +1001,14 @@
         "/assets/stock/images/jaguar-xjr-1786790604435-bc5036.jpg": "52.4% 100.0%",
         "/assets/stock/images/jaguar-xjr-1786790612381-b88367.jpg": "46.9% 45.3%",
         "/assets/stock/images/jaguar-xjr-1786790472162-d2da77.jpg": "55.4% 63.6%"
-      }
+      },
+      "location": "Valbonne, France",
+      "technical_inspection": null,
+      "french_registration": false,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "645i cab",
