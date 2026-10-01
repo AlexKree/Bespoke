@@ -1613,7 +1613,7 @@
         "en": "Daimler XJ40 AJ6 - RHD"
       },
       "mileage": "",
-      "country": "",
+      "country": "Japon",
       "transmission": "Automatic",
       "fuel_type": "Petrol",
       "body_type": "Berline",
@@ -1635,8 +1635,14 @@
       ],
       "image_focus": {},
       "slug": "daimler-xj40-aj6-rhd-1990",
-      "location": "Japon",
-      "vehicle_type": "car"
+      "location": "Valbonne, France",
+      "vehicle_type": "car",
+      "technical_inspection": null,
+      "french_registration": null,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "e500",
