@@ -430,7 +430,7 @@
       "price_eur": 15490,
       "mileage": "97 000",
       "mileage_km": 97000,
-      "country": "",
+      "country": "Japon",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -453,7 +453,7 @@
         "/assets/stock/images/sel-1778160365819-a71f53.jpg": "60.6% 24.3% 1.65",
         "/assets/stock/images/sel-1778160362016-48d843.jpg": "67.8% 25.9% 1.80"
       },
-      "location": "",
+      "location": "Saint Raphael, France",
       "technical_inspection": true,
       "french_registration": true,
       "coc": null,
