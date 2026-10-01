@@ -1292,7 +1292,7 @@
       "price_eur": 17000,
       "mileage": "122 000km",
       "mileage_km": 122000,
-      "country": "",
+      "country": "Japon",
       "status": "available",
       "sale_category": "professionnel",
       "images": [
@@ -1310,7 +1310,14 @@
       "vin": "",
       "image_focus": {
         "/assets/stock/images/img-1787153543936-104222.jpg": "44.7% 66.8%"
-      }
+      },
+      "location": "Valbonne, France",
+      "technical_inspection": null,
+      "french_registration": false,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "e320",
