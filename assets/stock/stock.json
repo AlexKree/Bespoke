@@ -814,7 +814,7 @@
       "price_eur": 21900,
       "mileage": "115 000km",
       "mileage_km": 115000,
-      "country": "",
+      "country": "Japon",
       "status": "available",
       "sale_category": "professionnel",
       "images": [
@@ -840,7 +840,14 @@
         "/assets/stock/images/img-1786786660971-36e203.jpg": "59.3% 68.0% 1.15",
         "/assets/stock/images/img-1786786630432-917c25.jpg": "57.1% 63.6%",
         "/assets/stock/images/img-1786786678457-dc59d6.jpg": "53.1% 82.3%"
-      }
+      },
+      "location": "Saint Raphael, France",
+      "technical_inspection": null,
+      "french_registration": false,
+      "coc": true,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "159",
