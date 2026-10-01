@@ -557,7 +557,7 @@
       "price_eur": null,
       "mileage": "90 000 miles",
       "mileage_km": 90000,
-      "country": "",
+      "country": "UK",
       "status": "available",
       "sale_category": "both",
       "images": [
@@ -583,7 +583,13 @@
         "/assets/stock/images/r32-1786278808605-f784e8.jpg": "58.8% 100.0%",
         "/assets/stock/images/r32-1786278815771-e60e41.jpg": "61.1% 73.6%"
       },
-      "location": "UK"
+      "location": "Valbonne, France",
+      "technical_inspection": null,
+      "french_registration": null,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "eclipse",
