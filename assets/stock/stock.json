@@ -1560,7 +1560,7 @@
         "en": "Mercedes-Benz S 500 W140 5.0 V8 M119 – RHD"
       },
       "mileage": "153 000km",
-      "country": "",
+      "country": "UK",
       "transmission": "Automatic",
       "fuel_type": "Petrol",
       "body_type": "Berline",
@@ -1596,8 +1596,14 @@
         "/assets/stock/images/s500-bleu-1790416843524-718633.jpg": "44.7% 56.9%"
       },
       "slug": "mercedes-benz-s-500-w140-5-0-v8-m119-rhd-1995",
-      "location": "UK",
-      "vehicle_type": "car"
+      "location": "Valbonne, France",
+      "vehicle_type": "car",
+      "technical_inspection": null,
+      "french_registration": null,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "Daimler XJ40",
