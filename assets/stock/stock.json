@@ -868,7 +868,7 @@
       "price_eur": 7000,
       "mileage": "104 000km",
       "mileage_km": 104000,
-      "country": "",
+      "country": "Japon",
       "status": "available",
       "sale_category": "professionnel",
       "images": [
@@ -896,7 +896,14 @@
         "/assets/stock/images/img-1786788100304-02be71.jpg": "57.9% 67.2%",
         "/assets/stock/images/img-1786788118577-747671.jpg": "63.8% 58.5%",
         "/assets/stock/images/159-1789287572500-aae26c.jpg": "67.5% 56.1%"
-      }
+      },
+      "location": "Saint Raphael, France",
+      "technical_inspection": null,
+      "french_registration": null,
+      "coc": true,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "turbo r bleue",
