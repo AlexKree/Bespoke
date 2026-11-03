@@ -669,7 +669,7 @@
       "mileage_km": 195000,
       "country": "",
       "status": "available",
-      "sale_category": "both",
+      "sale_category": "professionnel",
       "images": [
         "/assets/stock/images/s500-or-1790410590449-bb92a2.jpg",
         "/assets/stock/images/s500-or-1790410591519-f81008.jpg",
@@ -701,7 +701,13 @@
         "/assets/stock/images/s500-or-1790410594953-acee88.jpg": "72.5% 62.8%",
         "/assets/stock/images/s500-or-1790410626515-9d9338.jpg": "48.2% 68.8%"
       },
-      "location": "Canada"
+      "location": "Canada",
+      "technical_inspection": null,
+      "french_registration": null,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "rr sw",
