@@ -100,7 +100,14 @@
       "vin": "",
       "image_focus": {
         "/assets/stock/images/chevrolet-corvette-stingray-1786280032928-abd8b0.jpg": "41.0% 38.1%"
-      }
+      },
+      "location": "",
+      "technical_inspection": true,
+      "french_registration": true,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "jaguar-xjv12-vanden-plas",
