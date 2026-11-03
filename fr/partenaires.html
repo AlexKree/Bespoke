@@ -252,7 +252,7 @@
   var btn = document.getElementById('submit-btn');
   var statusEl = document.getElementById('form-status');
   var label = btn.textContent;
-  function show(type, text) { statusEl.textContent = text; statusEl.className = 'authMsg ' + type; statusEl.style.display = 'block'; }
+  function show(type, text) { statusEl.textContent = text; statusEl.className = 'authMsg ' + type; statusEl.style.display = 'block'; statusEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
     var data = {};
@@ -264,6 +264,7 @@
       var body = await res.json().catch(function () { return {}; });
       if (!res.ok) throw new Error(body.error || ('HTTP ' + res.status));
       form.querySelectorAll('input, select, textarea, button').forEach(function (el) { el.disabled = true; });
+      btn.textContent = 'Demande envoyée ✓';
       show('success', "Merci ! Votre demande est bien reçue. Nous vérifions vos informations et vous envoyons un lien d'activation par e-mail, en général sous 24 h ouvrées.");
       try { window.plausible('Partner request'); } catch (err) {}
     } catch (err) {
