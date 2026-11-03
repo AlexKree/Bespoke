@@ -1217,7 +1217,7 @@
       "mileage": "18500",
       "mileage_km": 18500,
       "country": "",
-      "status": "reserved",
+      "status": "available",
       "sale_category": "both",
       "images": [
         "/assets/stock/images/img-1787145052488-2486db.jpg",
@@ -1238,7 +1238,14 @@
         "/assets/stock/images/img-1787145066768-2878a1.jpg": "51.9% 76.0%",
         "/assets/stock/images/img-1787145263583-c42d50.jpg": "41.5% 39.0%",
         "/assets/stock/images/img-1787145032587-d2ceb2.jpg": "49.9% 68.8%"
-      }
+      },
+      "location": "",
+      "technical_inspection": null,
+      "french_registration": null,
+      "coc": null,
+      "original_registration": "",
+      "market_price_eur": null,
+      "market_price_date": null
     },
     {
       "id": "honda integra",
