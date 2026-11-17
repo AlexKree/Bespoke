@@ -256,6 +256,7 @@
     e.preventDefault();
     var data = {};
     new FormData(form).forEach(function (v, k) { data[k] = String(v).trim(); });
+    data.lang = 'en';
     if (!data.company || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email || '')) { show('error', 'Please provide at least your company name and a valid e-mail.'); return; }
     btn.disabled = true; btn.textContent = 'Sending…';
     try {
