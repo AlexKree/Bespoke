@@ -29,7 +29,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@TheBespokeCar" />
   <meta name="twitter:title" content="Stock — Available Collector Vehicles | Bespoke" />
-  <meta name="twitter:description" content="Browse our curated selection of prestige and collector vehicles. Regular updates. Price on request." />
+  <meta name="twitter:description" content="Browse our curated selection of prestige and collector vehicles. Regular updates. Prices for trade buyers only." />
   <meta name="twitter:image" content="https://www.thebespokecar.com/assets/photos/og-inventory.jpg" />
   <!-- SEO: Canonical + hreflang -->
   <link rel="canonical" href="https://www.thebespokecar.com/en/stock.html" />
@@ -112,6 +112,7 @@
         <a data-nav class="navlink" href="index.html">Home</a>
         <a data-nav class="navlink" href="services.html">Services</a>
         <a data-nav class="navlink" href="stock.html">Stock</a>
+        <a data-nav class="navlink" href="news.html">News</a>
         <a data-nav class="navlink" href="business-partners.html">Business partners</a>
         <a data-nav class="navlink" href="concierge.html">Concierge</a>
         <a data-nav class="navlink" href="track-record.html">Track record</a>
@@ -165,7 +166,11 @@
     <div class="card pad-lg">
       <div class="kicker">Stock</div>
       <h1>Collector Cars and Prestige Vehicles Available</h1>
-      <p class="lead">Discover our exclusive selection of collector cars, Japanese classics and prestige vehicles. Each vehicle is carefully selected, inspected (PPI) and comes with a complete file. Import, logistics and delivery across Europe. Regular updates. Price on request.</p>
+      <p class="lead">Discover our exclusive selection of collector cars, Japanese classics and prestige vehicles. Each vehicle is carefully selected, inspected (PPI) and comes with a complete file. Import, logistics and delivery across Europe. Regular updates. Prices for trade buyers only.</p>
+      <div class="card pad" style="margin:14px 0 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
+        <span>Prices and reservations are reserved for <b>motor trade professionals</b>. Private buyer? <a href="contact.html?profil=particulier">Contact us</a>.</span>
+        <span style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn btnPrimary btnSm" href="https://trade.thebespokecar.com/pro">Trade access</a><a class="btn btnSecondary btnSm" href="business-partners.html">Request access</a></span>
+      </div>
     </div>
 
     <!-- Dashboard tabs — shown only when logged in -->
@@ -189,17 +194,6 @@
           <div class="stockFilter">
             <label for="stockMake">Make</label>
             <select id="stockMake" class="select"><option value="">All makes</option></select>
-          </div>
-          <div class="stockFilter">
-            <label for="stockPrice">Price</label>
-            <select id="stockPrice" class="select">
-              <option value="">Any price</option>
-              <option value="-10000">Under &euro;10,000</option>
-              <option value="10000-25000">&euro;10,000 – 25,000</option>
-              <option value="25000-50000">&euro;25,000 – 50,000</option>
-              <option value="50000-100000">&euro;50,000 – 100,000</option>
-              <option value="100000-">Over &euro;100,000</option>
-            </select>
           </div>
           <div class="stockFilter">
             <label for="stockYear">Year</label>
@@ -227,9 +221,6 @@
         </div>
       </div>
       <div id="stockCatFilter" class="stockCatFilter card pad" style="margin-top:0;border-top:none;border-radius:0 0 var(--r-xl) var(--r-xl)">
-        <button type="button" class="catBtn active" data-cat="all">All</button>
-        <button type="button" class="catBtn catBtn--particulier" data-cat="particulier">Private Sale</button>
-        <button type="button" class="catBtn catBtn--professionnel" data-cat="professionnel">Trade Sale</button>
         <div id="stockTypeFilter" class="stockTypeFilter">
           <label class="toggle"><input type="checkbox" data-type="car" checked/><span>Cars</span></label>
           <label class="toggle"><input type="checkbox" data-type="motorcycle" checked/><span>Motorcycles</span></label>
@@ -283,7 +274,7 @@
           <span class="val" id="paramsBalance">—</span>
         </div>
         <div class="walletActions">
-          <div class="walletActionCard">
+          <div class="walletActionCard" style="display:none">
             <h3>Add funds</h3>
             <div class="walletRow">
               <label for="addFundsAmt">Amount (€)</label>

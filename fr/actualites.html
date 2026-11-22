@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Actualités — The Bespoke Car</title>
+  <meta name="description" content="Essais des dernières voitures, nouveautés du permis de conduire en Europe et articles sur nos véhicules : l'actualité automobile vue par The Bespoke Car.">
+  <meta name="robots" content="index,follow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../assets/styles.css?v=7" />
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Bespoke" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.svg" />
+  <!-- SEO: Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.thebespokecar.com/fr/actualites.html" />
+  <meta property="og:title" content="Actualités — The Bespoke Car" />
+  <meta property="og:description" content="Essais des dernières voitures, nouveautés du permis de conduire en Europe et articles sur nos véhicules : l'actualité automobile vue par The Bespoke Car." />
+  <meta property="og:image" content="https://www.thebespokecar.com/assets/photos/og-homepage.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:site_name" content="The Bespoke Car" />
+  <!-- SEO: Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@TheBespokeCar" />
+  <meta name="twitter:title" content="Actualités — The Bespoke Car" />
+  <meta name="twitter:description" content="Essais des dernières voitures, nouveautés du permis de conduire en Europe et articles sur nos véhicules : l'actualité automobile vue par The Bespoke Car." />
+  <meta name="twitter:image" content="https://www.thebespokecar.com/assets/photos/og-homepage.jpg" />
+  <!-- SEO: Canonical + hreflang -->
+  <link rel="canonical" href="https://www.thebespokecar.com/fr/actualites.html" />
+  <link rel="alternate" hreflang="fr" href="https://www.thebespokecar.com/fr/actualites.html" />
+  <link rel="alternate" hreflang="en" href="https://www.thebespokecar.com/en/news.html" />
+  <link rel="alternate" hreflang="x-default" href="https://www.thebespokecar.com/en/news.html" />
+  <!-- Analytics -->
+  <script defer data-domain="thebespokecar.com" src="https://plausible.io/js/script.js"></script>
+  <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments); };</script>
+<style>
+  .newsChips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+  .newsGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+  .newsCard{display:flex;flex-direction:column;overflow:hidden;padding:0;text-decoration:none;color:inherit;transition:border-color .2s}
+  .newsCard:hover{border-color:var(--gold)}
+  .newsCover{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;gap:12px;background:linear-gradient(135deg,#1d2633,#0b0d10)}
+  .newsCover--licence{background:linear-gradient(135deg,#2b2140,#0b0d10)}
+  .newsCover--stock{background:linear-gradient(135deg,#1d3328,#0b0d10)}
+  .newsCover img{width:100%;height:100%;object-fit:cover}
+  .newsIcon{font-size:44px}
+  .newsCountry{font-weight:700;letter-spacing:.08em;padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.12)}
+  .newsBody{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .newsMeta{font-size:12px;color:var(--muted)}
+  .newsKind{color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+  .newsTitle{font-size:18px;line-height:1.3;margin:0}
+  .newsExcerpt{color:var(--muted);font-size:14px;margin:0}
+  .newsRead{margin-top:auto;color:var(--gold);font-weight:600;font-size:14px}
+  .newsInfo{color:var(--muted)}
+  .newsBack{display:inline-block;margin:16px 0;color:var(--gold);text-decoration:none}
+  .newsArticle{max-width:820px}
+  .newsArticle .newsCover{border-radius:14px;overflow:hidden;margin-bottom:14px}
+  .newsH1{font-size:30px;line-height:1.2;margin:8px 0 16px}
+  .newsP{line-height:1.7}
+  .newsSources{margin-top:22px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)}
+  .newsSources a{color:var(--gold)}
+  .newsDisclaimer{font-size:12px;color:var(--muted2)}
+  .newsPro{margin-top:14px;font-size:14px;color:var(--muted)}
+  .newsPro a{color:var(--gold)}
+</style>
+</head>
+<body class="theme-racing">
+<header>
+  <div class="container">
+    <div class="navbar">
+      <a class="brand" href="index.html">
+        <img class="mark" src="/assets/_img/photos/hero-88.webp" alt="Bespoke" width="88" height="117" fetchpriority="high" decoding="async"/>
+        <div>
+          <div class="name">BESPOKE</div>
+          <div class="tag">Sourcing • Mandats • Import • Collection & Prestige</div>
+        </div>
+      </a>
+      <nav>
+        <button class="navbar-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+        <div class="navbar-menu">
+        <a data-nav class="navlink" href="index.html">Accueil</a>
+        <a data-nav class="navlink" href="services.html">Services</a>
+        <a data-nav class="navlink" href="stock.html">Stock</a>
+        <a data-nav class="navlink" href="actualites.html">Actualités</a>
+        <a data-nav class="navlink" href="partenaires.html">Business partners</a>
+        <a data-nav class="navlink" href="concierge.html">Concierge</a>
+        <a data-nav class="navlink" href="track-record.html">Track record</a>
+        <a data-nav class="navlink" href="marche.html">March&eacute;</a>
+        <a data-nav class="navlink" href="a-propos.html">À propos</a>
+        <a data-nav class="navlink" href="contact.html">Contact</a>
+        
+    <div class="lang">
+      <a class="active" href="../fr/actualites.html">FR</a>
+      <a class="" href="../en/news.html">EN</a>
+    </div>
+    
+        </div>
+      </nav>
+    </div>
+  </div>
+
+</header>
+<main>
+  <div class="container">
+<div class="card pad-lg">
+  <div class="kicker">Actualités</div>
+  <h1>L'actualité automobile, pour les professionnels.</h1>
+  <p class="lead">Essais des dernières voitures, nouveautés du permis de conduire en Europe et articles sur les véhicules de notre stock. Résumés rédigés par intelligence artificielle à partir des sources citées, relus par notre équipe.</p>
+  <p class="newsPro">Prix et réservation de nos véhicules : <a href="https://trade.thebespokecar.com/pro">espace professionnel</a> · <a href="partenaires.html">demander un accès</a> · particulier : <a href="contact.html?profil=particulier">nous contacter</a></p>
+</div>
+<div id="newsRoot" class="section"></div>
+  </div>
+</main>
+<footer>
+  <div class="container">
+    <div class="footerGrid">
+      <div>
+        <div class="footerTitle">Bespoke</div>
+        <div class="footerText">
+          Sourcing, mandats et importation de véhicules de prestige et de collection, en partenariat avec des ateliers spécialisés en France et en Italie.
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+            <span class="badge">Due diligence / PPI</span>
+            <span class="badge">Logistics & import</span>
+            <span class="badge">Mandat d’acquisition</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="footerTitle">Coordonnées</div>
+        <div class="footerText">
+          Adresse : <strong>1530 Chemin de Peyniblou 06560 Sophia-Antipolis</strong><br/>
+          Email : contact@thebespokecar.com<br/>
+          Téléphone : (merci d'envoyer un mail ou d'utiliser le formulaire)<br/>
+        </div>
+      </div>
+      <div>
+        <div class="footerTitle">Légal</div>
+        <div class="footerLinks">
+          <a class="navlink" href="legal/mentions-legales.html">Mentions légales</a>
+          <a class="navlink" href="legal/confidentialite.html">Confidentialité</a>
+        </div>
+        <div class="footerText">
+          Ateliers partenaires : <span class="gold">France & Italie</span>
+        </div>
+      </div>
+    </div>
+    <div class="sep"></div>
+    <div class="footerSocial" style="text-align:center;margin:20px 0;">
+      <div class="footerTitle" style="margin-bottom:12px;">Suivez-nous</div>
+      <div style="display:flex;gap:16px;justify-content:center;align-items:center;">
+        <a href="https://www.linkedin.com/company/112966970" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style="color:var(--gold);font-size:24px;transition:transform 0.2s;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="display:block;">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="mini" style="margin-bottom:12px;line-height:1.65">Positionnement : sourcing &amp; importation de véhicules de collection / prestige — collaboration atelier en France &amp; Italie. <span class='gold'>Ce site ne constitue pas un conseil financier réglementé.</span></div>
+    <div class="mini">© 2026 Bespoke — Tous droits réservés.</div>
+  </div>
+</footer>
+<script src="../assets/site.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .catch(err => console.warn('SW registration failed:', err));
+    });
+  }
+</script>
+<script>
+(function () {
+  var C = {"all": "Tout", "review": "Essais", "licence": "Permis en Europe", "stock": "Nos voitures", "read": "Lire", "back": "← Toutes les actualités", "sources": "Sources", "seeCar": "Voir le véhicule", "empty": "Les premiers articles arrivent bientôt.", "error": "Impossible de charger les actualités pour le moment.", "loading": "Chargement…", "disclaimer": "Résumé rédigé par intelligence artificielle à partir de ces sources. Pour une décision, référez-vous à la source.", "locale": "fr-FR", "lang": "fr"};
+  var API = 'https://trade.thebespokecar.com/api/public/news';
+  var ICON = { review: '🏁', licence: '🪪', stock: '🚗' };
+  var root = document.getElementById('newsRoot');
+  var stock = [];
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function date(s) { try { return new Date(s).toLocaleDateString(C.locale, { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return ''; } }
+  function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, ' ').trim(); }
+  function imgPath(p) { return p ? (p.charAt(0) === '/' || /^https?:/.test(p) ? p : '/' + p) : ''; }
+  // Article « nos voitures » : on retrouve la fiche du site par marque + modele + annee
+  function findCar(v) {
+    if (!v) return null;
+    var mk = norm(v.make).split(' ')[0], words = norm(v.model).split(' ').filter(Boolean);
+    var best = null, score = 0;
+    stock.forEach(function (it) {
+      if (it.status === 'sold' || norm(it.make).split(' ')[0] !== mk) return;
+      var t = norm((it.title && (it.title[C.lang] || it.title.fr || it.title.en)) || it.model);
+      var s = words.filter(function (w) { return t.indexOf(w) !== -1; }).length + (v.year && it.year === v.year ? 2 : 0);
+      if (s > score) { score = s; best = it; }
+    });
+    return score >= 2 ? best : null;
+  }
+  function cover(a, car) {
+    var box = el('div', 'newsCover newsCover--' + a.kind);
+    var img = car && car.images && car.images[0];
+    if (img) { var i = el('img'); i.src = imgPath(img); i.alt = ''; i.loading = 'lazy'; box.appendChild(i); }
+    else { box.appendChild(el('span', 'newsIcon', ICON[a.kind] || '')); if (a.country) box.appendChild(el('span', 'newsCountry', a.country)); }
+    return box;
+  }
+  function meta(a) { var m = el('div', 'newsMeta'); m.appendChild(el('span', 'newsKind', C[a.kind] || '')); m.appendChild(document.createTextNode(' ' + date(a.published_at))); return m; }
+  function list(kind) {
+    root.innerHTML = '';
+    var chips = el('div', 'stockCatFilter newsChips');
+    [['', C.all], ['review', C.review], ['licence', C.licence], ['stock', C.stock]].forEach(function (k) {
+      var b = el('button', 'catBtn' + (k[0] === kind ? ' active' : ''), (ICON[k[0]] ? ICON[k[0]] + ' ' : '') + k[1]); b.type = 'button';
+      b.addEventListener('click', function () { list(k[0]); });
+      chips.appendChild(b);
+    });
+    root.appendChild(chips);
+    var grid = el('div', 'newsGrid'); root.appendChild(grid);
+    var info = el('p', 'newsInfo', C.loading); root.appendChild(info);
+    fetch(API + '?lang=' + C.lang + (kind ? '&kind=' + kind : '')).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (rows) {
+      info.textContent = rows.length ? '' : C.empty;
+      rows.forEach(function (a) {
+        var card = el('a', 'newsCard card'); card.href = '?id=' + a.id;
+        card.appendChild(cover(a, findCar(a.vehicle)));
+        var body = el('div', 'newsBody');
+        body.appendChild(meta(a)); body.appendChild(el('h2', 'newsTitle', a.title)); body.appendChild(el('p', 'newsExcerpt', a.excerpt));
+        body.appendChild(el('span', 'newsRead', C.read + ' →'));
+        card.appendChild(body); grid.appendChild(card);
+      });
+    }).catch(function () { info.textContent = C.error; });
+  }
+  function article(id) {
+    root.innerHTML = '';
+    var back = el('a', 'newsBack', C.back); back.href = location.pathname; root.appendChild(back);
+    var info = el('p', 'newsInfo', C.loading); root.appendChild(info);
+    fetch(API + '/' + encodeURIComponent(id) + '?lang=' + C.lang).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (a) {
+      info.remove();
+      var car = findCar(a.vehicle);
+      var art = el('article', 'newsArticle card pad-lg');
+      art.appendChild(cover(a, car)); art.appendChild(meta(a));
+      art.appendChild(el('h1', 'newsH1', a.title));
+      String(a.body || '').split(/\n{2,}/).forEach(function (p) { if (p.trim()) art.appendChild(el('p', 'newsP', p.trim())); });
+      if (car && car.slug) { var b = el('a', 'btn primary', C.seeCar); b.href = 'stock/' + car.slug + '.html'; art.appendChild(b); }
+      if (a.sources && a.sources.length) {
+        var s = el('div', 'newsSources'); s.appendChild(el('div', 'kicker', C.sources));
+        var ul = el('ul');
+        a.sources.forEach(function (x) { var li = el('li'); var l = el('a', '', x.title || x.url); l.href = x.url; l.target = '_blank'; l.rel = 'noopener noreferrer nofollow'; li.appendChild(l); ul.appendChild(li); });
+        s.appendChild(ul); s.appendChild(el('p', 'newsDisclaimer', C.disclaimer)); art.appendChild(s);
+      }
+      root.appendChild(art);
+      document.title = a.title + ' — The Bespoke Car';
+    }).catch(function () { info.textContent = C.error; });
+  }
+  fetch('/assets/stock/stock.json').then(function (r) { return r.json(); }).then(function (d) { stock = d.items || []; }).catch(function () {}).then(function () {
+    var id = new URLSearchParams(location.search).get('id');
+    if (id) article(id); else list('');
+  });
+})();
+</script>
+</body>
+</html>

@@ -60,6 +60,7 @@
         <a data-nav class="navlink" href="index.html">Accueil</a>
         <a data-nav class="navlink" href="services.html">Services</a>
         <a data-nav class="navlink" href="stock.html">Stock</a>
+        <a data-nav class="navlink" href="actualites.html">Actualités</a>
         <a data-nav class="navlink" href="partenaires.html">Business partners</a>
         <a data-nav class="navlink" href="concierge.html">Concierge</a>
         <a data-nav class="navlink" href="track-record.html">Track record</a>
@@ -235,6 +236,17 @@
     var params = new URLSearchParams(location.search);
     var ref = (params.get('ref') || '').trim();
     var vurl = (params.get('url') || '').trim();
+    // Particulier (site recentre sur les professionnels, 22/11/2026) : demande
+    // de contact, sans prix ni reservation en ligne.
+    if (params.get('profil') === 'particulier') {
+      msg.value = 'Bonjour,\n\n'
+        + 'Je suis un particulier' + (ref ? ' et je suis intéressé par le véhicule suivant :\n' + ref + (vurl ? '\n' + vurl : '') : ' et je recherche un véhicule.') + '\n\n'
+        + 'Pays de résidence : \n'
+        + 'Téléphone (facultatif) : \n';
+      if (subj && !subj.value.trim()) subj.value = 'Particulier — ' + (ref || 'demande de contact');
+      askForContactDetails('Demande pré-remplie. Indiquez votre nom et votre e-mail puis envoyez : nous revenons vers vous rapidement.');
+      return;
+    }
     if (ref && params.get('intent') === 'same') {
       msg.value = 'Bonjour,\n\n'
         + 'Ce véhicule est vendu, mais je recherche le même modèle :\n'

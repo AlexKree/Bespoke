@@ -80,6 +80,10 @@ exports.handler = async function (event) {
 
     // ── add-funds ─────────────────────────────────────────────────────────
     if (action === 'add-funds') {
+      // Desactive (22/11/2026) : le site ne vend plus en direct aux particuliers.
+      // De plus, ce depot creditait le solde sans aucun paiement reel.
+      return json(410, { error: 'Le dépôt de fonds n\'est plus disponible. Contactez-nous : contact@thebespokecar.com' });
+      // eslint-disable-next-line no-unreachable
       const amount = parseInt(body.amount_cents, 10);
       if (!amount || amount <= 0) return json(400, { error: 'Montant invalide' });
       if (amount > 10000000) return json(400, { error: 'Montant maximum dépassé (100 000 €)' });

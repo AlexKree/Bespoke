@@ -129,6 +129,10 @@ exports.handler = async function (event) {
 
     // ── reserve-vehicle ───────────────────────────────────────────────────
     if (action === 'reserve-vehicle') {
+      // Desactive (22/11/2026) : plus de reservation en ligne sur le site public.
+      // Les reservations deja faites (consultation, solde, annulation) restent gerees ci-dessous.
+      return json(410, { error: 'La réservation en ligne n\'est plus disponible. Contactez-nous pour ce véhicule : contact@thebespokecar.com' });
+      // eslint-disable-next-line no-unreachable
       const { vehicle_slug } = body;
       if (!vehicle_slug) return json(400, { error: 'vehicle_slug requis' });
 

@@ -150,7 +150,7 @@ function eur(n, l) {
 
 const T = {
   fr: {
-    home: 'Accueil', stock: 'Stock', onRequest: 'Prix sur demande',
+    home: 'Accueil', stock: 'Stock', onRequest: 'Prix réservé aux professionnels', proPrice: 'Professionnel ? Voir le prix', proSignup: 'Demander un accès professionnel', privateContact: 'Particulier ? Nous contacter',
     available: 'Disponible', sold: 'Vendu', reserved: 'Réservé',
     year: 'Année', mileage: 'Kilométrage', location: 'Localisation', country: "Pays d'origine",
     make: 'Marque', model: 'Modèle', ref: 'Référence', type: 'Type', vin: 'VIN',
@@ -170,7 +170,7 @@ const T = {
     inspect: 'Faire analyser les photos', importCost: "Estimer le coût d'import",
   },
   en: {
-    home: 'Home', stock: 'Stock', onRequest: 'Price on request',
+    home: 'Home', stock: 'Stock', onRequest: 'Price for trade buyers only', proPrice: 'Trade buyer? See the price', proSignup: 'Request trade access', privateContact: 'Private buyer? Contact us',
     available: 'Available', sold: 'Sold', reserved: 'Reserved',
     year: 'Year', mileage: 'Mileage', location: 'Location', country: 'Country of origin',
     make: 'Make', model: 'Model', ref: 'Reference', type: 'Type', vin: 'VIN',
@@ -190,6 +190,8 @@ const T = {
     inspect: 'Have photos analysed', importCost: 'Estimate import cost',
   },
 };
+
+const PRO_URL = 'https://trade.thebespokecar.com/pro';
 
 const statusKey = (s) => (s === 'sold' ? 'sold' : s === 'reserved' ? 'reserved' : 'available');
 
@@ -264,9 +266,8 @@ function jsonLd(item, l, t, url) {
       '@type': 'Offer',
       url,
       priceCurrency: 'EUR',
-      ...(item.price_eur != null
-        ? { price: item.price_eur, priceValidUntil: PRICE_VALID_UNTIL }
-        : {}),
+      // Pas de prix dans les donnees structurees : prix reserves aux professionnels
+      // (22/11/2026). Les flux stock-feed*.xml/.csv gardent le prix (choix utilisateur).
       availability: item.status === 'sold'
         ? 'https://schema.org/SoldOut'
         : item.status === 'reserved'
@@ -332,7 +333,6 @@ function renderSpecs(item, l, t) {
     [t.make, item.make],
     [t.model, item.model],
     [t.year, item.year],
-    [t.marketPrice, marketPriceLabel(item, l, t)],
     [t.mileage, item.mileage || (item.mileage_km ? item.mileage_km.toLocaleString(l === 'en' ? 'en-GB' : 'fr-FR') + ' km' : null)],
     [t.transmission, TRANSMISSION_LABELS[l]?.[item.transmission] || null],
     [t.fuelType, FUEL_LABELS[l]?.[item.fuel_type] || null],
@@ -347,7 +347,6 @@ function renderSpecs(item, l, t) {
     [t.frenchRegistration, yesNo(item.french_registration, t)],
     [t.coc, yesNo(item.coc, t)],
     [t.originalRegistration, item.original_registration],
-    [t.ref, saleLabel(item.sale_category, t)],
     // item.vin est deja masque a la source (admin/index.html ne persiste que
     // les 6 premiers caracteres + des '*' dans stock.json) : jamais le VIN
     // complet ici, stock.json etant servi tel quel au public.
@@ -378,7 +377,7 @@ ${picks.map((v) => {
           ${img0 ? `<span class="vpRelatedImg"><img src="${img(img0, 560)}" onerror="${imgOnErr(img0, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"${focusStyle(v, img0)}/></span>` : '<div class="vpRelatedNoImg"></div>'}
           <div class="vpRelatedBody">
             <span class="vpRelatedTitle">${esc(title)}</span>
-            <span class="vpRelatedMeta">${esc([v.year, v.price_eur != null ? eur(v.price_eur, l) : t.onRequest].filter(Boolean).join(' · '))}</span>
+            <span class="vpRelatedMeta">${esc([v.year, v.status === 'sold' ? t.sold : null].filter(Boolean).join(' · '))}</span>
           </div>
         </a>`;
   }).join('\n')}
@@ -467,7 +466,7 @@ function computeFacets(pool) {
 function facetCard(v, l, t) {
   const title = (v.title && (v.title[l] || v.title.fr)) || v.model || v.id;
   const img0 = v.images[0];
-  const meta = [v.year, v.price_eur != null ? eur(v.price_eur, l) : t.onRequest, v.location || v.country || null]
+  const meta = [v.year, v.location || v.country || null]
     .filter(Boolean).join(' · ');
   return `        <a class="vpRelatedCard" href="${esc(v.slug)}.html">
           ${img0 ? `<span class="vpRelatedImg"><img src="${img(img0, 560)}" onerror="${imgOnErr(img0, 560)}" alt="${esc(title)}" width="560" height="350" loading="lazy" decoding="async"${focusStyle(v, img0)}/></span>` : '<div class="vpRelatedNoImg"></div>'}
@@ -598,7 +597,7 @@ function renderPage(item, l, all) {
   const headline = item.headline && (item.headline[l] || item.headline.fr);
   const st = statusKey(item.status);
   const url = `${SITE}/${l}/stock/${item.slug}.html`;
-  const price = item.price_eur != null ? eur(item.price_eur, l) : t.onRequest;
+  const price = item.status === 'sold' ? t.sold : t.onRequest;
   const contactRef = title + (item.year && !String(title).includes(String(item.year)) ? ` (${item.year})` : '');
 
   const metaDesc = (headline || desc || title)
@@ -664,7 +663,7 @@ ${renderGallery(item, title)}
         <div class="kicker ${st}">${esc(t[st])}</div>
         <h1 class="vpTitle">${esc(title)}</h1>
 ${headline ? `        <p class="lead">${esc(headline)}</p>\n` : ''}        <div class="vpPrice">${esc(price)}</div>
-${isGoodDeal(item) ? `        <div class="dealBadge" title="${esc(t.goodDealTitle)}">${esc(t.goodDeal)}</div>\n` : ''}${item.status === 'sold' ? `        <div class="vpSoldNotice">${esc(t.soldNotice)}</div>\n` : ''}
+${item.status === 'sold' ? `        <div class="vpSoldNotice">${esc(t.soldNotice)}</div>\n` : ''}
         <div class="sep"></div>
         <div class="kicker">${esc(t.specsTitle)}</div>
         ${renderSpecs(item, l, t)}
@@ -673,10 +672,12 @@ ${isGoodDeal(item) ? `        <div class="dealBadge" title="${esc(t.goodDealTitl
           ${item.status === 'sold'
             // Vendu : le dossier n'a plus d'objet, on propose de rechercher un equivalent.
             ? `<a class="btn primary" href="../contact.html?ref=${encodeURIComponent(contactRef)}&amp;url=${encodeURIComponent(url)}&amp;intent=same" onclick="plausible('Lead')">${esc(t.findSame)}</a>`
-            : `<a class="btn primary" href="../contact.html?ref=${encodeURIComponent(contactRef)}&amp;url=${encodeURIComponent(url)}" onclick="plausible('Lead')">${esc(t.contact)}</a>`}
+            : `<a class="btn primary" href="${PRO_URL}" onclick="plausible('Pro')">${esc(t.proPrice)}</a>
+          <a class="btn" href="../contact.html?ref=${encodeURIComponent(contactRef)}&amp;url=${encodeURIComponent(url)}&amp;profil=particulier" onclick="plausible('Lead')">${esc(t.privateContact)}</a>`}
           <a class="btn" href="../stock.html">${esc(t.backToStock)}</a>
         </div>
         <div class="vpToolLinks">
+          ${item.status === 'sold' ? '' : `<a href="../${l === 'fr' ? 'partenaires' : 'business-partners'}.html">${esc(t.proSignup)}</a>`}
           <a href="../inspection.html">${esc(t.inspect)}</a>
           <a href="../import.html">${esc(t.importCost)}</a>
         </div>
@@ -755,6 +756,7 @@ const STATIC = [
 ];
 const MARKET = { fr: 'marche.html', en: 'market.html' };
 const GALLERY = { fr: 'galerie.html', en: 'gallery.html' };
+const NEWS = { fr: 'actualites.html', en: 'news.html' };
 
 const available = items.filter((i) => i.slug && i.status !== 'sold');
 
@@ -765,6 +767,7 @@ for (const l of LANGS) {
   }
   urls.push(`  <url><loc>${SITE}/${l}/${MARKET[l]}</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>`);
   urls.push(`  <url><loc>${SITE}/${l}/${GALLERY[l]}</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>`);
+  urls.push(`  <url><loc>${SITE}/${l}/${NEWS[l]}</loc><changefreq>daily</changefreq><priority>0.7</priority></url>`);
 }
 // Fiches vehicule : une entree par langue, liees entre elles par hreflang, avec
 // les images en extension image-sitemap (utile pour Google Images sur des autos).

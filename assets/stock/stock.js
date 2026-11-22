@@ -16,12 +16,15 @@
       goodDealTitle: 'Prix au moins 10 % sous le prix marché constaté',
       mileage: 'Kilométrage',
       vin: 'VIN',
-      priceOnRequest: 'Prix sur demande',
+      priceOnRequest: 'Prix réservé aux professionnels',
+      proPrice: 'Professionnel ? Voir le prix',
+      proSignup: 'Pas encore de compte pro ? Demander un accès',
+      privateContact: 'Particulier ? Nous contacter',
       hideSold: 'Masquer vendues',
       cars: 'Voitures',
       motorcycles: 'Motos',
       details: 'Détails',
-      contact: 'Contacter',
+      contact: 'Nous contacter',
       searchEmpty: 'Aucun résultat.',
       error: 'Impossible de charger le stock.',
       views: 'vues',
@@ -51,12 +54,15 @@
       goodDealTitle: 'Priced at least 10% below the observed market price',
       mileage: 'Mileage',
       vin: 'VIN',
-      priceOnRequest: 'Price on request',
+      priceOnRequest: 'Price for trade buyers only',
+      proPrice: 'Trade buyer? See the price',
+      proSignup: 'No trade account yet? Request access',
+      privateContact: 'Private buyer? Contact us',
       hideSold: 'Hide sold',
       cars: 'Cars',
       motorcycles: 'Motorcycles',
       details: 'Details',
-      contact: 'Contact',
+      contact: 'Contact us',
       searchEmpty: 'No results.',
       error: 'Unable to load stock.',
       views: 'views',
@@ -140,20 +146,13 @@
   let historyModalAdded = false; // tracks whether we pushed a history entry for the open modal
   let ignoreNextPopstate = false; // prevents double-close when closeModal calls history.back()
 
+  // Site recentre sur les professionnels (22/11/2026) : aucun prix affiche au
+  // public, pour ne pas concurrencer nos partenaires. Les prix sont dans
+  // l'espace pro (trade.thebespokecar.com).
+  const PRO_URL = 'https://trade.thebespokecar.com/pro';
+  const PRO_SIGNUP = lang === 'fr' ? 'partenaires.html' : 'business-partners.html';
   function formatPrice(item) {
     if (item.status === 'sold') return T.sold;
-    const priceValue = item.price_eur || item.price;
-    if (priceValue && typeof priceValue === 'number') {
-      try {
-        return new Intl.NumberFormat(lang === 'fr' ? 'fr-FR' : 'en-GB', {
-          style: 'currency',
-          currency: 'EUR',
-          maximumFractionDigits: 0
-        }).format(priceValue);
-      } catch (_) {
-        return priceValue + ' €';
-      }
-    }
     return T.priceOnRequest;
   }
 
@@ -273,7 +272,7 @@
       const vurl = location.origin + location.pathname.replace(/[^/]*$/, 'stock/' + item.slug + '.html');
       q += '&url=' + encodeURIComponent(vurl);
     }
-    return 'contact.html?' + q;
+    return 'contact.html?' + q + '&profil=particulier';
   }
 
   // stock.json melange les formes "assets/..." et "/assets/..." : on normalise
@@ -362,6 +361,7 @@
   }
 
   function matchesCategory(item) {
+    return true; // filtre retire : tout le stock est presente aux professionnels
     if (activeCat === 'all') return true;
     const cat = item.sale_category || 'both';
     if (cat === 'both') return true;
@@ -375,6 +375,7 @@
 
   function matchesPrice(item) {
     const v = priceEl ? priceEl.value : '';
+    return true; // filtre prix retire (prix non publics)
     if (!v) return true;
     // Un vehicule sans prix affiche ("sur demande") ne peut pas etre filtre
     // par tranche : on le garde plutot que de le faire disparaitre en silence.
@@ -495,8 +496,8 @@
     if (isSold) price.style.color = '#e05c5c';
     body.appendChild(price);
 
-    // Prix marche valide dans l'admin : badge si le prix est >= 10 % en dessous.
-    if (!isSold && item.price_eur > 0 && item.market_price_eur > 0 && item.price_eur <= item.market_price_eur * 0.9) {
+    // Plus de badge « bonne affaire » : il revelait la position du prix.
+    if (false) {
       const deal = document.createElement('div');
       deal.className = 'dealBadge';
       deal.title = T.goodDealTitle;
@@ -504,26 +505,14 @@
       body.appendChild(deal);
     }
 
-    const cat = item.sale_category || 'both';
-    if (cat !== 'both') {
-      const catBadge = document.createElement('div');
-      catBadge.className = 'stockCatBadge stockCatBadge--' + cat;
-      catBadge.textContent = cat === 'particulier' ? T.catParticulier : T.catProfessionnel;
-      body.appendChild(catBadge);
-    } else {
-      const catBadgeWrap = document.createElement('div');
-      catBadgeWrap.style.display = 'flex';
-      catBadgeWrap.style.gap = '4px';
-      catBadgeWrap.style.flexWrap = 'wrap';
-      const b1 = document.createElement('div');
-      b1.className = 'stockCatBadge stockCatBadge--particulier';
-      b1.textContent = T.catParticulier;
-      const b2 = document.createElement('div');
-      b2.className = 'stockCatBadge stockCatBadge--professionnel';
-      b2.textContent = T.catProfessionnel;
-      catBadgeWrap.appendChild(b1);
-      catBadgeWrap.appendChild(b2);
-      body.appendChild(catBadgeWrap);
+    if (!isSold) {
+      const pro = document.createElement('a');
+      pro.className = 'stockProLink';
+      pro.href = PRO_URL;
+      pro.textContent = T.proPrice + ' →';
+      pro.style.cssText = 'display:inline-block;margin:2px 0 8px;font-size:13px;font-weight:600;color:#c6b07a;text-decoration:none';
+      pro.addEventListener('click', (e) => e.stopPropagation());
+      body.appendChild(pro);
     }
 
     const actions = document.createElement('div');
@@ -650,60 +639,40 @@
 
     modalPrice.textContent = formatPrice(item);
     modalPrice.style.color = item.status === 'sold' ? '#e05c5c' : '';
+    modalPrice.style.fontSize = item.status === 'sold' ? '' : '20px';
 
-    // Sale category
+    // Sous le prix : acces pro (prix) et inscription. Plus de badge de categorie.
     const existingCatBadge = modal.querySelector('.modalCatBadge');
     if (existingCatBadge) existingCatBadge.remove();
-    const cat = item.sale_category || 'both';
     const modalInfo = modal.querySelector('.modalInfo');
-    if (modalInfo) {
-      const catWrap = document.createElement('div');
-      catWrap.className = 'modalCatBadge';
-      catWrap.style.display = 'flex';
-      catWrap.style.gap = '6px';
-      catWrap.style.flexWrap = 'wrap';
-      catWrap.style.margin = '8px 0';
-      if (cat === 'particulier' || cat === 'both') {
-        const b = document.createElement('div');
-        b.className = 'stockCatBadge stockCatBadge--particulier';
-        b.textContent = T.catParticulier;
-        catWrap.appendChild(b);
-      }
-      if (cat === 'professionnel' || cat === 'both') {
-        const b = document.createElement('div');
-        b.className = 'stockCatBadge stockCatBadge--professionnel';
-        b.textContent = T.catProfessionnel;
-        catWrap.appendChild(b);
-      }
-      // Insert after modalPrice
-      const priceEl = modal.querySelector('.price');
-      if (priceEl && priceEl.parentNode) {
-        priceEl.parentNode.insertBefore(catWrap, priceEl.nextSibling);
-      } else {
-        modalInfo.insertBefore(catWrap, modalInfo.firstChild);
-      }
+    if (modalInfo && item.status !== 'sold') {
+      const proWrap = document.createElement('div');
+      proWrap.className = 'modalCatBadge';
+      proWrap.style.cssText = 'margin:8px 0 4px;display:flex;flex-direction:column;gap:6px';
+      const pro = document.createElement('a');
+      pro.className = 'btn btnPrimary';
+      pro.href = PRO_URL;
+      pro.textContent = T.proPrice;
+      const signup = document.createElement('a');
+      signup.href = PRO_SIGNUP;
+      signup.textContent = T.proSignup;
+      signup.style.cssText = 'font-size:13px;color:inherit;opacity:.75';
+      proWrap.appendChild(pro);
+      proWrap.appendChild(signup);
+      const priceNode = modal.querySelector('.price');
+      if (priceNode && priceNode.parentNode) priceNode.parentNode.insertBefore(proWrap, priceNode.nextSibling);
+      else modalInfo.insertBefore(proWrap, modalInfo.firstChild);
     }
 
     modalDescription.textContent = (item.description && (item.description[lang] || item.description.en || item.description.fr)) || '';
     modalContact.href = contactHref(item);
+    modalContact.textContent = T.privateContact;
+    modalContact.className = 'btn';
+    modalContact.style.display = item.status === 'sold' ? 'none' : '';
 
-    // ── Reserve button (shown only when user is logged in and vehicle is available) ──
+    // Reservation en ligne retiree (22/11/2026) : plus de vente directe au public.
     const existingReserveBtn = modal.querySelector('.modalReserveBtn');
     if (existingReserveBtn) existingReserveBtn.remove();
-    if (item.status === 'available' && (item.price_eur || item.price) && window.__bespokeOpenReserve) {
-      const reserveBtn = document.createElement('button');
-      reserveBtn.type = 'button';
-      reserveBtn.className = 'btn btnPrimary modalReserveBtn';
-      reserveBtn.textContent = lang === 'fr' ? 'Réserver ce véhicule' : 'Reserve this vehicle';
-      reserveBtn.style.marginTop = '10px';
-      reserveBtn.addEventListener('click', () => {
-        const title = itemTitle(item);
-        window.__bespokeOpenReserve(item.id, item.price_eur || item.price, title);
-      });
-      // Insert before or after the contact button
-      const modalInfo = modal.querySelector('.modalInfo');
-      if (modalInfo) modalInfo.appendChild(reserveBtn);
-    }
 
     const imgs = item.images || [];
     if (imgs.length) {

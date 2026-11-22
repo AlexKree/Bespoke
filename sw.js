@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bespoke-cache-v26';
+const CACHE_NAME = 'bespoke-cache-v27';
 const STATIC_ASSETS = [
   // Pas de '/' ici : la racine renvoie desormais une redirection 302 par pays
   // (voir netlify.toml). cache.addAll suivrait le 302 et cache.put rejette une
@@ -61,6 +61,10 @@ self.addEventListener('fetch', (event) => {
   // Never intercept admin or netlify functions — let the browser handle them normally
   if (url.pathname.startsWith('/admin') || url.pathname.startsWith('/.netlify')) return;
 
+  // Autres domaines (API de trade.thebespokecar.com pour les actualites, analytics…) :
+  // jamais mis en cache, sinon les actualites ne se mettraient plus a jour.
+  if (url.origin !== self.location.origin) return;
+
   // La racine est une redirection 302 resolue par pays a la peripherie Netlify.
   // Le SW ne doit jamais la mettre en cache ni la servir : la decision de langue
   // doit rester fraiche a chaque visite.
@@ -83,7 +87,8 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Network first for CSS/JS assets so updates always propagate; cache first for everything else
-  const isCssOrJs = url.pathname.endsWith('.css') || url.pathname.endsWith('.js');
+  // + JSON (stock.json) : toujours la version a jour quand le reseau repond.
+  const isCssOrJs = url.pathname.endsWith('.css') || url.pathname.endsWith('.js') || url.pathname.endsWith('.json');
   if (isCssOrJs) {
     event.respondWith(
       fetch(event.request)

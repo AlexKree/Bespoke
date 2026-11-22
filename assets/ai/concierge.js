@@ -143,7 +143,7 @@
             '<span class="aiMatchTitle">' + esc(v.title || v.id) + (v.year ? ' <span class="aiMatchYear">' + esc(v.year) + '</span>' : '') + '</span>' +
             '<span class="aiScore" title="' + esc(T.match) + '">' + Math.round(m.score) + '</span>' +
           '</div>' +
-          '<div class="aiMatchMeta">' + esc(v.price_eur ? eur(v.price_eur) : (lang === 'en' ? 'Price on request' : 'Prix sur demande')) +
+          '<div class="aiMatchMeta">' + esc(lang === 'en' ? 'Price for trade buyers only' : 'Prix réservé aux professionnels') +
             (v.location ? ' · ' + esc(v.location) : '') + '</div>' +
           '<p class="aiMatchWhy">' + esc(m.why) + '</p>' +
         '</div>';

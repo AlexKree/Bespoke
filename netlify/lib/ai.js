@@ -198,7 +198,8 @@ function compactVehicle(item, l) {
     make: pick(item.make),
     model: pick(item.model),
     year: item.year || null,
-    price_eur: item.price_eur != null ? item.price_eur : (item.price || null),
+    // Prix de nos vehicules jamais transmis (22/11/2026) : reserves aux professionnels,
+    // l'assistant ne peut donc ni les citer ni les renvoyer au navigateur.
     mileage_km: item.mileage_km != null ? item.mileage_km : (item.mileage || null),
     location: pick(item.location) || null,
     country_of_origin: pick(item.country) || null,

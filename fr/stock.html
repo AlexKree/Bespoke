@@ -29,7 +29,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@TheBespokeCar" />
   <meta name="twitter:title" content="Stock — Véhicules de collection disponibles | Bespoke" />
-  <meta name="twitter:description" content="Consultez notre sélection de véhicules de prestige et de collection disponibles. Mises à jour régulières. Prix sur demande." />
+  <meta name="twitter:description" content="Consultez notre sélection de véhicules de prestige et de collection disponibles. Mises à jour régulières. Prix réservés aux professionnels." />
   <meta name="twitter:image" content="https://www.thebespokecar.com/assets/photos/og-inventory.jpg" />
   <!-- SEO: Canonical + hreflang -->
   <link rel="canonical" href="https://www.thebespokecar.com/fr/stock.html" />
@@ -112,6 +112,7 @@
         <a data-nav class="navlink" href="index.html">Accueil</a>
         <a data-nav class="navlink" href="services.html">Services</a>
         <a data-nav class="navlink" href="stock.html">Stock</a>
+        <a data-nav class="navlink" href="actualites.html">Actualités</a>
         <a data-nav class="navlink" href="partenaires.html">Business partners</a>
         <a data-nav class="navlink" href="concierge.html">Concierge</a>
         <a data-nav class="navlink" href="track-record.html">Track record</a>
@@ -161,7 +162,11 @@
     <div class="card pad-lg">
       <div class="kicker">Stock</div>
       <h1>Voitures de Collection et Véhicules de Prestige Disponibles</h1>
-      <p class="lead">Découvrez notre sélection exclusive de voitures de collection, classiques japonaises et véhicules de prestige. Chaque véhicule est soigneusement sélectionné, inspecté (PPI) et accompagné d'un dossier complet. Import, logistique et livraison partout en Europe. Mises à jour régulières. Prix sur demande.</p>
+      <p class="lead">Découvrez notre sélection exclusive de voitures de collection, classiques japonaises et véhicules de prestige. Chaque véhicule est soigneusement sélectionné, inspecté (PPI) et accompagné d'un dossier complet. Import, logistique et livraison partout en Europe. Mises à jour régulières. Prix réservés aux professionnels.</p>
+      <div class="card pad" style="margin:14px 0 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
+        <span>Les prix et la réservation sont réservés aux <b>professionnels de l'automobile</b>. Particulier ? <a href="contact.html?profil=particulier">Contactez-nous</a>.</span>
+        <span style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn btnPrimary btnSm" href="https://trade.thebespokecar.com/pro">Accès professionnel</a><a class="btn btnSecondary btnSm" href="partenaires.html">Demander un accès</a></span>
+      </div>
     </div>
 
     <!-- Dashboard tabs — affichés uniquement après connexion -->
@@ -186,17 +191,6 @@
           <div class="stockFilter">
             <label for="stockMake">Marque</label>
             <select id="stockMake" class="select"><option value="">Toutes les marques</option></select>
-          </div>
-          <div class="stockFilter">
-            <label for="stockPrice">Prix</label>
-            <select id="stockPrice" class="select">
-              <option value="">Tous les prix</option>
-              <option value="-10000">Moins de 10 000 €</option>
-              <option value="10000-25000">10 000 – 25 000 €</option>
-              <option value="25000-50000">25 000 – 50 000 €</option>
-              <option value="50000-100000">50 000 – 100 000 €</option>
-              <option value="100000-">Plus de 100 000 €</option>
-            </select>
           </div>
           <div class="stockFilter">
             <label for="stockYear">Année</label>
@@ -224,9 +218,6 @@
         </div>
       </div>
       <div id="stockCatFilter" class="stockCatFilter card pad" style="margin-top:0;border-top:none;border-radius:0 0 var(--r-xl) var(--r-xl)">
-        <button type="button" class="catBtn active" data-cat="all">Tous</button>
-        <button type="button" class="catBtn catBtn--particulier" data-cat="particulier">Vente au Particulier</button>
-        <button type="button" class="catBtn catBtn--professionnel" data-cat="professionnel">Vente au Professionnel</button>
         <div id="stockTypeFilter" class="stockTypeFilter">
           <label class="toggle"><input type="checkbox" data-type="car" checked/><span>Voitures</span></label>
           <label class="toggle"><input type="checkbox" data-type="motorcycle" checked/><span>Motos</span></label>
@@ -280,7 +271,7 @@
           <span class="val" id="paramsBalance">—</span>
         </div>
         <div class="walletActions">
-          <div class="walletActionCard">
+          <div class="walletActionCard" style="display:none">
             <h3>Ajouter des fonds</h3>
             <div class="walletRow">
               <label for="addFundsAmt">Montant (€)</label>
@@ -329,7 +320,7 @@
               </div>
 
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-                <div>
+                <div style="display:none">
                   <label for="alertsMaxPrice" style="display:block;margin-bottom:6px;font-size:13px;font-weight:500">Prix maximum (€)</label>
                   <input type="number" id="alertsMaxPrice" class="input" placeholder="Ex: 50000" min="0" style="width:100%"/>
                   <div style="font-size:12px;color:rgba(255,255,255,.45);margin-top:4px">Laissez vide pour tout prix</div>

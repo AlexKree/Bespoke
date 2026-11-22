@@ -60,6 +60,7 @@
         <a data-nav class="navlink" href="index.html">Home</a>
         <a data-nav class="navlink" href="services.html">Services</a>
         <a data-nav class="navlink" href="stock.html">Stock</a>
+        <a data-nav class="navlink" href="news.html">News</a>
         <a data-nav class="navlink" href="business-partners.html">Business partners</a>
         <a data-nav class="navlink" href="concierge.html">Concierge</a>
         <a data-nav class="navlink" href="track-record.html">Track record</a>
@@ -234,6 +235,17 @@
     var params = new URLSearchParams(location.search);
     var ref = (params.get('ref') || '').trim();
     var vurl = (params.get('url') || '').trim();
+    // Private buyer (site focused on trade buyers, 22/11/2026): contact request,
+    // no price or online reservation.
+    if (params.get('profil') === 'particulier') {
+      msg.value = 'Hello,\n\n'
+        + 'I am a private buyer' + (ref ? ' interested in the following vehicle:\n' + ref + (vurl ? '\n' + vurl : '') : ' looking for a vehicle.') + '\n\n'
+        + 'Country of residence: \n'
+        + 'Phone (optional): \n';
+      if (subj && !subj.value.trim()) subj.value = 'Private buyer — ' + (ref || 'contact request');
+      askForContactDetails('Request pre-filled. Add your name and e-mail, then send: we will get back to you shortly.');
+      return;
+    }
     if (ref && params.get('intent') === 'same') {
       msg.value = 'Hello,\n\n'
         + 'This vehicle has been sold, but I am looking for the same model:\n'
