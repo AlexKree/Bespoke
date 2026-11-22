@@ -50,7 +50,9 @@
   .newsCover{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;gap:12px;background:linear-gradient(135deg,#1d2633,#0b0d10)}
   .newsCover--licence{background:linear-gradient(135deg,#2b2140,#0b0d10)}
   .newsCover--stock{background:linear-gradient(135deg,#1d3328,#0b0d10)}
+  .newsCover{position:relative}
   .newsCover img{width:100%;height:100%;object-fit:cover}
+  .newsCredit{position:absolute;right:6px;bottom:6px;font-size:10px;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,.6);color:#fff}
   .newsIcon{font-size:44px}
   .newsCountry{font-weight:700;letter-spacing:.08em;padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.12)}
   .newsBody{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
@@ -206,6 +208,12 @@
   }
   function cover(a, car) {
     var box = el('div', 'newsCover newsCover--' + a.kind);
+    // Photo de presse du constructeur (essais), avec son credit
+    if (a.image && a.image.url) {
+      var pi = el('img'); pi.src = a.image.url; pi.alt = ''; pi.loading = 'lazy'; box.appendChild(pi);
+      box.appendChild(el('span', 'newsCredit', a.image.credit || ''));
+      return box;
+    }
     var img = car && car.images && car.images[0];
     if (img) { var i = el('img'); i.src = imgPath(img); i.alt = ''; i.loading = 'lazy'; box.appendChild(i); }
     else { box.appendChild(el('span', 'newsIcon', ICON[a.kind] || '')); if (a.country) box.appendChild(el('span', 'newsCountry', a.country)); }
@@ -251,7 +259,11 @@
         var s = el('div', 'newsSources'); s.appendChild(el('div', 'kicker', C.sources));
         var ul = el('ul');
         a.sources.forEach(function (x) { var li = el('li'); var l = el('a', '', x.title || x.url); l.href = x.url; l.target = '_blank'; l.rel = 'noopener noreferrer nofollow'; li.appendChild(l); ul.appendChild(li); });
-        s.appendChild(ul); s.appendChild(el('p', 'newsDisclaimer', C.disclaimer)); art.appendChild(s);
+        s.appendChild(ul);
+        if (a.image && a.image.source_url) {
+          var cp = el('p', 'newsDisclaimer', (a.image.credit || '') + ' — '); var cl = el('a', '', 'press release'); cl.href = a.image.source_url; cl.target = '_blank'; cl.rel = 'noopener noreferrer nofollow'; cp.appendChild(cl); s.appendChild(cp);
+        }
+        s.appendChild(el('p', 'newsDisclaimer', C.disclaimer)); art.appendChild(s);
       }
       root.appendChild(art);
       document.title = a.title + ' — The Bespoke Car';
