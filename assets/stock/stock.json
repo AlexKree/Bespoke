@@ -1775,6 +1775,50 @@
       "original_registration": "",
       "market_price_eur": null,
       "market_price_date": null
+    },
+    {
+      "id": "bentley-turbo-r-blanche-1989",
+      "slug": "bentley-turbo-r-blanche-1989",
+      "ref": "BSP-001",
+      "vehicle_type": "car",
+      "make": "Bentley",
+      "model": "Turbo R Blanche",
+      "year": 1989,
+      "title": {
+        "fr": "Bentley Turbo R",
+        "en": "Bentley Turbo R"
+      },
+      "headline": {
+        "fr": "Bentley Turbo R de 1989 en teinte blanche, 129 949 km, motorisation essence, origine Japon",
+        "en": "1989 Bentley Turbo R finished in white, 129,949 km, petrol engine, Japanese origin"
+      },
+      "description": {
+        "fr": "Nous proposons une Bentley Turbo R de 1989, berline quatre portes à motorisation essence, affichant 129 949 km au compteur. Le véhicule est d'origine Japon.\n\nLa carrosserie est blanche. On distingue la calandre chromée à lamelles verticales surmontée de l'emblème Bentley, les doubles optiques rondes de chaque côté avec clignotants orange, les boucliers noirs et des jantes en alliage de teinte argent. Sur les photos, prises en station de lavage, la peinture présente un aspect brillant et homogène.\n\nLes informations sur la boîte de vitesses, la puissance, l'historique et l'entretien ne sont pas communiquées ; elles restent à vérifier lors de l'examen du véhicule.",
+        "en": "We are offering a 1989 Bentley Turbo R, a four-door saloon with a petrol engine, showing 129,949 km on the odometer. The vehicle is of Japanese origin.\n\nThe body is finished in white. Visible features include the chrome grille with vertical slats topped by the Bentley emblem, twin round headlamps on each side with amber indicators, black bumpers and silver alloy wheels. In the photos, taken at a car wash, the paintwork appears glossy and even.\n\nDetails on the gearbox, power output, history and maintenance are not provided; they should be checked when inspecting the vehicle."
+      },
+      "price_eur": 21000,
+      "mileage": "",
+      "mileage_km": 129949,
+      "country": "Japon",
+      "location": "Royaume-Uni",
+      "transmission": null,
+      "fuel_type": "Petrol",
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": null,
+      "interior_color": null,
+      "vin": "SCBZR0***********",
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/bentley-turbo-r-blanche-1989-1.jpg",
+        "/assets/stock/images/bentley-turbo-r-blanche-1989-2.jpg",
+        "/assets/stock/images/bentley-turbo-r-blanche-1989-3.jpg",
+        "/assets/stock/images/bentley-turbo-r-blanche-1989-4.jpg",
+        "/assets/stock/images/bentley-turbo-r-blanche-1989-5.jpg",
+        "/assets/stock/images/bentley-turbo-r-blanche-1989-6.jpg"
+      ],
+      "image_focus": {}
     }
   ]
 }
