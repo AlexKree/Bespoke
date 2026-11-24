@@ -2036,6 +2036,232 @@
         "/assets/stock/images/mercedes-benz-s63-amg-2007-3.jpg"
       ],
       "image_focus": {}
+    },
+    {
+      "id": "bentley-arnage-black-label-2000",
+      "slug": "bentley-arnage-black-label-2000",
+      "ref": "BSP-063",
+      "vehicle_type": "car",
+      "make": "Bentley",
+      "model": "Arnage Black Label RBS4L32",
+      "year": 2000,
+      "title": {
+        "fr": "Bentley Arnage Black Label 406 ch",
+        "en": "Bentley Arnage Black Label 406 hp"
+      },
+      "headline": {
+        "fr": "Berline Bentley Arnage Black Label essence de 406 ch, première immatriculation en octobre 2000, teinte noire.",
+        "en": "Bentley Arnage Black Label petrol saloon, 406 hp, first registered October 2000, finished in black."
+      },
+      "description": {
+        "fr": "Bentley Arnage Black Label, version RBS4L32, première mise en circulation le 23 octobre 2000. Moteur essence de 406 ch. Véhicule d'origine européenne. Kilométrage et type de boîte non communiqués.\n\nCarrosserie noire avec calandre grillagée, double optique avant, baguettes et pare-chocs chromés, jantes argentées et double sortie d'échappement ovale. Un logo Hamann est apposé sur la face arrière. Peinture brillante sur les photos, quelques traces et poussières visibles sur le coffre et le bouclier arrière.\n\nIntérieur en cuir noir, planche de bord et console en finition noir laqué, compteurs à fond crème, seuils de porte marqués Arnage. Un autoradio de type non d'origine est installé dans la console centrale. Le cuir des sièges avant présente des plis et une usure visible, la moquette est à nettoyer. Examen sur place recommandé pour l'état mécanique et l'historique.",
+        "en": "Bentley Arnage Black Label, version RBS4L32, first registered on 23 October 2000. Petrol engine rated at 406 hp. European-origin vehicle. Mileage and gearbox type not supplied.\n\nBlack paintwork with mesh grille, twin front headlamps, chrome trim strips and bumpers, silver wheels and twin oval exhaust outlets. A Hamann badge is fitted to the rear panel. The paint looks glossy in the photos, with some marks and dust visible on the boot lid and rear bumper.\n\nBlack leather interior, gloss black dashboard and console trim, cream-faced gauges and Arnage sill plates. A non-original-type head unit is fitted in the centre console. The front seat leather shows creasing and visible wear, and the carpets require cleaning. On-site inspection is advised regarding mechanical condition and history."
+      },
+      "price_eur": 28500,
+      "mileage": "",
+      "mileage_km": null,
+      "country": "EU",
+      "location": "France",
+      "transmission": null,
+      "fuel_type": "Petrol",
+      "body_type": null,
+      "power_hp": 406,
+      "exterior_color": null,
+      "interior_color": null,
+      "vin": "SCBLC3***********",
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/bentley-arnage-black-label-2000-1.jpg",
+        "/assets/stock/images/bentley-arnage-black-label-2000-2.jpg",
+        "/assets/stock/images/bentley-arnage-black-label-2000-3.jpg",
+        "/assets/stock/images/bentley-arnage-black-label-2000-4.jpg"
+      ],
+      "image_focus": {}
+    },
+    {
+      "id": "jaguar-xj6-1977",
+      "slug": "jaguar-xj6-1977",
+      "ref": "BSP-064",
+      "vehicle_type": "car",
+      "make": "Jaguar",
+      "model": "XJ6",
+      "year": 1977,
+      "title": {
+        "fr": "Jaguar XJ6 4.2",
+        "en": "Jaguar XJ6 4.2"
+      },
+      "headline": {
+        "fr": "Berline Jaguar XJ6 4.2 de 1977, teinte vert olive, intérieur cuir fauve, 59 920 km, véhicule de collection",
+        "en": "1977 Jaguar XJ6 4.2 saloon in olive green with tan leather interior, 59,920 km, classic vehicle"
+      },
+      "description": {
+        "fr": "Jaguar XJ6 essence, première immatriculation le 21 septembre 1977, présentée avec 59 920 km au compteur. Le véhicule est d'origine UE et relève du statut de collection. Le monogramme 4.2 Litre figure sur la face arrière.\n\nLa carrosserie vert olive est rehaussée d'un filet doré latéral. La face avant reçoit une calandre chromée cannelée et quatre phares ronds ; pare-chocs chromés, roues en tôle avec enjoliveurs chromés. Les photos extérieures récentes montrent une peinture brillante ; une vue arrière prise en parking souterrain montre le véhicule poussiéreux.\n\nÀ l'intérieur, poste de conduite à gauche, sièges et contre-portes en cuir fauve, planche de bord avec placage bois et instrumentation à cadrans ronds, volant à jante fine. Photos complémentaires sur demande.",
+        "en": "Petrol Jaguar XJ6, first registered on 21 September 1977, offered with 59,920 km on the odometer. The car is of EU origin and qualifies as a classic vehicle. A 4.2 Litre badge is fitted to the rear panel.\n\nThe olive green body is accented by a gold side coachline. The front features a fluted chrome grille and four round headlamps; chrome bumpers and steel wheels with chrome hubcaps. The recent exterior photos show glossy paintwork; a rear view taken in an underground car park shows the car dusty.\n\nInside, left-hand drive, tan leather seats and door panels, wood veneer dashboard with round dial instrumentation and a thin-rimmed steering wheel. Further photos available on request."
+      },
+      "price_eur": 12000,
+      "mileage": "",
+      "mileage_km": 59920,
+      "country": "EU",
+      "location": null,
+      "transmission": null,
+      "fuel_type": "Petrol",
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": null,
+      "interior_color": null,
+      "vin": "1L7301***",
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/jaguar-xj6-1977-1.jpg",
+        "/assets/stock/images/jaguar-xj6-1977-2.jpg",
+        "/assets/stock/images/jaguar-xj6-1977-3.jpg",
+        "/assets/stock/images/jaguar-xj6-1977-4.jpg",
+        "/assets/stock/images/jaguar-xj6-1977-5.jpg",
+        "/assets/stock/images/jaguar-xj6-1977-6.jpg",
+        "/assets/stock/images/jaguar-xj6-1977-7.jpg",
+        "/assets/stock/images/jaguar-xj6-1977-8.jpg"
+      ],
+      "image_focus": {}
+    },
+    {
+      "id": "citroen-ds5-2012",
+      "slug": "citroen-ds5-2012",
+      "ref": "BSP-065",
+      "vehicle_type": "car",
+      "make": "Citroën",
+      "model": "DS5",
+      "year": 2012,
+      "title": {
+        "fr": "Citroën DS5",
+        "en": "Citroën DS5"
+      },
+      "headline": {
+        "fr": "Citroën DS5 de 2012 en provenance du Japon, teinte gris métallisé et jantes alliage noires.",
+        "en": "2012 Citroën DS5 sourced from Japan, metallic grey paint and black alloy wheels."
+      },
+      "description": {
+        "fr": "Citroën DS5 de l'année 2012, véhicule en provenance du Japon. La carrosserie est en teinte gris foncé métallisé, avec les baguettes chromées caractéristiques partant des optiques avant vers les montants de pare-brise et un jonc chromé en bas de caisse. Les projecteurs avant intègrent une signature lumineuse à LED.\n\nLe véhicule est équipé de jantes en alliage de couleur noire avec centres frappés du logo Citroën. L'habitacle, visible à travers les vitres, présente une sellerie de teinte claire.\n\nSur les photos, la carrosserie apparaît poussiéreuse et les pneumatiques présentent des craquelures visibles sur les flancs, à prévoir lors de la reprise. Le soubassement est photographié ; le détail de la version, du kilométrage, de la motorisation et de l'historique n'est pas communiqué.",
+        "en": "Citroën DS5 from 2012, sourced from Japan. The body is finished in dark metallic grey, with the model's characteristic chrome strips running from the headlights to the windscreen pillars and chrome trim along the sills. The front headlights feature an LED light signature.\n\nThe car rides on black alloy wheels with Citroën-branded centre caps. The interior, visible through the windows, features light-coloured upholstery.\n\nIn the photos the bodywork appears dusty and the tyres show visible sidewall cracking, to be taken into account. The underbody has been photographed; trim level, mileage, engine and history details are not provided."
+      },
+      "price_eur": 8000,
+      "mileage": "",
+      "mileage_km": null,
+      "country": "Japon",
+      "location": "France",
+      "transmission": null,
+      "fuel_type": null,
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": null,
+      "interior_color": null,
+      "vin": null,
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/citroen-ds5-2012-1.jpg",
+        "/assets/stock/images/citroen-ds5-2012-2.jpg",
+        "/assets/stock/images/citroen-ds5-2012-3.jpg",
+        "/assets/stock/images/citroen-ds5-2012-4.jpg",
+        "/assets/stock/images/citroen-ds5-2012-5.jpg",
+        "/assets/stock/images/citroen-ds5-2012-6.jpg",
+        "/assets/stock/images/citroen-ds5-2012-7.jpg",
+        "/assets/stock/images/citroen-ds5-2012-8.jpg"
+      ],
+      "image_focus": {}
+    },
+    {
+      "id": "nissan-elgrand-2-5-7-places-2011",
+      "slug": "nissan-elgrand-2-5-7-places-2011",
+      "ref": "BSP-066",
+      "vehicle_type": "car",
+      "make": "Nissan",
+      "model": "ELGRAND 2.5 7 places",
+      "year": 2011,
+      "title": {
+        "fr": "Nissan Elgrand 2.5 7 places",
+        "en": "Nissan Elgrand 2.5 7-seater"
+      },
+      "headline": {
+        "fr": "Nissan Elgrand 2.5 de 2011, origine Japon, teinte noire, sellerie cuir noir et jantes alliage spécifiques",
+        "en": "2011 Nissan Elgrand 2.5, Japanese origin, black paint, black leather upholstery and aftermarket alloy wheels"
+      },
+      "description": {
+        "fr": "Monospace Nissan Elgrand 2.5 en configuration 7 places, millésime 2011, d'origine japonaise. La carrosserie est de teinte noire, avec calandre à lamelles chromées, baguettes latérales chromées et projecteurs antibrouillard intégrés au bouclier avant.\n\nL'habitacle reçoit une sellerie cuir noir, des sièges individuels de type capitaine au deuxième rang avec accoudoirs, des inserts façon bois sur les contre-portes et des tapis de sol à liseré bleu. Le cuir présente des plis d'usage visibles sur les assises et dossiers.\n\nLe véhicule est équipé de jantes alliage multibranches de teinte foncée à rebord poli, non d'origine, et d'étriers de frein rouges. Les photos montrent de légères marques sur la partie basse du bouclier avant et une oxydation de surface sur la ligne d'échappement. Kilométrage, historique et caractéristiques techniques détaillées non communiqués.",
+        "en": "Nissan Elgrand 2.5 people carrier in 7-seat configuration, model year 2011, of Japanese origin. The body is finished in black, with a chrome-slatted grille, chrome side mouldings and fog lights integrated into the front bumper.\n\nThe cabin features black leather upholstery, individual captain's chairs with armrests in the second row, wood-effect inserts on the door panels and floor mats with blue piping. The leather shows visible creasing from use on the seat cushions and backrests.\n\nThe vehicle is fitted with dark multi-spoke aftermarket alloy wheels with a polished lip, and red brake calipers. The photos show light marks on the lower front bumper and surface oxidation on the exhaust line. Mileage, history and detailed technical specifications not provided."
+      },
+      "price_eur": 9500,
+      "mileage": "",
+      "mileage_km": null,
+      "country": "Japon",
+      "location": "France",
+      "transmission": null,
+      "fuel_type": null,
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": null,
+      "interior_color": null,
+      "vin": "TE52-0*****",
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/nissan-elgrand-2-5-7-places-2011-1.jpg",
+        "/assets/stock/images/nissan-elgrand-2-5-7-places-2011-2.jpg",
+        "/assets/stock/images/nissan-elgrand-2-5-7-places-2011-3.jpg",
+        "/assets/stock/images/nissan-elgrand-2-5-7-places-2011-4.jpg",
+        "/assets/stock/images/nissan-elgrand-2-5-7-places-2011-5.jpg",
+        "/assets/stock/images/nissan-elgrand-2-5-7-places-2011-6.jpg",
+        "/assets/stock/images/nissan-elgrand-2-5-7-places-2011-7.jpg",
+        "/assets/stock/images/nissan-elgrand-2-5-7-places-2011-8.jpg"
+      ],
+      "image_focus": {}
+    },
+    {
+      "id": "porsche-panamera-4s-2011",
+      "slug": "porsche-panamera-4s-2011",
+      "ref": "BSP-067",
+      "vehicle_type": "car",
+      "make": "Porsche",
+      "model": "Panamera 4S ABA-970M48A",
+      "year": 2011,
+      "title": {
+        "fr": "Porsche Panamera 4S 4.8 V8",
+        "en": "Porsche Panamera 4S 4.8 V8"
+      },
+      "headline": {
+        "fr": "Panamera 4S essence de 2011, teinte noire, intérieur clair, 107 139 km, origine Japon.",
+        "en": "2011 petrol Panamera 4S in black with light interior, 107,139 km, Japanese origin."
+      },
+      "description": {
+        "fr": "Porsche Panamera 4S (type 970, code ABA-970M48A) à moteur essence, mise en circulation le 1er avril 2011. Le compteur affiche 107 139 km. Le véhicule provient du Japon.\n\nLa carrosserie est de teinte noire. L'habitacle présente une sellerie de teinte claire, beige. La voiture est équipée de jantes alliage à branches doubles de finition gris argenté, d'une lame de bouclier avant noire et d'une quadruple sortie d'échappement. Le monogramme Panamera 4S figure sur le hayon.\n\nSur les photos, la peinture apparaît poussiéreuse, notamment sur le capot, ce qui ne permet pas d'en juger précisément l'état ; un examen sur place est recommandé. Aucune information sur l'historique d'entretien ni sur la boîte de vitesses n'est communiquée.",
+        "en": "Porsche Panamera 4S (type 970, code ABA-970M48A) with petrol engine, first registered on 1 April 2011. The odometer reads 107,139 km. The vehicle comes from Japan.\n\nThe body is finished in black. The cabin features light beige upholstery. The car is fitted with silver-grey twin-spoke alloy wheels, a black front bumper lip and quad exhaust outlets. The Panamera 4S badge appears on the tailgate.\n\nIn the photos the paintwork appears dusty, particularly on the bonnet, which prevents an accurate assessment of its condition; an on-site inspection is recommended. No information is provided regarding service history or transmission."
+      },
+      "price_eur": 28500,
+      "mileage": "",
+      "mileage_km": 107139,
+      "country": "Japon",
+      "location": "France",
+      "transmission": null,
+      "fuel_type": "Petrol",
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": "Noir",
+      "interior_color": null,
+      "vin": "WP0ZZZ***********",
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/porsche-panamera-4s-2011-1.jpg",
+        "/assets/stock/images/porsche-panamera-4s-2011-2.jpg",
+        "/assets/stock/images/porsche-panamera-4s-2011-3.jpg",
+        "/assets/stock/images/porsche-panamera-4s-2011-4.jpg",
+        "/assets/stock/images/porsche-panamera-4s-2011-5.jpg",
+        "/assets/stock/images/porsche-panamera-4s-2011-6.jpg",
+        "/assets/stock/images/porsche-panamera-4s-2011-7.jpg",
+        "/assets/stock/images/porsche-panamera-4s-2011-8.jpg"
+      ],
+      "image_focus": {}
     }
   ]
 }
