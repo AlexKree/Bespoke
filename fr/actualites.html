@@ -54,6 +54,9 @@
   .newsCover img{width:100%;height:100%;object-fit:cover}
   .newsCredit{position:absolute;right:6px;bottom:6px;font-size:10px;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,.6);color:#fff}
   .newsIcon{font-size:44px}
+  .newsCover--brand{flex-direction:column;gap:10px}
+  .newsCover .newsLogo{width:72px;height:72px;object-fit:contain;border-radius:16px;box-shadow:0 4px 18px rgba(0,0,0,.4)}
+  .newsBrand{color:#c6b07a;font-family:Georgia,serif;font-weight:700;letter-spacing:.3em;font-size:15px}
   .newsCountry{font-weight:700;letter-spacing:.08em;padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.12)}
   .newsBody{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
   .newsMeta{font-size:12px;color:var(--muted)}
@@ -190,18 +193,23 @@
   function date(s) { try { return new Date(s).toLocaleDateString(C.locale, { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return ''; } }
   function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, ' ').trim(); }
   function imgPath(p) { return p ? (p.charAt(0) === '/' || /^https?:/.test(p) ? p : '/' + p) : ''; }
-  // Article « nos voitures » : on retrouve la fiche du site par marque + modele + annee
+  // Article « nos voitures » : on retrouve la fiche du site par marque + modele + annee.
+  // Marque : alias (Mercedes-Benz = Mercedes) et marque absente de certaines fiches -> on cherche aussi dans le titre.
+  var ALIAS = { 'mercedes benz': 'mercedes', 'rolls royce': 'rolls', 'land rover': 'land', 'alfa romeo': 'alfa', 'aston martin': 'aston' };
+  function brand(s) { s = norm(s); for (var k in ALIAS) if (s.indexOf(k) === 0) return ALIAS[k]; return s.split(' ')[0]; }
   function findCar(v) {
     if (!v) return null;
-    var mk = norm(v.make).split(' ')[0], words = norm(v.model).split(' ').filter(Boolean);
+    var mk = brand(v.make), words = norm(v.model).split(' ').filter(function (w) { return w.length > 1 || /\d/.test(w); });
     var best = null, score = 0;
     stock.forEach(function (it) {
-      if (it.status === 'sold' || norm(it.make).split(' ')[0] !== mk) return;
-      var t = norm((it.title && (it.title[C.lang] || it.title.fr || it.title.en)) || it.model);
-      var s = words.filter(function (w) { return t.indexOf(w) !== -1; }).length + (v.year && it.year === v.year ? 2 : 0);
+      var title = (it.title && (it.title[C.lang] || it.title.fr || it.title.en)) || '';
+      var hay = ' ' + norm([it.make, it.model, title].join(' ')).replace(/mercedes benz/g, 'mercedes').replace(/rolls royce/g, 'rolls') + ' ';
+      if (it.make && hay.indexOf(' ' + mk + ' ') === -1) return; // marque renseignee mais differente
+      var s = words.filter(function (w) { return hay.indexOf(' ' + w + ' ') !== -1; }).length + (v.year && it.year === v.year ? 2 : 0)
+        + (hay.indexOf(' ' + mk + ' ') !== -1 ? 1 : 0) + (it.status === 'sold' ? 0 : 0.5) - (v.year && it.year ? Math.min(Math.abs(v.year - it.year), 10) * 0.02 : 0); // a egalite : voiture disponible, puis annee la plus proche
       if (s > score) { score = s; best = it; }
     });
-    return score >= 2 ? best : null;
+    return score >= 3 ? best : null;
   }
   function cover(a, car) {
     var box = el('div', 'newsCover newsCover--' + a.kind);
@@ -212,8 +220,12 @@
       return box;
     }
     var img = car && car.images && car.images[0];
-    if (img) { var i = el('img'); i.src = imgPath(img); i.alt = ''; i.loading = 'lazy'; box.appendChild(i); }
-    else { box.appendChild(el('span', 'newsIcon', ICON[a.kind] || '')); if (a.country) box.appendChild(el('span', 'newsCountry', a.country)); }
+    if (img) { var i = el('img'); i.src = imgPath(img); i.alt = ''; i.loading = 'lazy'; box.appendChild(i); return box; }
+    // Pas d'image : couverture Bespoke (monogramme + nom), avec le pays pour les articles permis
+    box.classList.add('newsCover--brand');
+    var logo = el('img', 'newsLogo'); logo.src = '/assets/icons/icon-512.svg'; logo.alt = 'Bespoke'; box.appendChild(logo);
+    box.appendChild(el('span', 'newsBrand', 'BESPOKE'));
+    if (a.country) box.appendChild(el('span', 'newsCountry', a.country));
     return box;
   }
   function meta(a) { var m = el('div', 'newsMeta'); m.appendChild(el('span', 'newsKind', C[a.kind] || '')); m.appendChild(document.createTextNode(' ' + date(a.published_at))); return m; }
@@ -251,7 +263,7 @@
       art.appendChild(cover(a, car)); art.appendChild(meta(a));
       art.appendChild(el('h1', 'newsH1', a.title));
       String(a.body || '').split(/\n{2,}/).forEach(function (p) { if (p.trim()) art.appendChild(el('p', 'newsP', p.trim())); });
-      if (car && car.slug) { var b = el('a', 'btn primary', C.seeCar); b.href = 'stock/' + car.slug + '.html'; art.appendChild(b); }
+      if (car && car.slug && car.status !== 'sold') { var b = el('a', 'btn primary', C.seeCar); b.href = 'stock/' + car.slug + '.html'; art.appendChild(b); }
       if (a.sources && a.sources.length) {
         var s = el('div', 'newsSources'); s.appendChild(el('div', 'kicker', C.sources));
         var ul = el('ul');
