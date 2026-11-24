@@ -2706,6 +2706,98 @@
         "/assets/stock/images/london-taxi-tx4-2006-7.jpg"
       ],
       "image_focus": {}
+    },
+    {
+      "id": "bmw-active-hybrid-460cv-2011",
+      "slug": "bmw-active-hybrid-460cv-2011",
+      "ref": "BSP-069",
+      "vehicle_type": "car",
+      "make": "BMW",
+      "model": "Active Hybrid 460cv",
+      "year": 2011,
+      "title": {
+        "fr": "BMW Série 7 ActiveHybrid 7 460 ch",
+        "en": "BMW 7 Series ActiveHybrid 7 460 hp"
+      },
+      "headline": {
+        "fr": "Berline BMW ActiveHybrid 7 de 2011, noire, cuir noir, 62 113 km, origine Japon.",
+        "en": "2011 BMW ActiveHybrid 7 saloon in black with black leather, 62,113 km, Japanese origin."
+      },
+      "description": {
+        "fr": "BMW Série 7 ActiveHybrid 7 de 2011, motorisation hybride annoncée à 460 ch, en provenance du Japon. Le compteur affiche 62 113 km. Carrosserie noire, monogramme ActiveHybrid 7 sur le coffre, jantes en alliage à branches multiples.\n\nL'habitacle est garni de cuir noir, avec un ciel de toit clair et une console de climatisation dédiée aux places arrière. L'instrumentation est configurée en japonais.\n\nÉtat apparent sur photos : sellerie arrière et ciel de toit propres. Les optiques avant présentent un jaunissement marqué. La carrosserie est poussiéreuse sur les clichés et doit être inspectée en détail. Véhicule à destination des professionnels, à examiner sur place ou par expertise.",
+        "en": "2011 BMW 7 Series ActiveHybrid 7, hybrid powertrain stated at 460 hp, sourced from Japan. The odometer reads 62,113 km. Black paintwork, ActiveHybrid 7 badge on the boot lid, multi-spoke alloy wheels.\n\nThe cabin is trimmed in black leather, with a light headliner and a dedicated rear climate control panel. The instrument cluster is set to Japanese.\n\nApparent condition from the photos: rear upholstery and headliner look clean. The front headlight lenses show marked yellowing. The bodywork is dusty in the pictures and should be inspected in detail. Vehicle offered to trade buyers, inspection on site or by appraisal recommended."
+      },
+      "price_eur": 20500,
+      "mileage": "",
+      "mileage_km": 62113,
+      "country": "Japon",
+      "location": "France",
+      "transmission": null,
+      "fuel_type": "Hybrid",
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": "Noir",
+      "interior_color": null,
+      "vin": "WBAKX6***********",
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/bmw-active-hybrid-460cv-2011-1.jpg",
+        "/assets/stock/images/bmw-active-hybrid-460cv-2011-2.jpg",
+        "/assets/stock/images/bmw-active-hybrid-460cv-2011-3.jpg",
+        "/assets/stock/images/bmw-active-hybrid-460cv-2011-4.jpg",
+        "/assets/stock/images/bmw-active-hybrid-460cv-2011-5.jpg",
+        "/assets/stock/images/bmw-active-hybrid-460cv-2011-6.jpg",
+        "/assets/stock/images/bmw-active-hybrid-460cv-2011-7.jpg",
+        "/assets/stock/images/bmw-active-hybrid-460cv-2011-8.jpg"
+      ],
+      "image_focus": {}
+    },
+    {
+      "id": "mercedes-benz-e-500-w211-2004",
+      "slug": "mercedes-benz-e-500-w211-2004",
+      "ref": "BSP-075",
+      "vehicle_type": "car",
+      "make": "Mercedes-Benz",
+      "model": "E 500 W211",
+      "year": 2004,
+      "title": {
+        "fr": "Mercedes-Benz E 500 W211 Berline",
+        "en": "Mercedes-Benz E 500 W211 Saloon"
+      },
+      "headline": {
+        "fr": "Berline E 500 W211 noire, 306 ch, boîte automatique, 145 000 km, intérieur cuir noir et toit ouvrant",
+        "en": "Black E 500 W211 saloon, 306 hp, automatic, 145,000 km, black leather interior and sunroof"
+      },
+      "description": {
+        "fr": "Mercedes-Benz E 500 de génération W211, année 2004, affichant 145 000 km. Moteur essence de 306 ch associé à une boîte automatique. Véhicule d'origine Japon, conduite à gauche.\n\nCarrosserie noire avec badges V8 Kompressor sur les ailes avant, boucliers de style AMG et jantes argent à doubles branches. Habitacle en cuir noir, volant bois et cuir, inserts en ronce de noyer, toit ouvrant, seuils de porte et tapis AMG. Un autoradio à écran tactile de seconde monte équipe la console centrale.\n\nÉtat apparent conforme à l'âge et au kilométrage : usure marquée du cuir du volant, plis et craquelures sur le bourrelet du siège conducteur, accoudoir de porte avant gauche craquelé. Inspection recommandée avant achat.",
+        "en": "Mercedes-Benz E 500 from the W211 generation, 2004, showing 145,000 km. 306 hp petrol engine paired with an automatic gearbox. Vehicle originating from Japan, left-hand drive.\n\nBlack paintwork with V8 Kompressor badges on the front wings, AMG-style bumpers and silver twin-spoke wheels. Black leather interior, wood and leather steering wheel, burr walnut trim, sunroof, AMG sill plates and floor mats. An aftermarket touchscreen head unit is fitted in the centre console.\n\nVisible condition consistent with age and mileage: noticeable wear on the steering wheel leather, creasing and cracking on the driver's seat bolster, cracked front left door armrest. Inspection recommended prior to purchase."
+      },
+      "price_eur": 14490,
+      "mileage": "",
+      "mileage_km": 145000,
+      "country": "Japon",
+      "location": "France",
+      "transmission": "Automatic",
+      "fuel_type": "Petrol",
+      "body_type": null,
+      "power_hp": 306,
+      "exterior_color": "Noir",
+      "interior_color": null,
+      "vin": null,
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/mercedes-benz-e-500-w211-2004-1.jpg",
+        "/assets/stock/images/mercedes-benz-e-500-w211-2004-2.jpg",
+        "/assets/stock/images/mercedes-benz-e-500-w211-2004-3.jpg",
+        "/assets/stock/images/mercedes-benz-e-500-w211-2004-4.jpg",
+        "/assets/stock/images/mercedes-benz-e-500-w211-2004-5.jpg",
+        "/assets/stock/images/mercedes-benz-e-500-w211-2004-6.jpg",
+        "/assets/stock/images/mercedes-benz-e-500-w211-2004-7.jpg",
+        "/assets/stock/images/mercedes-benz-e-500-w211-2004-8.jpg"
+      ],
+      "image_focus": {}
     }
   ]
 }
