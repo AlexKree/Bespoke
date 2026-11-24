@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Contact — The Bespoke Car</title>
-  <meta name="description" content="Contact The Bespoke Car to submit an acquisition brief or a general enquiry. We reply within one business day." />
+  <meta name="description" content="Motor trade professionals: talk to The Bespoke Car before becoming a partner (trade stock, sourcing in Asia, import). We reply within one business day." />
   <meta name="robots" content="index,follow" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +22,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.thebespokecar.com/en/contact.html" />
   <meta property="og:title" content="Contact — The Bespoke Car" />
-  <meta property="og:description" content="Contact The Bespoke Car to submit an acquisition brief or a general enquiry. We reply within one business day." />
+  <meta property="og:description" content="Motor trade professionals: talk to The Bespoke Car before becoming a partner (trade stock, sourcing in Asia, import). We reply within one business day." />
   <meta property="og:image" content="https://www.thebespokecar.com/assets/photos/og-homepage.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -32,7 +32,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@TheBespokeCar" />
   <meta name="twitter:title" content="Contact — The Bespoke Car" />
-  <meta name="twitter:description" content="Contact The Bespoke Car to submit an acquisition brief or a general enquiry. We reply within one business day." />
+  <meta name="twitter:description" content="Motor trade professionals: talk to The Bespoke Car before becoming a partner (trade stock, sourcing in Asia, import). We reply within one business day." />
   <meta name="twitter:image" content="https://www.thebespokecar.com/assets/photos/og-homepage.jpg" />
   <!-- SEO: Canonical + hreflang -->
   <link rel="canonical" href="https://www.thebespokecar.com/en/contact.html" />
@@ -96,8 +96,9 @@
     <div class="contactLayout">
       <div class="card pad-lg">
         <div class="kicker">Contact</div>
-        <h1>Let's talk about your project.</h1>
-        <p class="lead">Tell us about the car you are looking for, or the one you would like us to sell on your behalf. We come back to you within one business day with a first assessment and the next steps.</p>
+        <h1 id="contactTitle">Let's talk before working together.</h1>
+        <p class="lead" id="contactLead">Are you a dealer, dealership, exporter or workshop and would like to know more before becoming a partner? Ask us anything: stock, sourcing in Japan and Asia, import, lead times, terms. We reply within one business day.</p>
+        <p id="contactPartnerCta" style="margin:10px 0 0">Already decided? <a href="business-partners.html" class="gold">Request your partner access directly →</a></p>
 
         <div class="sep"></div>
 
@@ -118,14 +119,18 @@
             </div>
           </div>
 
+          <div class="field" id="companyField">
+            <label for="company">Company <span class="fieldOpt">(optional)</span></label>
+            <input class="input" type="text" id="company" name="company" autocomplete="organization" placeholder="Your company name">
+          </div>
           <div class="field">
             <label for="subject">Subject <span class="fieldOpt">(optional)</span></label>
-            <input class="input" type="text" id="subject" name="subject" placeholder="e.g. looking for a Porsche 964 Carrera 2">
+            <input class="input" type="text" id="subject" name="subject" placeholder="e.g. trade terms, sourcing in Japan">
           </div>
 
           <div class="field">
             <label for="message">Your enquiry</label>
-            <textarea class="input" id="message" name="message" required rows="7" placeholder="Budget, intended use, technical criteria, timeline, delivery country…"></textarea>
+            <textarea class="input" id="message" name="message" required rows="7" placeholder="Your business, volumes, vehicles you are looking for, resale countries, your questions…"></textarea>
           </div>
 
           <button class="btn primary" type="submit" id="submit-btn">Send enquiry</button>
@@ -150,8 +155,8 @@
         </div>
         <div class="card pad-md">
           <ul class="contactPoints">
-            <li><strong>Confidentiality</strong><span>Your brief stays strictly confidential.</span></li>
-            <li><strong>No commitment</strong><span>The first assessment is free of charge.</span></li>
+            <li><strong>Confidentiality</strong><span>Our exchanges stay strictly confidential.</span></li>
+            <li><strong>No commitment</strong><span>A first conversation, with no obligation.</span></li>
             <li><strong>EN / FR / IT</strong><span>Team and partner workshops across Europe.</span></li>
           </ul>
         </div>
@@ -238,6 +243,10 @@
     // Private buyer (site focused on trade buyers, 22/11/2026): contact request,
     // no price or online reservation.
     if (params.get('profil') === 'particulier') {
+      // Particulier : texte adapté, sans le champ société ni l'appel à devenir partenaire
+      var ct = document.getElementById('contactTitle'); if (ct) ct.textContent = 'Tell us what you are looking for.';
+      var cl = document.getElementById('contactLead'); if (cl) cl.textContent = 'We mainly work with motor trade professionals, but we also answer private buyers. Tell us about the car you are interested in: we reply within one business day.';
+      ['companyField', 'contactPartnerCta'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
       msg.value = 'Hello,\n\n'
         + 'I am a private buyer' + (ref ? ' interested in the following vehicle:\n' + ref + (vurl ? '\n' + vurl : '') : ' looking for a vehicle.') + '\n\n'
         + 'Country of residence: \n'
@@ -312,6 +321,9 @@
     var email = document.getElementById('email').value.trim();
     var subject = document.getElementById('subject').value.trim();
     var message = document.getElementById('message').value.trim();
+    var companyEl = document.getElementById('company');
+    var company = companyEl ? companyEl.value.trim() : '';
+    if (company && message) message = 'Company : ' + company + '\n\n' + message;
     var botEl = document.getElementById('bot-field');
     var bot = botEl ? botEl.value : '';
 

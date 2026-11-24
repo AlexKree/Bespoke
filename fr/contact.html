@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Contact — The Bespoke Car</title>
-  <meta name="description" content="Contactez The Bespoke Car pour soumettre un brief d'acquisition ou une demande de renseignements. Réponse sous 24 h ouvrées." />
+  <meta name="description" content="Professionnels de l'automobile : échangez avec The Bespoke Car avant de devenir partenaire (stock pro, sourcing en Asie, import). Réponse sous 24 h ouvrées." />
   <meta name="robots" content="index,follow" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +22,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.thebespokecar.com/fr/contact.html" />
   <meta property="og:title" content="Contact — The Bespoke Car" />
-  <meta property="og:description" content="Contactez The Bespoke Car pour soumettre un brief d'acquisition ou une demande de renseignements. Réponse sous 24 h ouvrées." />
+  <meta property="og:description" content="Professionnels de l'automobile : échangez avec The Bespoke Car avant de devenir partenaire (stock pro, sourcing en Asie, import). Réponse sous 24 h ouvrées." />
   <meta property="og:image" content="https://www.thebespokecar.com/assets/photos/og-homepage.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -32,7 +32,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@TheBespokeCar" />
   <meta name="twitter:title" content="Contact — The Bespoke Car" />
-  <meta name="twitter:description" content="Contactez The Bespoke Car pour soumettre un brief d'acquisition ou une demande de renseignements. Réponse sous 24 h ouvrées." />
+  <meta name="twitter:description" content="Professionnels de l'automobile : échangez avec The Bespoke Car avant de devenir partenaire (stock pro, sourcing en Asie, import). Réponse sous 24 h ouvrées." />
   <meta name="twitter:image" content="https://www.thebespokecar.com/assets/photos/og-homepage.jpg" />
   <!-- SEO: Canonical + hreflang -->
   <link rel="canonical" href="https://www.thebespokecar.com/fr/contact.html" />
@@ -96,8 +96,9 @@
     <div class="contactLayout">
       <div class="card pad-lg">
         <div class="kicker">Contact</div>
-        <h1>Parlons de votre projet.</h1>
-        <p class="lead">Décrivez-nous le véhicule recherché, ou la voiture que vous souhaitez confier à la vente. Nous revenons vers vous sous 24 heures ouvrées avec une première analyse et les prochaines étapes.</p>
+        <h1 id="contactTitle">Parlons-en avant de travailler ensemble.</h1>
+        <p class="lead" id="contactLead">Vous êtes négociant, concession, exportateur ou atelier et vous souhaitez en savoir plus avant de devenir partenaire ? Posez-nous vos questions : stock, sourcing au Japon et en Asie, import, délais, conditions. Nous vous répondons sous 24 heures ouvrées.</p>
+        <p id="contactPartnerCta" style="margin:10px 0 0">Déjà décidé ? <a href="partenaires.html" class="gold">Demandez directement votre accès partenaire →</a></p>
 
         <div class="sep"></div>
 
@@ -118,14 +119,18 @@
             </div>
           </div>
 
+          <div class="field" id="companyField">
+            <label for="company">Société <span class="fieldOpt">(optionnel)</span></label>
+            <input class="input" type="text" id="company" name="company" autocomplete="organization" placeholder="Nom de votre société">
+          </div>
           <div class="field">
             <label for="subject">Sujet <span class="fieldOpt">(optionnel)</span></label>
-            <input class="input" type="text" id="subject" name="subject" placeholder="Ex : recherche Porsche 964 Carrera 2">
+            <input class="input" type="text" id="subject" name="subject" placeholder="Ex : conditions pro, sourcing au Japon">
           </div>
 
           <div class="field">
             <label for="message">Votre demande</label>
-            <textarea class="input" id="message" name="message" required rows="7" placeholder="Budget, usage, critères techniques, délai souhaité, pays de livraison…"></textarea>
+            <textarea class="input" id="message" name="message" required rows="7" placeholder="Votre activité, vos volumes, les véhicules recherchés, vos pays de revente, vos questions…"></textarea>
           </div>
 
           <button class="btn primary" type="submit" id="submit-btn">Envoyer la demande</button>
@@ -150,8 +155,8 @@
         </div>
         <div class="card pad-md">
           <ul class="contactPoints">
-            <li><strong>Confidentialité</strong><span>Votre brief reste strictement confidentiel.</span></li>
-            <li><strong>Sans engagement</strong><span>La première analyse est gratuite.</span></li>
+            <li><strong>Confidentialité</strong><span>Vos échanges restent strictement confidentiels.</span></li>
+            <li><strong>Sans engagement</strong><span>Un premier échange, sans obligation.</span></li>
             <li><strong>FR / EN / IT</strong><span>Équipe et ateliers partenaires en Europe.</span></li>
           </ul>
         </div>
@@ -239,6 +244,10 @@
     // Particulier (site recentre sur les professionnels, 22/11/2026) : demande
     // de contact, sans prix ni reservation en ligne.
     if (params.get('profil') === 'particulier') {
+      // Particulier : texte adapté, sans le champ société ni l'appel à devenir partenaire
+      var ct = document.getElementById('contactTitle'); if (ct) ct.textContent = 'Parlons de votre recherche.';
+      var cl = document.getElementById('contactLead'); if (cl) cl.textContent = 'Nous travaillons surtout avec les professionnels, mais nous répondons aussi aux particuliers. Décrivez-nous le véhicule qui vous intéresse : nous revenons vers vous sous 24 heures ouvrées.';
+      ['companyField', 'contactPartnerCta'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
       msg.value = 'Bonjour,\n\n'
         + 'Je suis un particulier' + (ref ? ' et je suis intéressé par le véhicule suivant :\n' + ref + (vurl ? '\n' + vurl : '') : ' et je recherche un véhicule.') + '\n\n'
         + 'Pays de résidence : \n'
@@ -313,6 +322,9 @@
     var email = document.getElementById('email').value.trim();
     var subject = document.getElementById('subject').value.trim();
     var message = document.getElementById('message').value.trim();
+    var companyEl = document.getElementById('company');
+    var company = companyEl ? companyEl.value.trim() : '';
+    if (company && message) message = 'Société : ' + company + '\n\n' + message;
     var botEl = document.getElementById('bot-field');
     var bot = botEl ? botEl.value : '';
 
