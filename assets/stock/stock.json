@@ -1819,6 +1819,223 @@
         "/assets/stock/images/bentley-turbo-r-blanche-1989-6.jpg"
       ],
       "image_focus": {}
+    },
+    {
+      "id": "mercedes-benz-s600-1992",
+      "slug": "mercedes-benz-s600-1992",
+      "ref": "BSP-004",
+      "vehicle_type": "car",
+      "make": "Mercedes-Benz",
+      "model": "S600 140057",
+      "year": 1992,
+      "title": {
+        "fr": "Mercedes-Benz S600 V12 (W140)",
+        "en": "Mercedes-Benz S600 V12 (W140)"
+      },
+      "headline": {
+        "fr": "Berline S600 V12 de 1992 d'origine japonaise, 96 202 km, éligible au statut de véhicule de collection",
+        "en": "1992 S600 V12 saloon of Japanese origin, 96,202 km, eligible for classic vehicle status"
+      },
+      "description": {
+        "fr": "Mercedes-Benz S600 de la génération W140, première immatriculation en mai 1992. Motorisation essence V12, comme l'indiquent les monogrammes S600 et V12 sur le coffre. Le compteur affiche 96 202 km. Le véhicule est d'origine japonaise et relève du statut de véhicule de collection.\n\nLa carrosserie est de teinte sombre, associée à des jantes en alliage. L'habitacle présente une sellerie en cuir foncé, des inserts en bois et des pochettes au dos des sièges avant. L'assise arrière en cuir montre des plis et des marques d'usage cohérents avec l'âge du véhicule. À l'extérieur, une marque est visible sur le bouclier avant, côté droit.\n\nVéhicule proposé aux professionnels de l'automobile. Les photos et les informations sont communiquées à titre indicatif ; un examen sur place est recommandé.",
+        "en": "Mercedes-Benz S600 from the W140 generation, first registered in May 1992. It has a V12 petrol engine, as shown by the S600 and V12 badges on the boot lid. The odometer reads 96,202 km. The vehicle is of Japanese origin and qualifies for classic vehicle status.\n\nThe body is finished in a dark colour and fitted with alloy wheels. The cabin has dark leather upholstery, wood trim and pockets on the backs of the front seats. The rear leather seat shows creasing and signs of wear in line with the car's age. On the outside, a mark is visible on the front bumper, right-hand side.\n\nThis vehicle is offered to automotive trade professionals. Photos and information are provided for guidance only; an on-site inspection is recommended."
+      },
+      "price_eur": 21500,
+      "mileage": "",
+      "mileage_km": 96202,
+      "country": "Japon",
+      "location": "Royaume-Uni",
+      "transmission": null,
+      "fuel_type": "Petrol",
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": null,
+      "interior_color": null,
+      "vin": "WDB140***********",
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/mercedes-benz-s600-1992-1.jpg",
+        "/assets/stock/images/mercedes-benz-s600-1992-2.jpg",
+        "/assets/stock/images/mercedes-benz-s600-1992-3.jpg",
+        "/assets/stock/images/mercedes-benz-s600-1992-4.jpg",
+        "/assets/stock/images/mercedes-benz-s600-1992-5.jpg",
+        "/assets/stock/images/mercedes-benz-s600-1992-6.jpg",
+        "/assets/stock/images/mercedes-benz-s600-1992-7.jpg",
+        "/assets/stock/images/mercedes-benz-s600-1992-8.jpg"
+      ],
+      "image_focus": {}
+    },
+    {
+      "id": "bmw-m5-2005",
+      "slug": "bmw-m5-2005",
+      "ref": "BSP-017",
+      "vehicle_type": "car",
+      "make": "BMW",
+      "model": "M5",
+      "year": 2005,
+      "title": {
+        "fr": "BMW M5",
+        "en": "BMW M5"
+      },
+      "headline": {
+        "fr": "BMW M5 berline gris argent, sellerie cuir gris clair, conduite à droite, origine Japon, mise en circulation 2005",
+        "en": "Silver BMW M5 saloon, light grey leather interior, right-hand drive, Japanese origin, first registered 2005"
+      },
+      "description": {
+        "fr": "BMW M5 berline à moteur essence, première immatriculation en octobre 2005, en provenance du Japon. Le véhicule est en conduite à droite. La carrosserie est en teinte gris argent, avec calandre noire et jantes alliage M à branches doubles. Un toit ouvrant est visible sur les photos.\n\nL'habitacle associe une sellerie cuir gris clair, une moquette noire et des inserts façon bois sur la planche de bord et la console centrale. Le volant M est gainé de cuir. Un écran multimédia de seconde monte est installé sur la planche de bord.\n\nSur les photos, la carrosserie et l'intérieur présentent un aspect soigné. Kilométrage, type de boîte, puissance et historique d'entretien non communiqués.",
+        "en": "BMW M5 petrol saloon, first registered in October 2005, sourced from Japan. The car is right-hand drive. The body is finished in silver, with black kidney grilles and M double-spoke alloy wheels. A sunroof is visible in the photos.\n\nThe interior combines light grey leather upholstery, black carpets and wood-effect trim on the dashboard and centre console. The M steering wheel is leather-trimmed. An aftermarket multimedia screen is fitted to the dashboard.\n\nIn the photos, the bodywork and interior appear well presented. Mileage, gearbox type, power output and service history not provided."
+      },
+      "price_eur": 22000,
+      "mileage": "",
+      "mileage_km": null,
+      "country": "Japon",
+      "location": "Royaume-Uni",
+      "transmission": null,
+      "fuel_type": "Petrol",
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": "Silver",
+      "interior_color": null,
+      "vin": "WBSNB9***********",
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/bmw-m5-2005-1.jpg",
+        "/assets/stock/images/bmw-m5-2005-2.jpg",
+        "/assets/stock/images/bmw-m5-2005-3.jpg"
+      ],
+      "image_focus": {}
+    },
+    {
+      "id": "nissan-skyline-ns4-1999",
+      "slug": "nissan-skyline-ns4-1999",
+      "ref": "BSP-049",
+      "vehicle_type": "car",
+      "make": "Nissan",
+      "model": "SKYLINE NS4",
+      "year": 1999,
+      "title": {
+        "fr": "Nissan Skyline NS4 berline, conduite à droite",
+        "en": "Nissan Skyline NS4 saloon, right-hand drive"
+      },
+      "headline": {
+        "fr": "Berline Nissan Skyline de 1999, origine Japon, conduite à droite, teinte gris argent et jantes non d'origine",
+        "en": "1999 Nissan Skyline saloon of Japanese origin, right-hand drive, silver grey paint and aftermarket wheels"
+      },
+      "description": {
+        "fr": "Nissan Skyline NS4 berline quatre portes de 1999, pays d'origine Japon, en conduite à droite. La carrosserie est de teinte gris argent, avec becquet sur le coffre. Elle est équipée de jantes multibranches noires à rebord poli, non d'origine, avec caches centraux rouges.\n\nL'habitacle présente une sellerie en tissu gris et noir et un volant gainé. Les photos montrent une usure apparente : volant marqué, tissu du siège conducteur effiloché sur le bord, moquette et tapis du côté conducteur salis, et des pièces métalliques posées sur le plancher conducteur.\n\nKilométrage, motorisation, boîte et historique ne sont pas communiqués. Véhicule présenté en l'état ; un examen sur place est recommandé avant toute transaction.",
+        "en": "1999 Nissan Skyline NS4 four-door saloon, country of origin Japan, right-hand drive. The body is finished in silver grey, with a boot lid spoiler. It is fitted with aftermarket black multi-spoke wheels with polished lips and red centre caps.\n\nThe cabin features grey and black cloth upholstery and a wrapped steering wheel. The photos show visible wear: marked steering wheel, frayed fabric on the edge of the driver's seat, soiled carpet and mat on the driver's side, and metal parts lying on the driver's floor.\n\nMileage, engine, gearbox and history are not provided. Vehicle offered as is; an on-site inspection is recommended before any transaction."
+      },
+      "price_eur": 9500,
+      "mileage": "",
+      "mileage_km": null,
+      "country": "Japon",
+      "location": "Royaume-Uni",
+      "transmission": null,
+      "fuel_type": null,
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": null,
+      "interior_color": null,
+      "vin": "ENR340*****",
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/nissan-skyline-ns4-1999-1.jpg",
+        "/assets/stock/images/nissan-skyline-ns4-1999-2.jpg",
+        "/assets/stock/images/nissan-skyline-ns4-1999-3.jpg",
+        "/assets/stock/images/nissan-skyline-ns4-1999-4.jpg",
+        "/assets/stock/images/nissan-skyline-ns4-1999-5.jpg"
+      ],
+      "image_focus": {}
+    },
+    {
+      "id": "hummer-h2-2006",
+      "slug": "hummer-h2-2006",
+      "ref": "BSP-060",
+      "vehicle_type": "car",
+      "make": "Hummer",
+      "model": "H2",
+      "year": 2006,
+      "title": {
+        "fr": "Hummer H2",
+        "en": "Hummer H2"
+      },
+      "headline": {
+        "fr": "Hummer H2 de 2006 noir, 77 605 km, provenance Japon, jantes chromées et rampe de quatre phares additionnels",
+        "en": "Black 2006 Hummer H2, 77,605 km, from Japan, with chrome wheels and a four-lamp auxiliary light bar"
+      },
+      "description": {
+        "fr": "Hummer H2 de 2006 en teinte noire, affichant 77 605 km. Le véhicule provient du Japon.\n\nÀ l'extérieur, la carrosserie noire est associée à de nombreux éléments chromés : calandre, entourages de phares, coques de rétroviseurs, poignées de portes et bouchon de réservoir. Une rampe de quatre phares additionnels est montée sur la prise d'air du capot. Le véhicule repose sur des jantes chromées multibranches chaussées de pneumatiques tout-terrain et dispose de marchepieds latéraux. Les vitres arrière sont teintées et un bandeau au nom du modèle figure en haut du pare-brise.\n\nSur les photos, la carrosserie présente un aspect brillant et soigné. Les informations sur la motorisation, la boîte, l'historique et l'entretien ne sont pas communiquées ; un examen sur place ou une demande de renseignements complémentaires est recommandé.",
+        "en": "Black 2006 Hummer H2 showing 77,605 km. The vehicle comes from Japan.\n\nOn the outside, the black paintwork is paired with numerous chrome details: grille, headlamp surrounds, mirror caps, door handles and fuel filler cap. A bar of four auxiliary lamps is fitted on the bonnet air intake. The vehicle sits on chrome multi-spoke wheels with all-terrain tyres and features side steps. The rear windows are tinted and a model-name banner runs across the top of the windscreen.\n\nIn the photos, the bodywork appears glossy and well presented. Details on the engine, gearbox, history and servicing have not been provided; an on-site inspection or a request for further information is recommended."
+      },
+      "price_eur": 28500,
+      "mileage": "",
+      "mileage_km": 77605,
+      "country": "Japon",
+      "location": "Royaume-Uni",
+      "transmission": null,
+      "fuel_type": null,
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": "Black",
+      "interior_color": null,
+      "vin": "5GRGN2***********",
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/hummer-h2-2006-1.jpg",
+        "/assets/stock/images/hummer-h2-2006-2.jpg",
+        "/assets/stock/images/hummer-h2-2006-3.jpg",
+        "/assets/stock/images/hummer-h2-2006-4.jpg",
+        "/assets/stock/images/hummer-h2-2006-5.jpg",
+        "/assets/stock/images/hummer-h2-2006-6.jpg",
+        "/assets/stock/images/hummer-h2-2006-7.jpg",
+        "/assets/stock/images/hummer-h2-2006-8.jpg"
+      ],
+      "image_focus": {}
+    },
+    {
+      "id": "mercedes-benz-s63-amg-2007",
+      "slug": "mercedes-benz-s63-amg-2007",
+      "ref": "BSP-062",
+      "vehicle_type": "car",
+      "make": "Mercedes-Benz",
+      "model": "S63 AMG",
+      "year": 2007,
+      "title": {
+        "fr": "Mercedes-Benz S63 AMG",
+        "en": "Mercedes-Benz S63 AMG"
+      },
+      "headline": {
+        "fr": "Mercedes-Benz S63 AMG noire, première immatriculation en février 2007, 119 900 km, origine Japon",
+        "en": "Black Mercedes-Benz S63 AMG, first registered February 2007, 119,900 km, Japanese origin"
+      },
+      "description": {
+        "fr": "Mercedes-Benz S63 AMG à moteur essence, mise en circulation pour la première fois en février 2007 et affichant 119 900 km. Le véhicule est d'origine japonaise.\n\nLa carrosserie est noire. Les photos montrent la partie arrière avec le monogramme AMG sur le coffre, les feux arrière à LED, le diffuseur arrière et les quatre sorties d'échappement trapézoïdales chromées, ainsi que des jantes multibranches bicolores chaussées de pneus à profil bas. La peinture présente un aspect brillant sur les zones visibles.\n\nLes clichés, réalisés en atelier, se limitent à la partie arrière du véhicule. Les professionnels intéressés peuvent nous contacter pour obtenir des informations complémentaires ou organiser un examen.",
+        "en": "Petrol-powered Mercedes-Benz S63 AMG, first registered in February 2007 and showing 119,900 km. The vehicle is of Japanese origin.\n\nThe body is finished in black. The photos show the rear end with the AMG badge on the boot lid, the LED tail lights, the rear diffuser and the four chrome trapezoidal exhaust tips, as well as multi-spoke two-tone alloy wheels fitted with low-profile tyres. The paintwork appears glossy on the visible areas.\n\nThe pictures, taken in a workshop, are limited to the rear of the vehicle. Interested trade buyers are welcome to contact us for further information or to arrange an inspection."
+      },
+      "price_eur": 18500,
+      "mileage": "",
+      "mileage_km": 119900,
+      "country": "Japon",
+      "location": "France",
+      "transmission": null,
+      "fuel_type": "Petrol",
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": null,
+      "interior_color": null,
+      "vin": "WDD221***********",
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/mercedes-benz-s63-amg-2007-1.jpg",
+        "/assets/stock/images/mercedes-benz-s63-amg-2007-2.jpg",
+        "/assets/stock/images/mercedes-benz-s63-amg-2007-3.jpg"
+      ],
+      "image_focus": {}
     }
   ]
 }
