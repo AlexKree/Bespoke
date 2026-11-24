@@ -2,7 +2,7 @@
   functions = "netlify/functions"
   # 1. Produit les variantes WebP servies par le site (assets/_img).
   # 2. Regenere les fiches vehicule, le sitemap et robots.txt : un
-  #    enregistrement depuis /admin commite stock.json, ce qui declenche un build.
+  #    envoi depuis trade (page « Site public ») commite stock.json, ce qui declenche un build.
   command = "node scripts/build-images.mjs && node scripts/build-stock-pages.mjs"
 
 # NB : le timeout des fonctions synchrones (10 s par defaut, 26 s max) n'est PAS
@@ -34,11 +34,18 @@
   status = 302
   force = true
 
-# Serve the admin page at /admin (without trailing slash)
+# Ancienne admin du site (supprimée le 24/11/2026) : le stock du site se gère depuis trade (page « Site public »)
 [[redirects]]
   from = "/admin"
-  to   = "/admin/index.html"
-  status = 200
+  to   = "https://trade.thebespokecar.com/site-stock"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/admin/*"
+  to   = "https://trade.thebespokecar.com/site-stock"
+  status = 301
+  force = true
 
 # Clean URLs for auth pages
 [[redirects]]
