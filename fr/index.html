@@ -107,7 +107,7 @@
         <a data-nav class="navlink" href="marche.html">Marché</a>
         <a data-nav class="navlink" href="a-propos.html">À propos</a>
         <a data-nav class="navlink" href="contact.html">Contact</a>
-        <a class="btn primary btnSm" href="login.html" id="navAuthBtn" style="margin-left:8px">Se connecter</a>
+        <a class="btn primary btnSm" href="https://trade.thebespokecar.com/pro/login" id="navAuthBtn" style="margin-left:8px">Se connecter</a>
     <div class="lang">
       <a class="active" href="../fr/index.html">FR</a>
       <a class="" href="../en/index.html">EN</a>
@@ -141,7 +141,7 @@
 
     <div class="heroAside" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px">
       <span style="display:flex;flex-wrap:wrap;gap:10px"><a href="https://trade.thebespokecar.com/pro" class="btn primary" style="white-space:normal">Accès professionnel</a><a href="partenaires.html" class="btn" style="white-space:normal">Devenir partenaire</a></span>
-      <span style="font-size:13px;opacity:.75"><a href="contact.html?profil=particulier" class="heroAsideLink">Particulier ? Contactez-nous</a> <a href="login.html" id="heroAuthBtn" class="heroAsideLink">· Déjà client ? Votre espace →</a></span>
+      <span style="font-size:13px;opacity:.75"><a href="contact.html?profil=particulier" class="heroAsideLink">Particulier ? Contactez-nous</a> <a href="https://trade.thebespokecar.com/pro/login" id="heroAuthBtn" class="heroAsideLink">· Déjà partenaire ? Votre espace pro →</a></span>
     </div>
 
     <div class="heroV2-rule"></div>
@@ -297,10 +297,7 @@
     });
     var data = await res.json();
     if (data.user) {
-      var btn = document.getElementById('navAuthBtn');
-      if (btn) { btn.textContent = 'Mon espace'; btn.href = 'stock.html'; }
-      var heroBtn = document.getElementById('heroAuthBtn');
-      if (heroBtn) heroBtn.style.display = 'none';
+      // Connexion : toujours l'espace pro de trade (l'ancien compte particulier ne change plus le bouton)
     }
   } catch (e) {}
 })();
