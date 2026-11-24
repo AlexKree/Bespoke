@@ -222,7 +222,8 @@
       box.appendChild(el('span', 'newsCredit', a.image.credit || ''));
       return box;
     }
-    var img = car && car.images && car.images[0];
+    // Photo de la fiche du site, sinon photo du portail trade (plaques floutees ou controlees), sinon logo
+    var img = (car && car.images && car.images[0]) || (a.vehicle && a.vehicle.photo);
     if (img) { var i = el('img'); i.src = imgPath(img); i.alt = ''; i.loading = 'lazy'; box.appendChild(i); return box; }
     // Pas d'image : couverture Bespoke (monogramme + nom), avec le pays pour les articles permis
     box.classList.add('newsCover--brand');
