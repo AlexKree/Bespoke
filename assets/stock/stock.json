@@ -2262,6 +2262,231 @@
         "/assets/stock/images/porsche-panamera-4s-2011-8.jpg"
       ],
       "image_focus": {}
+    },
+    {
+      "id": "bmw-740i-1995",
+      "slug": "bmw-740i-1995",
+      "ref": "BSP-014",
+      "vehicle_type": "car",
+      "make": "BMW",
+      "model": "740i E-GF40",
+      "year": 1995,
+      "title": {
+        "fr": "BMW 740i E38 V8 automatique, finition M, origine Japon",
+        "en": "BMW 740i E38 V8 automatic, M trim, Japanese-market car"
+      },
+      "headline": {
+        "fr": "Berline BMW 740i de 1995 à conduite à droite, sellerie cuir noir et un peu moins de 50 000 km",
+        "en": "1995 right-hand-drive BMW 740i saloon with black leather and just under 50,000 km"
+      },
+      "description": {
+        "fr": "BMW 740i de génération E38 (code E-GF40), mise en circulation en août 1995 au Japon, motorisation essence. Le véhicule affiche un peu moins de 50 000 km. Il s'agit d'un exemplaire à conduite à droite, doté d'une boîte automatique avec sélecteur P-R-N-D-4-3-2.\n\nLa carrosserie de teinte claire argentée porte un logo M à l'arrière, et un autocollant BMW Japan est visible sur la lunette arrière. L'habitacle reçoit une sellerie cuir noir, des inserts en ronce de noyer, un pommeau de levier en bois, un volant multifonction gainé de cuir et un écran de bord central. Un logo M figure également sur la console centrale.\n\nLes photos montrent une sellerie présentant des plis et une patine d'usage, plus marquées sur le siège conducteur. Les tapis sont à nettoyer. Un examen sur place est recommandé pour évaluer l'état général.",
+        "en": "BMW 740i of the E38 generation (code E-GF40), first registered in August 1995 in Japan, with a petrol engine. The car shows just under 50,000 km. It is a right-hand-drive example fitted with an automatic gearbox with a P-R-N-D-4-3-2 selector.\n\nThe light silver bodywork carries an M badge at the rear, and a BMW Japan sticker is visible on the rear window. The cabin features black leather upholstery, burr walnut trim, a wooden gear knob, a leather-wrapped multifunction steering wheel and a central on-board display. An M logo also appears on the centre console.\n\nThe photos show creasing and signs of use on the leather, more pronounced on the driver's seat. The carpets need cleaning. An on-site inspection is recommended to assess the overall condition."
+      },
+      "price_eur": 8000,
+      "mileage": "",
+      "mileage_km": 49400,
+      "country": "Japon",
+      "location": "Royaume-Uni",
+      "transmission": null,
+      "fuel_type": "Petrol",
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": "Bleu",
+      "interior_color": null,
+      "vin": "WBAGF6***********",
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/bmw-740i-1995-1.jpg",
+        "/assets/stock/images/bmw-740i-1995-2.jpg",
+        "/assets/stock/images/bmw-740i-1995-3.jpg",
+        "/assets/stock/images/bmw-740i-1995-4.jpg",
+        "/assets/stock/images/bmw-740i-1995-5.jpg",
+        "/assets/stock/images/bmw-740i-1995-6.jpg",
+        "/assets/stock/images/bmw-740i-1995-7.jpg",
+        "/assets/stock/images/bmw-740i-1995-8.jpg"
+      ],
+      "image_focus": {}
+    },
+    {
+      "id": "bmw-850-rtic-1995",
+      "slug": "bmw-850-rtic-1995",
+      "ref": "BSP-016",
+      "vehicle_type": "motorcycle",
+      "make": "BMW",
+      "model": "850 RTIC",
+      "year": 1995,
+      "title": {
+        "fr": "BMW 850 RTIC",
+        "en": "BMW 850 RTIC"
+      },
+      "headline": {
+        "fr": "Moto BMW à moteur boxer, première immatriculation en août 1995, origine Royaume-Uni, motorisation essence.",
+        "en": "BMW boxer-engined motorcycle, first registered in August 1995, UK origin, petrol engine."
+      },
+      "description": {
+        "fr": "BMW déclarée comme 850 RTIC, première immatriculation le 1er août 1995, origine Royaume-Uni, motorisation essence. La teinte déclarée est bleue ; sur les photos, la carrosserie apparaît gris argenté bleuté. Le cache latéral porte un badge R1100R, à rapprocher de la désignation déclarée avant toute transaction.\n\nLes photos montrent un bicylindre boxer avec couvre-culasses à ailettes, une bulle haute transparente, des protège-mains noirs, une sacoche de réservoir et une selle noire. Les jantes sont en alliage gris argent. Le tableau de bord comprend un compteur de vitesse gradué principalement en mph, un compte-tours et une montre additionnels.\n\nLa moto est stationnée dans un parking couvert. L'état apparent est conforme à son âge, avec des traces d'usage visibles sur la selle et sur certaines pièces mécaniques. Le kilométrage, la boîte, la puissance et l'historique d'entretien ne sont pas renseignés.",
+        "en": "BMW declared as an 850 RTIC, first registered on 1 August 1995, of UK origin, with a petrol engine. The declared colour is blue; in the photos the bodywork appears as a bluish silver-grey. The side panel carries an R1100R badge, which should be reconciled with the declared designation before any transaction.\n\nThe photos show a boxer twin with finned cylinder head covers, a tall clear windscreen, black handguards, a tank bag and a black seat. The wheels are silver-grey alloys. The dashboard has a speedometer graduated mainly in mph, plus an additional rev counter and clock.\n\nThe motorcycle is parked in a covered car park. Its apparent condition is consistent with its age, with visible signs of use on the seat and on some mechanical parts. Mileage, gearbox, power output and service history are not provided."
+      },
+      "price_eur": 3250,
+      "mileage": "",
+      "mileage_km": null,
+      "country": "Royaume-Uni",
+      "location": null,
+      "transmission": null,
+      "fuel_type": "Petrol",
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": "Bleu",
+      "interior_color": null,
+      "vin": null,
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/bmw-850-rtic-1995-1.jpg",
+        "/assets/stock/images/bmw-850-rtic-1995-2.jpg",
+        "/assets/stock/images/bmw-850-rtic-1995-3.jpg",
+        "/assets/stock/images/bmw-850-rtic-1995-4.jpg",
+        "/assets/stock/images/bmw-850-rtic-1995-5.jpg"
+      ],
+      "image_focus": {}
+    },
+    {
+      "id": "bmw-r1100-rt-1997",
+      "slug": "bmw-r1100-rt-1997",
+      "ref": "BSP-018",
+      "vehicle_type": "motorcycle",
+      "make": "BMW",
+      "model": "R1100 RT",
+      "year": 1997,
+      "title": {
+        "fr": "BMW R1100 RT",
+        "en": "BMW R1100 RT"
+      },
+      "headline": {
+        "fr": "BMW R1100 RT de 1997 en rouge métallisé, origine Royaume-Uni, équipée d'un top case et d'une bulle haute",
+        "en": "1997 BMW R1100 RT in metallic red, UK origin, fitted with a top case and a tall windscreen"
+      },
+      "description": {
+        "fr": "BMW R1100 RT de 1997, moto de grand tourisme à moteur bicylindre boxer, d'origine britannique. Elle se présente en peinture rouge métallisé, avec selle biplace noire, jantes argentées, carters moteur et repose-pieds argentés, et silencieux chromé.\n\nSur les photos, on distingue une bulle haute transparente, un top case noir monté à l'arrière et un afficheur additionnel Mobiletron fixé au-dessus du combiné d'instruments, dont le compteur de vitesse est gradué en mph. La moto est stockée en intérieur, dans un garage.\n\nLe carénage latéral gauche paraît ouvert ou incomplet au niveau de la zone située sous le guidon ; un examen sur place est recommandé pour en préciser l'état. Le kilométrage et l'historique d'entretien ne sont pas communiqués.",
+        "en": "1997 BMW R1100 RT, a grand touring motorcycle powered by a boxer twin engine, of UK origin. It is finished in metallic red, with a black two-up seat, silver wheels, silver engine covers and footrest plates, and a chrome silencer.\n\nThe photos show a tall clear windscreen, a black top case fitted at the rear and an aftermarket Mobiletron display mounted above the instrument cluster, whose speedometer reads in mph. The motorcycle is stored indoors, in a garage.\n\nThe left-hand side fairing appears open or incomplete in the area below the handlebar; an in-person inspection is recommended to confirm its condition. Mileage and service history are not provided."
+      },
+      "price_eur": 2750,
+      "mileage": "",
+      "mileage_km": null,
+      "country": "Royaume-Uni",
+      "location": null,
+      "transmission": null,
+      "fuel_type": null,
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": null,
+      "interior_color": null,
+      "vin": null,
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/bmw-r1100-rt-1997-1.jpg",
+        "/assets/stock/images/bmw-r1100-rt-1997-2.jpg",
+        "/assets/stock/images/bmw-r1100-rt-1997-3.jpg",
+        "/assets/stock/images/bmw-r1100-rt-1997-4.jpg",
+        "/assets/stock/images/bmw-r1100-rt-1997-5.jpg",
+        "/assets/stock/images/bmw-r1100-rt-1997-6.jpg"
+      ],
+      "image_focus": {}
+    },
+    {
+      "id": "harley-davidson-vrod-2003",
+      "slug": "harley-davidson-vrod-2003",
+      "ref": "BSP-024",
+      "vehicle_type": "motorcycle",
+      "make": "Harley-Davidson",
+      "model": "VROD",
+      "year": 2003,
+      "title": {
+        "fr": "Harley-Davidson V-Rod",
+        "en": "Harley-Davidson V-Rod"
+      },
+      "headline": {
+        "fr": "Harley-Davidson V-Rod de 2003 en finition argent, emblèmes du 100e anniversaire et immatriculation britannique.",
+        "en": "2003 Harley-Davidson V-Rod in silver, with 100th Anniversary emblems and UK registration."
+      },
+      "description": {
+        "fr": "Harley-Davidson V-Rod essence, première immatriculation en juillet 2003 au Royaume-Uni. Le kilométrage n'est pas communiqué.\n\nLa moto présente une finition argent sur le réservoir et le garde-boue arrière. Le réservoir porte les emblèmes ailés du 100e anniversaire de la marque. La selle biplace est noire. Elle est équipée de roues pleines en aluminium, d'un double échappement chromé et de pare-cylindres chromés à l'avant. Le compteur est gradué en miles.\n\nSur les photos, peinture, chromes et sellerie paraissent en bon état apparent. Les photos ne renseignent ni l'historique ni l'entretien.",
+        "en": "Petrol Harley-Davidson V-Rod, first registered in July 2003 in the United Kingdom. Mileage is not stated.\n\nThe bike has a silver finish on the tank and rear fender. The tank carries the brand's winged 100th Anniversary emblems. The dual seat is black. It is fitted with solid aluminium disc wheels, a chrome twin exhaust and chrome front engine guards. The speedometer reads in miles.\n\nIn the photos, the paintwork, chrome and seat appear to be in good visible condition. The photos give no information on history or maintenance."
+      },
+      "price_eur": 8500,
+      "mileage": "",
+      "mileage_km": null,
+      "country": "Royaume-Uni",
+      "location": null,
+      "transmission": null,
+      "fuel_type": "Petrol",
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": "Silver",
+      "interior_color": null,
+      "vin": "5HD1HA***********",
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/harley-davidson-vrod-2003-1.jpg",
+        "/assets/stock/images/harley-davidson-vrod-2003-2.jpg",
+        "/assets/stock/images/harley-davidson-vrod-2003-3.jpg",
+        "/assets/stock/images/harley-davidson-vrod-2003-4.jpg",
+        "/assets/stock/images/harley-davidson-vrod-2003-5.jpg",
+        "/assets/stock/images/harley-davidson-vrod-2003-6.jpg",
+        "/assets/stock/images/harley-davidson-vrod-2003-7.jpg",
+        "/assets/stock/images/harley-davidson-vrod-2003-8.jpg"
+      ],
+      "image_focus": {}
+    },
+    {
+      "id": "honda-vfr800-fi-v4-800cc-1999-2",
+      "slug": "honda-vfr800-fi-v4-800cc-1999-2",
+      "ref": "BSP-027",
+      "vehicle_type": "motorcycle",
+      "make": "Honda",
+      "model": "VFR800 FI – V4 800cc",
+      "year": 1999,
+      "title": {
+        "fr": "Honda VFR800 FI V4 800 cm3",
+        "en": "Honda VFR800 FI V4 800cc"
+      },
+      "headline": {
+        "fr": "Honda VFR800 FI de 1999 en rouge, 88 514 km, origine Royaume-Uni, silencieux Remus et bulle fumée",
+        "en": "1999 Honda VFR800 FI in red, 88,514 km, UK origin, Remus silencer and smoked screen"
+      },
+      "description": {
+        "fr": "Honda VFR800 FI à moteur V4 de 800 cm3 et alimentation essence, première immatriculation le 3 septembre 1999. Le compteur affiche 88 514 km. La moto est d'origine britannique.\n\nLa robe est rouge avec filet argenté sur le réservoir et logo Honda ailé. La selle biplace est noire, accompagnée des poignées passager d'origine. Les jantes sont noires, le freinage avant est assuré par des étriers Nissin et disques flottants.\n\nOn remarque sur les photos une bulle fumée, un silencieux Remus en inox, des embouts de guidon rouges et un protège-réservoir. La selle présente des traces d'usage. Les carénages présentent un aspect d'ensemble homogène sur les photos.",
+        "en": "Honda VFR800 FI with an 800cc V4 petrol engine, first registered on 3 September 1999. The odometer reads 88,514 km. The motorcycle is of UK origin.\n\nIt is finished in red with a silver pinstripe on the tank and the Honda wing logo. The dual seat is black, with the original pillion grab handles. Wheels are black, and front braking is by Nissin calipers with floating discs.\n\nThe photos show a smoked windscreen, a stainless Remus silencer, red bar-end weights and a tank pad. The seat shows signs of use. The fairing panels appear consistent overall in the photos."
+      },
+      "price_eur": 2000,
+      "mileage": "",
+      "mileage_km": 88514,
+      "country": "Royaume-Uni",
+      "location": null,
+      "transmission": null,
+      "fuel_type": "Petrol",
+      "body_type": null,
+      "power_hp": null,
+      "exterior_color": "Rouge",
+      "interior_color": null,
+      "vin": "JH2RC4***********",
+      "status": "available",
+      "sale_category": "both",
+      "images": [
+        "/assets/stock/images/honda-vfr800-fi-v4-800cc-1999-2-1.jpg",
+        "/assets/stock/images/honda-vfr800-fi-v4-800cc-1999-2-2.jpg",
+        "/assets/stock/images/honda-vfr800-fi-v4-800cc-1999-2-3.jpg",
+        "/assets/stock/images/honda-vfr800-fi-v4-800cc-1999-2-4.jpg",
+        "/assets/stock/images/honda-vfr800-fi-v4-800cc-1999-2-5.jpg",
+        "/assets/stock/images/honda-vfr800-fi-v4-800cc-1999-2-6.jpg",
+        "/assets/stock/images/honda-vfr800-fi-v4-800cc-1999-2-7.jpg",
+        "/assets/stock/images/honda-vfr800-fi-v4-800cc-1999-2-8.jpg"
+      ],
+      "image_focus": {}
     }
   ]
 }
