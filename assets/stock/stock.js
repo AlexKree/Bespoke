@@ -272,7 +272,7 @@
       const vurl = location.origin + location.pathname.replace(/[^/]*$/, 'stock/' + item.slug + '.html');
       q += '&url=' + encodeURIComponent(vurl);
     }
-    return 'contact.html?' + q + '&profil=particulier';
+    return 'contact.html?' + q;
   }
 
   // stock.json melange les formes "assets/..." et "/assets/..." : on normalise
@@ -665,10 +665,8 @@
     }
 
     modalDescription.textContent = (item.description && (item.description[lang] || item.description.en || item.description.fr)) || '';
-    modalContact.href = contactHref(item);
-    modalContact.textContent = T.privateContact;
-    modalContact.className = 'btn';
-    modalContact.style.display = item.status === 'sold' ? 'none' : '';
+    // Site réservé aux professionnels (24/11/2026) : plus de contact « particulier » depuis la fiche
+    modalContact.style.display = 'none';
 
     // Reservation en ligne retiree (22/11/2026) : plus de vente directe au public.
     const existingReserveBtn = modal.querySelector('.modalReserveBtn');

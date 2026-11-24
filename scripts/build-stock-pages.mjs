@@ -672,8 +672,7 @@ ${item.status === 'sold' ? `        <div class="vpSoldNotice">${esc(t.soldNotice
           ${item.status === 'sold'
             // Vendu : le dossier n'a plus d'objet, on propose de rechercher un equivalent.
             ? `<a class="btn primary" href="../contact.html?ref=${encodeURIComponent(contactRef)}&amp;url=${encodeURIComponent(url)}&amp;intent=same" onclick="plausible('Lead')">${esc(t.findSame)}</a>`
-            : `<a class="btn primary" href="${PRO_URL}" onclick="plausible('Pro')">${esc(t.proPrice)}</a>
-          <a class="btn" href="../contact.html?ref=${encodeURIComponent(contactRef)}&amp;url=${encodeURIComponent(url)}&amp;profil=particulier" onclick="plausible('Lead')">${esc(t.privateContact)}</a>`}
+            : `<a class="btn primary" href="${PRO_URL}" onclick="plausible('Pro')">${esc(t.proPrice)}</a>`}
           <a class="btn" href="../stock.html">${esc(t.backToStock)}</a>
         </div>
         <div class="vpToolLinks">

@@ -242,19 +242,6 @@
     var vurl = (params.get('url') || '').trim();
     // Private buyer (site focused on trade buyers, 22/11/2026): contact request,
     // no price or online reservation.
-    if (params.get('profil') === 'particulier') {
-      // Particulier : texte adapté, sans le champ société ni l'appel à devenir partenaire
-      var ct = document.getElementById('contactTitle'); if (ct) ct.textContent = 'Tell us what you are looking for.';
-      var cl = document.getElementById('contactLead'); if (cl) cl.textContent = 'We mainly work with motor trade professionals, but we also answer private buyers. Tell us about the car you are interested in: we reply within one business day.';
-      ['companyField', 'contactPartnerCta'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
-      msg.value = 'Hello,\n\n'
-        + 'I am a private buyer' + (ref ? ' interested in the following vehicle:\n' + ref + (vurl ? '\n' + vurl : '') : ' looking for a vehicle.') + '\n\n'
-        + 'Country of residence: \n'
-        + 'Phone (optional): \n';
-      if (subj && !subj.value.trim()) subj.value = 'Private buyer — ' + (ref || 'contact request');
-      askForContactDetails('Request pre-filled. Add your name and e-mail, then send: we will get back to you shortly.');
-      return;
-    }
     if (ref && params.get('intent') === 'same') {
       msg.value = 'Hello,\n\n'
         + 'This vehicle has been sold, but I am looking for the same model:\n'
